@@ -1,0 +1,50 @@
+{
+  "name": "app-pe",
+  "description": "pe项目打包",
+  "version": "1.0.0",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@gitlab.21tb.com:4350/eln/webdesk.git"
+  },
+  "author": "TomJie",
+  "license": "ISC",
+  "devDependencies": {
+    "concat": "^1.0.3",
+    "escape-string-regexp": "^1.0.5",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^4.0.0",
+    "gulp-cache": "^0.4.6",
+    "gulp-clean-css": "^3.9.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-connect": "^5.0.0",
+    "gulp-header": "^1.8.9",
+    "gulp-htmlmin": "^3.0.0",
+    "gulp-imagemin": "^3.4.0",
+    "gulp-jshint": "^2.0.4",
+    "gulp-livereload": "^3.8.1",
+    "gulp-maven-deploy": "^0.2.0",
+    "gulp-notify": "^3.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-rev": "^7.1.2",
+    "gulp-rev-collector": "^1.0.2",
+    "gulp-sass": "^2.3.2",
+    "gulp-sequence": "^0.4.6",
+    "gulp-sftp": "^0.1.5",
+    "gulp-shell": "^0.5.2",
+    "gulp-ssh": "^0.6.0",
+    "gulp-uglify": "^2.1.2",
+    "gulp-uglify-inline": "^0.1.1",
+    "gulp-useref": "^3.1.2",
+    "gulp-zip": "^3.2.0",
+    "jshint": "^2.9.5",
+    "livereload": "^0.6.3",
+    "ng-annotate": "^1.2.2",
+    "ngmin": "^0.5.0",
+    "orchestrator": "^0.3.8",
+    "uglify": "^0.1.5"
+  }
+}

@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>考试管理UI规范</title>
+
+    <link type="text/css" rel="stylesheet" href="./web-static/proExam/css/pro_exam_base.css"/>
+    <link rel="stylesheet" href="./web-static/proExam/css/pro_exam_plugin_min.css" type="text/css">
+    <link rel="stylesheet" href="./web-static/proExam/css/plugins/pagination.css" type="text/css">
+    <link rel="stylesheet" href="./web-static/proExam/css/plugins/artDialogdefault.css" type="text/css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_5eayxvmdjzwipb9.css" type="text/css"></head>
+<body>
+<div class="pe-main-wrap">
+    <br/>
+    <h4>按钮</h4>
+    <br/>
+    <button type="button" class="pe-btn pe-btn-blue">pe-btn pe-btn-blue</button>
+    <button type="button" class="pe-btn pe-btn-green">pe-btn pe-btn-green</button>
+    <button type="button" class="pe-btn pe-btn-primary">pe-btn pe-btn-primary</button>
+
+    <br/>
+    <br/>
+    <h4>panel</h4>
+    <br/>
+
+    <div class="pe-panel pe-panel-default">
+        <div class="pe-panel-header">
+            pe-panel-default: pe-panel-header
+        </div>
+        <div class="pe-panel-body">
+                <pre>
+
+                &lt;div class="pe-panel pe-panel-default"&gt;
+                    &lt;div class="pe-panel-header"&gt;
+                        pe-panel-default: pe-panel-header
+                    &lt;/div&gt;
+                    &lt;div class="pe-panel-body"&gt;
+                        &lt;pre&gt;
+
+                        pe-panel-default: pe-panel-body
+
+                        &lt;/pre&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                </pre>
+        </div>
+    </div>
+    <br/>
+
+    <div class="pe-panel pe-panel-info">
+        <div class="pe-panel-header">
+            pe-panel-info: pe-panel-header
+        </div>
+        <div class="pe-panel-body">
+                <pre>
+
+                    &lt;div class="pe-panel pe-panel-info"&gt;
+                        &lt;div class="pe-panel-header"&gt;
+                        pe-panel-info: pe-panel-header
+                        &lt;/div&gt;
+                        &lt;div class="pe-panel-body"&gt;
+                        &lt;pre&gt;
+
+                         pe-panel-info: pe-panel-body
+
+                        &lt;/pre&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+
+                </pre>
+        </div>
+    </div>
+
+    <br/>
+    <br/>
+    <h4>管理端页面demo</h4>
+    <br/>
+
+    <div class="pe-manage-content">
+        <form name="peFormSub" id="peFormSub" class="pe-form">
+            <div class="pe-classify-wrap floatL">
+                <div class="pe-classify-top over-flow-hide pe-form">
+                    <span class="floatL pe-classify-top-text">按题库类别筛选</span>
+                    <label class="floatL pe-checkbox category-include">
+                        <span class="iconfont icon-checked-checkbox peChecked"></span>
+                        <input name="category.include" class="pe-form-ele" value="true" type="checkbox" checked="checked"/><span class="include-subclass">包含子类</span>
+                    </label>
+                    <button type="button" title="管理类别" class="floatR iconfont pe-control-tree-btn icon-set set-category-btn "></button>
+                </div>
+                <div class="pe-classify-tree-wrap">
+                    <div class="pe-tree-search-wrap">
+                        <input class="pe-tree-form-text" type="text" placeholder="输入类别名称关键字进行查找">
+                        <span class="iconfont pe-tree-search-btn icon-search-magnifier"></span>
+                    </div>
+                    <div class="pe-tree-content-wrap">
+                        <div class="pe-tree-main-wrap">
+                            <div class="node-search-empty">暂无</div>
+                            <ul id="peZtreeMain" class="ztree pe-tree-container pe-no-manage-tree" style="height: 556px!important;" data-type="km"></ul>
+                        </div>
+                    </div>
+                    <!--<div class="pe-control-tree-btn iconfont icon-set">管理类别</div>-->
+                </div>
+            </div>
+            <div class="pe-manage-content-right">
+                <div class="pe-panel pe-panel-default">
+                    <div class="pe-panel-header">
+                        <div class="pe-filter-form">
+                            <div class="pe-form-cell">
+                                <div class="pe-control-group">
+                                    <label for="peMainKeyName">题库名称：</label>
+                                    <input id="peMainKeyName" name="bankName" type="text" maxlength="20">
+                                </div>
+                                <div class="pe-control-group">
+                                    <label for="peMainKeyName">创建人：</label>
+                                    <input id="createBy" type="text" placeholder="用户名/姓名/手机号/工号" maxlength="20">
+                                </div>
+                                <button type="button" id="peFilterBtn" class="pe-btn pe-btn-blue floatR pt-filter-btn">筛选</button>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pe-panel-body">
+                        <div class="pe-panel pe-panel-info">
+                            <div class="pe-panel-header">
+                                <div class="pe-manage-batch-opt-bar">
+                                    <button type="button" class="pe-btn pe-btn-green" id="peNewCategory">新增题库
+                                    </button>
+                                    <span class="pe-manage-table-tip">共有<span class="pe-table-number-tip" id="showTotal"></span>条记录</span>
+                                </div>
+
+
+                            </div>
+                            <div class="pe-panel-body">
+                                <div class="pe-table-wrap" id="peCategoryContWrap">
+                                    <table class="pe-stand-table">
+                                        <thead class="pe-stand-thead">
+                                        <tr class="pe-stand-tr">
+
+                                            <th class="pe-stand-th" style="width:95px">
+                                                题型
+                                            </th>
+
+                                            <th class="pe-stand-th" style="width:65px">
+                                                难度
+                                            </th>
+
+                                            <th class="pe-stand-th" style="width:302px">
+                                                试题内容
+                                            </th>
+
+                                            <th class="pe-stand-th" style="width:127px">
+                                                所属题库
+                                            </th>
+
+                                            <th class="pe-stand-th" style="width:123px">
+                                                知识点
+                                            </th>
+
+                                            <th class="pe-stand-th" style="width:58px">
+                                                状态
+                                            </th>
+
+                                            <th class="pe-stand-th" style="width:105px">
+                                                操作
+                                            </th>
+
+                                        </tr>
+                                        </thead>
+                                        <tbody class="pe-stand-tbody">
+
+
+                                        <tr class="pe-stand-tr" data-id="4028819d5828caf6015829704cd9000b">
+
+                                            <td class="pe-stand-td">简答题</td>
+
+
+                                            <td class="pe-stand-td">困难</td>
+
+                                            <td class="pe-stand-td"><a class="pe-stand-alink pe-ellipsis" href="javascript:;"
+                                                                       data-id="4028819d5828caf6015829704cd9000b">weqsfsffa12313131313</a>
+                                            </td>
+                                            <td class="pe-stand-td">JAVA</td>
+                                            <td class="pe-stand-td">知识点5</td>
+
+                                            <td class="pe-stand-td">启用</td>
+
+                                            <td class="pe-stand-td">
+                                                <div class="pe-table-stand-btn">
+
+                                                    <span class="pe-table-stop-btn iconfont icon-tabletingyong" title="停用"
+                                                          data-id="4028819d5828caf6015829704cd9000b"></span>
+
+                                                    <span class="pe-table-edit-btn iconfont icon-edit" title="编辑"
+                                                          data-id="4028819d5828caf6015829704cd9000b"></span>
+                                                    <span class="pe-table-dele-btn iconfont icon-delete" title="删除"
+                                                          data-id="4028819d5828caf6015829704cd9000b"></span>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="pe-stand-tr" data-id="4028819d5828caf601582963e09a0007">
+
+                                            <td class="pe-stand-td">填空题</td>
+
+
+                                            <td class="pe-stand-td">中等</td>
+
+                                            <td class="pe-stand-td"><a class="pe-stand-alink pe-ellipsis" href="javascript:;"
+                                                                       data-id="4028819d5828caf601582963e09a0007">231312313</a>
+                                            </td>
+                                            <td class="pe-stand-td">bank1</td>
+                                            <td class="pe-stand-td">知识点3,知识点4</td>
+
+                                            <td class="pe-stand-td">启用</td>
+
+                                            <td class="pe-stand-td">
+                                                <div class="pe-table-stand-btn">
+
+                                                    <span class="pe-table-stop-btn iconfont icon-tabletingyong" title="停用"
+                                                          data-id="4028819d5828caf601582963e09a0007"></span>
+
+                                                    <span class="pe-table-edit-btn iconfont icon-edit" title="编辑"
+                                                          data-id="4028819d5828caf601582963e09a0007"></span>
+                                                    <span class="pe-table-dele-btn iconfont icon-delete" title="删除"
+                                                          data-id="4028819d5828caf601582963e09a0007"></span>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="pe-stand-tr" data-id="4028819d5828bc25015828c305670004">
+
+                                            <td class="pe-stand-td">单选题</td>
+
+
+                                            <td class="pe-stand-td">较困难</td>
+
+                                            <td class="pe-stand-td"><a class="pe-stand-alink pe-ellipsis" href="javascript:;"
+                                                                       data-id="4028819d5828bc25015828c305670004">上的说法是否收费的</a>
+                                            </td>
+                                            <td class="pe-stand-td">bank1</td>
+                                            <td class="pe-stand-td">知识点3,知识点4</td>
+
+                                            <td class="pe-stand-td">启用</td>
+
+                                            <td class="pe-stand-td">
+                                                <div class="pe-table-stand-btn">
+
+                                                    <span class="pe-table-stop-btn iconfont icon-tabletingyong" title="停用"
+                                                          data-id="4028819d5828bc25015828c305670004"></span>
+
+                                                    <span class="pe-table-edit-btn iconfont icon-edit" title="编辑"
+                                                          data-id="4028819d5828bc25015828c305670004"></span>
+                                                    <span class="pe-table-dele-btn iconfont icon-delete" title="删除"
+                                                          data-id="4028819d5828bc25015828c305670004"></span>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="pe-stand-tr" data-id="4028819d5823e3d7015823e672570003">
+
+                                            <td class="pe-stand-td">判断题</td>
+
+
+                                            <td class="pe-stand-td">中等</td>
+
+                                            <td class="pe-stand-td"><a class="pe-stand-alink pe-ellipsis" href="javascript:;"
+                                                                       data-id="4028819d5823e3d7015823e672570003">大赞水电费你是否是你发斯蒂芬是否</a>
+                                            </td>
+                                            <td class="pe-stand-td">新的题库</td>
+                                            <td class="pe-stand-td">知识点3,知识点4</td>
+
+                                            <td class="pe-stand-td">启用</td>
+
+                                            <td class="pe-stand-td">
+                                                <div class="pe-table-stand-btn">
+
+                                                    <span class="pe-table-stop-btn iconfont icon-tabletingyong" title="停用"
+                                                          data-id="4028819d5823e3d7015823e672570003"></span>
+
+                                                    <span class="pe-table-edit-btn iconfont icon-edit" title="编辑"
+                                                          data-id="4028819d5823e3d7015823e672570003"></span>
+                                                    <span class="pe-table-dele-btn iconfont icon-delete" title="删除"
+                                                          data-id="4028819d5823e3d7015823e672570003"></span>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="pe-stand-tr" data-id="4028819d57ea05260157ea053a9c0237">
+
+                                            <td class="pe-stand-td">填空题</td>
+
+
+                                            <td class="pe-stand-td">困难</td>
+
+                                            <td class="pe-stand-td"><a class="pe-stand-alink pe-ellipsis" href="javascript:;"
+                                                                       data-id="4028819d57ea05260157ea053a9c0237">我是题干583</a>
+                                            </td>
+                                            <td class="pe-stand-td">JAVA</td>
+                                            <td class="pe-stand-td"></td>
+
+                                            <td class="pe-stand-td">启用</td>
+
+                                            <td class="pe-stand-td">
+                                                <div class="pe-table-stand-btn">
+
+                                                    <span class="pe-table-stop-btn iconfont icon-tabletingyong" title="停用"
+                                                          data-id="4028819d57ea05260157ea053a9c0237"></span>
+
+                                                    <span class="pe-table-edit-btn iconfont icon-edit" title="编辑"
+                                                          data-id="4028819d57ea05260157ea053a9c0237"></span>
+                                                    <span class="pe-table-dele-btn iconfont icon-delete" title="删除"
+                                                          data-id="4028819d57ea05260157ea053a9c0237"></span>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="pe-stand-tr" data-id="4028819d57ea05260157ea053a5f022b">
+
+                                            <td class="pe-stand-td">填空题</td>
+
+
+                                            <td class="pe-stand-td">中等</td>
+
+                                            <td class="pe-stand-td"><a class="pe-stand-alink pe-ellipsis" href="javascript:;"
+                                                                       data-id="4028819d57ea05260157ea053a5f022b">我是题干577</a>
+                                            </td>
+                                            <td class="pe-stand-td">JAVA</td>
+                                            <td class="pe-stand-td"></td>
+
+                                            <td class="pe-stand-td">启用</td>
+
+                                            <td class="pe-stand-td">
+                                                <div class="pe-table-stand-btn">
+
+                                                    <span class="pe-table-stop-btn iconfont icon-tabletingyong" title="停用"
+                                                          data-id="4028819d57ea05260157ea053a5f022b"></span>
+
+                                                    <span class="pe-table-edit-btn iconfont icon-edit" title="编辑"
+                                                          data-id="4028819d57ea05260157ea053a5f022b"></span>
+                                                    <span class="pe-table-dele-btn iconfont icon-delete" title="删除"
+                                                          data-id="4028819d57ea05260157ea053a5f022b"></span>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="pe-stand-tr" data-id="4028819d57ea05260157ea0539ed021f">
+
+                                            <td class="pe-stand-td">填空题</td>
+
+
+                                            <td class="pe-stand-td">较简单</td>
+
+                                            <td class="pe-stand-td"><a class="pe-stand-alink pe-ellipsis" href="javascript:;"
+                                                                       data-id="4028819d57ea05260157ea0539ed021f">我是题干571</a>
+                                            </td>
+                                            <td class="pe-stand-td">JAVA</td>
+                                            <td class="pe-stand-td"></td>
+
+                                            <td class="pe-stand-td">启用</td>
+
+                                            <td class="pe-stand-td">
+                                                <div class="pe-table-stand-btn">
+
+                                                    <span class="pe-table-stop-btn iconfont icon-tabletingyong" title="停用"
+                                                          data-id="4028819d57ea05260157ea0539ed021f"></span>
+
+                                                    <span class="pe-table-edit-btn iconfont icon-edit" title="编辑"
+                                                          data-id="4028819d57ea05260157ea0539ed021f"></span>
+                                                    <span class="pe-table-dele-btn iconfont icon-delete" title="删除"
+                                                          data-id="4028819d57ea05260157ea0539ed021f"></span>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="pe-stand-tr" data-id="4028819d57ea05260157ea053486010f">
+
+                                            <td class="pe-stand-td">单选题</td>
+
+
+                                            <td class="pe-stand-td">简单</td>
+
+                                            <td class="pe-stand-td"><a class="pe-stand-alink pe-ellipsis" href="javascript:;"
+                                                                       data-id="4028819d57ea05260157ea053486010f">我是题干435</a>
+                                            </td>
+                                            <td class="pe-stand-td">JAVA</td>
+                                            <td class="pe-stand-td"></td>
+
+                                            <td class="pe-stand-td">启用</td>
+
+                                            <td class="pe-stand-td">
+                                                <div class="pe-table-stand-btn">
+
+                                                    <span class="pe-table-stop-btn iconfont icon-tabletingyong" title="停用"
+                                                          data-id="4028819d57ea05260157ea053486010f"></span>
+
+                                                    <span class="pe-table-edit-btn iconfont icon-edit" title="编辑"
+                                                          data-id="4028819d57ea05260157ea053486010f"></span>
+                                                    <span class="pe-table-dele-btn iconfont icon-delete" title="删除"
+                                                          data-id="4028819d57ea05260157ea053486010f"></span>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="pe-stand-tr" data-id="4028819d57ea05260157ea0533ad00f3">
+
+                                            <td class="pe-stand-td">填空题</td>
+
+
+                                            <td class="pe-stand-td">较简单</td>
+
+                                            <td class="pe-stand-td"><a class="pe-stand-alink pe-ellipsis" href="javascript:;"
+                                                                       data-id="4028819d57ea05260157ea0533ad00f3">我是题干421</a>
+                                            </td>
+                                            <td class="pe-stand-td">JAVA</td>
+                                            <td class="pe-stand-td"></td>
+
+                                            <td class="pe-stand-td">启用</td>
+
+                                            <td class="pe-stand-td">
+                                                <div class="pe-table-stand-btn">
+
+                                                    <span class="pe-table-stop-btn iconfont icon-tabletingyong" title="停用"
+                                                          data-id="4028819d57ea05260157ea0533ad00f3"></span>
+
+                                                    <span class="pe-table-edit-btn iconfont icon-edit" title="编辑"
+                                                          data-id="4028819d57ea05260157ea0533ad00f3"></span>
+                                                    <span class="pe-table-dele-btn iconfont icon-delete" title="删除"
+                                                          data-id="4028819d57ea05260157ea0533ad00f3"></span>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="pe-stand-tr" data-id="4028819d57ea05260157ea0533a300f1">
+
+                                            <td class="pe-stand-td">多选题</td>
+
+
+                                            <td class="pe-stand-td">简单</td>
+
+                                            <td class="pe-stand-td"><a class="pe-stand-alink pe-ellipsis" href="javascript:;"
+                                                                       data-id="4028819d57ea05260157ea0533a300f1">我是题干420</a>
+                                            </td>
+                                            <td class="pe-stand-td">JAVA</td>
+                                            <td class="pe-stand-td"></td>
+
+                                            <td class="pe-stand-td">启用</td>
+
+                                            <td class="pe-stand-td">
+                                                <div class="pe-table-stand-btn">
+
+                                                    <span class="pe-table-stop-btn iconfont icon-tabletingyong" title="停用"
+                                                          data-id="4028819d57ea05260157ea0533a300f1"></span>
+
+                                                    <span class="pe-table-edit-btn iconfont icon-edit" title="编辑"
+                                                          data-id="4028819d57ea05260157ea0533a300f1"></span>
+                                                    <span class="pe-table-dele-btn iconfont icon-delete" title="删除"
+                                                          data-id="4028819d57ea05260157ea0533a300f1"></span>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="pe-stand-table-pagination"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

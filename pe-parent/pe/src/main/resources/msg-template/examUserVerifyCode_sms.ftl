@@ -1,0 +1,1 @@
+@1@=${EXAM_NAME!},@2@=${EXAM_CODE!}

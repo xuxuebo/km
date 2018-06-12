@@ -1,0 +1,1 @@
+尊敬的${USER_NAME!}:您的考试<a href="${EXAM_LINK!}">[${EXAM_NAME!}]</a>未通过，已为您安排补考，考试有效时间：${ARRANGE_TIME!}，请在有效时间内及时参加考试！

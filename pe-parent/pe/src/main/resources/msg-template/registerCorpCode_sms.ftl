@@ -1,0 +1,1 @@
+@1@=${REGISTER_CODE!},@2@=${EXPIRE_TIME!}

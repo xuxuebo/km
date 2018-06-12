@@ -1,0 +1,1 @@
+您的综合考试[${exam_name!}]的${arrange_name}的考试时间被修改，最新考试时间：${arrange_time!}，如有疑问请联系管理员！

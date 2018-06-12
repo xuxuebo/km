@@ -1,0 +1,278 @@
+@charset"utf-8";
+.pe-simple-editor.option{
+    height:162px;
+    border:1px solid #999;
+}
+.pe-simple-editor .container-content-title{
+    height:40px;
+    width:100%;
+    background:#f5f5f5;
+    border-bottom:1px dashed #cbcbcb;
+    position:relative;
+}
+
+.pe-simple-editor .tool-cate-item{
+    display:inline-block;
+    position:absolute;
+    right:40px;
+    top:6px;
+    width:auto;
+    height:26px;
+}
+.pe-simple-editor .tool-cate-item .tool-btn{
+    display:inline-block;
+    height: 26px;
+    width: 32px;
+    line-height: 26px;
+    background:#fff;
+    cursor: pointer;
+    text-align:center;
+    font-size: 18px;
+    color:#333;
+    border:1px solid #ccc;
+    border-left:none;
+}
+.pe-simple-editor .tool-cate-item li:first-child .tool-btn{
+    border-left:1px solid #ccc;
+    /*border-right:none;*/
+}
+.pe-simple-editor .tool-btns-wrap .tool-btn:hover{
+    background:#f0f0f0;
+}
+.pe-simple-editor .tool-btns-wrap .tool-btn:active{
+    background:#cbcbcb;
+}
+.pe-simple-editor .tool-btns-wrap .tool-cate-item  li:first-child .tool-btn{
+    border-left:none;
+}
+
+.pe-simple-editor .self-toolbar-left{
+    z-index: 1000;
+    position: absolute;
+    height: 40px;
+    line-height: 40px;
+    top: 0;
+    left: 15px;
+    font-size: 16px;
+    color: #444;
+}
+.pe-simple-editor .self-toolbar-left.insert-fill-blank{
+    right: 178px;
+    left: auto;
+    cursor: pointer;
+    font-size: 13px;
+    color: #777;
+    height: 26px;
+    margin-top: 6px;
+    line-height: 26px;
+    border: 1px solid #e0e0e0;
+    background: #fff;
+    padding: 0 8px;
+    display:none;
+}
+.pe-simple-editor .self-toolbar-left.insert-fill-blank  .icon-insert-blank{
+    font-size: 30px;
+    width: 30px;
+    height: 24px;
+    line-height: 24px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 4px;
+    color:#777;
+}
+.pe-simple-editor .editor-content-wrap{
+    padding:10px 20px 10px 10px;
+    overflow:auto;
+    overflow-x:hidden;
+    font-size:16px;
+    color:#444;
+}
+.pe-simple-editor .editor-content-wrap p,
+.pe-simple-editor .editor-content-wrap div{
+    font-size:16px;
+    color:#444;
+}
+.pe-simple-editor .tool-cate-item ul li:first-child a{
+    border-left:none;
+}
+.pe-simple-editor .upload-img{
+    display:inline-block;
+    vertical-align:middle;
+    font-size:18px;
+    color:#5e9be1;
+    width:20px;
+    height:20px;
+    cursor:pointer;
+}
+/*富文本编辑器边框图片hover的提示框样式*/
+.editor-real-img-wrap{
+    position: absolute;
+    top: 200px;
+    left: 200px;
+    display: none;
+    width: 180px;
+    height: 100px;
+    background:#fff;
+    z-index:1989;
+    text-align:center;
+    border: 3px solid #333;
+    box-shadow: inset 0 0 8px rgba(0,0,0,.8);
+}
+.editor-real-img-wrap .real-img{
+    display:none;
+}
+.editor-real-img-wrap .img-loading{
+    font-size:20px;
+    display:inline-block;
+    margin-top:40px;
+    margin-left:40px;
+}
+.big-view-states.pe-simple-editor{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 19891115;
+    height: 100%;
+    width: 100%;
+    background: #fff;
+}
+/**
+*上传弹框的样式开始
+*/
+.pe-box-wrap.pe-simple-editor-wrap{
+    width: 660px;
+    top: 50%;
+    margin-top: -180px;
+    left: 50%;
+    margin-left: -330px;
+}
+.pe-editor-box-contain.pe-box-contain{
+    width:602px;
+}
+.pe-simple-editor-wrap .upload-disabled{
+    background:#cbcbcb!important;
+}
+.pe-simple-editor-wrap .pe-box-title{
+    padding: 6px 12px;
+    font-weight: normal;
+    border-bottom: 1px solid #f5f5f5;
+}
+.pe-simple-editor-wrap .pe-box-close:hover{
+    color:#199ae2;
+}
+.pe-simple-editor-wrap .pe-uploader-file-show-name{
+    width:258px;
+}
+.pe-simple-editor-wrap .pe-show-uploader-name-area{
+    margin-left:55px;
+}
+.pe-editor-all-wrap .pe-import-template-btn {
+    display:inline-block;
+    padding: 0 12px;
+    background: #fff;
+    color: #5bc83d;
+    border: 1px solid #5bc83d;
+    margin-left: 12px;
+    line-height: 30px;
+}
+
+.pe-editor-all-wrap .pe-import-template-btn:hover {
+    background: #62d641;
+    color: #fff;
+}
+
+.pe-editor-all-wrap .pe-import-template-btn:active {
+    background: #4dba2f;
+    color: #fff;
+}
+
+.pe-editor-all-wrap .pe-import-template-btn .iconfont {
+    margin-right: 4px;
+    font-size: 18px;
+    float: left;
+    margin-top: 1px;
+}
+
+.pe-editor-all-wrap .pe-uploader-top-area {
+    width: 600px;
+    height: 215px;
+    border: 1px solid #e0e0e0;
+    background: #f4f4f4;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.pe-editor-all-wrap .pe-uploader-top-opt-area {
+    height: 127px;
+    line-height: 127px;
+}
+
+.pe-editor-all-wrap .pe-uploader-top-area .pe-uploader-progress-wrap {
+    height: 27px;
+    position: relative;
+    display: none;
+}
+
+.pe-editor-all-wrap .pe-import-main-wrap .pe-table-form-text {
+    width: 349px;
+    height: 22px;
+}
+
+.pe-editor-all-wrap .pe-uploader-progress-num {
+    position: absolute;
+    height: 18px;
+    top: 3px;
+    left: 0;
+    width: 40px;
+    margin-left: -40px;
+    line-height: 18px;
+    color: #5bc83d;
+}
+.pe-editor-all-wrap .pe-simple-editor-wrap .pe-uploader-complete-info{
+    margin-top:10px;
+}
+.pe-editor-all-wrap  .placeholder-show-name{
+    color:#cbcbcb;
+}
+.pe-simple-editor-wrap .pe-uploader-state-wrap {
+    display:block!important;
+    width: 600px;
+    height: 28px;
+    margin: 0 auto;
+}
+.pe-simple-editor-wrap .pe-question-import-wrap{
+    min-height:232px;
+}
+.pe-simple-editor-wrap .pe-btn{
+    margin-right:28px;
+}
+.pe-simple-editor-wrap .pe-uploader-opt-btns .pe-begin-uploader-btn{
+    /*margin-left:157px;*/
+    margin-left:230px;
+}
+.pe-simple-editor-wrap .pe-uploader-state-image {
+    display:none!important;
+    width: 318px;
+    height: 200px;
+    margin: 28px auto 20px;
+}
+
+.pe-editor-all-wrap .pe-uploader-state-image.state-success {
+    background: url('../../images/question_import_success.png') center center no-repeat;
+    background-size: 100%;
+}
+
+.pe-editor-all-wrap .pe-uploader-state-image.state-fail {
+    background: url('../../images/question_import_fail.png') center center no-repeat;
+    background-size: 100%;
+}
+
+.pe-editor-all-wrap .pe-uploader-progress-percentage {
+    height: 2px;
+    width: 0;
+    max-width: 100%;
+    background: #5bc83d;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}

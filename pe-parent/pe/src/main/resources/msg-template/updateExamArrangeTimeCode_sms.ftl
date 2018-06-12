@@ -1,0 +1,1 @@
+@1@=${EXAM_NAME!},@2@=${ARRANGE_NAME!},@3@=${ARRANGE_TIME!}

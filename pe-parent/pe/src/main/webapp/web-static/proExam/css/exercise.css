@@ -1,0 +1,29 @@
+@charset "utf-8";
+.pe-exercise-nav-top{
+    position: relative;
+    width: 1200px;
+    height: 84px;
+    margin: 20px 0;
+    background-color: #FFF;
+}
+.pe-exercise-complete-left{
+    width: 432px;
+    height: 18px;
+    position:absolute;
+    left: 16px;
+    top: 26px;
+}
+.pe-wrong-nav{
+    background-color: #fff9f8;
+    border-bottom: 1px solid #f00;
+}
+.pe-wrong-pass{
+    font-family: HiraginoSansGB-W3;
+    font-size: 14px;
+    color: #FC4E51;
+}
+.pe-wrong-switch{
+    float: right;
+    margin-right: 20px;
+    margin-left:10px;
+}

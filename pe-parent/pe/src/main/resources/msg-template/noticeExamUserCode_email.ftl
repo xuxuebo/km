@@ -1,0 +1,1 @@
+尊敬的${USER_NAME!}:您有新的考试需要参加，考试名称：<a href="${EXAM_LINK!}">[${ARRANGE_NAME!}]</a>、考试有效时间：${ARRANGE_TIME!}，请在有效时间内及时参加考试！

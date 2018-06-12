@@ -1,0 +1,142 @@
+<!doctype html>
+
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+
+    <title>jQuery-webcam-master</title>
+
+    <link href="cs.css" rel="stylesheet" type="text/css">
+
+    <script src="../js/plugins/jquery.js"></script>
+    <style type="text/css">
+        #webcam.pos{
+            width: 100px;
+            height: 100px;
+            overflow: hidden;
+        }
+        #webcam.pos object{
+            width: 100px;
+            height: 100px;
+        }
+        .fixed{
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: auto;
+            height: auto;
+            background-color: #b3b3b3;
+        }
+
+        .fixed object{
+            margin: 0 auto;
+            display: block;
+            top: 50%;
+            position: absolute;
+            margin-top: -120px;
+            left: 50%;
+            margin-left: -120px;
+        }
+    </style>
+</head>
+<body>
+<div  id="webcam" class="fixed"></div>
+<button id="startbutton" type="button">Take photo</button>
+<img id="captureImg" src="" alt="抓拍的图片">
+
+<canvas id="canvas" width="240" height="160" style="display:none;"></canvas>
+<script src="../js/plugins/html5.js"></script>
+<script src="jquery.webcam.js"></script>
+<script type="text/javascript">
+
+    $(function(){
+//    alert('进来了');
+        var pos = 0, ctx = null, saveCB, image = [];
+        var canvas = document.getElementById("canvas");
+        if (canvas.toDataURL) {
+//      alert('asss');
+            ctx = canvas.getContext("2d");
+            image = ctx.getImageData(0, 0, 220, 160);
+            saveCB = function (data) {
+                var col = data.split(";");
+                var img = image;
+
+                for (var i = 0; i < 240; i++) {
+                    var tmp = parseInt(col[i]);
+                    img.data[pos + 0] = (tmp >> 16) & 0xff;
+                    img.data[pos + 1] = (tmp >> 8) & 0xff;
+                    img.data[pos + 2] = tmp & 0xff;
+                    img.data[pos + 3] = 0xff;
+                    pos += 4;
+                }
+
+                if (pos >= 4 * 240 * 160) {
+                    ctx.putImageData(img, 0, 0);
+                    $.post("", { type: "data", image: canvas.toDataURL("image/jpg") }, function (msg) {
+                        var msgjson = JSON.parse(msg);
+                    });
+                    $('#captureImg').attr('src',canvas.toDataURL("image/jpg"));
+                    pos = 0;
+                }
+            };
+
+        } else {
+            saveCB = function (data) {
+                image.push(data);
+                pos += 4 * 240;
+                if (pos >= 4 * 240 * 160) {
+                    $.post("", { type: "pixel", image: image.join('|') }, function (msg) {
+                        var msgjson = JSON.parse(msg);
+                        $('#captureImg').attr('src',canvas.toDataURL("image/jpg"));
+                    });
+                    pos = 0;
+                }
+            };
+        }
+
+        jQuery("#webcam").webcam({
+            width:240,
+            height:160,
+            mode: "callback",
+            swffile: "jscam_canvas_only.swf", // canvas only doesn't implement a jpeg encoder, so the file is much smaller
+            onTick: function(remain) {
+                if (0 == remain) {
+                    jQuery("#status").text("Cheese!");
+                } else {
+                    jQuery("#status").text(remain + " seconds remaining...");
+                }
+            },
+            onSave: function(data) {
+                saveCB(data);
+            },
+            onCapture: function () {
+                webcam.save();
+            },
+            debug: function (type, string) {
+                if(type==='notify' && string === 'Camera started'){
+                    jQuery("#webcam").removeClass('fixed').addClass('pos');
+                }
+            },
+
+            onLoad: function () {
+                var cams = webcam.getCameraList();
+                for(var i in cams) {
+                    jQuery("#cams").append("<li>" + cams[i] + "</li>");
+                }
+            }
+        });
+        $('#startbutton').click(function(){
+            webcam.capture();
+        })
+    });
+
+</script>
+
+</body>
+
+</html>
+
