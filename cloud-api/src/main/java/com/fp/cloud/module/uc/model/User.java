@@ -2,7 +2,6 @@ package com.fp.cloud.module.uc.model;
 
 import com.fp.cloud.base.model.BaseModel;
 import com.fp.cloud.base.model.Category;
-import com.fp.cloud.module.ems.model.ExamResult;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -216,10 +215,6 @@ public class User extends BaseModel {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @Fetch(FetchMode.SUBSELECT)
     private List<UserRole> userRoles;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    @Fetch(FetchMode.SUBSELECT)
-    private List<ExamResult> examResults;
 
     /**********************************************
      *              非持久化字段                    *
@@ -680,14 +675,6 @@ public class User extends BaseModel {
 
     public void setSourcePwd(String sourcePwd) {
         this.sourcePwd = sourcePwd;
-    }
-
-    public List<ExamResult> getExamResults() {
-        return examResults;
-    }
-
-    public void setExamResults(List<ExamResult> examResults) {
-        this.examResults = examResults;
     }
 
     public String getTicket() {
