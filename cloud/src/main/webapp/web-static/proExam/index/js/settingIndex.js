@@ -94,75 +94,37 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
     changeHashCb();
 
 
-    //我的云盘
+
     function initYunPage(container, routeInfo,title) {
-        var _tpl = $(routeInfo.templateId).html();
+        console.log(container);
+        console.log(routeInfo);
+        var _tpl = $(routeInfo.templateId).html();//tplUser  按钮
         container.html(_.template(_tpl)({title: title}));
         //table渲染
+        var _table = $("#tblUserTable").html();//表头
+        var $userTable = $('#userTable');//div
+
         var data = [
             {
                 id: '1232131314',
-                userName: 'word',
-                loginName: '2018/05/11会议材料',
-                employeeCode: '43.45M',
-                mobile: '2018/05/13 11:20',
+                userName: '姓名',
+                loginName: '用户名',
+                employeeCode: '工号',
+                mobile: '13075569283',
                 corpInfo:'中心',
                 organize:'部门',
                 status:'正常',
                 opt:'操作一下'
             }
-            /*{
-                id: '1231',
-                fileType: 'file',
-                fileName: '2018/05/11会议材料',
-                size: '-',
-                time: '2018/05/13 11:20'
-            },
-            {
-                id: '1232131312',
-                fileType: 'audio',
-                fileName: '2018/05/11会议材料',
-                size: '43.45M',
-                time: '2018/05/13 11:20'
-            },
-            {
-                id: '1232131331',
-                fileType: 'video',
-                fileName: '2018/05/11会议材料',
-                size: '43.45M',
-                time: '2018/05/13 11:20'
-            },
-            {
-                id: '1232131314',
-                fileType: 'word',
-                fileName: '2018/05/11会议材料',
-                size: '43.45M',
-                time: '2018/05/13 11:20'
-            }*/
         ];
-        var _table = $("#tblUserTable").html();
-        var $yunTable = $('#userTable');
 
-        var table, initSort = {
+        var table = {
 
         };
         renderTable();
         function renderTable() {
-            $yunTable.html(_.template(_table)({list: data, sort: initSort}));
-            table = initTable($yunTable);
-            $yunTable.find('.sort').click(function () {
-                data.splice(0, 0, {
-                    id: '1231',
-                    fileType: 'video',
-                    fileName: '排序数据',
-                    size: '23M',
-                    time: '2018/05/13 11:20'
-                });
-                //降序 TODO
-                $yunTable.html(_.template(_table)({
-                    list: data, sort: $.extend({}, initSort, {name: 'asc'})
-                }));
-            });
+            $userTable.html(_.template(_table)({list: data}));
+            table = initTable($userTable);
         }
 
         //table上按钮绑定事件 //TODO
@@ -229,16 +191,6 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
                 $allCheckbox.prop('checked', 'checked');
             } else {
                 $allCheckbox.removeProp('checked');
-            }
-        });
-
-        //排序
-        $thead.find('.sort').on("click", function () {
-            var isDes = $(this).hasClass("desc");
-            if (isDes) {
-                $(this).removeClass('desc').addClass("asc");
-            } else {
-                $(this).addClass('desc').removeClass("asc");
             }
         });
 

@@ -145,19 +145,28 @@
                 </label>
             </td>
             <td class="y-table__td userName">
-                <div class="y-table__opt__bar">
-                    <button type="button" class="yfont-icon opt-item js-opt-download">&#xe64f;</button>
-                    <button type="button" class="yfont-icon opt-item js-opt-more">&#xe652;</button>
-                </div>
-                <div class="y-table__filed_name">
                     <%=item.userName%>
-                </div>
             </td>
-            <td class="y-table__td size">
-                <%=item.size%>
+            <td class="y-table__td loginName">
+                <%=item.loginName%>
             </td>
-            <td class="y-table__td upload-time">
-                <%=item.time%>
+            <td class="y-table__td employeeCode">
+                <%=item.employeeCode%>
+            </td>
+            <td class="y-table__td mobile">
+                <%=item.mobile%>
+            </td>
+            <td class="y-table__td corpInfo">
+                <%=item.corpInfo%>
+            </td>
+            <td class="y-table__td organize">
+                <%=item.organize%>
+            </td>
+            <td class="y-table__td status">
+                <%=item.status%>
+            </td>
+            <td class="y-table__td opt">
+                <%=item.opt%>
             </td>
         </tr>
         <%})%>
@@ -173,13 +182,6 @@
             <button class="y-btn y-btn__blue js-activation" type="button">激活</button>
             <button class="y-btn y-btn__green js-resetPwd" type="button">重置密码</button>
             <button class="y-btn y-btn__orange js-export" type="button">导出</button>
-            <#--<div type="button" class="pe-btn export-btn">导出
-                <span class="iconfont icon-btn-arrow-down"></span>
-                <div class="btn-drop-down">
-                    <a href="javascript:;" class="drop-item export-all-user">导出全部</a>
-                    <a href="javascript:;" class="drop-item export-choose-user">导出选中</a>
-                </div>
-            </div>-->
     </div>
     <div class="y-content__table" id="userTable">
     </div>
