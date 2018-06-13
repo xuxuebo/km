@@ -13,14 +13,7 @@ import java.util.List;
  * @author chenHuaMei@HF 2016年12月1日15:40:12
  */
 @Entity
-@Table(name = "t_ems_exam_result", indexes = {
-        @Index(name = "i_ems_exam_result_examId", columnList = "exam_id"),
-        @Index(name = "i_ems_exam_result_userId", columnList = "user_id"),
-        @Index(name = "i_ems_exam_result_paperId", columnList = "paper_id"),
-        @Index(name = "i_ems_exam_result_lastResultId", columnList = "last_result_id"),
-        @Index(name = "i_ems_exam_result_corpCode", columnList = "corpCode")}, uniqueConstraints = {
-        @UniqueConstraint(name = "u_ems_exam_result_examUser", columnNames = {"exam_id", "user_id"})
-})
+@Table(name = "t_ems_exam_result")
 public class ExamResult extends BaseModel {
     public static final String _exam = "exam.id";
     public static final String _examAlias = "exam";

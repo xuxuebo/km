@@ -49,10 +49,10 @@
     </div>
     <nav class="y-nav">
         <ul class="y-nav__link">
-            <li><a href="${ctx!}/cloud/front/index" class="y-nav__link__item active"><span class="txt">云库</span></a></li>
+            <li><a href="${ctx!}/cloud/front/index" class="y-nav__link__item "><span class="txt">云库</span></a></li>
             <li><a href="${ctx!}/cloud/front/dataView" class="y-nav__link__item"><span class="txt">数据</span></a></li>
         <#if admin?? && admin>
-            <li><a href="${ctx!}/cloud/front/adminSetting" class="y-nav__link__item"><span class="txt">设置</span></a></li>
+            <li><a href="${ctx!}/cloud/front/adminSetting" class="y-nav__link__item active"><span class="txt">设置</span></a></li>
         </#if>
 
         </ul>
@@ -64,28 +64,28 @@
             <span class="yfont-icon">&#xe650;</span><span class="txt">菜单</span>
         </div>
         <ul class="y-aside__menu">
-            <li class="y-menu__item my-yun">
-                <a href="#yun" class="y-menu__item__title y-aside__menu__item__title">
+            <li class="y-menu__item y-user">
+                <a href="#user" class="y-menu__item__title y-aside__menu__item__title">
                     <span class="yfont-icon">&#xe643;</span><span class="txt">用户管理</span>
                 </a>
             </li>
-            <li class="y-menu__item my-yun">
-                <a href="#yun" class="y-menu__item__title y-aside__menu__item__title">
+            <li class="y-menu__item y-organize">
+                <a href="#organize" class="y-menu__item__title y-aside__menu__item__title">
                     <span class="yfont-icon">&#xe643;</span><span class="txt">部门管理</span>
                 </a>
             </li>
-            <li class="y-menu__item my-yun">
-                <a href="#yun" class="y-menu__item__title y-aside__menu__item__title">
+            <li class="y-menu__item y-role">
+                <a href="#role" class="y-menu__item__title y-aside__menu__item__title">
                     <span class="yfont-icon">&#xe643;</span><span class="txt">角色管理</span>
                 </a>
             </li>
-            <li class="y-menu__item my-yun">
-                <a href="#yun" class="y-menu__item__title y-aside__menu__item__title">
+            <li class="y-menu__item y-position">
+                <a href="#position" class="y-menu__item__title y-aside__menu__item__title">
                     <span class="yfont-icon">&#xe643;</span><span class="txt">岗位管理</span>
                 </a>
             </li>
-            <li class="y-menu__item my-yun">
-                <a href="#yun" class="y-menu__item__title y-aside__menu__item__title">
+            <li class="y-menu__item y-label">
+                <a href="#label" class="y-menu__item__title y-aside__menu__item__title">
                     <span class="yfont-icon">&#xe643;</span><span class="txt">标签管理</span>
                 </a>
             </li>
@@ -99,7 +99,7 @@
         </footer>
     </section>
 </section>
-<script type="text/template" id="tplTable">
+<script type="text/template" id="tblUserTable">
     <table class="y-table">
         <thead class="y-table__header">
         <tr>
@@ -109,14 +109,29 @@
                     <span class="y-checkbox__span"></span>
                 </label>
             </th>
-            <th class="y-table__td name">
-                <span class="sort <%if(sort.name === 'desc'){%>desc<%}else{%>asc<%}%>">名称</span>
+            <th class="y-table__td userName">
+                <span class="sorts">姓名</span>
             </th>
-            <th class="y-table__td size">
-                <span class="sort  <%if(sort.size === 'desc'){%>desc<%}else{%>asc<%}%>">大小</span>
+            <th class="y-table__td loginName">
+                <span class="sorts">用户名</span>
             </th>
-            <th class="y-table__td upload-time">
-                <span class="sort  <%if(sort.uploadTime === 'desc'){%>desc<%}else{%>asc<%}%>">上传时间</span>
+            <th class="y-table__td employeeCode">
+                <span class="sorts">工号</span>
+            </th>
+            <th class="y-table__td mobile">
+                <span class="sorts">手机号码</span>
+            </th>
+            <th class="y-table__td corpInfo">
+                <span class="sorts">分公司/中心</span>
+            </th>
+            <th class="y-table__td organize">
+                <span class="sorts">部门</span>
+            </th>
+            <th class="y-table__td status">
+                <span class="sorts">状态</span>
+            </th>
+            <th class="y-table__td opt">
+                <span class="sorts">操作</span>
             </th>
         </tr>
         </thead>
@@ -129,13 +144,13 @@
                     <span class="y-checkbox__span"></span>
                 </label>
             </td>
-            <td class="y-table__td name">
+            <td class="y-table__td userName">
                 <div class="y-table__opt__bar">
                     <button type="button" class="yfont-icon opt-item js-opt-download">&#xe64f;</button>
                     <button type="button" class="yfont-icon opt-item js-opt-more">&#xe652;</button>
                 </div>
-                <div class="y-table__filed_name type-<%=item.fileType%>">
-                    <%=item.fileName%>
+                <div class="y-table__filed_name">
+                    <%=item.userName%>
                 </div>
             </td>
             <td class="y-table__td size">
@@ -149,36 +164,53 @@
         </tbody>
     </table>
 </script>
-<script type="text/template" id="tplYun">
+<script type="text/template" id="tplUser">
     <h4 class="y-content__title"><%=title%></h4>
     <div class="y-content__opt__bar">
-        <button class="y-btn y-btn__blue js-copy" type="button">复制到我的云库</button>
-        <button class="y-btn y-btn__green js-download" type="button">下载</button>
-        <button class="y-btn y-btn__orange js-del" type="button">删除</button>
+            <button class="y-btn y-btn__blue js-addUser" type="button">新增</button>
+            <button class="y-btn y-btn__green js-import" type="button">导入</button>
+            <button class="y-btn y-btn__orange js-frozen" type="button">冻结</button>
+            <button class="y-btn y-btn__blue js-activation" type="button">激活</button>
+            <button class="y-btn y-btn__green js-resetPwd" type="button">重置密码</button>
+            <button class="y-btn y-btn__orange js-export" type="button">导出</button>
+            <#--<div type="button" class="pe-btn export-btn">导出
+                <span class="iconfont icon-btn-arrow-down"></span>
+                <div class="btn-drop-down">
+                    <a href="javascript:;" class="drop-item export-all-user">导出全部</a>
+                    <a href="javascript:;" class="drop-item export-choose-user">导出选中</a>
+                </div>
+            </div>-->
     </div>
-    <div class="y-content__table" id="yunTable">
+    <div class="y-content__table" id="userTable">
     </div>
 </script>
-<script type="text/template" id="tplPublic">
+<script type="text/template" id="tplOrganize">
+    <h4 class="y-content__title"><%=title%></h4>
+
+    <div class="y-content__table" id="organizeTable"></div>
+</script>
+<script type="text/template" id="tplRole">
     <h4 class="y-content__title"><%=title%></h4>
     <div class="y-content__opt__bar">
-        <button class="y-btn y-btn__blue" type="button">复制到我的云库</button>
-        <button class="y-btn y-btn__green" type="button">下载</button>
-        <button class="y-btn y-btn__orange" type="button">删除</button>
+        <button class="y-btn y-btn__blue js-addRole" type="button">新增角色</button>
     </div>
-    <div class="y-content__table" id="publicTable">
-    </div>
+    <div class="y-content__table" id="roleTable"></div>
 </script>
-<script type="text/template" id="tplRecycle">
+
+<script type="text/template" id="tplPosition">
+    <h4 class="y-content__title"><%=title%></h4>
+    <div class="y-content__table" id="positionTable"></div>
+</script>
+
+
+<script type="text/template" id="tplLabel">
     <h4 class="y-content__title"><%=title%></h4>
     <div class="y-content__opt__bar">
-        <button class="y-btn y-btn__blue" type="button">复制到我的云库</button>
-        <button class="y-btn y-btn__green" type="button">下载</button>
-        <button class="y-btn y-btn__orange" type="button">删除</button>
+        <button class="y-btn y-btn__blue js-addLabel" type="button">新增标签</button>
     </div>
-    <div class="y-content__table" id="recycleTable">
-    </div>
+    <div class="y-content__table" id="labelTable"></div>
 </script>
-<script src="${resourcePath!}/web-static/proExam/index/js/index.js"></script>
+
+<script src="${resourcePath!}/web-static/proExam/index/js/settingIndex.js"></script>
 </body>
 </html>

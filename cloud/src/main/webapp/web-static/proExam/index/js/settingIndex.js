@@ -5,38 +5,53 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
     //路由
     var route = {
         routes: {
-            'yun': {//'yun'
-                "templateId": '#tplYun',
-                nav: 'my-yun',
-                cb: "YunCb"
+            'user':{
+              "templateId":'#tplUser',
+                nav:'y-user',
+                cb:"userCb"
             },
-            //TODO
-            'public/.+': {//'index'
-                "templateId": '#tplPublic',
-                nav: 'public-yun',
-                cb: "publicCb"
+            'organize':{
+                "templateId":'#tplOrganize',
+                nav:'y-organize',
+                cb:"organizeCb"
             },
-            'recycle': {//'index'
-                "templateId": '#tplRecycle',
-                nav: 'recycle-yun',
-                cb: "recycleCb"
+            'role':{
+                "templateId":'#tplRole',
+                nav:'y-role',
+                cb:"roleCb"
+            },
+            'position':{
+                "templateId":'#tplPosition',
+                nav:'y-position',
+                cb:"positionCb"
+            },
+            'label':{
+                "templateId":'#tplLabel',
+                nav:'y-label',
+                cb:"labelCb"
             }
         },
-        YunCb: function (container, routeInfo, cb) {
-            initYunPage(container, routeInfo);
+        userCb: function (container, routeInfo, cb) {
+            initYunPage(container, routeInfo,'用户管理');
         },
-        publicCb: function (container, routeInfo, cb) {
-            initPublicPage(container, routeInfo);
+        organizeCb: function (container, routeInfo, cb) {
+            initYunPage(container, routeInfo,'部门管理');
         },
-        recycleCb: function (container, routeInfo, cb) {
-            initRecyclePage(container, routeInfo);
+        roleCb: function (container, routeInfo, cb) {
+            initYunPage(container, routeInfo,'角色管理');
+        },
+        positionCb: function (container, routeInfo, cb) {
+            initYunPage(container, routeInfo,'岗位管理');
+        },
+        labelCb: function (container, routeInfo, cb) {
+            initYunPage(container, routeInfo,'标签管理');
         }
     };
 
     function changeHashCb(cb) {
         var _hash = location.hash.substring(1);
         if (!_hash) {
-            location.hash = 'yun';
+            location.hash = 'user';
         }
         var hashArr = _hash.split("/");
         $yAside.find("li").removeClass('active');
@@ -80,12 +95,23 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
 
 
     //我的云盘
-    function initYunPage(container, routeInfo) {
+    function initYunPage(container, routeInfo,title) {
         var _tpl = $(routeInfo.templateId).html();
-        container.html(_.template(_tpl)({title: '我的云库'}));
+        container.html(_.template(_tpl)({title: title}));
         //table渲染
         var data = [
             {
+                id: '1232131314',
+                userName: 'word',
+                loginName: '2018/05/11会议材料',
+                employeeCode: '43.45M',
+                mobile: '2018/05/13 11:20',
+                corpInfo:'中心',
+                organize:'部门',
+                status:'正常',
+                opt:'操作一下'
+            }
+            /*{
                 id: '1231',
                 fileType: 'file',
                 fileName: '2018/05/11会议材料',
@@ -112,15 +138,13 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
                 fileName: '2018/05/11会议材料',
                 size: '43.45M',
                 time: '2018/05/13 11:20'
-            }
+            }*/
         ];
-        var _table = $("#tplTable").html();
-        var $yunTable = $('#yunTable');
+        var _table = $("#tblUserTable").html();
+        var $yunTable = $('#userTable');
 
         var table, initSort = {
-            name: "desc",
-            size: "desc",
-            uploadTime: "desc"
+
         };
         renderTable();
         function renderTable() {
@@ -141,37 +165,48 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
             });
         }
 
-        //绑定事件
-        //复制到我的云库
-        $('.js-copy').on('click', function () {
+        //table上按钮绑定事件 //TODO
+        //新增
+        $('.js-addUser').on('click', function () {
+            layer.msg("新增");
+        });
+        //导入
+        $('.js-import').on('click', function () {
+            layer.msg("导入");
+        });
+        //冻结
+        $('.js-frozen').on('click', function () {
             var selectList = table.getSelect();
             if (selectList.length === 0) {
                 layer.msg("请先选择操作项");
                 return;
             }
-            //TODO
         });
-        //下载
-        $('.js-download').on('click', function () {
-
+        //激活
+        $('.js-activation').on('click', function () {
+            var selectList = table.getSelect();
+            if (selectList.length === 0) {
+                layer.msg("请先选择操作项");
+                return;
+            }
         });
-        //删除
-        $('.js-del').on('click', function () {
-
+        //重置密码
+        $('.js-resetPwd').on('click', function () {
+            var selectList = table.getSelect();
+            if (selectList.length === 0) {
+                layer.msg("请先选择操作项");
+                return;
+            }
+        });
+        //导出
+        $('.js-export').on('click', function () {
+            layer.msg("导出");
         });
 
 
     }
 
-    //公共库
-    function initPublicPage() {
 
-    }
-
-    //回收站
-    function initRecyclePage() {
-
-    }
 
     //初始化table事件
     function initTable($container) {

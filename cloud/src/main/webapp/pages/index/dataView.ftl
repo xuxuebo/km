@@ -49,8 +49,8 @@
     </div>
     <nav class="y-nav">
         <ul class="y-nav__link">
-            <li><a href="${ctx!}/cloud/front/index" class="y-nav__link__item active"><span class="txt">云库</span></a></li>
-            <li><a href="${ctx!}/cloud/front/dataView" class="y-nav__link__item"><span class="txt">数据</span></a></li>
+            <li><a href="${ctx!}/cloud/front/index" class="y-nav__link__item "><span class="txt">云库</span></a></li>
+            <li><a href="${ctx!}/cloud/front/dataView" class="y-nav__link__item active"><span class="txt">数据</span></a></li>
         <#if admin?? && admin>
             <li><a href="${ctx!}/cloud/front/adminSetting" class="y-nav__link__item"><span class="txt">设置</span></a></li>
         </#if>
@@ -70,57 +70,8 @@
         </footer>
     </section>
 </section>
-<script type="text/template" id="tplTable">
-    <table class="y-table">
-        <thead class="y-table__header">
-        <tr>
-            <th class="y-table__td checkbox">
-                <label class="y-checkbox">
-                    <input type="checkbox">
-                    <span class="y-checkbox__span"></span>
-                </label>
-            </th>
-            <th class="y-table__td name">
-                <span class="sort <%if(sort.name === 'desc'){%>desc<%}else{%>asc<%}%>">名称</span>
-            </th>
-            <th class="y-table__td size">
-                <span class="sort  <%if(sort.size === 'desc'){%>desc<%}else{%>asc<%}%>">大小</span>
-            </th>
-            <th class="y-table__td upload-time">
-                <span class="sort  <%if(sort.uploadTime === 'desc'){%>desc<%}else{%>asc<%}%>">上传时间</span>
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <%_.each(list,function(item,i){%>
-        <tr class="y-table__tr" data-id="<%=item.id%>">
-            <td class="y-table__td checkbox">
-                <label class="y-checkbox">
-                    <input type="checkbox">
-                    <span class="y-checkbox__span"></span>
-                </label>
-            </td>
-            <td class="y-table__td name">
-                <div class="y-table__opt__bar">
-                    <button type="button" class="yfont-icon opt-item js-opt-download">&#xe64f;</button>
-                    <button type="button" class="yfont-icon opt-item js-opt-more">&#xe652;</button>
-                </div>
-                <div class="y-table__filed_name type-<%=item.fileType%>">
-                    <%=item.fileName%>
-                </div>
-            </td>
-            <td class="y-table__td size">
-                <%=item.size%>
-            </td>
-            <td class="y-table__td upload-time">
-                <%=item.time%>
-            </td>
-        </tr>
-        <%})%>
-        </tbody>
-    </table>
-</script>
-<script type="text/template" id="tplYun">
+
+<script type="text/template" >
     <h4 class="y-content__title"><%=title%></h4>
     <div class="y-content__opt__bar">
         <button class="y-btn y-btn__blue js-copy" type="button">复制到我的云库</button>
@@ -130,26 +81,8 @@
     <div class="y-content__table" id="yunTable">
     </div>
 </script>
-<script type="text/template" id="tplPublic">
-    <h4 class="y-content__title"><%=title%></h4>
-    <div class="y-content__opt__bar">
-        <button class="y-btn y-btn__blue" type="button">复制到我的云库</button>
-        <button class="y-btn y-btn__green" type="button">下载</button>
-        <button class="y-btn y-btn__orange" type="button">删除</button>
-    </div>
-    <div class="y-content__table" id="publicTable">
-    </div>
-</script>
-<script type="text/template" id="tplRecycle">
-    <h4 class="y-content__title"><%=title%></h4>
-    <div class="y-content__opt__bar">
-        <button class="y-btn y-btn__blue" type="button">复制到我的云库</button>
-        <button class="y-btn y-btn__green" type="button">下载</button>
-        <button class="y-btn y-btn__orange" type="button">删除</button>
-    </div>
-    <div class="y-content__table" id="recycleTable">
-    </div>
-</script>
-<script src="${resourcePath!}/web-static/proExam/index/js/index.js"></script>
+
+
+<#--<script src="${resourcePath!}/web-static/proExam/index/js/index.js"></script>-->
 </body>
 </html>
