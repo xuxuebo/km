@@ -75,6 +75,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     }
 
     private boolean isStaticResource(RequestContext requestContext) {
+
         return "web-static".equals(requestContext.getChannel()) || "css".equals(requestContext.getChannel())
                 || "images".equals(requestContext.getChannel()) || "js".equals(requestContext.getChannel())
                 || "file".equals(requestContext.getChannel());

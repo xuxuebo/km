@@ -34,8 +34,22 @@ public class FrontController {
 
     @Resource
     private CorpService corpService;
+
+
+    @RequestMapping("index")
+    public String index(Model model){
+        model.addAttribute("userName", SessionContext.get().getUserName());
+        model.addAttribute("admin", SessionContext.get().isAdmin());
+        return "index/index";
+    }
+
+
+
+
+
+
     /**
-     * 学员端首页
+     * 首页
      */
     @RequestMapping("initPage")
     public String initMyExamDynamic(Model model) {
@@ -43,6 +57,7 @@ public class FrontController {
         model.addAttribute("admin", SessionContext.get().isAdmin());
         return "myExamNav";
     }
+
 
     @RequestMapping("initBindMobile")
     public String initBindMobile(Model model) {
