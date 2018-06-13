@@ -36,6 +36,7 @@ public class FrontController {
     private CorpService corpService;
 
 
+    //首页  我的云库
     @RequestMapping("index")
     public String index(Model model){
         model.addAttribute("userName", SessionContext.get().getUserName());
@@ -43,31 +44,23 @@ public class FrontController {
         return "index/index";
     }
 
-
-
-
-
-
-    /**
-     * 首页
-     */
-    @RequestMapping("initPage")
-    public String initMyExamDynamic(Model model) {
+    //首页  设置
+    @RequestMapping("adminSetting")
+    public String adminSetting(Model model){
         model.addAttribute("userName", SessionContext.get().getUserName());
         model.addAttribute("admin", SessionContext.get().isAdmin());
-        return "myExamNav";
+        return "index/adminSetting";
+    }
+
+    //首页  数据可视化视图
+    @RequestMapping("dataView")
+    public String dataView(Model model){
+        model.addAttribute("userName", SessionContext.get().getUserName());
+        model.addAttribute("admin", SessionContext.get().isAdmin());
+        return "index/dataView";
     }
 
 
-    @RequestMapping("initBindMobile")
-    public String initBindMobile(Model model) {
-        User user = userRedisService.get(ExecutionContext.getUserId(), User._userName, User._roleType, User._mobile, User._loginName);
-        if (StringUtils.isBlank(user.getMobile()) && !PeConstant.ADMIN.equals(user.getLoginName())) {
-            return "uc/login/bindMobile";
-        }
-
-        return initMyExamDynamic(model);
-    }
 
     @RequestMapping("manage/initPage")
     public String initMainPage(Model model) {

@@ -12,7 +12,7 @@
     <script type="text/javascript">
         requirejs.config({
             urlArgs: 'v=',
-            baseUrl: '/pe/web-static/proExam/index/js/',
+            baseUrl: '${resourcePath!}/web-static/proExam/index/js/',
             paths: {
                 jquery: 'jquery.min',
                 underscore: 'underscore-min',
@@ -24,7 +24,7 @@
 <body class="y-body">
 <header class="y-head">
     <div class="y-logo__wrap">
-        <a href="${ctx!}/pe/front/index" class="y-logo"></a>
+        <a href="${ctx!}/cloud/front/index" class="y-logo"></a>
     </div>
     <div class="y-head__right">
         <form class="y-head__searcher" name="searchForm" action="javascript:void(0);">
@@ -38,22 +38,23 @@
         <div class="y-head__help">
             <span class="yfont-icon">&#xe64d;</span>
         </div>
-        <div class="y-head__user" title="${userName}">
+        <div class="y-head__user" title="${userName!}">
             <div class="y-head__avatar">
                 <img src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
             </div>
             <div class="y-head__username">
-                ${userName}
+                ${userName!}
             </div>
         </div>
     </div>
     <nav class="y-nav">
         <ul class="y-nav__link">
-            <li><a href="${ctx!}/pe/front/index" class="y-nav__link__item active"><span class="txt">云库</span></a></li>
-            <li><a href="${ctx!}/pe/front/dataView" class="y-nav__link__item"><span class="txt">数据</span></a></li>
+            <li><a href="${ctx!}/cloud/front/index" class="y-nav__link__item active"><span class="txt">云库</span></a></li>
+            <li><a href="${ctx!}/cloud/front/index" class="y-nav__link__item"><span class="txt">数据</span></a></li>
             <#if admin?? && admin>
-                <li><a href="${ctx!}/pe/front/adminSetting" class="y-nav__link__item"><span class="txt">设置</span></a></li>
+                <li><a href="${ctx!}/cloud/front/adminSetting" class="y-nav__link__item"><span class="txt">设置</span></a></li>
             </#if>
+
         </ul>
     </nav>
 </header>

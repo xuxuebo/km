@@ -10,7 +10,7 @@ public class JettyMain {
     public static void main(String[] args) throws Exception {
         Integer port = 8888;
         String war = "src/main/webapp";
-        String contextPath = "/pe";
+        String contextPath = "/cloud";
 
         if (args.length > 0) {
             String portText = args[0];

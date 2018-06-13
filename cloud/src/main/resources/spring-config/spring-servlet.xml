@@ -72,7 +72,7 @@
         </property>
     </bean>
 
-    <PeFreeMarkerViewResolverlver -->
+    <!--<PeFreeMarkerViewResolverlver -->
     <bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
         <property name="suffix" value=".ftl"/>
         <property name="contentType" value="text/html;charset=UTF-8"/>
