@@ -35,10 +35,12 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
 
     function changeHashCb(cb) {
         var _hash = location.hash.substring(1);
+        console.log("_hash=="+_hash);
         if (!_hash) {
             location.hash = 'yun';
         }
         var hashArr = _hash.split("/");
+        console.log("hashArr=="+hashArr);
         $yAside.find("li").removeClass('active');
         var routeInfo;
         if (hashArr.length > 1) {
@@ -57,10 +59,11 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
             console.warn('没有改路由信息');
             return;
         }
-
+        console.log("routeInfo=="+routeInfo.nav);
         /*定位菜单*/
         var $curNav = $yAside.find('.' + routeInfo.nav);
         if ($curNav.size() > 0) {
+            console.log("$curNav=="+$curNav);
             $curNav.addClass('active').siblings().removeClass('active');
         }
         if (routeInfo.cb) {
