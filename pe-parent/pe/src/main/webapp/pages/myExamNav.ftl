@@ -74,7 +74,7 @@
                     <div class="pe-classify-wrap floatL pe-center-left my-exam-center-left">
                         <div class="pe-center-left-con" style="padding-top:0;">
                             <ul>
-                                <li class="pe-user-menu-tree" data-type="initMyDynamic" style="cursor: pointer" data-url="${ctx!}/front/initMyDynamic"><i class="iconfont" style="font-size:17px;">&#xe738;</i>我的考试</li>
+                                <li class="pe-user-menu-tree" data-type="initMyDynamic" style="cursor: pointer" <#--data-url="${ctx!}/front/initMyDynamic"-->><i class="iconfont" style="font-size:17px;">&#xe738;</i>我的考试</li>
                                 <li class="pe-user-menu-tree" data-type="myExamPage" style="cursor: pointer" data-url="${ctx!}/front/initMyExamPage"><i class="iconfont">&#xe734;</i>历史考试</li>
                               <#--  <li class="pe-user-menu-tree" style="cursor: pointer"
                                     data-url="${ctx!}/front/initMyMockExamDynamic"><i class="iconfont">&#xe734;</i>模拟考试
