@@ -44,7 +44,7 @@
 <div class="pe-login-wrapper">
     <div class="pe-login-top-nav-header">
         <div class="pe-logo">
-            <img src="${(resourcePath+loginLogoUrl)!'${resourcePath!}/web-static/proExam/images/long_logo_stand.png'}" class="floatL" width="100%" alt="LOGO">
+            <img src="${(resourcePath+loginLogoUrl)!'${resourcePath!}/web-static/proExam/index/img/ico_user_logo.png'}" class="floatL" width="100%" alt="LOGO">
         </div>
     </div>
 
@@ -86,7 +86,7 @@
             </div>
         </div>
     </div>
-    <div class="pe-login-foot">${(footExplain)!'Copyright &copy${.now?string("yyyy")} 青谷科技专业考试系统 All Rights Reserved 皖ICP备16015686号-2'}</div>
+    <div class="pe-login-foot">${(footExplain)!'Copyright &copy${.now?string("yyyy")} 国家电网江苏省电力公司 ©苏ICP备15007035号-1 '}</div>
 </div>
 <script>
 
@@ -190,7 +190,7 @@
                         return false;
                     }
 
-                    location.href = '${ctx!}/front/initBindMobile';
+                    location.href = '${ctx!}/front/index';
                 }
             });
         });
