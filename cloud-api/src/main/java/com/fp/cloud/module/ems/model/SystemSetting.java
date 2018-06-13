@@ -2,8 +2,6 @@ package com.fp.cloud.module.ems.model;
 
 
 import com.fp.cloud.base.model.BaseModel;
-import com.fp.cloud.module.ems.vo.Us;
-import com.fp.cloud.module.ems.vo.Ses;
 
 import javax.persistence.*;
 
@@ -48,9 +46,7 @@ public class SystemSetting extends BaseModel {
     private boolean openAppMsg;
 
 
-    //考试消息设置
-    @Transient
-    private Ses examSetting;
+
 
     public boolean isOpenAppMsg() {
         return openAppMsg;
@@ -60,9 +56,6 @@ public class SystemSetting extends BaseModel {
         this.openAppMsg = openAppMsg;
     }
 
-    //用户消息设置
-    @Transient
-    private Us userSetting;
 
     public String getMessage() {
         return message;
@@ -80,19 +73,4 @@ public class SystemSetting extends BaseModel {
         this.systemType = systemType;
     }
 
-    public Ses getExamSetting() {
-        return examSetting;
-    }
-
-    public void setExamSetting(Ses examSetting) {
-        this.examSetting = examSetting;
-    }
-
-    public Us getUserSetting() {
-        return userSetting;
-    }
-
-    public void setUserSetting(Us userSetting) {
-        this.userSetting = userSetting;
-    }
 }

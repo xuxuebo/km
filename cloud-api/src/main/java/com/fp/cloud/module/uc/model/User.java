@@ -2,9 +2,7 @@ package com.fp.cloud.module.uc.model;
 
 import com.fp.cloud.base.model.BaseModel;
 import com.fp.cloud.base.model.Category;
-import com.fp.cloud.module.ems.model.*;
-import com.fp.cloud.module.exercise.model.ExerciseUser;
-import com.fp.cloud.module.ems.model.*;
+import com.fp.cloud.module.ems.model.ExamResult;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -221,38 +219,6 @@ public class User extends BaseModel {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @Fetch(FetchMode.SUBSELECT)
-    private List<PaperTemplateAuth> paperTemplateAuths;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @Fetch(FetchMode.SUBSELECT)
-    @JoinColumn(name = "referId")
-    private List<ExamUser> examUsers;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @Fetch(FetchMode.SUBSELECT)
-    @JoinColumn(name = "referId")
-    private List<MockExamUser> mockExamUsers;
-
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @Fetch(FetchMode.SUBSELECT)
-    @JoinColumn(name = "referId")
-    private List<ExerciseUser> exerciseUsers;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    @Fetch(FetchMode.SUBSELECT)
-    private List<JudgeUser> judgeUsers;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    @Fetch(FetchMode.SUBSELECT)
-    private List<ExamAuth> examAuths;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    @Fetch(FetchMode.SUBSELECT)
-    private List<ExamMonitor> examMonitors;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    @Fetch(FetchMode.SUBSELECT)
     private List<ExamResult> examResults;
 
     /**********************************************
@@ -411,38 +377,6 @@ public class User extends BaseModel {
      */
     @Transient
     private String coverPath;
-
-    public List<ExamAuth> getExamAuths() {
-        return examAuths;
-    }
-
-    public void setExamAuths(List<ExamAuth> examAuths) {
-        this.examAuths = examAuths;
-    }
-
-    public List<PaperTemplateAuth> getPaperTemplateAuths() {
-        return paperTemplateAuths;
-    }
-
-    public List<JudgeUser> getJudgeUsers() {
-        return judgeUsers;
-    }
-
-    public void setJudgeUsers(List<JudgeUser> judgeUsers) {
-        this.judgeUsers = judgeUsers;
-    }
-
-    public void setPaperTemplateAuths(List<PaperTemplateAuth> paperTemplateAuths) {
-        this.paperTemplateAuths = paperTemplateAuths;
-    }
-
-    public List<ExamUser> getExamUsers() {
-        return examUsers;
-    }
-
-    public void setExamUsers(List<ExamUser> examUsers) {
-        this.examUsers = examUsers;
-    }
 
     public List<String> getRoleIds() {
         return roleIds;
@@ -716,24 +650,12 @@ public class User extends BaseModel {
         this.createUser = createUser;
     }
 
-    public List<ExamMonitor> getExamMonitors() {
-        return examMonitors;
-    }
-
-    public void setExamMonitors(List<ExamMonitor> examMonitors) {
-        this.examMonitors = examMonitors;
-    }
-
     public boolean isRememberPwd() {
         return rememberPwd;
     }
 
     public void setRememberPwd(boolean rememberPwd) {
         this.rememberPwd = rememberPwd;
-    }
-
-    public List<ExerciseUser> getExerciseUsers() {
-        return exerciseUsers;
     }
 
     public boolean isDisableDelete() {
@@ -790,18 +712,6 @@ public class User extends BaseModel {
 
     public void setCoverPath(String coverPath) {
         this.coverPath = coverPath;
-    }
-
-    public List<MockExamUser> getMockExamUsers() {
-        return mockExamUsers;
-    }
-
-    public void setMockExamUsers(List<MockExamUser> mockExamUsers) {
-        this.mockExamUsers = mockExamUsers;
-    }
-
-    public void setExerciseUsers(List<ExerciseUser> exerciseUsers) {
-        this.exerciseUsers = exerciseUsers;
     }
 
     public String getOrganizeId() {

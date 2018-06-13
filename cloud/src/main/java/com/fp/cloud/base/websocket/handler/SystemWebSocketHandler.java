@@ -7,7 +7,6 @@ import com.fp.cloud.base.service.SessionService;
 import com.fp.cloud.base.vo.SocketVo;
 import com.fp.cloud.base.websocket.util.WebSocketSessionHelp;
 import com.fp.cloud.constant.PeConstant;
-import com.fp.cloud.module.ems.vo.Ur;
 import com.fp.cloud.utils.LogUtil;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -61,7 +60,6 @@ public class SystemWebSocketHandler implements WebSocketHandler {
             }
 
             if (PeConstant.SOCKET_ANSWER_KEY.equals(socketVo.getKey())) {
-                Ur ur = JSON.parseObject(socketVo.getValue(), Ur.class);
 
                 sendMessageToUser(Collections.singletonList(ExecutionContext.getUserId()), JSON.toJSONString(socketVo));
             }

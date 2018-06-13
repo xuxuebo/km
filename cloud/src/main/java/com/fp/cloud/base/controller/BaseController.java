@@ -1,8 +1,6 @@
 package com.fp.cloud.base.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.fp.cloud.module.ems.vo.Ic;
-import com.fp.cloud.module.ems.vo.Ss;
 import com.fp.cloud.module.im.service.MsgSendService;
 import com.fp.cloud.module.uc.model.Authority;
 import com.fp.cloud.module.uc.model.SessionContext;
@@ -18,16 +16,12 @@ import com.fp.cloud.constant.AuthConstant;
 import com.fp.cloud.constant.CookieKey;
 import com.fp.cloud.constant.PeConstant;
 import com.fp.cloud.constant.RedisKey;
-import com.fp.cloud.module.ems.model.ExamSetting;
-import com.fp.cloud.module.ems.model.Paper;
-import com.fp.cloud.module.ems.vo.Pr;
 import com.fp.cloud.module.im.domain.ImTemplate;
 import com.fp.cloud.module.uc.model.Role;
 import com.fp.cloud.module.uc.model.User;
 import com.fp.cloud.module.uc.service.RoleAuthorityService;
 import com.fp.cloud.module.uc.service.RoleService;
 import com.fp.cloud.module.uc.service.UserRoleService;
-import com.fp.cloud.utils.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -159,33 +153,6 @@ public abstract class BaseController {
 
 
 
-    private void processScoreType(Paper paper, Ss ss) {
-        if (!ExamSetting.ScoreType.CONVERT.equals(ss.getSt())) {
-            return;
-        }
-
-        double cm = ss.getCm();
-        double totalMark = paper.getMark();
-        Map<String, Pr> prMap = paper.getPaperContent().getPrm();
-        double realTotalMark = NumberUtils.DOUBLE_ZERO;
-        Iterator<Pr> iterator = prMap.values().iterator();
-        while (iterator.hasNext()) {
-            Pr pr = iterator.next();
-            List<Ic> ics = pr.getIcs();
-            for (int icIndex = 0; icIndex < ics.size(); icIndex++) {
-                Ic ic = ics.get(icIndex);
-                double mark = ic.getM();
-                if (!iterator.hasNext() && (icIndex == ics.size() - 1)) {
-                    mark = cm - realTotalMark;
-                } else {
-                    mark = PeNumberUtils.reservedDecimal(1, (mark / totalMark) * cm);
-                    realTotalMark += mark;
-                }
-
-                ic.setM(mark);
-            }
-        }
-    }
 
     protected JsonResult<User> bindLoginMobile(String mobile) {
         PeJedisCommands sessionRedis = PeRedisClient.getSessionJedis();

@@ -94,13 +94,6 @@ public class ExamResult extends BaseModel {
     }
 
     /**
-     * 考试（手动补考：被补考考试ID，非手动补考：当前考试ID）
-     */
-    @JoinColumn(name = "exam_id", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Exam exam;
-
-    /**
      * 人员
      */
     @JoinColumn(name = "user_id", nullable = false)
@@ -113,20 +106,6 @@ public class ExamResult extends BaseModel {
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     private JudgeFlag judgeFlag;
-
-    /**
-     * 安排ID
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "arrange_id")
-    private ExamArrange examArrange;
-
-    /**
-     * 最后一次评卷试卷ID
-     */
-    @JoinColumn(name = "paper_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Paper paper;
 
     /**
      * 最后一次考试的评卷时间
@@ -202,25 +181,22 @@ public class ExamResult extends BaseModel {
     /**
      * 最后一次考试ID
      */
-    @JoinColumn(name = "last_result_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private ExamResultDetail lastResultDetail;
+//    @JoinColumn(name = "last_result_id")
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private ExamResultDetail lastResultDetail;
 
     /**
      * 最后一次手动补考ID
      */
-    @JoinColumn(name = "mark_exam_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Exam markExam;
+//    @JoinColumn(name = "mark_exam_id")
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private Exam markExam;
 
     /**
      * 通过
      */
     @Transient
     private List<Boolean> passStatus;
-
-    @Transient
-    private List<UserExamRecord> userExamRecords;
 
     /**
      * 是否复评
@@ -258,14 +234,6 @@ public class ExamResult extends BaseModel {
 
     public void setHighScore(Double highScore) {
         this.highScore = highScore;
-    }
-
-    public Exam getExam() {
-        return exam;
-    }
-
-    public void setExam(Exam exam) {
-        this.exam = exam;
     }
 
     public User getUser() {
@@ -332,14 +300,6 @@ public class ExamResult extends BaseModel {
         this.status = status;
     }
 
-    public List<UserExamRecord> getUserExamRecords() {
-        return userExamRecords;
-    }
-
-    public void setUserExamRecords(List<UserExamRecord> userExamRecords) {
-        this.userExamRecords = userExamRecords;
-    }
-
     public boolean isPass() {
         return pass;
     }
@@ -362,14 +322,6 @@ public class ExamResult extends BaseModel {
 
     public void setPassStatus(List<Boolean> passStatus) {
         this.passStatus = passStatus;
-    }
-
-    public Paper getPaper() {
-        return paper;
-    }
-
-    public void setPaper(Paper paper) {
-        this.paper = paper;
     }
 
     public boolean isReview() {
@@ -404,36 +356,12 @@ public class ExamResult extends BaseModel {
         this.startTime = startTime;
     }
 
-    public ExamResultDetail getLastResultDetail() {
-        return lastResultDetail;
-    }
-
-    public void setLastResultDetail(ExamResultDetail lastResultDetail) {
-        this.lastResultDetail = lastResultDetail;
-    }
-
     public String getMarkUpExamId() {
         return markUpExamId;
     }
 
     public void setMarkUpExamId(String markUpExamId) {
         this.markUpExamId = markUpExamId;
-    }
-
-    public Exam getMarkExam() {
-        return markExam;
-    }
-
-    public void setMarkExam(Exam markExam) {
-        this.markExam = markExam;
-    }
-
-    public ExamArrange getExamArrange() {
-        return examArrange;
-    }
-
-    public void setExamArrange(ExamArrange examArrange) {
-        this.examArrange = examArrange;
     }
 
     public List<UserExamStatus> getExamStatuses() {

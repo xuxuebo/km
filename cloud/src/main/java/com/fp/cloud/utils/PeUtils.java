@@ -1,6 +1,5 @@
 package com.fp.cloud.utils;
 
-import com.fp.cloud.module.ems.vo.Ic;
 import com.fp.cloud.module.sfm.service.FileServerService;
 import com.fp.cloud.base.ExecutionContext;
 import com.fp.cloud.base.model.Page;
@@ -9,14 +8,8 @@ import com.fp.cloud.base.redis.PeJedisCommands;
 import com.fp.cloud.base.redis.PeRedisClient;
 import com.fp.cloud.constant.PeConstant;
 import com.fp.cloud.constant.RedisKey;
-import com.fp.cloud.module.ems.model.Exam;
-import com.fp.cloud.module.ems.model.Item;
-import com.fp.cloud.module.ems.vo.Io;
-import com.fp.cloud.module.ems.vo.Pr;
 import com.fp.cloud.module.sfm.model.PeFile;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
@@ -237,80 +230,7 @@ public class PeUtils {
         return Math.abs(random.nextInt()) % max + 1;
     }
 
-    /**
-     * 从SR中通过index获取对应的试题类型
-     *
-     * @param typeIndex 试题类型索引
-     * @return 试题类型
-     * @since 2016年10月21日14:48:12
-     */
-    public static Item.ItemType getItemType(int typeIndex) {
-        switch (typeIndex) {
-            case 1:
-                return Item.ItemType.SINGLE_SELECTION;
-            case 2:
-                return Item.ItemType.MULTI_SELECTION;
-            case 3:
-                return Item.ItemType.INDEFINITE_SELECTION;
-            case 4:
-                return Item.ItemType.JUDGMENT;
-            case 5:
-                return Item.ItemType.FILL;
-            case 6:
-                return Item.ItemType.QUESTIONS;
-        }
 
-        return null;
-    }
-
-    /**
-     * 从SC中通过index获取对应的试题等级
-     *
-     * @param levelIndex 试题等级索引
-     * @return 试题类型
-     * @since 2016年10月21日14:48:12
-     */
-    public static Item.ItemLevel getItemLevel(int levelIndex) {
-        switch (levelIndex) {
-            case 1:
-                return Item.ItemLevel.SIMPLE;
-            case 2:
-                return Item.ItemLevel.RELATIVELY_SIMPLE;
-            case 3:
-                return Item.ItemLevel.MEDIUM;
-            case 4:
-                return Item.ItemLevel.MORE_DIFFICULT;
-            case 5:
-                return Item.ItemLevel.DIFFICULT;
-        }
-
-        return null;
-    }
-
-    public static double getLevelNum(Item.ItemLevel level) {
-        double levelNum = 0;
-        if (Item.ItemLevel.SIMPLE.equals(level)) {
-            levelNum = 1;
-        }
-
-        if (Item.ItemLevel.RELATIVELY_SIMPLE.equals(level)) {
-            levelNum = 2;
-        }
-
-        if (Item.ItemLevel.MEDIUM.equals(level)) {
-            levelNum = 3;
-        }
-
-        if (Item.ItemLevel.MORE_DIFFICULT.equals(level)) {
-            levelNum = 4;
-        }
-
-        if (Item.ItemLevel.DIFFICULT.equals(level)) {
-            levelNum = 5;
-        }
-
-        return levelNum;
-    }
 
     /**
      * 分页对象内部属性提取转换
@@ -359,54 +279,6 @@ public class PeUtils {
         }
 
         return tPage;
-    }
-
-
-    /**
-     * id分组 author by LiYanCheng@HF
-     *
-     * @param idList   id原始集合
-     * @param subCount 每组数量
-     * @return 分组后的集合
-     * @since 2016年2月25日10:59:52
-     */
-    public static <T> List<List<T>> groupIdList(List<T> idList, int subCount) {
-        if (CollectionUtils.isEmpty(idList)) {
-            return new ArrayList<>(0);
-        }
-
-        if (subCount <= 0) {
-            subCount = 1000;
-        }
-
-        int totalPage = idList.size() % subCount == 0 ? idList.size() / subCount : (idList.size() / subCount) + 1;
-        List<List<T>> listList = new ArrayList<>(totalPage);
-        for (int pageNo = 0; pageNo < totalPage; pageNo++) {
-            int firstIndex = pageNo * subCount;
-            int toIndex = (pageNo + 1) * subCount;
-            if (toIndex > idList.size()) {
-                toIndex = idList.size();
-            }
-
-            listList.add(idList.subList(firstIndex, toIndex));
-        }
-
-        return listList;
-    }
-    public static void processItemCt(Ic ic) {
-        //题干
-        if (StringUtils.isBlank(ic.getCt())) {
-            return;
-        }
-
-        Document document = Jsoup.parse(ic.getCt());
-        Elements elements = document.getElementsByAttributeValue("class", "upload-img");
-        processElements(elements, PeFile.ProcessorType.IMAGE);
-        elements = document.getElementsByAttributeValue("class", "image-audio");
-        processElements(elements, PeFile.ProcessorType.AUDIO);
-        elements = document.getElementsByAttributeValue("class", "image-video");
-        processElements(elements, PeFile.ProcessorType.VIDEO);
-        ic.setCt(document.body().html());
     }
 
     private static void processElements(Elements elements, PeFile.ProcessorType processorType) {
@@ -459,57 +331,6 @@ public class PeUtils {
         }
     }
 
-
-    public static void processItemEp(Ic ic) {
-        if (StringUtils.isBlank(ic.getEp())) {
-            return;
-        }
-
-        Document document = Jsoup.parse(ic.getEp());
-        Elements elements = document.getElementsByAttributeValue("class", "upload-img");
-        processElements(elements, PeFile.ProcessorType.IMAGE);
-        elements = document.getElementsByAttributeValue("class", "image-audio");
-        processElements(elements, PeFile.ProcessorType.AUDIO);
-        elements = document.getElementsByAttributeValue("class", "image-video");
-        processElements(elements, PeFile.ProcessorType.VIDEO);
-        ic.setEp(document.body().html());
-    }
-
-    public static void processItemIos(Ic ic) {
-        if (CollectionUtils.isEmpty(ic.getIos())) {
-            return;
-        }
-        //分析
-        String answer = "";
-        for (int index = 0; index < ic.getIos().size(); index++) {
-            Io io = ic.getIos().get(index);
-            io.setSo(PeConstant.LETTERS[index]);
-            //选项
-            if (BooleanUtils.isTrue(io.getT())) {
-                answer = answer + PeConstant.LETTERS[index] + PeConstant.COMMA;
-            }
-
-            if (StringUtils.isBlank(io.getCt())) {
-                continue;
-            }
-
-            Document document = Jsoup.parse(HtmlUtils.htmlUnescape(io.getCt()));
-            Elements elements = document.getElementsByAttributeValue("class", "upload-img");
-            processElements(elements, PeFile.ProcessorType.IMAGE);
-            elements = document.getElementsByAttributeValue("class", "image-audio");
-            processElements(elements, PeFile.ProcessorType.AUDIO);
-            elements = document.getElementsByAttributeValue("class", "image-video");
-            processElements(elements, PeFile.ProcessorType.VIDEO);
-            io.setCt(document.body().html());
-        }
-
-        if (StringUtils.isBlank(answer)) {
-            return;
-        }
-
-        ic.setA(answer.substring(0, answer.length() - 1));
-    }
-
     //获取IP地址
     public static String getIpAddress(HttpServletRequest request) {
         String ip = request.getHeader("X-Real-IP");
@@ -550,17 +371,6 @@ public class PeUtils {
         }
 
         return text;
-    }
-
-    public static Exam.ExamStatus getExamStatus(Date startTime, Date endTime) {
-        Date now = PeDateUtils.parse(new Date(), PeDateUtils.FORMAT_YYYY_MM_DD_HH_MM_SS);
-        if (now.after(endTime)) {
-            return Exam.ExamStatus.OVER;
-        } else if (now.after(startTime) || now.equals(startTime)) {
-            return Exam.ExamStatus.PROCESS;
-        }
-
-        return Exam.ExamStatus.NO_START;
     }
 
     /**
@@ -621,27 +431,6 @@ public class PeUtils {
         }
 
         return upsets;
-    }
-
-    public static void processIcNo(Map<String, Pr> prm) {
-        if (MapUtils.isEmpty(prm)) {
-            return;
-        }
-
-        int no = 1;
-        for (String itemType : PeConstant.ITEM_TYPES) {
-            Pr pr = prm.get(itemType);
-            if (pr == null) {
-                continue;
-            }
-
-            for (Ic ic : pr.getIcs()) {
-                processItemIos(ic);
-                ic.setNo(no);
-                no++;
-            }
-
-        }
     }
 
     public static String secondTranTime(long time) {

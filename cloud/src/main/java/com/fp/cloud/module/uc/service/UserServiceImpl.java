@@ -3,8 +3,6 @@ package com.fp.cloud.module.uc.service;
 import com.alibaba.fastjson.JSON;
 import com.fp.cloud.base.model.Category;
 import com.fp.cloud.base.service.*;
-import com.fp.cloud.module.ems.service.SystemSettingService;
-import com.fp.cloud.module.ems.vo.Us;
 import com.fp.cloud.module.im.service.MsgSendService;
 import com.fp.cloud.module.sfm.service.FileServerService;
 import com.fp.cloud.module.uc.model.*;
@@ -70,8 +68,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     private RoleService roleService;
     @Resource
     private FileServerService fileServerService;
-    @Resource
-    private SystemSettingService systemSettingService;
     @Resource
     private PositionService positionService;
     @Resource
@@ -553,15 +549,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         final Map<String, String> contextMap = ExecutionContext.getContextMap();
         taskExecutor.submit(() -> {
             ExecutionContext.setContextMap(contextMap);
-            SystemSetting systemSetting = systemSettingService.getByCorp(SystemSetting.SystemType.USER);
-            Us userSetting = JSON.parseObject(systemSetting.getMessage(), Us.class);
-            if (userSetting == null || MapUtils.isEmpty(userSetting.getAdMsg())) {
-                return;
-            }
 
-            Map adMsg = userSetting.getAdMsg();
-            Boolean smsSetting = corpService.checkMessage();
-            saveUserSendMsg(user, expressPwd, adMsg, smsSetting);
+
         });
 
         if (StringUtils.isBlank(user.getPositionId())) {
@@ -644,22 +633,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         final Map<String, String> contextMap = ExecutionContext.getContextMap();
         taskExecutor.submit((Runnable) () -> {
             ExecutionContext.setContextMap(contextMap);
-            SystemSetting systemSetting = systemSettingService.getByCorp(SystemSetting.SystemType.USER);
-            if (systemSetting == null || systemSetting.getMessage() == null) {
-                return;
-            }
-
-            Us userSetting = JSON.parseObject(systemSetting.getMessage(), Us.class);
-            if (userSetting == null || MapUtils.isEmpty(userSetting.getAdMsg())) {
-                return;
-            }
-
-            Map<String, Boolean> adMsg = userSetting.getAdMsg();
-            Boolean smsSetting = corpService.checkMessage();
-            for (User user : users) {
-                saveUserSendMsg(user, user.getSourcePwd(), adMsg, smsSetting);
-            }
-
+          
         });
 
         return users.stream().map(User::getId).collect(Collectors.toList());

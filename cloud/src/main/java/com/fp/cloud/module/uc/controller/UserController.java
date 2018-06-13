@@ -3,8 +3,8 @@ package com.fp.cloud.module.uc.controller;
 import com.alibaba.fastjson.JSON;
 import com.fp.cloud.base.controller.BaseController;
 import com.fp.cloud.doc.uc.UserDoc;
-import com.fp.cloud.module.ems.service.SystemSettingService;
-import com.fp.cloud.module.ems.vo.Us;
+//import com.fp.cloud.module.ems.service.SystemSettingService;
+//import com.fp.cloud.module.ems.vo.Us;
 import com.fp.cloud.module.im.service.MsgSendService;
 import com.fp.cloud.module.sfm.model.PeFile;
 import com.fp.cloud.module.sfm.service.FileServerService;
@@ -78,8 +78,8 @@ public class UserController extends BaseController {
     private UserRedisService userRedisService;
     @Resource
     private ThreadPoolTaskExecutor taskExecutor;
-    @Resource
-    private SystemSettingService systemSettingService;
+//    @Resource
+//    private SystemSettingService systemSettingService;
     @Resource
     private CorpService corpService;
 
@@ -291,17 +291,17 @@ public class UserController extends BaseController {
             ExecutionContext.setContextMap(contextMap);
             ExecutionContext.setCorpCode(corpCode);
             Boolean messageSetting = corpService.checkMessage();
-            SystemSetting systemSetting = systemSettingService.getByCorp(SystemSetting.SystemType.USER);
-            if (systemSetting == null || StringUtils.isBlank(systemSetting.getMessage())) {
-                return;
-            }
+//            SystemSetting systemSetting = systemSettingService.getByCorp(SystemSetting.SystemType.USER);
+//            if (systemSetting == null || StringUtils.isBlank(systemSetting.getMessage())) {
+//                return;
+//            }
+//
+//            Us us = JSON.parseObject(systemSetting.getMessage(), Us.class);
+//            if (MapUtils.isEmpty(us.getRsMsg())) {
+//                return;
+//            }
 
-            Us us = JSON.parseObject(systemSetting.getMessage(), Us.class);
-            if (MapUtils.isEmpty(us.getRsMsg())) {
-                return;
-            }
-
-            sendManagerUpdatePwd(Arrays.asList(user.getId().split(PeConstant.COMMA)), user.getPassword(), us.getRsMsg(), messageSetting);
+//            sendManagerUpdatePwd(Arrays.asList(user.getId().split(PeConstant.COMMA)), user.getPassword(), us.getRsMsg(), messageSetting);
         });
 
         return new JsonResult(true, i18nService.getI18nValue("update.success"));
@@ -387,18 +387,18 @@ public class UserController extends BaseController {
 
         return new JsonResult<>(false, JsonResult.FAILED);
     }
-
-    @ResponseBody
-    @RequestMapping("client/checkMyMobile")
-    public JsonResult<User> checkMyMobile(String mobile) {
-        return super.checkMyMobile(mobile);
-    }
-
-    @ResponseBody
-    @RequestMapping("client/bindLoginMobile")
-    public JsonResult<User> bindLoginMobile(String mobile) {
-        return super.bindLoginMobile(mobile);
-    }
+//
+//    @ResponseBody
+//    @RequestMapping("client/checkMyMobile")
+//    public JsonResult<User> checkMyMobile(String mobile) {
+//        return super.checkMyMobile(mobile);
+//    }
+//
+//    @ResponseBody
+//    @RequestMapping("client/bindLoginMobile")
+//    public JsonResult<User> bindLoginMobile(String mobile) {
+//        return super.bindLoginMobile(mobile);
+//    }
 
     @ResponseBody
     @RequestMapping("manage/checkEmail")
@@ -541,24 +541,24 @@ public class UserController extends BaseController {
             ExecutionContext.setContextMap(contextMap);
             ExecutionContext.setCorpCode(corpCode);
             Boolean messageSetting = corpService.checkMessage();
-            SystemSetting systemSetting = systemSettingService.getByCorp(SystemSetting.SystemType.USER);
-            if (systemSetting == null || StringUtils.isBlank(systemSetting.getMessage())) {
-                return;
-            }
-
-            Us us = JSON.parseObject(systemSetting.getMessage(), Us.class);
-            if (User.UserStatus.FORBIDDEN.equals(userStatus) && us.getFrMsg() != null) {
-                String messageTemplate = ImTemplate.FORBIDDEN_USER;
-                String subject = i18nService.getI18nValue("login.user.forbidden");
-                sendManagerUpdateStatus(Arrays.asList(user.getId().split(PeConstant.COMMA)), userStatus, messageTemplate, subject, us.getFrMsg(), messageSetting);
-                return;
-            }
-
-            if (User.UserStatus.ENABLE.equals(userStatus) && us.getAcMsg() != null) {
-                String messageTemplate = ImTemplate.ENABLE_USER;
-                String subject = i18nService.getI18nValue("login.user.enable");
-                sendManagerUpdateStatus(Arrays.asList(user.getId().split(PeConstant.COMMA)), userStatus, messageTemplate, subject, us.getAcMsg(), messageSetting);
-            }
+//            SystemSetting systemSetting = systemSettingService.getByCorp(SystemSetting.SystemType.USER);
+//            if (systemSetting == null || StringUtils.isBlank(systemSetting.getMessage())) {
+//                return;
+//            }
+//
+//            Us us = JSON.parseObject(systemSetting.getMessage(), Us.class);
+//            if (User.UserStatus.FORBIDDEN.equals(userStatus) && us.getFrMsg() != null) {
+//                String messageTemplate = ImTemplate.FORBIDDEN_USER;
+//                String subject = i18nService.getI18nValue("login.user.forbidden");
+//                sendManagerUpdateStatus(Arrays.asList(user.getId().split(PeConstant.COMMA)), userStatus, messageTemplate, subject, us.getFrMsg(), messageSetting);
+//                return;
+//            }
+//
+//            if (User.UserStatus.ENABLE.equals(userStatus) && us.getAcMsg() != null) {
+//                String messageTemplate = ImTemplate.ENABLE_USER;
+//                String subject = i18nService.getI18nValue("login.user.enable");
+//                sendManagerUpdateStatus(Arrays.asList(user.getId().split(PeConstant.COMMA)), userStatus, messageTemplate, subject, us.getAcMsg(), messageSetting);
+//            }
         });
 
 

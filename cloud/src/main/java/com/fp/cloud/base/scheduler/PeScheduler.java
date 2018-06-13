@@ -6,7 +6,6 @@ import com.fp.cloud.base.model.PeJob;
 import com.fp.cloud.base.redis.PeRedisClient;
 import com.fp.cloud.base.service.JobLogService;
 import com.fp.cloud.base.service.JobService;
-import com.fp.cloud.module.youmeng.YouMengService;
 import com.fp.cloud.base.ExecutionContext;
 import com.fp.cloud.base.redis.PeJedisCommands;
 import com.fp.cloud.constant.RedisKey;
@@ -34,8 +33,6 @@ public class PeScheduler {
     private JobLogService jobLogService;
     @Resource
     private ThreadPoolTaskExecutor taskExecutor;
-    @Resource
-    private YouMengService youMengService;
 
     @PostConstruct
     public void init() {
@@ -78,10 +75,6 @@ public class PeScheduler {
                 ExecutionContext.setUserId(peJob.getCreateBy());
                 ExecutionContext.setCorpCode(peJob.getCorpCode());
                 try {
-                    if(JobConstant.EXAMHALFNOTICE.equals(peJob.getFunctionCode())){
-                        youMengService.sendExamMessage(peJob.getSourceId());
-                    }
-
                     peJob.setExecuteStatus(PeJob.ExecuteStatus.SUCCESS);
                 } catch (Exception e) {
                     LOG.error(e);

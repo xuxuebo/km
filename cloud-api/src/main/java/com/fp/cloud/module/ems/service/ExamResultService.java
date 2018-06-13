@@ -3,11 +3,7 @@ package com.fp.cloud.module.ems.service;
 import com.fp.cloud.base.model.Page;
 import com.fp.cloud.base.model.PageParam;
 import com.fp.cloud.base.service.BaseService;
-import com.fp.cloud.base.vo.SocketVo;
-import com.fp.cloud.module.ems.model.Exam;
-import com.fp.cloud.module.ems.model.ExamMonitor;
 import com.fp.cloud.module.ems.model.ExamResult;
-import com.fp.cloud.module.ems.vo.Ur;
 import com.fp.cloud.module.uc.model.User;
 
 import java.util.List;
@@ -39,25 +35,6 @@ public interface ExamResultService extends BaseService<ExamResult> {
      */
     Map<String, ExamResult> find(List<String> examIds, String userId);
 
-    /**
-     * 【获取考试结果信息】
-     *
-     * @param examIds  考试ID集合
-     * @param userId   学员ID
-     * @param statuses 考试状态
-     *                 <ul>
-     *                 <li>{@linkplain ExamResult.UserExamStatus#MISS_EXAM 缺考}</li>
-     *                 <li>{@linkplain ExamResult.UserExamStatus#RELEASE 已发布}</li>
-     *                 </ul>
-     * @return 结果信息：
-     * <ul>
-     * <li>{@linkplain Exam#id 考试ID}</li>
-     * <li>{@linkplain Exam#examName 考试名称}</li>
-     * <li>{@linkplain ExamResult#pass 是否通过}</li>
-     * <li>{@linkplain ExamResult#status 学员参考状态}</li>
-     * </ul>
-     */
-    List<ExamResult> list(List<String> examIds, String userId, List<ExamResult.UserExamStatus> statuses);
 
     /**
      * 查询学员考试（除综合类考试之外）的考试最后一次成绩记录
@@ -76,18 +53,6 @@ public interface ExamResultService extends BaseService<ExamResult> {
      * @return 考试最后一次成绩记录 <ur><li>key:考试ID</li><li>value:考试成绩</li> </ur>
      */
     ExamResult get(String examId, String userIds);
-
-    /**
-     * 【管理员端，获取发布成绩列表】
-     * 1、显示自己创建或者授权并且启用的考试
-     * 2、去除考试结束并且全都发布成绩的考试
-     * 3、查询已经完成评卷的数量并且没有发布成绩
-     *
-     * @param keyword 关键字搜索：考试名称/考试编号
-     * @return 考试列表
-     * @since 2016年12月22日11:15:34
-     */
-    List<Exam> listExam(String keyword);
 
     /**
      * 【管理员端，分组获取学员对应的状态】
@@ -156,29 +121,6 @@ public interface ExamResultService extends BaseService<ExamResult> {
      * </ul>
      */
     Page<ExamResult> searchReleaseResult(User user, ExamResult examResult, PageParam pageParam);
-
-    /**
-     * 【管理员端，获取应考、已发布成绩学员列表】
-     *
-     * @param user 用户查询信息
-     *             <ul>
-     *             <li>{@linkplain User#keyword 姓名/用户名/工号/手机号}</li>
-     *             <li>{@linkplain User#organize 部门}</li>
-     *             <li>{@linkplain User#positionId 岗位}</li>
-     *             <li>{@linkplain User#userStatusList 学员状态}</li>
-     *             </ul>
-     * @return 人员信息如下：
-     * <ul>
-     * <li>{@linkplain User#userName 姓名 }</li>
-     * <li>{@linkplain User#loginName 用户名 }</li>
-     * <li>{@linkplain User#employeeCode 工号 }</li>
-     * <li>{@linkplain User#organize 部门 }</li>
-     * <li>{@linkplain User#positionName 岗位名称 }</li>
-     * <li>{@linkplain User#status 状态 }</li>
-     * <li>{@linkplain ExamResult#status 考试状态 }</li>
-     * </ul>
-     */
-    Page<ExamMonitor> search(User user, String examId, PageParam pageParam);
 
     /**
      * 【管理员端，分页展示评卷中成绩列表】
@@ -263,21 +205,6 @@ public interface ExamResultService extends BaseService<ExamResult> {
      */
     Page<ExamResult> searchReviewExam(ExamResult examResult, PageParam pageParam);
 
-    /**
-     * 分页展示成绩列表
-     *
-     * @param exam      查询条件
-     *                  <ul>
-     *                  <li>{@linkplain Exam#examName 考试名称/编号}</li>
-     *                  <li>{@linkplain Exam#startTime 考试开始时间范围}</li>
-     *                  <li>{@linkplain Exam#endTime 考试开始时间范围}</li>
-     *                  <li>{@linkplain Exam#examType 考试类型}</li>
-     *                  </ul>
-     * @param pageParam 分页条件
-     * @return author by LiYanCheng@HF
-     * @since 2017年1月6日20:38:14
-     */
-    Page<Exam> searchResult(Exam exam, PageParam pageParam);
 
     /**
      * 获取批次对应的应考学员数量
@@ -335,28 +262,6 @@ public interface ExamResultService extends BaseService<ExamResult> {
      */
     int updateCompResult(String examId, String userId);
 
-    /**
-     * 【学员端，展示我的考试信息】
-     *
-     * @param pageParam  分页条件
-     * @param examResult 查询条件
-     *                   <ul>
-     *                   <li>{@linkplain ExamResult#status 考试状态}</li>
-     *                   <li>{@linkplain Exam#startTime 开始时间}</li>
-     *                   <li>{@linkplain Exam#endTime 结束时间}</li>
-     *                   <li>{@linkplain Exam#examType 考试类型}</li>
-     *                   </ul>
-     * @return 具体列表数据如下：
-     * <ul>
-     * <li>{@linkplain Exam#examName 考试名称}</li>
-     * <li>{@linkplain Exam#startTime 考试开始时间}</li>
-     * <li>{@linkplain Exam#endTime 考试结束时间}</li>
-     * <li>{@linkplain Exam#examType 考试类型}</li>
-     * <li>{@linkplain ExamResult#status 考试状态}</li>
-     * <li>{@linkplain ExamResult#score 考试成绩}</li>
-     * </ul>
-     */
-    Page<Exam> searchMyExam(PageParam pageParam, ExamResult examResult);
 
     /**
      * 【评卷主要入口，学员答卷自动评卷客观题，评卷完成后自动保存到数据库中，并存考试记录】
@@ -366,15 +271,6 @@ public interface ExamResultService extends BaseService<ExamResult> {
      * @since 2017年1月13日16:47:07
      */
     void markUserExam(String examId, String userId);
-
-    /**
-     * 【评卷主要入口，学员答卷自动评卷客观题，评卷完成后自动保存到数据库中，并存考试记录】
-     *
-     * @param examId 考试ID
-     * @param userId 学员ID
-     * @since 2017年1月13日16:47:07
-     */
-    void markUserExam(Ur ur, String examId, String userId);
 
     /**
      * 考试排行
@@ -424,46 +320,6 @@ public interface ExamResultService extends BaseService<ExamResult> {
      */
     int updateImport(List<ExamResult> examResults, String examId);
 
-    /**
-     * 统计考试信息
-     *
-     * @param examIds 考试ID集合
-     * @return 统计信息
-     * @since 2017年1月15日10:53:12
-     */
-    Map<String, Exam> statisticsExam(List<String> examIds);
-
-    /**
-     * 统计考试信息
-     *
-     * @param subjectIds 科目ID集合
-     * @return 统计信息
-     * @since 2017年1月15日10:53:12
-     */
-    Map<String, Exam> statisticsSubject(List<String> subjectIds);
-
-    /**
-     * 【学员端，定时循环保存学员答题记录】
-     *
-     * @param ur 学员答题记录
-     * @since 2017年2月13日15:07:46
-     */
-    SocketVo saveUserAnswerProcess(Ur ur);
-
-    /**
-     * 统计个人考试信息
-     *
-     * @param userId 用户ID
-     * @return 统计个人考试信息，具体字段如下：
-     * <ul>
-     * <li>{@linkplain Exam#missCount 缺考数}</li>
-     * <li>{@linkplain Exam#passCount 通过数 }</li>
-     * <li>{@linkplain Exam#noPassCount 未通过数 }</li>
-     * <li>{@linkplain Exam#examCount 总数 }</li>
-     * </ul>
-     * @since 2017年2月23日14:18:46 author by LiYanCheng
-     */
-    Exam statisticsUserExam(String userId);
 
     /**
      * 获取考试id信息
