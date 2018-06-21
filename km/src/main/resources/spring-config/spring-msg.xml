@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:env.properties,classpath:config.properties"/>
+
+    <!-- 消息发送相关配置 开始 -->
+   <bean id="msgFetchTask" class="com.qgutech.km.module.im.task.MsgFetchTask" init-method="init" lazy-init="true">
+        <property name="httpClient" ref="httpClient"/>
+        <property name="quickSmsTaskExecutor" ref="quickThreadPoolTask"/>
+        <property name="slowSmsTaskExecutor" ref="slowThreadPoolTask"/>
+        <property name="emailSendThreadPoolTaskQuick" ref="emailSendThreadPoolTaskQuick"/>
+    </bean>
+
+    <!-- httpclient线程池 -->
+    <bean id="connectionManagerParams" class="org.apache.commons.httpclient.params.HttpConnectionManagerParams">
+        <property name="connectionTimeout" value="${msg.sms.http.connectionTimeoutInMillis}"/>
+        <property name="soTimeout" value="${msg.sms.http.socketTimeoutInMillis}"/>
+        <property name="maxTotalConnections" value="${msg.sms.http.maxTotalConnections}"/>
+        <property name="defaultMaxConnectionsPerHost" value="${msg.sms.http.defaultMaxConnectionsPerHost}"/>
+    </bean>
+
+    <bean id="connectionManager" class="org.apache.commons.httpclient.MultiThreadedHttpConnectionManager">
+        <property name="params" ref="connectionManagerParams"/>
+    </bean>
+
+    <bean id="httpClient" class="org.apache.commons.httpclient.HttpClient">
+        <constructor-arg ref="connectionManager"/>
+    </bean>
+
+    <!-- 短信发送线程池（慢） -->
+    <bean id="slowThreadPoolTask" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="${msg.task.sms.slow.corePoolSize}"/>
+        <property name="maxPoolSize" value="${msg.task.sms.slow.maxPoolSize}"/>
+        <property name="queueCapacity" value="${msg.task.sms.slow.queueCapacity}"/>
+        <property name="keepAliveSeconds" value="${msg.task.sms.slow.keepAliveSeconds}"/>
+        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+        <property name="threadNamePrefix" value="im_send_slow_"/>
+        <!-- need jdk 6 -->
+        <property name="allowCoreThreadTimeOut" value="true"/>
+        <!-- 线程池对拒绝任务(无线程可用)的处理策略 -->
+        <property name="rejectedExecutionHandler">
+            <bean class="com.qgutech.km.module.im.task.ThreadPoolExecutorPolicy$WaitPolicy"/>
+        </property>
+    </bean>
+
+    <!-- 短信发送线程池（快） -->
+    <bean id="quickThreadPoolTask" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="${msg.task.sms.quick.corePoolSize}"/>
+        <property name="maxPoolSize" value="${msg.task.sms.quick.maxPoolSize}"/>
+        <property name="queueCapacity" value="${msg.task.sms.quick.queueCapacity}"/>
+        <property name="keepAliveSeconds" value="${msg.task.sms.quick.keepAliveSeconds}"/>
+        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+        <property name="threadNamePrefix" value="im_send_quick_"/>
+        <!-- need jdk 6 -->
+        <property name="allowCoreThreadTimeOut" value="true"/>
+        <!-- 线程池对拒绝任务(无线程可用)的处理策略 -->
+        <property name="rejectedExecutionHandler">
+            <bean class="com.qgutech.km.module.im.task.ThreadPoolExecutorPolicy$WaitPolicy"/>
+        </property>
+    </bean>
+
+    <!-- 邮件发送线程池 -->
+    <bean name="emailSendThreadPoolTaskBase" abstract="true"
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="${msg.task.email.corePoolSize}"/>
+        <property name="maxPoolSize" value="${msg.task.email.maxPoolSize}"/>
+        <property name="queueCapacity" value="${msg.task.email.queueCapacity}"/>
+        <property name="keepAliveSeconds" value="${msg.task.email.keepAliveSeconds}"/>
+        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+        <property name="threadNamePrefix" value="im_email_send_"/>
+        <!-- need jdk 6 -->
+        <property name="allowCoreThreadTimeOut" value="true"/>
+        <!-- 线程池对拒绝任务(无线程可用)的处理策略 -->
+        <property name="rejectedExecutionHandler">
+            <bean class="com.qgutech.km.module.im.task.ThreadPoolExecutorPolicy$WaitPolicy"/>
+        </property>
+    </bean>
+
+    <bean name="failUpdateThreadPoolTaskBase" abstract="true"
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="${msg.task.update.corePoolSize}"/>
+        <property name="maxPoolSize" value="${msg.task.update.maxPoolSize}"/>
+        <property name="queueCapacity" value="${msg.task.update.queueCapacity}"/>
+        <property name="keepAliveSeconds" value="${msg.task.update.keepAliveSeconds}"/>
+        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+        <!-- need jdk 6 -->
+        <property name="allowCoreThreadTimeOut" value="true"/>
+        <!-- 线程池对拒绝任务(无线程可用)的处理策略 -->
+        <property name="rejectedExecutionHandler">
+            <bean class="com.qgutech.km.module.im.task.ThreadPoolExecutorPolicy$WaitPolicy"/>
+        </property>
+    </bean>
+
+    <bean name="emailSendThreadPoolTask0" parent="emailSendThreadPoolTaskBase"/>
+    <bean name="emailSendThreadPoolTask1" parent="emailSendThreadPoolTaskBase"/>
+    <bean name="emailSendThreadPoolTask2" parent="emailSendThreadPoolTaskBase"/>
+    <bean name="emailSendThreadPoolTask3" parent="emailSendThreadPoolTaskBase"/>
+    <bean name="emailSendThreadPoolTask4" parent="emailSendThreadPoolTaskBase"/>
+    <bean name="emailSendThreadPoolTaskQuick" parent="emailSendThreadPoolTaskBase"/>
+    <bean name="failUpdateThreadPoolTask" parent="failUpdateThreadPoolTaskBase"/>
+    <!-- 消息发送相关配置 结束 -->
+</beans>
