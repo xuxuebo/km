@@ -31,7 +31,7 @@ import java.util.List;
  * @since 2016年10月10日10:32:33
  */
 @Controller
-@RequestMapping("sfm")
+@RequestMapping("km")
 public class KnowledgeController {
 
     private static final Log LOG = LogFactory.getLog(KnowledgeController.class);
