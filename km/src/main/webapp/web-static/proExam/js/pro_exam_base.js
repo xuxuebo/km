@@ -324,11 +324,7 @@ var PEMO = {
 
         /*点击取消文件上传*/
         $cancelUpBtn.on('click',function(){
-            // uploader.stop();
-            // if(!$uploadBtn.hasClass('disabled') || !($('input[name="uploadState"]').val() === 'success')){
-            //     recoverUpState();
-            // }
-            // window.close();
+
         });
 
         /*回复默认上传状态*/

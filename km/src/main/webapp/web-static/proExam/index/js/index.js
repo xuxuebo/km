@@ -122,6 +122,34 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
             });
         }
 
+        var thisUpload = PEMO.UPLOAD({
+            pick: {
+                id: '#filePicker'
+            },
+            // dnd: '#uploader',
+            paste: document.body,
+            accept: {
+                title: '部分音乐类型',
+                extensions: 'mp3,MP3',
+                mimeTypes: 'audio/x-mpeg'
+            },
+            // swf文件路径
+            swf: 'jquery.uploader.swf',
+            disableGlobalDnd: true,
+            chunked: false,
+            formData: {
+                fsType:'COMMON',
+                templateType:'ITEM',
+                processorType:'AUDIO'
+            },
+            fileNumLimit: 300,
+            fileSizeLimit: 10 * 1024 * 1024,
+            fileSingleSizeLimit: 10 * 1024 * 1024, //单个文件的上传大小限制1就是10M(前端限制)
+            method: 'post',
+            afterSuccessUploadContent: '<span class="pe-uploader-success-text">上传成功</span>',
+            afterFailUploadContent: '<span class="pe-uploader-fail-text">上传失败，请重新上传</span>'
+        });
+
         //绑定事件
         //分享到云库
         $('.js-share').on('click', function () {

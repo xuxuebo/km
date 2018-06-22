@@ -8,6 +8,38 @@
     <title>云库</title>
     <link href="https://cdn.bootcss.com/layer/3.1.0/theme/default/layer.css" rel="stylesheet">
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/index/css/index.css">
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery-1.9.1.min.js"></script>
+<#--开发引用-->
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.core.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.excheck.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.exedit.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.underscore-min.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.pagination.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery-peGrid.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/viewer.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/layer/layer.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/sui_datepicker.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.mCustomScrollbar.concat.min.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.easydropdown.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.webuploader.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.validate.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.moment.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/highcharts.src.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/highcharts-more.src.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/drilldown.src.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/exporting.src.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery-peGrid.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/media/video_dev.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/idangerous.swiper2.7.6.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/recordRTC.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/environment_check.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/pro_exam_base.js"></script>
+    <script>
+        var pageContext = {
+            rootPath:'${ctx!}',
+            resourcePath:'${resourcePath!}
+        }
+    </script>
     <script src="${resourcePath!}/web-static/proExam/index/js/require.js"></script>
     <script type="text/javascript">
         requirejs.config({
@@ -74,8 +106,8 @@
                     <span class="yfont-icon">&#xe656;</span><span class="txt">公共库</span>
                 </a>
                 <ul class="y-menu__sub">
-                    <#--<li class="y-menu__item active">
-                        <!-- TODO id must &ndash;&gt; 动态显示
+                    <li class="y-menu__item active">
+                        <!-- TODO id must -->
                         <a href="#public/23" data-id="23" class="y-menu__item__title">
                             <span class="txt">公共类别1</span>
                         </a>
@@ -109,9 +141,9 @@
     <section class="y-content">
         <div class="y-content-body" id="yunContentBody">
         </div>
-        <footer class="y-footer">
-            国家电网江苏省电力公司 ©苏ICP备15007035号-1
-        </footer>
+        <#--<footer class="y-footer">-->
+            <#--国家电网江苏省电力公司 ©苏ICP备15007035号-1-->
+        <#--</footer>-->
     </section>
 </section>
 <script type="text/template" id="tplYunTable">
@@ -242,10 +274,10 @@
 <script type="text/template" id="tplYun">
     <h4 class="y-content__title"><%=title%></h4>
     <div class="y-content__opt__bar">
-        <button class="y-btn y-btn__blue js-upload" type="button">上传</button>
-        <button class="y-btn y-btn__blue js-download" type="button">下载</button>
-        <button class="y-btn y-btn__green js-share" type="button">分享至公共库</button>
-        <button class="y-btn y-btn__orange js-newFolder" type="button">新建文件夹</button>
+        <button class="y-btn y-btn__blue my-upload" id="filePicker" type="button">上传</button>
+        <button class="y-btn y-btn__green js-download" type="button">下载</button>
+        <button class="y-btn y-btn__green js-copy" type="button">分享至共享库</button>
+        <button class="y-btn y-btn__orange js-del" type="button">新建文件夹</button>
     </div>
     <div class="y-content__table" id="yunTable">
     </div>

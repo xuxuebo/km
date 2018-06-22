@@ -1,9 +1,9 @@
 <#--面包屑提示及提示语区域-->
-<div class="pe-break-nav-tip-container">
-    <ul class="pe-break-nav-ul">
-        <li class="pe-brak-nav-items">用户</li><li class="pe-brak-nav-items iconfont icon-bread-arrow">部门管理</li>
-    </ul>
-</div>
+<#--<div class="pe-break-nav-tip-container">-->
+    <#--&lt;#&ndash;<ul class="pe-break-nav-ul">&ndash;&gt;-->
+        <#--&lt;#&ndash;<li class="pe-brak-nav-items">用户</li><li class="pe-brak-nav-items iconfont icon-bread-arrow">部门管理</li>&ndash;&gt;-->
+    <#--&lt;#&ndash;</ul>&ndash;&gt;-->
+<#--</div>-->
 <div class="pe-test-question-manage pe-organize-manage-all-wrap">
 <#--树状布局开始,可复用,记得调用下面的初始化函数;-->
     <form name="peFormSub" id="peFormSub">

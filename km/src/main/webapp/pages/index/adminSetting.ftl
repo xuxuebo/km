@@ -74,11 +74,11 @@
                     <span class="yfont-icon">&#xe643;</span><span class="txt">部门管理</span>
                 </a>
             </li>
-            <li class="y-menu__item y-role">
-                <a href="#role" class="y-menu__item__title y-aside__menu__item__title">
-                    <span class="yfont-icon">&#xe643;</span><span class="txt">角色管理</span>
-                </a>
-            </li>
+            <#--<li class="y-menu__item y-role">-->
+                <#--<a href="#role" class="y-menu__item__title y-aside__menu__item__title">-->
+                    <#--<span class="yfont-icon">&#xe643;</span><span class="txt">角色管理</span>-->
+                <#--</a>-->
+            <#--</li>-->
             <li class="y-menu__item y-position">
                 <a href="#position" class="y-menu__item__title y-aside__menu__item__title">
                     <span class="yfont-icon">&#xe643;</span><span class="txt">岗位管理</span>
@@ -94,9 +94,9 @@
     <section class="y-content">
         <div class="y-content-body" id="yunContentBody">
         </div>
-        <footer class="y-footer">
-            国家电网江苏省电力公司 ©苏ICP备15007035号-1
-        </footer>
+        <#--<footer class="y-footer">-->
+            <#--国家电网江苏省电力公司 ©苏ICP备15007035号-1-->
+        <#--</footer>-->
     </section>
 </section>
 <script type="text/template" id="tblUserTable">

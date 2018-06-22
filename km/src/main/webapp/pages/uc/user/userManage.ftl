@@ -1,12 +1,12 @@
 <#assign ctx=request.contextPath/>
 <div class="pe-break-nav-tip-container">
-    <ul class="pe-break-nav-ul">
-        <li class="pe-brak-nav-items">用户</li>
-        <li class="pe-brak-nav-items iconfont icon-bread-arrow">用户管理</li>
-     <#--   <li class="pe-brak-nav-items" style="float: right">
-            <button type="button" class="pe-btn pe-btn-blue pe-question-choosen-btn pe-user-msg-setting">消息设置</button>
-        </li>-->
-    </ul>
+    <#--<ul class="pe-break-nav-ul">-->
+        <#--<li class="pe-brak-nav-items">用户</li>-->
+        <#--<li class="pe-brak-nav-items iconfont icon-bread-arrow">用户管理</li>-->
+     <#--&lt;#&ndash;   <li class="pe-brak-nav-items" style="float: right">-->
+            <#--<button type="button" class="pe-btn pe-btn-blue pe-question-choosen-btn pe-user-msg-setting">消息设置</button>-->
+        <#--</li>&ndash;&gt;-->
+    <#--</ul>-->
 </div>
 <div class="pe-user-manage-all-wrap ">
     <form name="peFormSub" id="peFormSub" class="">

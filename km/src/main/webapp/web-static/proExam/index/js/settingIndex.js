@@ -32,16 +32,19 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
             }
         },
         userCb: function (container, routeInfo, cb) {
-            initYunPage(container, routeInfo,'用户管理');
+            $('#yunContentBody').html('<iframe style="width:100%;height: 100%;margin-left: -170px;margin-top:-10px" src="/km/front/manage/initPage#url=/km/uc/user/manage/initPage"></iframe>');
+            // initYunPage(container, routeInfo,'用户管理');
         },
         organizeCb: function (container, routeInfo, cb) {
-            initYunPage(container, routeInfo,'部门管理');
+            $('#yunContentBody').html('<iframe style="width:100%;height: 100%;margin-left: -170px;" src="/km/front/manage/initPage#url=/km/uc/organize/manage/initPage"></iframe>');
+            //initYunPage(container, routeInfo,'部门管理');
         },
-        roleCb: function (container, routeInfo, cb) {
-            initYunPage(container, routeInfo,'角色管理');
-        },
+        // roleCb: function (container, routeInfo, cb) {
+        //     initYunPage(container, routeInfo,'角色管理');
+        // },
         positionCb: function (container, routeInfo, cb) {
-            initYunPage(container, routeInfo,'岗位管理');
+            $('#yunContentBody').html('<iframe style="width:100%;height: 100%;margin-left: -170px;" src="/km/front/manage/initPage#url=/km/uc/position/manage/initPage"></iframe>');
+            // initYunPage(container, routeInfo,'岗位管理');
         },
         labelCb: function (container, routeInfo, cb) {
             initYunPage(container, routeInfo,'标签管理');
@@ -90,83 +93,17 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
         $(window).bind("hashchange", changeHashCb);
     }
 
-    /*初始化*/
     changeHashCb();
 
-
-
     function initYunPage(container, routeInfo,title) {
-        var _tpl = $(routeInfo.templateId).html();//tplUser  按钮
+        var _tpl = $(routeInfo.templateId).html();
         container.html(_.template(_tpl)({title: title}));
-        //table渲染
+
         var _table = $("#tblUserTable").html();//表头
         var $userTable = $('#userTable');//div
 
-        var data = [
-            {
-                id: '1232131314',
-                userName: '姓名',
-                loginName: '用户名',
-                employeeCode: '工号',
-                mobile: '13075569283',
-                corpInfo:'中心',
-                organize:'部门',
-                status:'正常',
-                opt:'操作一下'
-            }
-        ];
-
-        var table = {
-
-        };
-        renderTable();
-        function renderTable() {
-            $userTable.html(_.template(_table)({list: data}));
-            table = initTable($userTable);
-        }
-
-        //table上按钮绑定事件 //TODO
-        //新增
-        $('.js-addUser').on('click', function () {
-            layer.msg("新增");
-        });
-        //导入
-        $('.js-import').on('click', function () {
-            layer.msg("导入");
-        });
-        //冻结
-        $('.js-frozen').on('click', function () {
-            var selectList = table.getSelect();
-            if (selectList.length === 0) {
-                layer.msg("请先选择操作项");
-                return;
-            }
-        });
-        //激活
-        $('.js-activation').on('click', function () {
-            var selectList = table.getSelect();
-            if (selectList.length === 0) {
-                layer.msg("请先选择操作项");
-                return;
-            }
-        });
-        //重置密码
-        $('.js-resetPwd').on('click', function () {
-            var selectList = table.getSelect();
-            if (selectList.length === 0) {
-                layer.msg("请先选择操作项");
-                return;
-            }
-        });
-        //导出
-        $('.js-export').on('click', function () {
-            layer.msg("导出");
-        });
-
-
+        // $('#userTable').load('/km/front/manage/initPage#url=/km/uc/user/manage/initPage')
     }
-
-
 
     //初始化table事件
     function initTable($container) {
