@@ -19,6 +19,10 @@
                 layer: 'layer'
             }
         });
+        pageContext = {
+            resourcePath:'${resourcePath!}',
+            rootPath:'${ctx!}'
+        };
     </script>
 </head>
 <body class="y-body">
@@ -149,15 +153,15 @@
                     <button type="button" class="yfont-icon opt-item js-opt-download">&#xe64f;</button>
                     <button type="button" class="yfont-icon opt-item js-opt-more">&#xe652;</button>
                 </div>
-                <div class="y-table__filed_name type-<%=item.fileType%>">
-                    <%=item.fileName%>
+                <div class="y-table__filed_name type-<%=item.knowledgeType%>">
+                    <%=item.knowledgeName%>
                 </div>
             </td>
             <td class="y-table__td size">
-                <%=item.size%>
+                <%=item.knowledgeSize%>
             </td>
             <td class="y-table__td upload-time">
-                <%=item.time%>
+                <%=item.showOrder%>
             </td>
         </tr>
         <%})%>
@@ -247,7 +251,11 @@
         <button class="y-btn y-btn__green js-share" type="button">分享至公共库</button>
         <button class="y-btn y-btn__orange js-newFolder" type="button">新建文件夹</button>
     </div>
-    <div class="y-content__table" id="yunTable">
+    <#--表格包裹的div-->
+    <div class="pe-stand-table-main-panel">
+        <div class="y-content__table" id="yunTable">
+        <div class="pe-stand-table-pagination"></div>
+    </div>
     </div>
 </script>
 

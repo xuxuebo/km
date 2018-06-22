@@ -18,6 +18,8 @@ import javax.persistence.Table;
 @Table(name = "t_km_knowledge", indexes = {@Index(name = "i_km_knowledge_corpCode", columnList = "corpCode")})
 public class Knowledge extends BaseModel {
 
+    public static String KNOWLEDGE_ID = "knowledgeId";
+
     /**
      * 文件名称
      */
@@ -113,6 +115,19 @@ public class Knowledge extends BaseModel {
     }
 
     public void setShowOrder(float showOrder) {
+        this.showOrder = showOrder;
+    }
+
+    public Knowledge() {
+    }
+
+    public Knowledge(String knowledgeName, String knowledgePath, long knowledgeSize, String knowledgeType, String sourceKnowledgeId, String folder, float showOrder) {
+        this.knowledgeName = knowledgeName;
+        this.knowledgePath = knowledgePath;
+        this.knowledgeSize = knowledgeSize;
+        this.knowledgeType = knowledgeType;
+        this.sourceKnowledgeId = sourceKnowledgeId;
+        this.folder = folder;
         this.showOrder = showOrder;
     }
 }

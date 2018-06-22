@@ -18,6 +18,9 @@ import javax.persistence.Table;
 @Table(name = "t_km_library", indexes = {@Index(name = "i_km_library_corpCode", columnList = "corpCode")})
 public class Library extends BaseModel {
 
+    public static String LIBRARY_TYPE = "libraryType";
+    public static String PARENT_ID = "parentId";
+
     /**
      * 库名称
      */
