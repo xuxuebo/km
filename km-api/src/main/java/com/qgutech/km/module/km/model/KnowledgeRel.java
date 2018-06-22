@@ -18,6 +18,9 @@ import javax.persistence.Table;
 @Table(name = "t_km_knowledge_rel", indexes = {@Index(name = "i_km_knowledge_rel", columnList = "corpCode,libraryId")})
 public class KnowledgeRel extends BaseModel {
 
+    public static String LIBRARY_ID = "libraryId";
+
+
     @Column(nullable = false, length = 32)
     private String knowledgeId;
 

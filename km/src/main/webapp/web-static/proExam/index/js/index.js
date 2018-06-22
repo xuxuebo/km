@@ -71,7 +71,6 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
             $curNav.addClass('active').siblings().removeClass('active');
         }
         if (routeInfo.cb) {
-            console.log(routeInfo.cb);
             try {
                 route[routeInfo.cb]($yunContentBody, routeInfo, cb);
             } catch (e) {
@@ -90,21 +89,22 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
 
     //初始化我的云库页面
     function initYunPage(container, routeInfo) {
+
         var _tpl = $(routeInfo.templateId).html();
         container.html(_.template(_tpl)({title: '我的云库'}));
         //table渲染
-        var data = [
-            {
-                id: '1231',
-                fileType: 'file',
-                fileName: '2018/05/11会议材料',
-                size: '-',
-                time: '2018/05/13 11:20'
-            }
-        ];
         var _table = $("#tplYunTable").html();
         var $yunTable = $('#yunTable');
-
+        var data = [];
+        $.ajax({
+            async: false,//此值要设置为FALSE  默认为TRUE 异步调用
+            type : "POST",
+            url : pageContext.resourcePath + '/km/manage/search',
+            dataType : 'json',
+            success : function(result) {
+                data = result;
+            }
+        });
         var table, initSort = {
             name: "desc",
             size: "desc",
@@ -115,7 +115,6 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
             $yunTable.html(_.template(_table)({list: data, sort: initSort}));
             table = initTable($yunTable);
             $yunTable.find('.sort').click(function () {
-                //降序 TODO
                 $yunTable.html(_.template(_table)({
                     list: data, sort: $.extend({}, initSort, {name: 'asc'})
                 }));

@@ -1,10 +1,16 @@
 package com.qgutech.km.module.km.controller;
 
 import com.alibaba.fastjson.util.IOUtils;
+import com.qgutech.km.base.ExecutionContext;
+import com.qgutech.km.base.model.Page;
+import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.vo.JsonResult;
 import com.qgutech.km.constant.PeConstant;
+import com.qgutech.km.module.km.model.Knowledge;
+import com.qgutech.km.module.km.service.KnowledgeService;
 import com.qgutech.km.module.sfm.model.PeFile;
 import com.qgutech.km.module.sfm.service.FileServerService;
+import com.qgutech.km.module.uc.model.User;
 import com.qgutech.km.utils.PeException;
 import com.qgutech.km.utils.PeFileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -20,6 +26,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,6 +44,8 @@ public class KnowledgeController {
     private static final Log LOG = LogFactory.getLog(KnowledgeController.class);
     @Resource
     private FileServerService fileServerService;
+    @Resource
+    private KnowledgeService knowledgeService;
 
     @ResponseBody
     @RequestMapping("uploadFile")
@@ -159,5 +168,20 @@ public class KnowledgeController {
             IOUtils.close(os);
             IOUtils.close(inputStream);
         }
+    }
+
+    /**
+     * 我的云库
+     * createBy
+     * 云库表  云库和文件关系表  文件表
+     */
+    @ResponseBody
+    @RequestMapping("manage/search")
+    public List<Knowledge> search(PageParam pageParam){
+        List<Knowledge> list = new ArrayList<>();
+        String userId = ExecutionContext.getUserId();
+        String corpCode = ExecutionContext.getCorpCode();
+        list = knowledgeService.getKnowledgeByCreateBy();
+        return list;
     }
 }
