@@ -5,21 +5,25 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
     //路由
     var route = {
         routes: {
-            'yun': {//'yun'
+            'yun': {
                 "templateId": '#tplYun',
                 nav: 'my-yun',
                 cb: "YunCb"
             },
-            //TODO
-            'public/.+': {//'index'
+            'public/.+': {
                 "templateId": '#tplPublic',
                 nav: 'public-yun',
                 cb: "publicCb"
             },
-            'recycle': {//'index'
+            'recycle': {
                 "templateId": '#tplRecycle',
                 nav: 'recycle-yun',
                 cb: "recycleCb"
+            },
+            "share":{
+                "templateId": '#tplShare',
+                nav: 'share-yun',
+                cb: "shareCb"
             }
         },
         YunCb: function (container, routeInfo, cb) {
@@ -30,9 +34,13 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
         },
         recycleCb: function (container, routeInfo, cb) {
             initRecyclePage(container, routeInfo);
+        },
+        shareCb: function (container, routeInfo, cb) {
+            initSharePage(container, routeInfo);
         }
     };
 
+    //初始化
     function changeHashCb(cb) {
         var _hash = location.hash.substring(1);
         if (!_hash) {
@@ -63,6 +71,7 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
             $curNav.addClass('active').siblings().removeClass('active');
         }
         if (routeInfo.cb) {
+            console.log(routeInfo.cb);
             try {
                 route[routeInfo.cb]($yunContentBody, routeInfo, cb);
             } catch (e) {
@@ -70,7 +79,7 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
             }
         }
     }
-
+    //修改
     if (('onhashchange' in window) && ((typeof document.documentMode === 'undefined') || document.documentMode == 8)) {
         $(window).bind("hashchange", changeHashCb);
     }
@@ -79,7 +88,7 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
     changeHashCb();
 
 
-    //我的云盘
+    //初始化我的云库页面
     function initYunPage(container, routeInfo) {
         var _tpl = $(routeInfo.templateId).html();
         container.html(_.template(_tpl)({title: '我的云库'}));
@@ -91,30 +100,9 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
                 fileName: '2018/05/11会议材料',
                 size: '-',
                 time: '2018/05/13 11:20'
-            },
-            {
-                id: '1232131312',
-                fileType: 'audio',
-                fileName: '2018/05/11会议材料',
-                size: '43.45M',
-                time: '2018/05/13 11:20'
-            },
-            {
-                id: '1232131331',
-                fileType: 'video',
-                fileName: '2018/05/11会议材料',
-                size: '43.45M',
-                time: '2018/05/13 11:20'
-            },
-            {
-                id: '1232131314',
-                fileType: 'word',
-                fileName: '2018/05/11会议材料',
-                size: '43.45M',
-                time: '2018/05/13 11:20'
             }
         ];
-        var _table = $("#tplTable").html();
+        var _table = $("#tplYunTable").html();
         var $yunTable = $('#yunTable');
 
         var table, initSort = {
@@ -127,13 +115,6 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
             $yunTable.html(_.template(_table)({list: data, sort: initSort}));
             table = initTable($yunTable);
             $yunTable.find('.sort').click(function () {
-                data.splice(0, 0, {
-                    id: '1231',
-                    fileType: 'video',
-                    fileName: '排序数据',
-                    size: '23M',
-                    time: '2018/05/13 11:20'
-                });
                 //降序 TODO
                 $yunTable.html(_.template(_table)({
                     list: data, sort: $.extend({}, initSort, {name: 'asc'})
@@ -142,8 +123,72 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
         }
 
         //绑定事件
-        //复制到我的云库
-        $('.js-copy').on('click', function () {
+        //分享到云库
+        $('.js-share').on('click', function () {
+            var selectList = table.getSelect();
+            if (selectList.length === 0) {
+                layer.msg("请先选择操作项");
+                return;
+            }
+
+        });
+        //下载
+        $('.js-download').on('click', function () {
+            var selectList = table.getSelect();
+            if (selectList.length === 0) {
+                layer.msg("请先选择操作项");
+                return;
+            }
+        });
+        //上传
+        $('.js-upload').on('click', function () {
+
+        });
+
+        //新建文件夹
+        $('.js-newFolder').on('click', function () {
+
+        });
+
+    }
+
+    //公共库
+    function initPublicPage() {
+
+    }
+
+    //我的分享
+    function initSharePage(container, routeInfo) {
+        var _tpl = $(routeInfo.templateId).html();
+        container.html(_.template(_tpl)({title: '我的分享'}));
+        //table渲染
+        var data = [
+            {
+                id: '1231',
+                fileType: 'file',
+                fileName: '2018/05/11',
+                createTime:'',
+                expireTime:'',
+                viewCount:'1',
+                downloadCount:'1',
+                copyCount:'1'
+            }
+        ];
+        var _table = $("#tplShareTable").html();
+        var $yunTable = $('#shareTable');
+
+        var table = {
+
+        };
+        renderTable();
+        function renderTable() {
+            $yunTable.html(_.template(_table)({list: data}));
+            table = initTable($yunTable);
+        }
+
+        //绑定事件
+        //取消分享
+        $('.js-cancelShare').on('click', function () {
             var selectList = table.getSelect();
             if (selectList.length === 0) {
                 layer.msg("请先选择操作项");
@@ -151,20 +196,6 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
             }
             //TODO
         });
-        //下载
-        $('.js-download').on('click', function () {
-
-        });
-        //删除
-        $('.js-del').on('click', function () {
-
-        });
-
-
-    }
-
-    //公共库
-    function initPublicPage() {
 
     }
 
@@ -206,7 +237,7 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
                 $(this).addClass('desc').removeClass("asc");
             }
         });
-
+        //选择所有
         function checkAll() {
             var total = $checkbox.size();
             var count = 0;
@@ -218,7 +249,7 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
             return total === count;
         }
 
-
+        //选择
         return {
             getSelect: function () {
                 var list = [];

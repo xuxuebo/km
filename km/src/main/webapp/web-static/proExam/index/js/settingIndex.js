@@ -96,8 +96,6 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
 
 
     function initYunPage(container, routeInfo,title) {
-        console.log(container);
-        console.log(routeInfo);
         var _tpl = $(routeInfo.templateId).html();//tplUser  按钮
         container.html(_.template(_tpl)({title: title}));
         //table渲染

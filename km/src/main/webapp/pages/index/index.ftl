@@ -74,8 +74,8 @@
                     <span class="yfont-icon">&#xe656;</span><span class="txt">公共库</span>
                 </a>
                 <ul class="y-menu__sub">
-                    <li class="y-menu__item active">
-                        <!-- TODO id must -->
+                    <#--<li class="y-menu__item active">
+                        <!-- TODO id must &ndash;&gt; 动态显示
                         <a href="#public/23" data-id="23" class="y-menu__item__title">
                             <span class="txt">公共类别1</span>
                         </a>
@@ -89,9 +89,16 @@
                         <a href="#public/123" data-id="123" class="y-menu__item__title">
                             <span class="txt">公共类别3</span>
                         </a>
-                    </li>
+                    </li>-->
                 </ul>
             </li>
+
+            <li class="y-menu__item share-yun">
+                <a href="#share" class="y-menu__item__title y-aside__menu__item__title">
+                    <span class="yfont-icon">&#xe643;</span><span class="txt">我的分享</span>
+                </a>
+            </li>
+
             <li class="y-menu__item recycle-yun">
                 <a href="#recycle" class="y-menu__item__title y-aside__menu__item__title">
                     <span class="yfont-icon">&#xe65c;</span><span class="txt">回收站</span>
@@ -107,7 +114,7 @@
         </footer>
     </section>
 </section>
-<script type="text/template" id="tplTable">
+<script type="text/template" id="tplYunTable">
     <table class="y-table">
         <thead class="y-table__header">
         <tr>
@@ -118,7 +125,7 @@
                 </label>
             </th>
             <th class="y-table__td name">
-                <span class="sort <%if(sort.name === 'desc'){%>desc<%}else{%>asc<%}%>">名称</span>
+                <span class="sort <%if(sort.name === 'desc'){%>desc<%}else{%>asc<%}%>">文件名</span>
             </th>
             <th class="y-table__td size">
                 <span class="sort  <%if(sort.size === 'desc'){%>desc<%}else{%>asc<%}%>">大小</span>
@@ -157,36 +164,127 @@
         </tbody>
     </table>
 </script>
+
+
+<script type="text/template" id="tplShareTable">
+    <table class="y-table">
+        <thead class="y-table__header">
+        <tr>
+            <th class="y-table__td checkbox">
+                <label class="y-checkbox">
+                    <input type="checkbox">
+                    <span class="y-checkbox__span"></span>
+                </label>
+            </th>
+            <th class="y-table__td name">
+                <span class=" ">文件名</span>
+            </th>
+            <th class="y-table__td create-time">
+                <span class="  ">分享时间</span>
+            </th>
+            <th class="y-table__td expire-time">
+                <span class="  ">失效时间</span>
+            </th>
+            <th class="y-table__td view-count">
+                <span class="  ">浏览次数</span>
+            </th>
+            <th class="y-table__td download-count">
+                <span class=" ">复制次数</span>
+            </th>
+            <th class="y-table__td copy-count">
+                <span class="  ">下载次数</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <%_.each(list,function(item,i){%>
+        <tr class="y-table__tr" data-id="<%=item.id%>">
+            <td class="y-table__td checkbox">
+                <label class="y-checkbox">
+                    <input type="checkbox">
+                    <span class="y-checkbox__span"></span>
+                </label>
+            </td>
+            <td class="y-table__td name">
+                <div class="y-table__opt__bar">
+                    <button type="button" class="yfont-icon opt-item js-opt-download">&#xe64f;</button>
+                    <button type="button" class="yfont-icon opt-item js-opt-more">&#xe652;</button>
+                </div>
+                <div class="y-table__filed_name type-<%=item.fileType%>">
+                    <%=item.fileName%>
+                </div>
+            </td>
+            <td class="y-table__td create-time">
+                <%=item.createTime%>
+            </td>
+            <td class="y-table__td expire-time">
+                <%=item.expireTime%>
+            </td>
+            <td class="y-table__td view-count">
+                <%=item.viewCount%>
+            </td>
+            <td class="y-table__td download-count">
+                <%=item.downloadCount%>
+            </td>
+            <td class="y-table__td copy-count">
+                <%=item.copyCount%>
+            </td>
+        </tr>
+        <%})%>
+        </tbody>
+    </table>
+</script>
+
+
+<#--模板引擎-->
+
+<#--我的云库-->
 <script type="text/template" id="tplYun">
     <h4 class="y-content__title"><%=title%></h4>
     <div class="y-content__opt__bar">
-        <button class="y-btn y-btn__blue js-copy" type="button">复制到我的云库</button>
-        <button class="y-btn y-btn__green js-download" type="button">下载</button>
-        <button class="y-btn y-btn__orange js-del" type="button">删除</button>
+        <button class="y-btn y-btn__blue js-upload" type="button">上传</button>
+        <button class="y-btn y-btn__blue js-download" type="button">下载</button>
+        <button class="y-btn y-btn__green js-share" type="button">分享至公共库</button>
+        <button class="y-btn y-btn__orange js-newFolder" type="button">新建文件夹</button>
     </div>
     <div class="y-content__table" id="yunTable">
     </div>
 </script>
+
+<#--公共库-->
 <script type="text/template" id="tplPublic">
     <h4 class="y-content__title"><%=title%></h4>
     <div class="y-content__opt__bar">
         <button class="y-btn y-btn__blue" type="button">复制到我的云库</button>
         <button class="y-btn y-btn__green" type="button">下载</button>
-        <button class="y-btn y-btn__orange" type="button">删除</button>
     </div>
     <div class="y-content__table" id="publicTable">
     </div>
 </script>
+
+<#--我的分享-->
+<script type="text/template" id="tplShare">
+    <h4 class="y-content__title"><%=title%></h4>
+    <div class="y-content__opt__bar">
+        <button class="y-btn y-btn__blue js-cancelShare" type="button">取消分享</button>
+    </div>
+    <div class="y-content__table" id="shareTable">
+    </div>
+</script>
+
+<#--回收站-->
 <script type="text/template" id="tplRecycle">
     <h4 class="y-content__title"><%=title%></h4>
     <div class="y-content__opt__bar">
-        <button class="y-btn y-btn__blue" type="button">复制到我的云库</button>
-        <button class="y-btn y-btn__green" type="button">下载</button>
-        <button class="y-btn y-btn__orange" type="button">删除</button>
+        <button class="y-btn y-btn__blue" type="button" >还原文件</button>
+        <button class="y-btn y-btn__green" type="button">清空回收站</button>
     </div>
     <div class="y-content__table" id="recycleTable">
     </div>
 </script>
+
+
+
 <script src="${resourcePath!}/web-static/proExam/index/js/index.js"></script>
 </body>
 </html>
