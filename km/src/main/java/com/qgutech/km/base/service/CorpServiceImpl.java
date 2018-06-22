@@ -14,11 +14,7 @@ import com.qgutech.km.base.model.CorpInfo;
 import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.redis.PeJedisCommands;
 import com.qgutech.km.constant.RedisKey;
-import com.qgutech.km.module.uc.model.*;
 import com.qgutech.km.module.uc.service.AuthorityService;
-import com.qgutech.km.utils.*;
-import com.qgutech.km.module.uc.model.*;
-import com.qgutech.km.utils.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -91,13 +87,13 @@ public class CorpServiceImpl extends BaseServiceImpl<CorpInfo> implements CorpSe
                     return new Page<>();
                 }
 
-                conjunction.add(Restrictions.in(CorpInfo._createBy, userIds));
+                conjunction.add(Restrictions.in(CorpInfo.CREATE_BY, userIds));
             }
 
             if (StringUtils.isNotBlank(corpInfo.getCorpName())) {
                 String corpName = corpInfo.getCorpName().trim();
                 Disjunction disjunction = Restrictions.disjunction();
-                disjunction.add(Restrictions.like(CorpInfo._corpCode, corpName, MatchMode.ANYWHERE));
+                disjunction.add(Restrictions.like(CorpInfo.CORP_CODE, corpName, MatchMode.ANYWHERE));
                 disjunction.add(Restrictions.like(CorpInfo._corpName, corpName, MatchMode.ANYWHERE));
                 conjunction.add(disjunction);
             }
@@ -116,9 +112,9 @@ public class CorpServiceImpl extends BaseServiceImpl<CorpInfo> implements CorpSe
             }
         }
 
-        Page<CorpInfo> page = search(pageParam, conjunction, new Order[]{Order.desc(CorpInfo._updateTime)},
-                CorpInfo._corpName, CorpInfo._corpCode, CorpInfo._createBy, CorpInfo._concurrentNum, CorpInfo._createTime,
-                CorpInfo._registerNum, CorpInfo._endTime, CorpInfo._corpStatus, CorpInfo._id, CorpInfo._fromAppType , CorpInfo._version);
+        Page<CorpInfo> page = search(pageParam, conjunction, new Order[]{Order.desc(CorpInfo.UPDATE_TIME)},
+                CorpInfo._corpName, CorpInfo.CORP_CODE, CorpInfo.CREATE_BY, CorpInfo._concurrentNum, CorpInfo.CREATE_TIME,
+                CorpInfo._registerNum, CorpInfo._endTime, CorpInfo._corpStatus, CorpInfo.ID, CorpInfo._fromAppType , CorpInfo._version);
         if (CollectionUtils.isEmpty(page.getRows())) {
             return new Page<>();
         }
@@ -157,7 +153,7 @@ public class CorpServiceImpl extends BaseServiceImpl<CorpInfo> implements CorpSe
             throw new IllegalArgumentException("Parameters is not valid!");
         }
 
-        return getByFieldNameAndValue(CorpInfo._corpCode, corpCode, CorpInfo._id);
+        return getByFieldNameAndValue(CorpInfo.CORP_CODE, corpCode, CorpInfo.ID);
     }
 
     @Override
@@ -167,7 +163,7 @@ public class CorpServiceImpl extends BaseServiceImpl<CorpInfo> implements CorpSe
             throw new IllegalArgumentException("Parameters is not valid!");
         }
 
-        return getByFieldNameAndValue(CorpInfo._domainName, domainName, CorpInfo._id);
+        return getByFieldNameAndValue(CorpInfo._domainName, domainName, CorpInfo.ID);
     }
 
     @Override
@@ -184,7 +180,7 @@ public class CorpServiceImpl extends BaseServiceImpl<CorpInfo> implements CorpSe
             throw new PeException("企业域名已经存在，请重新输入");
         }
 
-        dataCorpInfo = get(corpInfo.getId(), CorpInfo._corpCode, CorpInfo._domainName, CorpInfo._corpStatus);
+        dataCorpInfo = get(corpInfo.getId(), CorpInfo.CORP_CODE, CorpInfo._domainName, CorpInfo._corpStatus);
         if (CorpInfo.CorpStatus.ENABLE.equals(dataCorpInfo.getCorpStatus())) {
             PeRedisClient.getCommonJedis().del(RedisKey.CORP_INFO_DOMAIN + dataCorpInfo.getDomainName());
             PeRedisClient.getCommonJedis().del(RedisKey.CORP_INFO_CODE + dataCorpInfo.getCorpCode());
@@ -212,7 +208,7 @@ public class CorpServiceImpl extends BaseServiceImpl<CorpInfo> implements CorpSe
             throw new IllegalArgumentException("Parameters is not valid!");
         }
 
-        CorpInfo corpInfo = get(corpId, CorpInfo._corpCode, CorpInfo._domainName, CorpInfo._endTime,
+        CorpInfo corpInfo = get(corpId, CorpInfo.CORP_CODE, CorpInfo._domainName, CorpInfo._endTime,
                 CorpInfo._concurrentNum, CorpInfo._registerNum, CorpInfo._corpStatus);
         if (corpInfo == null) {
             throw new IllegalArgumentException("CorpInfo is not existed!");
@@ -352,7 +348,7 @@ public class CorpServiceImpl extends BaseServiceImpl<CorpInfo> implements CorpSe
             throw new IllegalArgumentException("CorpInfo is null or corpStatus is not avaliable!");
         }
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq(User._corpCode, corpCode));
+        conjunction.add(Restrictions.eq(User.CORP_CODE, corpCode));
         conjunction.add(Restrictions.eq(User._loginName, loginName));
         conjunction.add(Restrictions.eq(User._status, User.UserStatus.ENABLE));
         User user = userService.getByCriterion(conjunction);
@@ -397,7 +393,7 @@ public class CorpServiceImpl extends BaseServiceImpl<CorpInfo> implements CorpSe
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq(CorpInfo._domainName, domain));
         conjunction.add(Restrictions.eq(CorpInfo._corpStatus, CorpInfo.CorpStatus.ENABLE));
-        CorpInfo corpInfo = getByCriterion(conjunction, CorpInfo._corpCode, CorpInfo._domainName,
+        CorpInfo corpInfo = getByCriterion(conjunction, CorpInfo.CORP_CODE, CorpInfo._domainName,
                 CorpInfo._endTime, CorpInfo._concurrentNum, CorpInfo._registerNum,CorpInfo._version);
         if (corpInfo == null) {
             return null;
@@ -430,7 +426,7 @@ public class CorpServiceImpl extends BaseServiceImpl<CorpInfo> implements CorpSe
 //        }
 
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq(CorpInfo._corpCode, corpCode));
+        conjunction.add(Restrictions.eq(CorpInfo.CORP_CODE, corpCode));
         conjunction.add(Restrictions.eq(CorpInfo._corpStatus, CorpInfo.CorpStatus.ENABLE));
         CorpInfo corpInfo = getByCriterion(conjunction);
         if (corpInfo == null) {
@@ -451,7 +447,7 @@ public class CorpServiceImpl extends BaseServiceImpl<CorpInfo> implements CorpSe
             throw new IllegalArgumentException("Parameters is not valid!");
         }
 
-        CorpInfo corpInfo = get(corpId, CorpInfo._corpCode, CorpInfo._domainName, CorpInfo._corpStatus);
+        CorpInfo corpInfo = get(corpId, CorpInfo.CORP_CODE, CorpInfo._domainName, CorpInfo._corpStatus);
         if (CorpInfo.CorpStatus.ENABLE.equals(corpInfo.getCorpStatus())) {
             PeRedisClient.getCommonJedis().del(RedisKey.CORP_INFO_DOMAIN + corpInfo.getDomainName());
             PeRedisClient.getCommonJedis().del(RedisKey.CORP_INFO_CODE + corpInfo.getCorpCode());

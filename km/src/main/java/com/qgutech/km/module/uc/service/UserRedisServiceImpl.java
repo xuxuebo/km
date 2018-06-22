@@ -233,10 +233,10 @@ public class UserRedisServiceImpl implements UserRedisService {
             Map<String, String> userMap = PeRedisClient.getSessionJedis().hgetAll(userId);
             if (MapUtils.isEmpty(userMap)) {
                 Conjunction conjunction = Restrictions.conjunction();
-                conjunction.add(Restrictions.eq(User._corpCode, ExecutionContext.getCorpCode()));
-                conjunction.add(Restrictions.eq(User._id, userId));
+                conjunction.add(Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()));
+                conjunction.add(Restrictions.eq(User.ID, userId));
                 conjunction.add(Restrictions.eq(User._status, User.UserStatus.ENABLE));
-                User user = userService.getByCriterion(conjunction, User._id, User._mobile, User._email, User._employeeCode,
+                User user = userService.getByCriterion(conjunction, User.ID, User._mobile, User._email, User._employeeCode,
                         User._loginName, User._faceFileName, User._faceFileId, User._idCard, User._userName, User._organize,
                         User._organizeName, User._status, User._password, User._roleType);
                 if (user == null) {

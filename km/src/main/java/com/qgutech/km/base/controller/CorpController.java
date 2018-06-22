@@ -145,7 +145,7 @@ public class CorpController {
             throw new IllegalArgumentException("corpId is null when synchronize corp");
         }
 
-        CorpInfo corpInfo = corpService.get(corpId, CorpInfo._id, CorpInfo._fromAppType);
+        CorpInfo corpInfo = corpService.get(corpId, CorpInfo.ID, CorpInfo._fromAppType);
         if (corpInfo == null) {
             throw new IllegalArgumentException("corpInfo doesn't exist in DB!");
         }

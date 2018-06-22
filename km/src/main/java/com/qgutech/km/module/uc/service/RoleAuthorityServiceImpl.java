@@ -62,7 +62,7 @@ public class RoleAuthorityServiceImpl extends BaseServiceImpl<RoleAuthority> imp
 
         delete(Restrictions.conjunction()
                 .add(Restrictions.eq(RoleAuthority._roleId, roleId))
-                .add(Restrictions.eq(RoleAuthority._corpCode, ExecutionContext.getCorpCode()))
+                .add(Restrictions.eq(RoleAuthority.CORP_CODE, ExecutionContext.getCorpCode()))
                 .add(Restrictions.in(RoleAuthority._authority, oldAuthorityIdsCopy))
         );
 
@@ -85,7 +85,7 @@ public class RoleAuthorityServiceImpl extends BaseServiceImpl<RoleAuthority> imp
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public int deleteByRoleId(String roleId) {
         return delete(Restrictions.conjunction()
-                .add(Restrictions.eq(RoleAuthority._corpCode, ExecutionContext.getCorpCode()))
+                .add(Restrictions.eq(RoleAuthority.CORP_CODE, ExecutionContext.getCorpCode()))
                 .add(Restrictions.eq(RoleAuthority._roleId, roleId)));
     }
 
@@ -116,7 +116,7 @@ public class RoleAuthorityServiceImpl extends BaseServiceImpl<RoleAuthority> imp
 
         List<String> authorityIds = roleAuthorities.stream().map(roleAuthority ->
                 roleAuthority.getAuthority().getId()).collect(Collectors.toList());
-        Criterion criterion = Restrictions.in(Authority._id, authorityIds);
+        Criterion criterion = Restrictions.in(Authority.ID, authorityIds);
         return authorityService.listByCriterion(criterion, Authority._authUrl, Authority._authCode);
     }
 }

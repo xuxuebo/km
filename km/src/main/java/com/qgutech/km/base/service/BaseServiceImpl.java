@@ -68,7 +68,7 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
 
     protected Conjunction getConjunction() {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq(BaseModel._corpCode, ExecutionContext.getCorpCode()));
+        conjunction.add(Restrictions.eq(BaseModel.CORP_CODE, ExecutionContext.getCorpCode()));
         return conjunction;
     }
 
@@ -97,8 +97,8 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
 
         Set<String> set = new HashSet<>(fields.length + 2);
         Collections.addAll(set, fields);
-        set.add(BaseModel._updateBy);
-        set.add(BaseModel._updateTime);
+        set.add(BaseModel.UPDATE_BY);
+        set.add(BaseModel.UPDATE_TIME);
         model.setUpdateBy(ExecutionContext.getUserId());
         model.setUpdateTime(new Date());
         update(set.toArray(new String[set.size()]), model);
@@ -114,8 +114,8 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
             builder.addParameter(processHqlMapKey(fields[i]), getFieldValue(fields[i], model));
         }
 
-        builder.append(WHERE).append(BaseModel._id).append(EQUAL).append(COLON + BaseModel._id);
-        builder.addParameter(processHqlMapKey(BaseModel._id), model.getId());
+        builder.append(WHERE).append(BaseModel.ID).append(EQUAL).append(COLON + BaseModel.ID);
+        builder.addParameter(processHqlMapKey(BaseModel.ID), model.getId());
         return executeUpdate(builder);
     }
 
@@ -175,14 +175,14 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
         HqlBuilder builder = new HqlBuilder();
         builder.append(UPDATE).append(getEntityName()).append(SET);
         builder.append(fieldName).append(EQUAL).append(COLON + "fieldValue").append(COMMA);
-        builder.append(BaseModel._updateTime).append(EQUAL).append(COLON + BaseModel._updateTime).append(COMMA);
-        builder.append(BaseModel._updateBy).append(EQUAL).append(COLON + BaseModel._updateBy);
-        builder.append(WHERE).append(BaseModel._id).append(IN).append(LEFT_BRACKET)
+        builder.append(BaseModel.UPDATE_TIME).append(EQUAL).append(COLON + BaseModel.UPDATE_TIME).append(COMMA);
+        builder.append(BaseModel.UPDATE_BY).append(EQUAL).append(COLON + BaseModel.UPDATE_BY);
+        builder.append(WHERE).append(BaseModel.ID).append(IN).append(LEFT_BRACKET)
                 .append(COLON + "primaryKeyValues").append(RIGHT_BRACKET);
         Query query = baseService.getSession().createQuery(builder.toString());
         query.setParameter("fieldValue", value);
-        query.setParameter(BaseModel._updateTime, new Date());
-        query.setParameter(BaseModel._updateBy, ExecutionContext.getUserId());
+        query.setParameter(BaseModel.UPDATE_TIME, new Date());
+        query.setParameter(BaseModel.UPDATE_BY, ExecutionContext.getUserId());
         int size = modelIds.size();
         int count = size % BATCH_SIZE == 0 ? size / BATCH_SIZE : (size / BATCH_SIZE + 1);
         int execute = 0;
@@ -203,7 +203,7 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
         Assert.notEmpty(modelIds, "modelIds is empty!");
         Assert.notNull(model, "model is null!");
 
-        return updateByCriterion(Restrictions.in(BaseModel._id, modelIds), model, fields);
+        return updateByCriterion(Restrictions.in(BaseModel.ID, modelIds), model, fields);
     }
 
     private Object getFieldValue(String fieldName, Object model) {
@@ -243,14 +243,14 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
             return baseService.get(modelClass, modelId);
         }
 
-        return getByFieldNameAndValue(BaseModel._id, modelId, fieldNames);
+        return getByFieldNameAndValue(BaseModel.ID, modelId, fieldNames);
     }
 
     @Override
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public boolean exist(String modelId) {
         Assert.hasText(modelId, "modelId is empty!");
-        return exist(BaseModel._id, modelId);
+        return exist(BaseModel.ID, modelId);
     }
 
     @Override
@@ -441,7 +441,7 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
         if (!subField.contains(".")) {
             Field f = ReflectUtil.getField(field.getType(), subField);
             Assert.notNull(f, "field[" + subField + "] not in class[" + field.getType() + "]!");
-            return BaseModel._id.equals(f.getName());
+            return BaseModel.ID.equals(f.getName());
         }
 
         String secondFieldName = subField.substring(0, subField.indexOf("."));
@@ -559,7 +559,7 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
         Assert.hasText(modelId, "modelId is empty!");
         Assert.hasText(fieldName, "fieldName is empty!");
 
-        return getFieldValueByFieldNameAndValue(BaseModel._id, modelId, fieldName);
+        return getFieldValueByFieldNameAndValue(BaseModel.ID, modelId, fieldName);
     }
 
     @Override
@@ -672,14 +672,14 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
     public List<T> listByIds(List<String> modelIds, String... fieldNames) {
         Assert.notEmpty(modelIds, "modelIds is empty!");
 
-        Criterion criterion = Restrictions.in(BaseModel._id, modelIds);
+        Criterion criterion = Restrictions.in(BaseModel.ID, modelIds);
         if (fieldNames == null || fieldNames.length == 0) {
             return listByCriterion(criterion);
         }
 
         Set<String> fields = new HashSet<String>(fieldNames.length + 1);
         Collections.addAll(fields, fieldNames);
-        fields.add(BaseModel._id);
+        fields.add(BaseModel.ID);
         return listByCriterion(criterion, fields.toArray(new String[fields.size()]));
     }
 
@@ -689,14 +689,14 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
         Assert.notEmpty(modelIds, "modelIds is empty!");
         Assert.notEmpty(orders, "orders is empty!");
 
-        Criterion criterion = Restrictions.in(BaseModel._id, modelIds);
+        Criterion criterion = Restrictions.in(BaseModel.ID, modelIds);
         if (fieldNames == null || fieldNames.length == 0) {
             return listByCriterion(criterion, orders);
         }
 
         Set<String> fields = new HashSet<String>(fieldNames.length + 1);
         Collections.addAll(fields, fieldNames);
-        fields.add(BaseModel._id);
+        fields.add(BaseModel.ID);
         return listByCriterion(criterion, orders, fields.toArray(new String[fields.size()]));
     }
 
@@ -960,8 +960,8 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
             HqlBuilder builder = new HqlBuilder();
             builder.append(UPDATE).append(getEntityName()).append(SET)
                     .append(fieldName).append(EQUAL).append(QUESTION_MARK)
-                    .append(COMMA).append(BaseModel._updateBy).append(EQUAL).append(QUESTION_MARK)
-                    .append(COMMA).append(BaseModel._updateTime).append(EQUAL).append(QUESTION_MARK);
+                    .append(COMMA).append(BaseModel.UPDATE_BY).append(EQUAL).append(QUESTION_MARK)
+                    .append(COMMA).append(BaseModel.UPDATE_TIME).append(EQUAL).append(QUESTION_MARK);
             builder.addParameter(fieldValue).addParameter(ExecutionContext.getUserId())
                     .addParameter(new Date());
             return executeUpdate(builder);
@@ -990,15 +990,15 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
             String[] propertyNames = getPersistPropertyNames();
             Set<String> properties = new HashSet<String>(propertyNames.length);
             Collections.addAll(properties, propertyNames);
-            properties.remove(BaseModel._corpCode);
-            properties.remove(BaseModel._createBy);
-            properties.remove(BaseModel._createTime);
+            properties.remove(BaseModel.CORP_CODE);
+            properties.remove(BaseModel.CREATE_BY);
+            properties.remove(BaseModel.CREATE_TIME);
             fields = properties.toArray(new String[properties.size()]);
         } else {
             Set<String> properties = new HashSet<String>(fields.length + 2);
             Collections.addAll(properties, fields);
-            properties.add(BaseModel._updateBy);
-            properties.add(BaseModel._updateTime);
+            properties.add(BaseModel.UPDATE_BY);
+            properties.add(BaseModel.UPDATE_TIME);
             fields = properties.toArray(new String[properties.size()]);
         }
 
@@ -1055,8 +1055,8 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
                     .append(fieldName).append(EQUAL)
                     .append(COALESCE).append(LEFT_BRACKET).append(fieldName).append(COMMA)
                     .append(ZERO).append(RIGHT_BRACKET).append(PLUS).append(QUESTION_MARK)
-                    .append(COMMA).append(BaseModel._updateBy).append(EQUAL).append(QUESTION_MARK)
-                    .append(COMMA).append(BaseModel._updateTime).append(EQUAL).append(QUESTION_MARK);
+                    .append(COMMA).append(BaseModel.UPDATE_BY).append(EQUAL).append(QUESTION_MARK)
+                    .append(COMMA).append(BaseModel.UPDATE_TIME).append(EQUAL).append(QUESTION_MARK);
             builder.addParameter(increment)
                     .addParameter(ExecutionContext.getUserId())
                     .addParameter(new Date());
@@ -1079,12 +1079,12 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
         model.setUpdateBy(ExecutionContext.getUserId());
         model.setUpdateTime(new Date());
         if (fields == null || fields.length == 0) {
-            fields = new String[]{BaseModel._updateBy, BaseModel._updateTime};
+            fields = new String[]{BaseModel.UPDATE_BY, BaseModel.UPDATE_TIME};
         } else {
             Set<String> properties = new HashSet<String>(fields.length + 2);
             Collections.addAll(properties, fields);
-            properties.add(BaseModel._updateBy);
-            properties.add(BaseModel._updateTime);
+            properties.add(BaseModel.UPDATE_BY);
+            properties.add(BaseModel.UPDATE_TIME);
             fields = properties.toArray(new String[properties.size()]);
         }
 
@@ -1119,7 +1119,7 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
                 (CriteriaImpl) criteria, getFullEntityName(), CriteriaQueryTranslator.ROOT_SQL_ALIAS);
         CriteriaQuery criteriaQuery = new PeCriteriaQuery(translator);
         String sqlString = criterion.toSqlString(criteria, criteriaQuery)
-                .replace(CriteriaQueryTranslator.ROOT_SQL_ALIAS + BaseModel._point, StringUtils.EMPTY);
+                .replace(CriteriaQueryTranslator.ROOT_SQL_ALIAS + BaseModel.POINT, StringUtils.EMPTY);
         builder.append(sqlString);
         TypedValue[] typedValues = criterion.getTypedValues(criteria, criteriaQuery);
         for (TypedValue typedValue : typedValues) {
@@ -1148,7 +1148,7 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
         Assert.hasText(fieldName, "fieldName is empty!");
         Assert.notNull(increment, "increment is null!");
 
-        return incrByCriterion(Restrictions.in(BaseModel._id, modelIds), fieldName, increment);
+        return incrByCriterion(Restrictions.in(BaseModel.ID, modelIds), fieldName, increment);
     }
 
     @Override
@@ -1170,7 +1170,7 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
         Assert.notNull(model, "model is null!");
         Assert.notEmpty(incrFields, "incrFields is empty!");
 
-        return incrByCriterion(Restrictions.in(BaseModel._id, modelIds), model, incrFields, fields);
+        return incrByCriterion(Restrictions.in(BaseModel.ID, modelIds), model, incrFields, fields);
     }
 
     @Override
@@ -1203,7 +1203,7 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
                 criteria.addOrder(order);
             }
         } else {
-            criteria.addOrder(Order.desc(BaseModel._createTime));
+            criteria.addOrder(Order.desc(BaseModel.CREATE_TIME));
         }
 
         if (pageParam.isAutoPaging()) {
@@ -1246,7 +1246,7 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
                 criteria.addOrder(order);
             }
         } else {
-            criteria.addOrder(Order.desc(BaseModel._createTime));
+            criteria.addOrder(Order.desc(BaseModel.CREATE_TIME));
         }
 
         if (pageParam.isAutoPaging()) {
@@ -1292,7 +1292,7 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
                 criteria.addOrder(order);
             }
         } else {
-            criteria.addOrder(Order.desc(BaseModel._createTime));
+            criteria.addOrder(Order.desc(BaseModel.CREATE_TIME));
         }
 
         if (pageParam.isAutoPaging()) {
@@ -1341,7 +1341,7 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
                 criteria.addOrder(order);
             }
         } else {
-            criteria.addOrder(Order.desc(BaseModel._createTime));
+            criteria.addOrder(Order.desc(BaseModel.CREATE_TIME));
         }
 
         if (pageParam.isAutoPaging()) {

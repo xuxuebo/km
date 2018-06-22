@@ -26,8 +26,8 @@ public class MessageServiceImpl extends BaseServiceImpl<Message> implements Mess
         PeUtils.validPage(pageParam);
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq(Message._user, ExecutionContext.getUserId()));
-        conjunction.add(Restrictions.eq(Message._corpCode, ExecutionContext.getCorpCode()));
-        return search(pageParam, conjunction, new Order[]{Order.desc(Message._createTime)}, Message._id,
+        conjunction.add(Restrictions.eq(Message.CORP_CODE, ExecutionContext.getCorpCode()));
+        return search(pageParam, conjunction, new Order[]{Order.desc(Message._createTime)}, Message.ID,
                 Message._content, Message._read, Message._createTime);
 
     }
@@ -40,7 +40,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message> implements Mess
         }
         Criterion criterion = Restrictions.and(
                 Restrictions.eq(Message._user, ExecutionContext.getUserId()),
-                Restrictions.in(Message._id, messageIds)
+                Restrictions.in(Message.ID, messageIds)
         );
 
         return updateByCriterion(criterion, Message._read, true);

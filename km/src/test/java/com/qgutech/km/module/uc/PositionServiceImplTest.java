@@ -42,7 +42,7 @@ public class PositionServiceImplTest extends BaseTests {
         PageParam page = new PageParam();
         page.setPage(1);
         page.setPageSize(10);
-        page.setSort(Position._updateTime);
+        page.setSort(Position.UPDATE_TIME);
         page.setOrder(PageParam.SortOrder.asc);
         Position position = new Position();
         Category category = new Category();

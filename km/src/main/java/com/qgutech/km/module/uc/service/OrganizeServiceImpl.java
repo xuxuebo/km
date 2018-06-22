@@ -129,7 +129,7 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
         }
 
         Map<String, Organize> organizeMap = organizes.stream().collect(Collectors.toMap(Organize::getId, organize -> organize));
-        List<String> dbOrganizeIds = listFieldValueByCriterion(getConjunction(), Organize._id);
+        List<String> dbOrganizeIds = listFieldValueByCriterion(getConjunction(), Organize.ID);
         List<String> saveOrganizeIds = (List<String>) CollectionUtils.subtract(organizeMap.keySet(), dbOrganizeIds);
         if (CollectionUtils.isNotEmpty(dbOrganizeIds)) {
             List<String> expireIds = (List<String>) CollectionUtils.subtract(dbOrganizeIds, organizeMap.keySet());
@@ -298,13 +298,13 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
      */
     private boolean checkName(Organize organize) {
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(Organize._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(Organize.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.eq(Organize._parentId, organize.getParentId()),
                 Restrictions.eq(Organize._organizeName, organize.getOrganizeName()),
                 Restrictions.ne(Organize._organizeStauts, Organize.OrganizeStatus.DELETE)
         );
 
-        String dataOrganizeId = getFieldValueByCriterion(criterion, Organize._id);
+        String dataOrganizeId = getFieldValueByCriterion(criterion, Organize.ID);
         return !StringUtils.isBlank(dataOrganizeId) &&
                 !(StringUtils.isNotBlank(organize.getId()) && dataOrganizeId.equals(organize.getId()));
 
@@ -412,9 +412,9 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
         }
 
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(Organize._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(Organize.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.or(
-                        Restrictions.eq(Organize._id, organizeId),
+                        Restrictions.eq(Organize.ID, organizeId),
                         Restrictions.like(Organize._idPath, organizeId, MatchMode.ANYWHERE)),
                 Restrictions.ne(Organize._organizeStauts, Organize.OrganizeStatus.DELETE));
 
@@ -425,7 +425,7 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
     @Transactional(readOnly = true)
     public Organize getRoot() {
         return getByCriterion(Restrictions.and(
-                Restrictions.eq(Organize._corpCode, ExecutionContext.getCorpCode())
+                Restrictions.eq(Organize.CORP_CODE, ExecutionContext.getCorpCode())
                 , Restrictions.isNull(Organize._parentId)));
     }
 
@@ -437,22 +437,22 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
         }
 
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(Organize._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(Organize.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.or(
                         Restrictions.ilike(Organize._idPath, parentId, MatchMode.ANYWHERE),
-                        Restrictions.eq(Organize._id, parentId)),
+                        Restrictions.eq(Organize.ID, parentId)),
                 Restrictions.ne(Organize._organizeStauts, Organize.OrganizeStatus.DELETE));
-        return listFieldValueByCriterion(criterion, Organize._id);
+        return listFieldValueByCriterion(criterion, Organize.ID);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<PeTreeNode> listTreeNode() {
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(Organize._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(Organize.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.ne(Organize._organizeStauts, Organize.OrganizeStatus.DELETE));
         List<Organize> organizes = listByCriterion((criterion),
-                new Order[]{Order.asc(Organize._showOrder), Order.desc(Organize._createTime)});
+                new Order[]{Order.asc(Organize._showOrder), Order.desc(Organize.CREATE_TIME)});
         if (CollectionUtils.isEmpty(organizes)) {
             return new ArrayList<>(0);
         }
@@ -490,7 +490,7 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
         //获取交换对象
         Criteria criteria = createCriteria();
         criteria.add(Restrictions.and(
-                Restrictions.eq(Organize._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(Organize.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.eq(Organize._parentId, organize.getParentId()),
                 Restrictions.ne(Organize._organizeStauts, Organize.OrganizeStatus.DELETE)));
         Float showOrder = organize.getShowOrder();
@@ -524,10 +524,10 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
 
         Conjunction conjunction = getConjunction();
         conjunction.add(Restrictions.and(
-                Restrictions.eq(Organize._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(Organize.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.ne(Organize._organizeStauts, Organize.OrganizeStatus.DELETE)));
-        conjunction.add(Restrictions.in(Organize._id, organizeIds));
-        List<Organize> organizes = listByCriterion(conjunction, Organize._organizeName, Organize._id, Organize._idPath);
+        conjunction.add(Restrictions.in(Organize.ID, organizeIds));
+        List<Organize> organizes = listByCriterion(conjunction, Organize._organizeName, Organize.ID, Organize._idPath);
         Map<String, Organize> organizeMap = new HashMap<>(organizes.size());
         for (Organize organize : organizes) {
             organizeMap.put(organize.getId(), organize);
@@ -540,9 +540,9 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
     @Transactional(readOnly = true)
     public Map<String, Organize> findAll() {
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(Organize._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(Organize.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.ne(Organize._organizeStauts, Organize.OrganizeStatus.DELETE));
-        List<Organize> organizes = listByCriterion(criterion, Organize._organizeName, Organize._idPath, Organize._parentId, Organize._id);
+        List<Organize> organizes = listByCriterion(criterion, Organize._organizeName, Organize._idPath, Organize._parentId, Organize.ID);
         if (CollectionUtils.isEmpty(organizes)) {
             return new HashMap<>(0);
         }
@@ -558,12 +558,12 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
         }
 
         Criteria criteria = createCriteria();
-        criteria.add(Restrictions.in(Organize._id, organizeIds));
+        criteria.add(Restrictions.in(Organize.ID, organizeIds));
         criteria.createAlias(Organize._userAlias, Organize._userAlias);
         String userAlias = Organize._userAlias + PeConstant.POINT;
         criteria.add(Restrictions.eq(userAlias + User._status, User.UserStatus.ENABLE));
         criteria.setProjection(Projections.projectionList()
-                .add(Projections.groupProperty(Organize._id))
+                .add(Projections.groupProperty(Organize.ID))
                 .add(Projections.rowCount()));
         List<Object[]> objects = criteria.list();
         if (CollectionUtils.isEmpty(objects)) {
@@ -586,8 +586,8 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
         Conjunction conjunction = new Conjunction();
         conjunction.add(Restrictions.eq(Organize._organizeName, "其他"));
         conjunction.add(Restrictions.eq(Organize._isDefault, Boolean.TRUE));
-        conjunction.add(Restrictions.eq(Organize._corpCode, ExecutionContext.getCorpCode()));
-        return getByCriterion(conjunction, Organize._id, Organize._organizeName);
+        conjunction.add(Restrictions.eq(Organize.CORP_CODE, ExecutionContext.getCorpCode()));
+        return getByCriterion(conjunction, Organize.ID, Organize._organizeName);
     }
 
     @Override
@@ -600,7 +600,7 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
         Conjunction conjunction = getConjunction();
         conjunction.add(Restrictions.in(Organize._organizeName, organizeNames));
         conjunction.add(Restrictions.eq(Organize._organizeStauts, Organize.OrganizeStatus.ENABLE));
-        List<Organize> organizes = listByCriterion(conjunction, Organize._organizeName, Organize._id, Organize._parentId, Organize._idPath);
+        List<Organize> organizes = listByCriterion(conjunction, Organize._organizeName, Organize.ID, Organize._parentId, Organize._idPath);
         if (CollectionUtils.isEmpty(organizes)) {
             return new HashMap<>(0);
         }

@@ -23,12 +23,6 @@ import com.qgutech.km.constant.PeConstant;
 import com.qgutech.km.constant.RedisKey;
 import com.qgutech.km.module.im.domain.ImReceiver;
 import com.qgutech.km.module.im.domain.ImTemplate;
-import com.qgutech.km.module.uc.model.*;
-import com.qgutech.km.module.uc.service.*;
-import com.qgutech.km.utils.*;
-import com.qgutech.km.module.uc.model.*;
-import com.qgutech.km.module.uc.service.*;
-import com.qgutech.km.utils.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -88,8 +82,8 @@ public class UserController extends BaseController {
     public String initPage(Model model) {
         Organize organize = organizeService.getRoot();
         model.addAttribute(User._organizeAlias, organize);
-        List<Role> roles = roleService.listByCriterion(Restrictions.eq(Role._corpCode, ExecutionContext.getCorpCode()),
-                Role._id, Role._roleName);
+        List<Role> roles = roleService.listByCriterion(Restrictions.eq(Role.CORP_CODE, ExecutionContext.getCorpCode()),
+                Role.ID, Role._roleName);
         model.addAttribute("roles", roles);
         model.addAttribute("myUserId", ExecutionContext.getUserId());
         return "uc/user/userManage";
@@ -99,13 +93,13 @@ public class UserController extends BaseController {
     @RequestMapping("manage/listRoleTree")
     public List<PeTreeNode> listRoleTree() {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq(Role._corpCode, ExecutionContext.getCorpCode()));
+        conjunction.add(Restrictions.eq(Role.CORP_CODE, ExecutionContext.getCorpCode()));
         if (!SessionContext.get().isSuperAdmin()) {
             String roleId = roleService.getSystemId();
-            conjunction.add(Restrictions.ne(Role._id, roleId));
+            conjunction.add(Restrictions.ne(Role.ID, roleId));
         }
 
-        List<Role> roles = roleService.listByCriterion(conjunction, Role._id, Role._roleName);
+        List<Role> roles = roleService.listByCriterion(conjunction, Role.ID, Role._roleName);
         if (CollectionUtils.isEmpty(roles)) {
             return new ArrayList<>(0);
         }
@@ -350,7 +344,7 @@ public class UserController extends BaseController {
             User user = new User();
             Organize organize = organizeService.getByCriterion(Restrictions.and(
                     Restrictions.isNotNull(Organize._parentId),
-                    Restrictions.eq(Organize._id, organizeId)), Organize._id, Organize._organizeName);
+                    Restrictions.eq(Organize.ID, organizeId)), Organize.ID, Organize._organizeName);
             user.setOrganize(organize);
             model.addAttribute(User._userAlias, user);
             return "uc/user/addUser";

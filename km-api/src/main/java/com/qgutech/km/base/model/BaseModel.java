@@ -13,39 +13,13 @@ import java.util.Date;
  */
 @MappedSuperclass
 public class BaseModel {
-    public static final String _id = "id";
-    public static final String _corpCode = "corpCode";
-    public static final String _createBy = "createBy";
-    public static final String _updateBy = "updateBy";
-    public static final String _createTime = "createTime";
-    public static final String _updateTime = "updateTime";
-    public static final String _point = ".";
-
-    public enum OptType {
-        DELETE("删除"), UPDATE("修改"), ADD("新增"), VIEW("预览");
-        private String text;
-
-        OptType(String text) {
-            this.text = text;
-        }
-
-        public String getText() {
-            return text;
-        }
-    }
-
-    public enum FromType {
-        MOBILE("手机端"), PC("PC端");
-        private String text;
-
-        FromType(String text) {
-            this.text = text;
-        }
-
-        public String getText() {
-            return text;
-        }
-    }
+    public static final String ID = "id";
+    public static final String CORP_CODE = "corpCode";
+    public static final String CREATE_BY = "createBy";
+    public static final String UPDATE_BY = "updateBy";
+    public static final String CREATE_TIME = "createTime";
+    public static final String UPDATE_TIME = "updateTime";
+    public static final String POINT = ".";
 
     /**
      * 主键
@@ -87,12 +61,6 @@ public class BaseModel {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date updateTime;
-
-    /**
-     * 操作类型
-     */
-    @Transient
-    private OptType optType;
 
     public String getId() {
         return id;
@@ -140,13 +108,5 @@ public class BaseModel {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public OptType getOptType() {
-        return optType;
-    }
-
-    public void setOptType(OptType optType) {
-        this.optType = optType;
     }
 }

@@ -42,7 +42,7 @@ public class UserPositionServiceImpl extends BaseServiceImpl<UserPosition> imple
         }
 
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(UserPosition._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(UserPosition.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.in(UserPosition._user, userIds));
         List<UserPosition> userPositions = listByCriterion(criterion, UserPosition._positionAlias, UserPosition._positionName, UserPosition._user);
         if (CollectionUtils.isEmpty(userPositions)) {
@@ -73,9 +73,9 @@ public class UserPositionServiceImpl extends BaseServiceImpl<UserPosition> imple
         }
 
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(UserPosition._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(UserPosition.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.eq(UserPosition._user, userId));
-        List<UserPosition> userPositions = listByCriterion(criterion, new Order[]{Order.desc(UserPosition._createTime)},
+        List<UserPosition> userPositions = listByCriterion(criterion, new Order[]{Order.desc(UserPosition.CREATE_TIME)},
                 UserPosition._position, UserPosition._positionName, UserPosition._positionAlias);
         if (CollectionUtils.isEmpty(userPositions)) {
             return new ArrayList<>(0);
@@ -98,7 +98,7 @@ public class UserPositionServiceImpl extends BaseServiceImpl<UserPosition> imple
         }
 
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(UserPosition._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(UserPosition.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.in(UserPosition._user, userIds)
         );
 
@@ -135,7 +135,7 @@ public class UserPositionServiceImpl extends BaseServiceImpl<UserPosition> imple
             throw new IllegalArgumentException("PositionId is null!");
         }
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(UserPosition._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(UserPosition.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.eq(UserPosition._position, positionId)
         );
         return delete(criterion);

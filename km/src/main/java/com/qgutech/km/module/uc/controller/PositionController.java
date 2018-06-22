@@ -165,7 +165,7 @@ public class PositionController {
     @ResponseBody
     @RequestMapping("manage/getPosition")
     public Position get(String positionId) {
-        return positionService.get(positionId, Position._id,
+        return positionService.get(positionId, Position.ID,
                 Position._positionName, Position._category, Position._categoryName);
     }
 }

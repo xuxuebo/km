@@ -71,13 +71,13 @@ public class PositionServiceImpl extends BaseServiceImpl<Position> implements Po
      */
     private boolean checkName(Position position) {
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(Position._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(Position.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.eq(Position._positionName, position.getPositionName()),
                 Restrictions.eq(Position._category, position.getCategory().getId()),
                 Restrictions.ne(Position._positionStauts, Position.PositionStatus.DELETE)
         );
 
-        String dataPositionId = getFieldValueByCriterion(criterion, Position._id);
+        String dataPositionId = getFieldValueByCriterion(criterion, Position.ID);
         return !StringUtils.isBlank(dataPositionId) &&
                 !(StringUtils.isNotBlank(position.getId()) && dataPositionId.equals(position.getId()));
     }
@@ -127,12 +127,12 @@ public class PositionServiceImpl extends BaseServiceImpl<Position> implements Po
         }
 
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(Position._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(Position.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.ne(Position._positionStauts, Position.PositionStatus.DELETE),
                 Restrictions.in(Position._category, categoryIds)
         );
 
-        return search(pageParam, criterion, new Order[]{}, Position._positionName, Position._id);
+        return search(pageParam, criterion, new Order[]{}, Position._positionName, Position.ID);
     }
 
     @Override
@@ -143,10 +143,10 @@ public class PositionServiceImpl extends BaseServiceImpl<Position> implements Po
         }
 
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(Position._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(Position.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.ne(Position._positionStauts, Position.PositionStatus.DELETE),
                 Restrictions.in(Position._category, categoryIds));
-        return listByCriterion(criterion, new Order[]{Order.desc(Position._createTime)}, Position._id, Position._positionName, Position._category);
+        return listByCriterion(criterion, new Order[]{Order.desc(Position.CREATE_TIME)}, Position.ID, Position._positionName, Position._category);
     }
 
     @Override
@@ -157,7 +157,7 @@ public class PositionServiceImpl extends BaseServiceImpl<Position> implements Po
         }
 
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(Position._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(Position.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.ne(Position._positionStauts, Position.PositionStatus.DELETE),
                 Restrictions.in(Position._category, categoryIds)
         );
@@ -175,7 +175,7 @@ public class PositionServiceImpl extends BaseServiceImpl<Position> implements Po
         Conjunction conjunction = getConjunction();
         conjunction.add(Restrictions.in(Position._positionName, positionNames));
         conjunction.add(Restrictions.eq(Position._positionStauts, Position.PositionStatus.ENABLE));
-        List<Position> positions = listByCriterion(conjunction, Position._id, Position._positionName,
+        List<Position> positions = listByCriterion(conjunction, Position.ID, Position._positionName,
                 Position._category, Position._categoryIdPath);
         if (CollectionUtils.isEmpty(positions)) {
             return new HashMap<>(0);
@@ -189,7 +189,7 @@ public class PositionServiceImpl extends BaseServiceImpl<Position> implements Po
             categoryIds.add(category.getId());
         }
 
-        List<Category> categories = categoryService.listByIds(new ArrayList<>(categoryIds), Category._id, Category._categoryName);
+        List<Category> categories = categoryService.listByIds(new ArrayList<>(categoryIds), Category.ID, Category._categoryName);
         if (CollectionUtils.isEmpty(categories)) {
             return new HashMap<>(0);
         }
@@ -261,7 +261,7 @@ public class PositionServiceImpl extends BaseServiceImpl<Position> implements Po
         Conjunction conjunction = getConjunction();
         conjunction.add(Restrictions.eq(Category._categoryType, Category.CategoryEnumType.POSITION));
         conjunction.add(Restrictions.isNotNull(Category._parentId));
-        List<String> categoryIds = categoryService.listFieldValueByCriterion(conjunction, Category._id);
+        List<String> categoryIds = categoryService.listFieldValueByCriterion(conjunction, Category.ID);
         List<String> saveCategoryIds = (List<String>) CollectionUtils.subtract(categoryMap.keySet(), categoryIds);
         if (CollectionUtils.isNotEmpty(categoryIds)) {
             List<String> expireIds = (List<String>) CollectionUtils.subtract(categoryIds, categoryMap.keySet());
@@ -324,7 +324,7 @@ public class PositionServiceImpl extends BaseServiceImpl<Position> implements Po
         }
 
         Map<String, Position> positionMap = positions.stream().collect(Collectors.toMap(Position::getId, position -> position));
-        List<String> positionIds = listFieldValueByCriterion(getConjunction(), Position._id);
+        List<String> positionIds = listFieldValueByCriterion(getConjunction(), Position.ID);
         List<String> savePositionIds = (List<String>) CollectionUtils.subtract(positionMap.keySet(), positionIds);
         if (CollectionUtils.isNotEmpty(positionIds)) {
             List<String> expireIds = (List<String>) CollectionUtils.subtract(positionIds, positionMap.keySet());

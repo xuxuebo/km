@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.qgutech.km.base.model.BaseLevelModel.*;
-import static com.qgutech.km.base.model.BaseModel._corpCode;
+import static com.qgutech.km.base.model.BaseModel.CORP_CODE;
 import static com.qgutech.km.base.model.Category._categoryName;
 import static com.qgutech.km.base.model.Category._categoryType;
 
@@ -59,12 +59,12 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
     public boolean checkName(Category category) {
         checkParams(category);
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(Category._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(Category.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.eq(Category._categoryName, category.getCategoryName()),
                 Restrictions.eq(Category._parentId, category.getParentId()),
                 Restrictions.eq(Category._categoryType, category.getCategoryType()),
                 Restrictions.ne(Category._categoryStatus, Category.CategoryStatus.DELETE));
-        Category dataCategory = getByCriterion(criterion, Category._id);
+        Category dataCategory = getByCriterion(criterion, Category.ID);
         return dataCategory != null && (StringUtils.isBlank(category.getId())
                 || !dataCategory.getId().equals(category.getId()));
 
@@ -114,8 +114,8 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
             throw new PeException(i18nService.getI18nValue(errorInfoKey));
         }
 
-        Criterion criterion = Restrictions.and(Restrictions.eq(Category._corpCode, ExecutionContext.getCorpCode()),
-                Restrictions.or(Restrictions.eq(Category._id, categoryId),
+        Criterion criterion = Restrictions.and(Restrictions.eq(Category.CORP_CODE, ExecutionContext.getCorpCode()),
+                Restrictions.or(Restrictions.eq(Category.ID, categoryId),
                         Restrictions.like(Category._idPath, categoryId, MatchMode.ANYWHERE)));
         return updateByCriterion(criterion, Category._categoryStatus, Category.CategoryStatus.DELETE);
     }
@@ -145,12 +145,12 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
         }
 
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(Category._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(Category.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.eq(Category._categoryType, type),
                 Restrictions.ne(Category._categoryStatus, Category.CategoryStatus.DELETE),
                 Restrictions.or(Restrictions.like(Category._idPath, parentId, MatchMode.ANYWHERE),
-                        Restrictions.eq(Category._id, parentId)));
-        List<Category> categories = listByCriterion(criterion, Category._id);
+                        Restrictions.eq(Category.ID, parentId)));
+        List<Category> categories = listByCriterion(criterion, Category.ID);
         if (CollectionUtils.isEmpty(categories)) {
             return new ArrayList<>(0);
         }
@@ -169,7 +169,7 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
         }
 
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(Category._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(Category.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.eq(Category._categoryType, type),
                 Restrictions.ne(Category._categoryStatus, Category.CategoryStatus.DELETE),
                 Restrictions.like(Category._idPath, parentId, MatchMode.ANYWHERE));
@@ -184,7 +184,7 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
         }
 
         Junction junction = Restrictions.conjunction()
-                .add(Restrictions.eq(_corpCode, ExecutionContext.getCorpCode()))
+                .add(Restrictions.eq(CORP_CODE, ExecutionContext.getCorpCode()))
                 .add(Restrictions.like(_idPath, parentId, MatchMode.ANYWHERE))
                 .add(Restrictions.ne(Category._categoryStatus, Category.CategoryStatus.DELETE));
         if (StringUtils.isNotBlank(keyword)) {
@@ -206,7 +206,7 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
         }
 
         Junction junction = Restrictions.conjunction()
-                .add(Restrictions.eq(_corpCode, ExecutionContext.getCorpCode()))
+                .add(Restrictions.eq(CORP_CODE, ExecutionContext.getCorpCode()))
                 .add(Restrictions.eq(_parentId, parentId))
                 .add(Restrictions.ne(Category._categoryStatus, Category.CategoryStatus.DELETE));
         if (StringUtils.isNotBlank(keyword)) {
@@ -271,7 +271,7 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
     public Category getRoot(Category.CategoryEnumType type) {
         return getByCriterion(Restrictions.conjunction()
                 .add(Restrictions.eq(_categoryType, type))
-                .add(Restrictions.eq(_corpCode, ExecutionContext.getCorpCode()))
+                .add(Restrictions.eq(CORP_CODE, ExecutionContext.getCorpCode()))
                 .add(Restrictions.ne(Category._categoryStatus, Category.CategoryStatus.DELETE))
                 .add(Restrictions.disjunction().add(Restrictions.eq(_parentId, ""))
                         .add(Restrictions.isNull(_parentId))));
@@ -284,7 +284,7 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
             throw new PeException("Type is null!");
         }
 
-        return listByCriterion(Restrictions.and(Restrictions.eq(Category._corpCode, ExecutionContext.getCorpCode()),
+        return listByCriterion(Restrictions.and(Restrictions.eq(Category.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.eq(Category._categoryType, type),
                 Restrictions.ne(Category._categoryStatus, Category.CategoryStatus.DELETE)),
                 new Order[]{Order.asc(Category._showOrder)});
@@ -335,7 +335,7 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
         //获取交换对象
         Criteria criteria = createCriteria();
         criteria.add(Restrictions.and(
-                Restrictions.eq(Category._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(Category.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.eq(Category._parentId, category.getParentId()),
                 Restrictions.ne(Category._categoryStatus, Category.CategoryStatus.DELETE)
                 )
@@ -369,12 +369,12 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
             throw new IllegalArgumentException("Category Parameter is illegal");
         }
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(Category._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(Category.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.eq(Category._categoryName, category.getCategoryName()),
                 Restrictions.eq(Category._categoryType, Category.CategoryEnumType.ITEM_BANK),
                 Restrictions.eq(Category._categoryStatus, Category.CategoryStatus.ENABLE)
         );
-        List<Category> categories = listByCriterion(criterion, Category._id);
+        List<Category> categories = listByCriterion(criterion, Category.ID);
         if (CollectionUtils.isNotEmpty(categories)) {
             return categories.get(0).getId();
         }
@@ -392,7 +392,7 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
         Conjunction conjunction = getConjunction();
         conjunction.add(Restrictions.and(Restrictions.eq(Category._categoryType, categoryEnumType),
                 Restrictions.eq(Category._categoryStatus, Category.CategoryStatus.ENABLE)));
-        List<Category> categories = listByCriterion(conjunction, Category._id, Category._parentId, Category._idPath, Category._categoryName);
+        List<Category> categories = listByCriterion(conjunction, Category.ID, Category._parentId, Category._idPath, Category._categoryName);
         if (CollectionUtils.isNotEmpty(categories)) {
             Map<String, Category> categoryNameMap = new HashMap<>(categories.size());//<类别名称，类别实体>
             Map<String, String> categoryMap = new HashMap<>(categories.size());
@@ -436,8 +436,8 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
         conjunction.add(Restrictions.eq(Category._categoryName, "未分类"));
         conjunction.add(Restrictions.eq(Category._categoryStatus, Category.CategoryStatus.ENABLE));
         conjunction.add(Restrictions.eq(Category._isDefault, Boolean.TRUE));
-        conjunction.add(Restrictions.eq(Category._corpCode, ExecutionContext.getCorpCode()));
-        return getByCriterion(conjunction, Category._id, Category._categoryName);
+        conjunction.add(Restrictions.eq(Category.CORP_CODE, ExecutionContext.getCorpCode()));
+        return getByCriterion(conjunction, Category.ID, Category._categoryName);
     }
 
     @Override
@@ -526,7 +526,7 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
 
         Conjunction conjunction = getConjunction();
         if (CollectionUtils.isNotEmpty(categoryIds)) {
-            conjunction.add(Restrictions.eq(Category._id, categoryIds));
+            conjunction.add(Restrictions.eq(Category.ID, categoryIds));
         }
 
         conjunction.add(Restrictions.eq(Category._categoryType, categoryEnumType));

@@ -3,7 +3,6 @@ package com.qgutech.km.module.uc.service;
 import com.alibaba.fastjson.JSON;
 import com.qgutech.km.base.model.Category;
 import com.qgutech.km.base.service.*;
-import com.qgutech.km.base.service.*;
 import com.qgutech.km.module.im.service.MsgSendService;
 import com.qgutech.km.module.sfm.service.FileServerService;
 import com.qgutech.km.module.uc.model.*;
@@ -12,14 +11,9 @@ import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.model.CorpInfo;
 import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
-import com.qgutech.km.base.service.*;
 import com.qgutech.km.constant.PeConstant;
 import com.qgutech.km.module.im.domain.ImReceiver;
 import com.qgutech.km.module.im.domain.ImTemplate;
-import com.qgutech.km.module.uc.model.*;
-import com.qgutech.km.utils.*;
-import com.qgutech.km.module.uc.model.*;
-import com.qgutech.km.utils.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.BooleanUtils;
@@ -84,7 +78,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq(User._roleType, User.RoleType.ADMIN));
-        conjunction.add(Restrictions.eq(User._corpCode, ExecutionContext.getCorpCode()));
+        conjunction.add(Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()));
         Disjunction disjunction = Restrictions.disjunction();
         disjunction.add(Restrictions.like(User._userName, keyword, MatchMode.ANYWHERE));
         disjunction.add(Restrictions.like(User._loginName, keyword, MatchMode.ANYWHERE));
@@ -92,7 +86,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         disjunction.add(Restrictions.like(User._mobile, keyword, MatchMode.ANYWHERE));
         conjunction.add(disjunction);
         conjunction.add(Restrictions.ne(User._status, User.UserStatus.DELETED));
-        return listFieldValueByCriterion(conjunction, User._id);
+        return listFieldValueByCriterion(conjunction, User.ID);
     }
 
 
@@ -101,7 +95,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     public List<String> listUserId(String keyword, User.RoleType roleType) {
         Assert.hasText(keyword, "Keyword can not be empty when listUserIdByKey");
         Conjunction conjunction = getConjunction();
-        conjunction.add(Restrictions.eq(User._corpCode, ExecutionContext.getCorpCode()));
+        conjunction.add(Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()));
         Disjunction disjunction = Restrictions.disjunction();
         disjunction.add(Restrictions.like(User._userName, keyword, MatchMode.ANYWHERE));
         disjunction.add(Restrictions.like(User._loginName, keyword, MatchMode.ANYWHERE));
@@ -113,7 +107,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
 
         conjunction.add(Restrictions.ne(User._status, User.UserStatus.DELETED));
-        return listFieldValueByCriterion(conjunction, User._id);
+        return listFieldValueByCriterion(conjunction, User.ID);
     }
 
     @Override
@@ -124,8 +118,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
 
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(User._corpCode, ExecutionContext.getCorpCode()),
-                Restrictions.in(User._id, userIds));
+                Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()),
+                Restrictions.in(User.ID, userIds));
         List<User> users = listByCriterion(criterion);
         if (CollectionUtils.isEmpty(users)) {
             return new HashMap<>(0);
@@ -144,9 +138,9 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     public Page<User> search(User user, PageParam pageParam) {
         PeUtils.validPage(pageParam);
         Conjunction conjunction = getConjunction();
-        conjunction.add(Restrictions.eq(User._corpCode, ExecutionContext.getCorpCode()));
+        conjunction.add(Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()));
         if (user == null) {
-            Page<User> page = search(pageParam, conjunction, Order.desc(User._createTime));
+            Page<User> page = search(pageParam, conjunction, Order.desc(User.CREATE_TIME));
             packageUser(page.getRows());
             return page;
         }
@@ -229,7 +223,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
         };
 
-        Page<User> page = search(pageParam, condition, Order.desc(User._createTime));
+        Page<User> page = search(pageParam, condition, Order.desc(User.CREATE_TIME));
         packageUser(page.getRows());
         return page;
     }
@@ -242,9 +236,9 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
 
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.in(User._id, userIds));
+        conjunction.add(Restrictions.in(User.ID, userIds));
         if (user == null) {
-            return listByCriterion(conjunction, User._id);
+            return listByCriterion(conjunction, User.ID);
         }
 
         if (StringUtils.isNotBlank(user.getKeyword())) {
@@ -272,7 +266,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             criteria.add(Restrictions.in(User._status, user.getUserStatusList()));
         }
 
-        return listByCriteria(criteria, User._id);
+        return listByCriteria(criteria, User.ID);
     }
 
     @Override
@@ -283,8 +277,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
 
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.in(User._id, userIds));
-        conjunction.add(Restrictions.eq(User._corpCode, ExecutionContext.getCorpCode()));
+        conjunction.add(Restrictions.in(User.ID, userIds));
+        conjunction.add(Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()));
         List<User> users = listByCriterion(conjunction);
         if (CollectionUtils.isEmpty(users)) {
             return new ArrayList<>(0);
@@ -306,7 +300,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<User> getAllUser() {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq(User._corpCode, ExecutionContext.getCorpCode()));
+        conjunction.add(Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()));
         conjunction.add(Restrictions.ne(User._status, User.UserStatus.DELETED));
         List<User> users = listByCriterion(conjunction);
         Map<String, Organize> organizeMap = organizeService.findAll();
@@ -334,7 +328,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             return userIds.size();
         }
 
-        List<User> users = listByIds(userIds, User._id, User._mobile, User._email, User._employeeCode, User._loginName,
+        List<User> users = listByIds(userIds, User.ID, User._mobile, User._email, User._employeeCode, User._loginName,
                 User._faceFileId, User._idCard, User._userName, User._organize, User._organizeName, User._faceFileName,
                 User._status, User._password, User._roleType);
         if (CollectionUtils.isEmpty(users)) {
@@ -385,7 +379,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
 
         update(userIds, User._organize, organizeId);
-        Organize organize = organizeService.get(organizeId, Organize._id, Organize._organizeName);
+        Organize organize = organizeService.get(organizeId, Organize.ID, Organize._organizeName);
         userRedisService.updateOrganize(userIds, organize);
         return userIds.size();
     }
@@ -489,7 +483,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
 
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(User._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.in(User._organize, organizeIds),
                 Restrictions.ne(User._status, User.UserStatus.DELETED)
         );
@@ -531,7 +525,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             user.setMobileVerify(true);
         }
 
-        Organize organize = organizeService.get(user.getOrganize().getId(), Organize._id, Organize._organizeName);
+        Organize organize = organizeService.get(user.getOrganize().getId(), Organize.ID, Organize._organizeName);
         user.setOrganize(organize);
         user.setPassword(MD5Generator.getHexMD5(password));
         user.setStatus(User.UserStatus.ENABLE);
@@ -685,7 +679,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         update(user, User._userName, User._loginName, User._employeeCode, User._mobile, User._email, User._faceFileName,
                 User._organize, User._idCard, User._sexType, User._address, User._faceFileId, User._roleType, User._entryTime);
         if (user.getOrganize() != null && StringUtils.isNotBlank(user.getOrganize().getId())) {
-            Organize organize = organizeService.get(user.getOrganize().getId(), Organize._id, Organize._organizeName);
+            Organize organize = organizeService.get(user.getOrganize().getId(), Organize.ID, Organize._organizeName);
             user.setOrganize(organize);
         }
 
@@ -733,9 +727,9 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
 
         return getByCriterion(Restrictions.and(
-                Restrictions.eq(User._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.eq(User._mobile, mobile.trim()),
-                Restrictions.ne(User._status, User.UserStatus.DELETED)), User._id);
+                Restrictions.ne(User._status, User.UserStatus.DELETED)), User.ID);
     }
 
     @Override
@@ -746,9 +740,9 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
 
         return getByCriterion(Restrictions.and(
-                Restrictions.eq(User._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.eq(User._email, email.trim()),
-                Restrictions.ne(User._status, User.UserStatus.DELETED)), User._updateBy, User._emailVerify, User._id, User._status);
+                Restrictions.ne(User._status, User.UserStatus.DELETED)), User.UPDATE_BY, User._emailVerify, User.ID, User._status);
     }
 
     @Override
@@ -759,9 +753,9 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
 
         return getByCriterion(Restrictions.and(
-                Restrictions.eq(User._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.eq(User._loginName, loginName.trim()),
-                Restrictions.ne(User._status, User.UserStatus.DELETED)), User._id);
+                Restrictions.ne(User._status, User.UserStatus.DELETED)), User.ID);
     }
 
     @Override
@@ -772,9 +766,9 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
 
         return getByCriterion(Restrictions.and(
-                Restrictions.eq(User._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.eq(User._idCard, idCard.trim()),
-                Restrictions.ne(User._status, User.UserStatus.DELETED)), User._id);
+                Restrictions.ne(User._status, User.UserStatus.DELETED)), User.ID);
     }
 
     @Override
@@ -784,7 +778,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             throw new PeException("UserId is blank!");
         }
 
-        User user = get(userId, User._id, User._employeeCode, User._mobile, User._loginName, User._entryTime,
+        User user = get(userId, User.ID, User._employeeCode, User._mobile, User._loginName, User._entryTime,
                 User._email, User._userName, User._password, User._faceFileId, User._password, User._faceFileName,
                 User._idCard, User._organize, User._organizeName, User._status, User._roleType, User._sexType, User._address);
         if (user == null) {
@@ -796,7 +790,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         List<Position> positions = userPositionService.listByUserId(userId);
         user.setPositions(positions);
         if (user.getOrganize() != null && StringUtils.isNotBlank(user.getOrganize().getId())) {
-            Organize organize = organizeService.get(user.getOrganize().getId(), Organize._id, Organize._organizeName);
+            Organize organize = organizeService.get(user.getOrganize().getId(), Organize.ID, Organize._organizeName);
             user.setOrganize(organize);
         }
 
@@ -817,13 +811,13 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
 
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(User._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.or(
                         Restrictions.eq(User._loginName, account),
                         Restrictions.eq(User._email, account),
                         Restrictions.eq(User._mobile, account)),
                 Restrictions.ne(User._status, User.UserStatus.DELETED));
-        User user = getByCriterion(criterion, User._id, User._employeeCode, User._mobile, User._loginName,
+        User user = getByCriterion(criterion, User.ID, User._employeeCode, User._mobile, User._loginName,
                 User._email, User._userName, User._password, User._faceFileId, User._faceFileName,
                 User._idCard, User._organize, User._organizeName, User._status, User._roleType);
         if (user == null || StringUtils.isBlank(user.getFaceFileId())) {
@@ -842,7 +836,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             throw new IllegalArgumentException("UserIds is empty!");
         }
 
-        List<User> users = listByIds(userIds, User._id, User._userName, User._mobile, User._loginName, User._employeeCode,
+        List<User> users = listByIds(userIds, User.ID, User._userName, User._mobile, User._loginName, User._employeeCode,
                 User._email, User._status, User._organizeAlias + PeConstant.POINT + Organize._organizeName);
         if (CollectionUtils.isEmpty(users)) {
             return new HashMap<>(0);
@@ -886,9 +880,9 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                     Restrictions.conjunction()
                             .add(Restrictions.eq(userRoleAlisa + UserRole._role, roleId)))
                     .add(Restrictions.in(User._organize, organizeIds))
-                    .add(Restrictions.eq(User._corpCode, ExecutionContext.getCorpCode()))
+                    .add(Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()))
                     .add(Restrictions.eq(User._status, User.UserStatus.ENABLE))
-                    .add(Restrictions.isNull(userRoleAlisa + UserRole._corpCode));
+                    .add(Restrictions.isNull(userRoleAlisa + UserRole.CORP_CODE));
 
             //关键字不为空
             if (StringUtils.isNotBlank(user.getKeyword())) {
@@ -899,7 +893,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                         .add(Restrictions.eq(User._loginName, user.getKeyword()));
                 criteria.add(junction);
             }
-        }, Order.desc(User._createTime));
+        }, Order.desc(User.CREATE_TIME));
     }
 
     @Override
@@ -922,7 +916,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
 
         Junction junction = Restrictions.conjunction()
-                .add(Restrictions.eq(User._corpCode, ExecutionContext.getCorpCode()));
+                .add(Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()));
         junction.add(Restrictions.eq(User._roleType, User.RoleType.ADMIN));
         //用户名,姓名,工号,手机号
         if (StringUtils.isNotBlank(condition.getKeyword())) {
@@ -979,7 +973,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
         criteria.add(junction);
         criteria.setProjection(Projections.projectionList()
-                .add(Projections.max(userRoleAlias + UserRole._updateTime), "ype")
+                .add(Projections.max(userRoleAlias + UserRole.UPDATE_TIME), "ype")
                 .add(Projections.groupProperty(userRoleAlias + UserRole._user)))
                 .addOrder(Order.desc("ype"));
         List list = criteria.list();
@@ -1022,13 +1016,13 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
         String organizeId = organize.getId();
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(User._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.eq(User._organize, organizeId),
                 Restrictions.ne(User._status, User.UserStatus.DELETED),
                 Restrictions.ne(User._status, User.UserStatus.FORBIDDEN));
 
-        Page<User> page = search(pageParam, criterion, new Order[]{Order.desc(User._createTime)}, User._userName, User._loginName, User._employeeCode, User._mobile
-                , User._id);
+        Page<User> page = search(pageParam, criterion, new Order[]{Order.desc(User.CREATE_TIME)}, User._userName, User._loginName, User._employeeCode, User._mobile
+                , User.ID);
         List<User> users = page.getRows();
         if (CollectionUtils.isEmpty(users)) {
             return new Page<>();
@@ -1128,11 +1122,11 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
 
         Criteria criteria = createCriteria();
-        criteria.add(Restrictions.in(User._corpCode, corpCodes));
+        criteria.add(Restrictions.in(User.CORP_CODE, corpCodes));
         criteria.add(Restrictions.ne(User._status, User.UserStatus.DELETED));
         criteria.add(Restrictions.ne(User._loginName, PeConstant.ADMIN));
         ProjectionList projectionList = Projections.projectionList();
-        projectionList.add(Projections.groupProperty(User._corpCode));
+        projectionList.add(Projections.groupProperty(User.CORP_CODE));
         projectionList.add(Projections.rowCount());
         criteria.setProjection(projectionList);
         List<Object[]> values = criteria.list();
@@ -1244,7 +1238,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     public Long getRegisterNum() {
         Criteria criteria = createCriteria();
         criteria.add(Restrictions.ne(User._status, User.UserStatus.DELETED));
-        criteria.add(Restrictions.eq(User._corpCode, ExecutionContext.getCorpCode()));
+        criteria.add(Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()));
         criteria.add(Restrictions.ne(User._loginName, PeConstant.ADMIN));
         criteria.setProjection(Projections.rowCount());
         return (Long) criteria.uniqueResult();
@@ -1273,10 +1267,10 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
 
         Criterion criterion = Restrictions.and(
-                Restrictions.eq(User._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.ne(User._status, User.UserStatus.DELETED),
                 Restrictions.in(User._loginName, loginNames));
-        List<User> users = listByCriterion(criterion, User._id, User._loginName, User._status, User._userName);
+        List<User> users = listByCriterion(criterion, User.ID, User._loginName, User._status, User._userName);
         if (CollectionUtils.isEmpty(users)) {
             return new HashMap<>(0);
         }
@@ -1369,7 +1363,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
 
         Map<String, User> userMap = users.stream().collect(Collectors.toMap(User::getId, user -> user));
-        List<String> dbUserIds = listFieldValueByCriterion(Restrictions.in(User._id, userMap.keySet()), User._id);
+        List<String> dbUserIds = listFieldValueByCriterion(Restrictions.in(User.ID, userMap.keySet()), User.ID);
         if (CollectionUtils.isNotEmpty(dbUserIds)) {
             List<User> updateUsers = new ArrayList<>(dbUserIds.size());
             for (String dbUserId : dbUserIds) {

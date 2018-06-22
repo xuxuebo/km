@@ -47,7 +47,7 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole> implements Us
         }
 
         return delete(Restrictions.and(
-                Restrictions.eq(UserRole._corpCode, ExecutionContext.getCorpCode()),
+                Restrictions.eq(UserRole.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.eq(UserRole._user, userId)
         ));
     }
@@ -61,13 +61,13 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole> implements Us
         Condition condition = criteria -> {
             criteria.createAlias(UserRole._userAlias, UserRole._userAlias);
             String userAlias = UserRole._userAlias + PeConstant.POINT;
-            criteria.add(Restrictions.eq(UserRole._corpCode, ExecutionContext.getCorpCode()));
+            criteria.add(Restrictions.eq(UserRole.CORP_CODE, ExecutionContext.getCorpCode()));
             criteria.add(Restrictions.eq(UserRole._role, roleId));
             criteria.add(Restrictions.ne(userAlias + User._loginName, PeConstant.ADMIN));
             criteria.add(Restrictions.eq(userAlias + User._status, User.UserStatus.ENABLE));
         };
 
-        Page<UserRole> rolePage = search(pageParam, condition, Order.desc(UserRole._createTime));
+        Page<UserRole> rolePage = search(pageParam, condition, Order.desc(UserRole.CREATE_TIME));
         if (rolePage.getTotal() <= 0) {
             return new Page<>(0);
         }
@@ -102,7 +102,7 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole> implements Us
         Assert.hasText(userId, "userId is null when listByUserId");
 
         List<String> roleIds = listFieldValueByFieldNameAndValue(UserRole._user, userId,
-                new Order[]{Order.desc(UserRole._createTime)}, UserRole._role);
+                new Order[]{Order.desc(UserRole.CREATE_TIME)}, UserRole._role);
         if (CollectionUtils.isEmpty(roleIds)) {
             return new ArrayList<>(0);
         }
@@ -136,7 +136,7 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole> implements Us
 
         int rowCount = delete(Restrictions.conjunction()
                 .add(Restrictions.eq(UserRole._role, roleId))
-                .add(Restrictions.eq(UserRole._corpCode, ExecutionContext.getCorpCode())));
+                .add(Restrictions.eq(UserRole.CORP_CODE, ExecutionContext.getCorpCode())));
         processUserRole(userIds);
         return rowCount;
     }
@@ -149,7 +149,7 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole> implements Us
 
         int rowCount = delete(Restrictions.conjunction()
                 .add(Restrictions.eq(UserRole._role, roleId))
-                .add(Restrictions.eq(UserRole._corpCode, ExecutionContext.getCorpCode()))
+                .add(Restrictions.eq(UserRole.CORP_CODE, ExecutionContext.getCorpCode()))
                 .add(Restrictions.in(UserRole._user, userIds)));
         processUserRole(userIds);
         return rowCount;
@@ -197,8 +197,8 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole> implements Us
         Criteria criteria = createCriteria();
         criteria.createAlias(UserRole._userAlias, UserRole._userAlias);
         String userAlias = UserRole._userAlias + PeConstant.POINT;
-        criteria.add(Restrictions.eq(UserRole._corpCode, ExecutionContext.getCorpCode()));
-        criteria.add(Restrictions.eq(userAlias + User._corpCode, ExecutionContext.getCorpCode()));
+        criteria.add(Restrictions.eq(UserRole.CORP_CODE, ExecutionContext.getCorpCode()));
+        criteria.add(Restrictions.eq(userAlias + User.CORP_CODE, ExecutionContext.getCorpCode()));
         criteria.add(Restrictions.eq(userAlias + User._status, User.UserStatus.ENABLE));
         criteria.add(Restrictions.ne(userAlias + User._loginName, PeConstant.ADMIN));
         if (user != null) {
@@ -215,7 +215,7 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole> implements Us
         }
 
         if (CollectionUtils.isNotEmpty(excludeUserIds)) {
-            criteria.add(Restrictions.not(Restrictions.in(userAlias + User._id, new HashSet<String>(excludeUserIds))));
+            criteria.add(Restrictions.not(Restrictions.in(userAlias + User.ID, new HashSet<String>(excludeUserIds))));
         }
 
         criteria.setProjection(Projections.groupProperty(UserRole._user));
@@ -224,8 +224,8 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole> implements Us
             return new Page<>();
         }
 
-        return userService.search(pageParam, Restrictions.in(User._id, userIds),
-                new Order[]{Order.desc(User._createTime)}, User._id, User._userName, User._loginName);
+        return userService.search(pageParam, Restrictions.in(User.ID, userIds),
+                new Order[]{Order.desc(User.CREATE_TIME)}, User.ID, User._userName, User._loginName);
     }
 
     @Override
@@ -236,7 +236,7 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole> implements Us
 
         Criteria criteria = createCriteria();
         criteria.createAlias(UserRole._roleAlias, UserRole._roleAlias)
-                .add(Restrictions.eq(UserRole._corpCode, ExecutionContext.getCorpCode()))
+                .add(Restrictions.eq(UserRole.CORP_CODE, ExecutionContext.getCorpCode()))
                 .add(Restrictions.in(UserRole._user, userIds));
         List<UserRole> result = criteria.list();
         if (CollectionUtils.isEmpty(result)) {

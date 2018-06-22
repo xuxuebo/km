@@ -41,7 +41,7 @@ public class LoginServiceImpl extends BaseServiceImpl<User> implements LoginServ
         }
 
         return getByCriterion(Restrictions.conjunction()
-                .add(Restrictions.eq(User._corpCode, ExecutionContext.getCorpCode()))
+                .add(Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()))
                 .add(Restrictions.disjunction()
                         .add(Restrictions.eq(User._loginName, loginName.trim()))
                         .add(Restrictions.eq(User._userName, loginName.trim()))
@@ -54,7 +54,7 @@ public class LoginServiceImpl extends BaseServiceImpl<User> implements LoginServ
         Assert.hasText(loginName, "loginName is empty when existLoginName");
 
         return userService.exist(Restrictions.conjunction()
-                .add(Restrictions.eq(User._corpCode, ExecutionContext.getCorpCode()))
+                .add(Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()))
                 .add(Restrictions.disjunction()
                         .add(Restrictions.eq(User._loginName, loginName.trim()))
                         .add(Restrictions.eq(User._userName, loginName.trim()))

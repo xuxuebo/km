@@ -87,7 +87,7 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleServic
 
         return exist(Restrictions.conjunction()
                 .add(Restrictions.eq(Role._roleName, role.getRoleName()))
-                .add(Restrictions.eq(Role._corpCode, ExecutionContext.getCorpCode()))
+                .add(Restrictions.eq(Role.CORP_CODE, ExecutionContext.getCorpCode()))
         );
     }
 
@@ -103,7 +103,7 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleServic
 
         roleAuthorityService.delete(Restrictions.conjunction()
                 .add(Restrictions.eq(RoleAuthority._roleId, role.getId()))
-                .add(Restrictions.eq(RoleAuthority._corpCode, ExecutionContext.getCorpCode())));
+                .add(Restrictions.eq(RoleAuthority.CORP_CODE, ExecutionContext.getCorpCode())));
         List<RoleAuthority> roleAuthorities = new ArrayList<>();
         for (Authority authority : role.getAuthorities()) {
             RoleAuthority roleAuthority = new RoleAuthority();
@@ -129,18 +129,18 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleServic
         }
 
         Junction junction = Restrictions.conjunction()
-                .add(Restrictions.eq(Role._corpCode, ExecutionContext.getCorpCode()));
+                .add(Restrictions.eq(Role.CORP_CODE, ExecutionContext.getCorpCode()));
         //是否有角色名称
         if (!SessionContext.get().isSuperAdmin()) {
             String roleId = getSystemId();
-            junction.add(Restrictions.ne(Role._id, roleId));
+            junction.add(Restrictions.ne(Role.ID, roleId));
         }
 
         if (StringUtils.isNotBlank(condition.getRoleName())) {
             junction.add(Restrictions.like(Role._roleName, condition.getRoleName(), MatchMode.ANYWHERE));
         }
 
-        Page<Role> page = search(pageParam, junction, Order.desc(Role._updateTime));
+        Page<Role> page = search(pageParam, junction, Order.desc(Role.UPDATE_TIME));
         if (CollectionUtils.isEmpty(page.getRows())) {
             return new Page<>();
         }
@@ -172,8 +172,8 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleServic
         Conjunction conjunction = new Conjunction();
         conjunction.add(Restrictions.eq(Role._roleName, "系统管理员"));
         conjunction.add(Restrictions.eq(Role._isDefault, Boolean.TRUE));
-        conjunction.add(Restrictions.eq(Role._corpCode, ExecutionContext.getCorpCode()));
-        return getFieldValueByCriterion(conjunction, Role._id);
+        conjunction.add(Restrictions.eq(Role.CORP_CODE, ExecutionContext.getCorpCode()));
+        return getFieldValueByCriterion(conjunction, Role.ID);
     }
 
 }

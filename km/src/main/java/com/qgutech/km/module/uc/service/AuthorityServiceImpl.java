@@ -22,14 +22,14 @@ public class AuthorityServiceImpl extends BaseServiceImpl<Authority> implements 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<Authority> list() {
         return listByCriterion(Restrictions.conjunction()
-                .add(Restrictions.eq(Authority._corpCode, PeConstant.DEFAULT_CORP_CODE)));
+                .add(Restrictions.eq(Authority.CORP_CODE, PeConstant.DEFAULT_CORP_CODE)));
     }
 
     @Override
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<String> listIds() {
         return listFieldValueByCriterion(Restrictions.conjunction()
-                .add(Restrictions.eq(Authority._corpCode, PeConstant.DEFAULT_CORP_CODE)), Authority._id);
+                .add(Restrictions.eq(Authority.CORP_CODE, PeConstant.DEFAULT_CORP_CODE)), Authority.ID);
     }
 
     @Override
@@ -40,8 +40,8 @@ public class AuthorityServiceImpl extends BaseServiceImpl<Authority> implements 
         }
 
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq(Authority._corpCode, corpCode));
+        conjunction.add(Restrictions.eq(Authority.CORP_CODE, corpCode));
         conjunction.add(Restrictions.eq(Authority._authCode, authCode));
-        return getByCriterion(conjunction, Authority._id);
+        return getByCriterion(conjunction, Authority.ID);
     }
 }

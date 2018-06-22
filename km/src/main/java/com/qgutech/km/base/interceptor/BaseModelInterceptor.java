@@ -20,9 +20,9 @@ public class BaseModelInterceptor extends EmptyInterceptor {
     public boolean onFlushDirty(Object entity, Serializable id, Object[] currentState, Object[] previousState,
                                 String[] propertyNames, Type[] types) throws CallbackException {
         for (int i = 0; i < propertyNames.length; i++) {
-            if (BaseModel._updateTime.equals(propertyNames[i])) {
+            if (BaseModel.UPDATE_TIME.equals(propertyNames[i])) {
                 currentState[i] = new Date();
-            } else if (BaseModel._updateBy.equals(propertyNames[i])) {
+            } else if (BaseModel.UPDATE_BY.equals(propertyNames[i])) {
                 currentState[i] = ExecutionContext.getUserId();
             }
         }
@@ -38,31 +38,31 @@ public class BaseModelInterceptor extends EmptyInterceptor {
         boolean changed = false;
         for (int i = 0; i < propertyNames.length; i++) {
             String propertyName = propertyNames[i];
-            if (BaseModel._createTime.equals(propertyName)) {
+            if (BaseModel.CREATE_TIME.equals(propertyName)) {
                 Object currState = state[i];
                 if (currState == null) {
                     state[i] = new Date();
                     changed = true;
                 }
-            } else if (BaseModel._updateTime.equals(propertyName)) {
+            } else if (BaseModel.UPDATE_TIME.equals(propertyName)) {
                 Object currState = state[i];
                 if (currState == null) {
                     state[i] = new Date();
                     changed = true;
                 }
-            } else if (BaseModel._createBy.equals(propertyName)) {
+            } else if (BaseModel.CREATE_BY.equals(propertyName)) {
                 Object currState = state[i];
                 if (currState == null) {
                     state[i] = ExecutionContext.getUserId();
                     changed = true;
                 }
-            } else if (BaseModel._updateBy.equals(propertyName)) {
+            } else if (BaseModel.UPDATE_BY.equals(propertyName)) {
                 Object currState = state[i];
                 if (currState == null) {
                     state[i] = ExecutionContext.getUserId();
                     changed = true;
                 }
-            } else if (BaseModel._corpCode.equals(propertyName)) {
+            } else if (BaseModel.CORP_CODE.equals(propertyName)) {
                 Object currState = state[i];
                 if (currState == null) {
                     state[i] = ExecutionContext.getCorpCode();

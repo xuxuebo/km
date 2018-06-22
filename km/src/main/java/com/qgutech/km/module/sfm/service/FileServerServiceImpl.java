@@ -101,8 +101,8 @@ public class FileServerServiceImpl extends BaseServiceImpl<PeFile> implements Fi
             throw new IllegalArgumentException("Parameters is not valid!");
         }
 
-        PeFile peFile = get(fileId, PeFile._id, PeFile._fsType, PeFile._referId, PeFile._processorType, PeFile._suffix,
-                PeFile._templateType, PeFile._createTime, PeFile._createBy);
+        PeFile peFile = get(fileId, PeFile.ID, PeFile._fsType, PeFile._referId, PeFile._processorType, PeFile._suffix,
+                PeFile._templateType, PeFile.CREATE_TIME, PeFile.CREATE_BY);
         if (peFile == null || !PeFile.ProcessorType.IMAGE.equals(peFile.getProcessorType())) {
             throw new PeException("源图片不存在");
         }
@@ -213,8 +213,8 @@ public class FileServerServiceImpl extends BaseServiceImpl<PeFile> implements Fi
             throw new PeException("File id is blank!");
         }
 
-        PeFile peFile = get(fileId, PeFile._id, PeFile._fsType, PeFile._referId, PeFile._processorType, PeFile._suffix,
-                PeFile._templateType, PeFile._createTime, PeFile._createBy);
+        PeFile peFile = get(fileId, PeFile.ID, PeFile._fsType, PeFile._referId, PeFile._processorType, PeFile._suffix,
+                PeFile._templateType, PeFile.CREATE_TIME, PeFile.CREATE_BY);
         if (peFile == null) {
             return null;
         }
@@ -237,8 +237,8 @@ public class FileServerServiceImpl extends BaseServiceImpl<PeFile> implements Fi
     @Override
     @Transactional(readOnly = true)
     public Map<String, String> findFilePath(List<String> fileIds) {
-        List<PeFile> files = listByIds(fileIds, PeFile._id, PeFile._fsType, PeFile._referId, PeFile._processorType, PeFile._suffix,
-                PeFile._templateType, PeFile._createTime, PeFile._createBy);
+        List<PeFile> files = listByIds(fileIds, PeFile.ID, PeFile._fsType, PeFile._referId, PeFile._processorType, PeFile._suffix,
+                PeFile._templateType, PeFile.CREATE_TIME, PeFile.CREATE_BY);
         if (CollectionUtils.isEmpty(files)) {
             return new HashMap<>(0);
         }
@@ -263,8 +263,8 @@ public class FileServerServiceImpl extends BaseServiceImpl<PeFile> implements Fi
             throw new IllegalArgumentException("Parameters is not valid!");
         }
 
-        List<PeFile> files = listByIds(fileIds, PeFile._id, PeFile._fsType, PeFile._referId,
-                PeFile._processorType, PeFile._suffix, PeFile._templateType, PeFile._createTime, PeFile._createBy);
+        List<PeFile> files = listByIds(fileIds, PeFile.ID, PeFile._fsType, PeFile._referId,
+                PeFile._processorType, PeFile._suffix, PeFile._templateType, PeFile.CREATE_TIME, PeFile.CREATE_BY);
         Map<String, String> fileMap = new HashMap<>(files.size());
         for (PeFile file : files) {
             file.setExamId(examId);
