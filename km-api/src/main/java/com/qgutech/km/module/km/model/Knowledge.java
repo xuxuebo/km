@@ -18,8 +18,6 @@ import javax.persistence.Table;
 @Table(name = "t_km_knowledge", indexes = {@Index(name = "i_km_knowledge_corpCode", columnList = "corpCode")})
 public class Knowledge extends BaseModel {
 
-    public static String KNOWLEDGE_ID = "knowledgeId";
-
     /**
      * 文件名称
      */

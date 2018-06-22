@@ -7,12 +7,15 @@ import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.vo.JsonResult;
 import com.qgutech.km.constant.PeConstant;
 import com.qgutech.km.module.km.model.Knowledge;
+import com.qgutech.km.module.km.model.Share;
+import com.qgutech.km.module.km.service.KnowledgeRelService;
 import com.qgutech.km.module.km.service.KnowledgeService;
 import com.qgutech.km.module.sfm.model.PeFile;
 import com.qgutech.km.module.sfm.service.FileServerService;
 import com.qgutech.km.module.uc.model.User;
 import com.qgutech.km.utils.PeException;
 import com.qgutech.km.utils.PeFileUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -177,11 +180,29 @@ public class KnowledgeController {
      */
     @ResponseBody
     @RequestMapping("manage/search")
-    public List<Knowledge> search(PageParam pageParam){
-        List<Knowledge> list = new ArrayList<>();
-        String userId = ExecutionContext.getUserId();
-        String corpCode = ExecutionContext.getCorpCode();
-        list = knowledgeService.getKnowledgeByCreateBy();
+    public List<Knowledge> search(){
+        List<Knowledge> list = knowledgeService.getKnowledgeByCreateBy();
+        if(CollectionUtils.isEmpty(list)){
+            list = new ArrayList<>(0);
+        }
         return list;
     }
+
+    /**
+     * 分享到公共库
+     * @return
+     * 1.添加个人的分析记录
+     * 2.在公共库添加此文件记录
+     * 3.统计表
+     * 4.操作表
+     */
+    @ResponseBody
+    @RequestMapping("shareToPublic")
+    public JsonResult shareToPublic(Share share){
+        JsonResult jsonResult = new JsonResult();
+        knowledgeService.shareToPublic(share);
+        jsonResult.setMessage("分享成功");
+        return jsonResult;
+    }
+
 }

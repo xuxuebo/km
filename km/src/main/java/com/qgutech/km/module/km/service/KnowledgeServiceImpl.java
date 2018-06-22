@@ -9,6 +9,7 @@ import com.qgutech.km.constant.PeConstant;
 import com.qgutech.km.module.km.model.Knowledge;
 import com.qgutech.km.module.km.model.KnowledgeRel;
 import com.qgutech.km.module.km.model.Library;
+import com.qgutech.km.module.km.model.Share;
 import com.qgutech.km.module.sfm.model.PeFile;
 import com.qgutech.km.module.sfm.service.FileServerService;
 import com.qgutech.km.module.uc.model.Organize;
@@ -54,6 +55,8 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
     private LibraryService libraryService;
     @Resource
     private KnowledgeRelService knowledgeRelService;
+    @Resource
+    private ShareService shareService;
 
     /**
      * 获取个人云库文件列表
@@ -68,7 +71,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         conjunction.add(Restrictions.eq(Knowledge.CORP_CODE,ExecutionContext.getCorpCode()));
         conjunction.add(Restrictions.eq(Knowledge.CREATE_BY,ExecutionContext.getUserId()));
         //添加id in
-        List<String> knowledgeId = new ArrayList<>();
+        List<String> knowledgeIds = new ArrayList<>();
         //查询我的个人库的id
         Library library = libraryService.getUserLibraryByLibraryType(KnowledgeConstant.MY_LIBRARY);
         if(library==null){
@@ -81,16 +84,32 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         }
         //取我的云库里面所有文件id
         for(KnowledgeRel k : knowledgeRelList){
-            knowledgeId.add(k.getKnowledgeId());
+            knowledgeIds.add(k.getKnowledgeId());
         }
         Criterion criterion = Restrictions.and(
                 Restrictions.eq(Knowledge.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.ne(Knowledge.CREATE_BY, ExecutionContext.getUserId()),
-                Restrictions.in(Knowledge.KNOWLEDGE_ID,knowledgeId)
+                Restrictions.in(Knowledge.ID,knowledgeIds)
                 );
-        Object[] objects = new Object[]{Order.desc(Knowledge.CREATE_TIME)};
         knowledgeList = listByCriterion((criterion),
                 new Order[]{Order.asc(Knowledge.CREATE_TIME)});
         return knowledgeList;
+    }
+
+
+    @Override
+    @Transactional(readOnly = false)
+    public int shareToPublic(Share share) {
+        if(null==share || StringUtils.isEmpty(share.getKnowledgeId())||StringUtils.isEmpty(share.getShareLibraryId())){
+            throw  new PeException("knowledgeId or libraryId is null ");
+        }
+        KnowledgeRel knowledgeRel = new KnowledgeRel();
+        knowledgeRel.setKnowledgeId(share.getKnowledgeId());
+        knowledgeRel.setLibraryId(share.getShareLibraryId());
+        String knowledgeRelId = knowledgeRelService.save(knowledgeRel);
+        share.setShareType(KnowledgeConstant.SHARE_PLAIN_TEXT);
+        share.setExpireTime(KnowledgeConstant.SHARE_PERMANENT_VALIDITY);
+        String shareId = shareService.save(share);
+        return 1;
     }
 }

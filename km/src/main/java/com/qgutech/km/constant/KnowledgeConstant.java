@@ -12,4 +12,15 @@ public class KnowledgeConstant {
     public static String RECYCLE_LIBRARY = "RECYCLE_LIBRARY";
     //终极库
     public static String FINAL_LIBRARY = "FINAL_LIBRARY";
+
+
+    //分享相关
+
+    //分享有效期 永久有效
+    public static String SHARE_PERMANENT_VALIDITY = "permanent_validity";
+    //密文
+    public static String SHARE_CIPHER_TEXT = "ciphertext";
+    //明文
+    public static String SHARE_PLAIN_TEXT = "plaintext";
+
 }
