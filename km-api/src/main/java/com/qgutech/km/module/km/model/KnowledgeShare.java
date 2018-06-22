@@ -1,4 +1,6 @@
-package com.qgutech.km.base.model;
+package com.qgutech.km.module.km.model;
+
+import com.qgutech.km.base.model.BaseModel;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +16,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "t_km_knowledge_share", indexes = {@Index(name = "i_km_knowledge_share", columnList = "corpCode")})
-public class KnowledgeShare extends BaseModel{
+public class KnowledgeShare extends BaseModel {
 
     /**
      * 共享类型

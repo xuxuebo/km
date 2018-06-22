@@ -1,4 +1,6 @@
-package com.qgutech.km.base.model;
+package com.qgutech.km.module.km.model;
+
+import com.qgutech.km.base.model.BaseModel;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +16,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "t_km_knowledge", indexes = {@Index(name = "i_km_knowledge_corpCode", columnList = "corpCode")})
-public class Knowledge extends BaseModel{
+public class Knowledge extends BaseModel {
 
     /**
      * 文件名称

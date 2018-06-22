@@ -1,4 +1,6 @@
-package com.qgutech.km.base.model;
+package com.qgutech.km.module.km.model;
+
+import com.qgutech.km.base.model.BaseModel;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
