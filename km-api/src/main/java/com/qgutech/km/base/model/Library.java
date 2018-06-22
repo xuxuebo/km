@@ -6,7 +6,7 @@ import javax.persistence.Index;
 import javax.persistence.Table;
 
 /**
- * 智慧云文件实体
+ * 智慧云库实体
  *
  * @author zhaowei
  * @since 2018年06月22日
