@@ -21,6 +21,8 @@ public class Library extends BaseModel {
     public static String LIBRARY_TYPE = "libraryType";
     public static String PARENT_ID = "parentId";
     public static String SHOW_ORDER = "showOrder";
+    public static String ID_PATH = "idPath";
+
     /**
      * 库名称
      */

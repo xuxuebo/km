@@ -84,27 +84,18 @@
                     <span class="yfont-icon">&#xe643;</span><span class="txt">我的云库</span>
                 </a>
             </li>
-            <li class="y-menu__item public-yun active">
+            <li class="y-menu__item public-yun">
                 <a href="javascript:void(0);" class="y-menu__item__title y-aside__menu__item__title has-arrow">
                     <span class="yfont-icon">&#xe656;</span><span class="txt">公共库</span>
                 </a>
                 <ul class="y-menu__sub">
-                    <li class="y-menu__item active">
-                        <!-- TODO id must -->
-                        <a href="#public/23" data-id="23" class="y-menu__item__title">
-                            <span class="txt">公共类别1</span>
-                        </a>
-                    </li>
-                    <li class="y-menu__item">
-                        <a href="#public/12" data-id="12" class="y-menu__item__title">
-                            <span class="txt">公共类别2</span>
-                        </a>
-                    </li>
-                    <li class="y-menu__item">
-                        <a href="#public/123" data-id="123" class="y-menu__item__title">
-                            <span class="txt">公共类别3</span>
-                        </a>
-                    </li>-->
+                    <#list firstLevelLibrary as fl>
+                        <li class="y-menu__item">
+                            <a href="#public/${fl.id}" data-id="${fl.id}" class="y-menu__item__title">
+                                <span class="txt">${fl.libraryName}</span>
+                            </a>
+                        </li>
+                    </#list>
                 </ul>
             </li>
 
@@ -145,8 +136,8 @@
             <th class="y-table__td size">
                 <span class="sort  <%if(sort.size === 'desc'){%>desc<%}else{%>asc<%}%>">大小</span>
             </th>
-            <th class="y-table__td upload-time">
-                <span class="sort  <%if(sort.uploadTime === 'desc'){%>desc<%}else{%>asc<%}%>">上传时间</span>
+            <th class="y-table__td create-time">
+                <span class="sort  <%if(sort.createTime === 'desc'){%>desc<%}else{%>asc<%}%>">上传时间</span>
             </th>
         </tr>
         </thead>
@@ -172,7 +163,7 @@
                 <%=item.knowledgeSize%>
             </td>
             <td class="y-table__td upload-time">
-                <%=item.showOrder%>
+                <%=item.createTime%>
             </td>
         </tr>
         <%})%>
@@ -259,8 +250,8 @@
     <div class="y-content__opt__bar">
         <button class="y-btn y-btn__blue my-upload" id="filePicker" type="button">上传</button>
         <button class="y-btn y-btn__green js-download" type="button">下载</button>
-        <button class="y-btn y-btn__green js-copy" type="button">分享至共享库</button>
-        <button class="y-btn y-btn__orange js-del" type="button">新建文件夹</button>
+        <button class="y-btn y-btn__green js-share" type="button">分享至共享库</button>
+        <button class="y-btn y-btn__orange js-newFolder" type="button">新建文件夹</button>
         <div id="theList"></div>
     </div>
     <#--表格包裹的div-->
@@ -269,6 +260,14 @@
             <div class="pe-stand-table-pagination"></div>
         </div>
     </div>
+</script>
+
+<#--分享至公共库-->
+<script type="text/template" id="shareToPublic">
+       <input name="libraryId" type="hidden">
+       <div class="pe-select-tree-wrap pe-input-tree-wrap-drop">
+           <ul id="editOrgTree" class="ztree pe-tree-container"></ul>
+       </div>
 </script>
 
 <#--公共库-->

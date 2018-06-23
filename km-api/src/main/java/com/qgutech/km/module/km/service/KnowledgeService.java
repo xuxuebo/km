@@ -25,4 +25,11 @@ public interface KnowledgeService extends BaseService<Knowledge> {
      */
     int shareToPublic(Share share);
 
+    /**
+     * 根据批量id获取批量文件
+     * @param knowledgeIdList
+     * @return
+     */
+    List<Knowledge> getKnowledgeByKnowledgeIds(List<String> knowledgeIdList);
+
 }

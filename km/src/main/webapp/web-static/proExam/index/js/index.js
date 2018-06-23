@@ -184,12 +184,66 @@ requirejs(['jquery', 'underscore', "layer", "upload"], function ($, _, layer, up
         //绑定事件
         //分享到云库
         $('.js-share').on('click', function () {
+            //id
             var selectList = table.getSelect();
             if (selectList.length === 0) {
                 layer.msg("请先选择操作项");
                 return;
             }
+            //分享弹框
+            PEMO.DIALOG.confirmL({
+                content: _.template($('#shareToPublic').html())({}),
+                area: ['468px','520px'],
+                title: '选择公共库',
+                btn: ['确定', '取消'],
+                skin: 'pe-layer-confirm pe-layer-has-tree organize-change-layer',
+                resize:false,
+                btnAlign: 'c',
+                btn1: function () {
+                    var libraryId = $('input[name="libraryId"]').val();
+                    PEBASE.ajaxRequest({
+                        url: pageContext.rootPath + '/km/shareToPublic',
+                        data: {'knowledgeId': selectList, 'libraryId': libraryId},
+                        success: function (data) {
+                            if (data.success) {
+                                layer.closeAll();
+                                PEMO.DIALOG.tips({
+                                    content: '操作成功',
+                                    time: 1000,
+                                });
 
+                                return false;
+                            }
+                            PEMO.DIALOG.alert({
+                                content: data.message,
+                                btn: ['我知道了'],
+                                yes: function () {
+                                    layer.closeAll();
+                                }
+                            });
+                        }
+                    });
+                },
+                btn2: function () {//取消按钮
+                    layer.closeAll();
+                },
+
+                success: function () {
+                    //初始化树
+                    var settingInputTree = {
+                        isOpen:true,
+                        dataUrl: pageContext.rootPath + '/km/library/listTree',
+                        clickNode: function (treeNode) {
+                            $('input[name="libraryId"]').val(treeNode.id);
+                            //$('.show-org-name').val(treeNode.name);
+                        },
+                        treePosition:'inputDropDown'
+                    };
+                    PEMO.ZTREE.initTree('editOrgTree', settingInputTree);
+                    var treeObj = $.fn.zTree.getZTreeObj("editOrgTree");
+                    treeObj.expandAll(true);
+                }
+            });
         });
         //下载
         $('.js-download').on('click', function () {

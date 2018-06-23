@@ -1,6 +1,7 @@
 package com.qgutech.km.module.km.service;
 
 import com.qgutech.km.base.service.BaseService;
+import com.qgutech.km.base.vo.PeTreeNode;
 import com.qgutech.km.module.km.model.Library;
 
 import java.util.List;
@@ -23,4 +24,7 @@ public interface LibraryService extends BaseService<Library> {
      */
     List<Library> getFirstLevelLibrary();
 
+    List<PeTreeNode> listTree();
+
+    String addFolder(String libraryName);
 }

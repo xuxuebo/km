@@ -174,8 +174,19 @@ public class KnowledgeController {
 
     }
 
-    @RequestMapping("downloadUserTemplate")
-    public void downLoadUserTemplate(HttpServletRequest request, HttpServletResponse response) {
+    /**
+     * 下载文件
+     * @param request
+     * @param response
+     * @param knowledgeIds  文件id
+     */
+    @RequestMapping("downloadKnowledge")
+    public void downLoadUserTemplate(HttpServletRequest request, HttpServletResponse response,String knowledgeIds) {
+        if(StringUtils.isEmpty(knowledgeIds)){
+            return;
+        }
+        String[] knowledgeIdArr = knowledgeIds.split(",");
+
         String fileName = "UserTemplate.xls";
         response.setCharacterEncoding("utf-8");
         response.setContentType("multipart/form-data");
@@ -253,6 +264,7 @@ public class KnowledgeController {
         }
         return jsonResult;
     }
+
 
 
 }
