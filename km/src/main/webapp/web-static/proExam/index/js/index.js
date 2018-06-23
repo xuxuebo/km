@@ -1,5 +1,5 @@
 'use strict';
-requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
+requirejs(['jquery', 'underscore', "layer", "upload"], function ($, _, layer, upload) {
     var $yunContentBody = $('#yunContentBody');
     var $yAside = $('#YAside');
     //路由
@@ -20,7 +20,7 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
                 nav: 'recycle-yun',
                 cb: "recycleCb"
             },
-            "share":{
+            "share": {
                 "templateId": '#tplShare',
                 nav: 'share-yun',
                 cb: "shareCb"
@@ -71,13 +71,15 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
             $curNav.addClass('active').siblings().removeClass('active');
         }
         if (routeInfo.cb) {
-            try {
-                route[routeInfo.cb]($yunContentBody, routeInfo, cb);
+            route[routeInfo.cb]($yunContentBody, routeInfo, cb);
+           /* try {
+
             } catch (e) {
                 console.error("没有此" + routeInfo.cb + "方法", e);
-            }
+            }*/
         }
     }
+
     //修改
     if (('onhashchange' in window) && ((typeof document.documentMode === 'undefined') || document.documentMode == 8)) {
         $(window).bind("hashchange", changeHashCb);
@@ -98,10 +100,10 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
         var data = [];
         $.ajax({
             async: false,//此值要设置为FALSE  默认为TRUE 异步调用
-            type : "POST",
-            url : pageContext.resourcePath + '/km/manage/search',
-            dataType : 'json',
-            success : function(result) {
+            type: "POST",
+            url: pageContext.resourcePath + '/km/manage/search',
+            dataType: 'json',
+            success: function (result) {
                 data = result;
             }
         });
@@ -121,32 +123,50 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
             });
         }
 
-        var thisUpload = PEMO.UPLOAD({
-            pick: {
-                id: '#filePicker'
-            },
-            // dnd: '#uploader',
+        var hash = window.location.hash;
+        var processor = "DOC";
+        /*if (hash) {
+            processor = hash.substring(1);
+        }*/
+
+        upload.uploadFile({
+            swf: "/km/web-static/flash/Uploader.swf",
+            server: "http://192.168.0.35/fs/file/uploadFile",
+            pick: "#filePicker",
+            resize: false,
+            dnd: "#theList",
             paste: document.body,
-            accept: {
-                title: '部分音乐类型',
-                extensions: 'mp3,MP3',
-                mimeTypes: 'audio/x-mpeg'
-            },
-            // swf文件路径
-            swf: 'jquery.uploader.swf',
             disableGlobalDnd: true,
-            chunked: false,
-            formData: {
-                fsType:'COMMON',
-                templateType:'ITEM',
-                processorType:'AUDIO'
+            thumb: {
+                width: 100,
+                height: 100,
+                quality: 70,
+                allowMagnify: true,
+                crop: true
             },
-            fileNumLimit: 300,
-            fileSizeLimit: 10 * 1024 * 1024,
-            fileSingleSizeLimit: 10 * 1024 * 1024, //单个文件的上传大小限制1就是10M(前端限制)
-            method: 'post',
-            afterSuccessUploadContent: '<span class="pe-uploader-success-text">上传成功</span>',
-            afterFailUploadContent: '<span class="pe-uploader-fail-text">上传失败，请重新上传</span>'
+            compress: false,
+            prepareNextFile: true,
+            chunked: true,
+            chunkSize: 5000 * 1024,
+            threads: true,
+            fileNumLimit: 1,
+            fileSingleSizeLimit: 10 * 1024 * 1024 * 1024,
+            duplicate: true
+        }, {
+            uploadCompleted: function (data) {
+                if (data == undefined || data == null) {
+                    return;
+                }
+
+                //业务逻辑处
+                console.log(data);
+            },
+            appCode: "km",
+            processor: processor,
+            //extractPoint: true,
+            corpCode: "ladeng.com",
+            businessId: (new Date()).getTime(),
+            responseFormat: "json"
         });
 
         //绑定事件
@@ -194,19 +214,17 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
                 id: '1231',
                 fileType: 'file',
                 fileName: '2018/05/11',
-                createTime:'',
-                expireTime:'',
-                viewCount:'1',
-                downloadCount:'1',
-                copyCount:'1'
+                createTime: '',
+                expireTime: '',
+                viewCount: '1',
+                downloadCount: '1',
+                copyCount: '1'
             }
         ];
         var _table = $("#tplShareTable").html();
         var $yunTable = $('#shareTable');
 
-        var table = {
-
-        };
+        var table = {};
         renderTable();
         function renderTable() {
             $yunTable.html(_.template(_table)({list: data}));
