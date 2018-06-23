@@ -6,10 +6,7 @@ import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.constant.PeConstant;
-import com.qgutech.km.module.km.model.Knowledge;
-import com.qgutech.km.module.km.model.KnowledgeRel;
-import com.qgutech.km.module.km.model.Library;
-import com.qgutech.km.module.km.model.Share;
+import com.qgutech.km.module.km.model.*;
 import com.qgutech.km.module.sfm.model.PeFile;
 import com.qgutech.km.module.sfm.service.FileServerService;
 import com.qgutech.km.module.uc.model.Organize;
@@ -58,6 +55,9 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
     @Resource
     private ShareService shareService;
 
+    @Resource
+    private StatisticService statisticService;
+
     /**
      * 获取个人云库文件列表
      * @return
@@ -103,13 +103,18 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         if(null==share || StringUtils.isEmpty(share.getKnowledgeId())||StringUtils.isEmpty(share.getShareLibraryId())){
             throw  new PeException("knowledgeId or libraryId is null ");
         }
+        //保存公共库
         KnowledgeRel knowledgeRel = new KnowledgeRel();
         knowledgeRel.setKnowledgeId(share.getKnowledgeId());
         knowledgeRel.setLibraryId(share.getShareLibraryId());
         String knowledgeRelId = knowledgeRelService.save(knowledgeRel);
+        //保存分享记录
         share.setShareType(KnowledgeConstant.SHARE_PLAIN_TEXT);
         share.setExpireTime(KnowledgeConstant.SHARE_PERMANENT_VALIDITY);
         String shareId = shareService.save(share);
+        //保存共享统计记录
+        Statistic statistic = new Statistic(shareId,0,0,0);
+        statisticService.save(statistic);
         return 1;
     }
 }

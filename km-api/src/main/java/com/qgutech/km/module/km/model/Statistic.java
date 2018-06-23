@@ -39,4 +39,15 @@ public class Statistic extends BaseModel {
      */
     @Column(nullable = false)
     private Integer copyCount;
+
+
+    public Statistic() {
+    }
+
+    public Statistic(String shareId, Integer viewCount, Integer downloadCount, Integer copyCount) {
+        this.shareId = shareId;
+        this.viewCount = viewCount;
+        this.downloadCount = downloadCount;
+        this.copyCount = copyCount;
+    }
 }

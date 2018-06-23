@@ -8,5 +8,4 @@ import com.qgutech.km.module.km.model.Statistic;
  */
 public interface StatisticService extends BaseService<Statistic> {
 
-    //Statistic getByShareId();
 }
