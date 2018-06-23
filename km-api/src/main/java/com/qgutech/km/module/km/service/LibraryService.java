@@ -17,6 +17,10 @@ public interface LibraryService extends BaseService<Library> {
      */
     Library getUserLibraryByLibraryType(String libraryType);
 
+    /**
+     * 一级公共库
+     * @return
+     */
     List<Library> getFirstLevelLibrary();
 
 }

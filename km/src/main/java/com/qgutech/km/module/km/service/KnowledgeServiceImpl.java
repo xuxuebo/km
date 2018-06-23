@@ -93,7 +93,6 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         return knowledgeList;
     }
 
-
     @Override
     @Transactional(readOnly = false)
     public int shareToPublic(Share share) {

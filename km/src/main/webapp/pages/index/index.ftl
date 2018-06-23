@@ -271,16 +271,24 @@
     <div class="y-content__opt__bar">
         <button class="y-btn y-btn__blue my-upload" id="filePicker" type="button">上传</button>
         <button class="y-btn y-btn__green js-download" type="button">下载</button>
-        <button class="y-btn y-btn__green js-copy" type="button">分享至共享库</button>
-        <button class="y-btn y-btn__orange js-del" type="button">新建文件夹</button>
+        <button class="y-btn y-btn__green js-share" type="button">分享至共享库</button>
+        <button class="y-btn y-btn__orange js-newFolder" type="button">新建文件夹</button>
     </div>
     <#--表格包裹的div-->
     <div class="pe-stand-table-main-panel">
         <div class="y-content__table" id="yunTable">
-        <div class="pe-stand-table-pagination"></div>
     </div>
     </div>
 </script>
+
+<#-- 分享公共库模板-->
+<script type="text/template" id="shareToPublic">
+    <input  type="hidden" name="knowledgeId">
+    <input  type="hidden" name="libraryId">
+<span>分享的呀</span>
+
+</script>
+
 
 <#--公共库-->
 <script type="text/template" id="tplPublic">

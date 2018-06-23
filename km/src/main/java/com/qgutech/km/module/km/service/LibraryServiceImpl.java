@@ -30,7 +30,8 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
         Criterion criterion = Restrictions.and(Restrictions.eq(Library.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.eq(Library.CORP_CODE, ExecutionContext.getCorpCode()),
                 Restrictions.eq(Library.LIBRARY_TYPE,libraryType),
-                Restrictions.eq(Library.PARENT_ID,null));
+                Restrictions.eq(Library.PARENT_ID,"0"),
+                Restrictions.eq(Library.CREATE_BY,ExecutionContext.getUserId()));
 
         List<Library> libraries = listByCriterion(    criterion ,
                 new Order[]{Order.asc(Library.CREATE_TIME)}
@@ -55,4 +56,5 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
         }
         return libraryList;
     }
+
 }
