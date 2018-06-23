@@ -22,7 +22,6 @@ import java.util.List;
 @Service("libraryService")
 public class LibraryServiceImpl extends BaseServiceImpl<Library> implements LibraryService{
 
-
     @Override
     @Transactional(readOnly = true)
     public Library getUserLibraryByLibraryType(String libraryType) {
@@ -33,7 +32,7 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
                 Restrictions.eq(Library.PARENT_ID,"0"),
                 Restrictions.eq(Library.CREATE_BY,ExecutionContext.getUserId()));
 
-        List<Library> libraries = listByCriterion(    criterion ,
+        List<Library> libraries = listByCriterion(criterion ,
                 new Order[]{Order.asc(Library.CREATE_TIME)}
                 );
         if(CollectionUtils.isEmpty(libraries)){

@@ -58,7 +58,7 @@
                 <img src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
             </div>
             <div class="y-head__username">
-                ${userName!}
+            ${userName!}
             </div>
         </div>
     </div>
@@ -66,9 +66,9 @@
         <ul class="y-nav__link">
             <li><a href="${ctx!}/km/front/index" class="y-nav__link__item active"><span class="txt">云库</span></a></li>
             <li><a href="${ctx!}/km/front/dataView" class="y-nav__link__item"><span class="txt">数据</span></a></li>
-            <#if admin?? && admin>
-                <li><a href="${ctx!}/km/front/adminSetting" class="y-nav__link__item"><span class="txt">设置</span></a></li>
-            </#if>
+        <#if admin?? && admin>
+            <li><a href="${ctx!}/km/front/adminSetting" class="y-nav__link__item"><span class="txt">设置</span></a></li>
+        </#if>
 
         </ul>
     </nav>
@@ -89,13 +89,22 @@
                     <span class="yfont-icon">&#xe656;</span><span class="txt">公共库</span>
                 </a>
                 <ul class="y-menu__sub">
-                    <#list firstLevelLibrary as fl>
-                        <li class="y-menu__item active">
-                            <a href="#public/23" data-id="${fl.id}" class="y-menu__item__title">
-                                <span class="txt">${fl.libraryName}</span>
-                            </a>
-                        </li>
-                    </#list>
+                    <li class="y-menu__item active">
+                        <!-- TODO id must -->
+                        <a href="#public/23" data-id="23" class="y-menu__item__title">
+                            <span class="txt">公共类别1</span>
+                        </a>
+                    </li>
+                    <li class="y-menu__item">
+                        <a href="#public/12" data-id="12" class="y-menu__item__title">
+                            <span class="txt">公共类别2</span>
+                        </a>
+                    </li>
+                    <li class="y-menu__item">
+                        <a href="#public/123" data-id="123" class="y-menu__item__title">
+                            <span class="txt">公共类别3</span>
+                        </a>
+                    </li>-->
                 </ul>
             </li>
 
@@ -115,9 +124,9 @@
     <section class="y-content">
         <div class="y-content-body" id="yunContentBody">
         </div>
-        <#--<footer class="y-footer">-->
-            <#--国家电网江苏省电力公司 ©苏ICP备15007035号-1-->
-        <#--</footer>-->
+    <#--<footer class="y-footer">-->
+    <#--国家电网江苏省电力公司 ©苏ICP备15007035号-1-->
+    <#--</footer>-->
     </section>
 </section>
 <script type="text/template" id="tplYunTable">
@@ -250,24 +259,17 @@
     <div class="y-content__opt__bar">
         <button class="y-btn y-btn__blue my-upload" id="filePicker" type="button">上传</button>
         <button class="y-btn y-btn__green js-download" type="button">下载</button>
-        <button class="y-btn y-btn__green js-share" type="button">分享至共享库</button>
-        <button class="y-btn y-btn__orange js-newFolder" type="button">新建文件夹</button>
+        <button class="y-btn y-btn__green js-copy" type="button">分享至共享库</button>
+        <button class="y-btn y-btn__orange js-del" type="button">新建文件夹</button>
+        <div id="theList"></div>
     </div>
     <#--表格包裹的div-->
     <div class="pe-stand-table-main-panel">
         <div class="y-content__table" id="yunTable">
-    </div>
+            <div class="pe-stand-table-pagination"></div>
+        </div>
     </div>
 </script>
-
-<#-- 分享公共库模板-->
-<script type="text/template" id="shareToPublic">
-    <input  type="hidden" name="knowledgeId">
-    <input  type="hidden" name="libraryId">
-<span>分享的呀</span>
-
-</script>
-
 
 <#--公共库-->
 <script type="text/template" id="tplPublic">

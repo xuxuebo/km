@@ -8,9 +8,12 @@ import com.qgutech.km.base.vo.JsonResult;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.constant.PeConstant;
 import com.qgutech.km.module.km.model.Knowledge;
+import com.qgutech.km.module.km.model.KnowledgeRel;
+import com.qgutech.km.module.km.model.Library;
 import com.qgutech.km.module.km.model.Share;
 import com.qgutech.km.module.km.service.KnowledgeRelService;
 import com.qgutech.km.module.km.service.KnowledgeService;
+import com.qgutech.km.module.km.service.LibraryService;
 import com.qgutech.km.module.sfm.model.PeFile;
 import com.qgutech.km.module.sfm.service.FileServerService;
 import com.qgutech.km.module.uc.model.User;
@@ -50,6 +53,10 @@ public class KnowledgeController {
     private FileServerService fileServerService;
     @Resource
     private KnowledgeService knowledgeService;
+    @Resource
+    private KnowledgeRelService knowledgeRelService;
+    @Resource
+    private LibraryService libraryService;
 
     @ResponseBody
     @RequestMapping("uploadFile")
@@ -71,6 +78,26 @@ public class KnowledgeController {
         }
     }
 
+    @ResponseBody
+    @RequestMapping("saveKnowledge")
+    public JsonResult<Knowledge> saveKnowledge(Knowledge knowledge) {
+        try {
+            if (StringUtils.isBlank(knowledge.getId())) {
+                String knowledgeId = knowledgeService.save(knowledge);
+                KnowledgeRel knowledgeRel = new KnowledgeRel();
+                knowledgeRel.setKnowledgeId(knowledgeId);
+                Library myLibrary = libraryService.getUserLibraryByLibraryType("MY_LIBRARY");
+                knowledgeRel.setLibraryId(myLibrary.getId());
+                knowledgeRelService.save(knowledgeRel);
+            } else {
+                knowledgeService.update(knowledge);
+            }
+
+            return new JsonResult<>(true, JsonResult.SUCCESS);
+        } catch (PeException e) {
+            return new JsonResult<>(false, e.getMessage());
+        }
+    }
 
     @ResponseBody
     @RequestMapping("subImage")

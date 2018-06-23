@@ -28,7 +28,7 @@ public class Knowledge extends BaseModel {
      * 文件路径
      */
     @Column(nullable = false, length = 200)
-    private String knowledgePath;
+    private String fileId;
 
     /**
      * 文件大小
@@ -45,7 +45,7 @@ public class Knowledge extends BaseModel {
     /**
      * 来源文件主键
      */
-    @Column(nullable = false, length = 32)
+    @Column(length = 32)
     private String sourceKnowledgeId;
 
     /**
@@ -68,12 +68,12 @@ public class Knowledge extends BaseModel {
         this.knowledgeName = knowledgeName;
     }
 
-    public String getKnowledgePath() {
-        return knowledgePath;
+    public String getFileId() {
+        return fileId;
     }
 
-    public void setKnowledgePath(String knowledgePath) {
-        this.knowledgePath = knowledgePath;
+    public void setFileId(String fileId) {
+        this.fileId = fileId;
     }
 
     public long getKnowledgeSize() {
@@ -119,9 +119,9 @@ public class Knowledge extends BaseModel {
     public Knowledge() {
     }
 
-    public Knowledge(String knowledgeName, String knowledgePath, long knowledgeSize, String knowledgeType, String sourceKnowledgeId, String folder, float showOrder) {
+    public Knowledge(String knowledgeName, String fileId, long knowledgeSize, String knowledgeType, String sourceKnowledgeId, String folder, float showOrder) {
         this.knowledgeName = knowledgeName;
-        this.knowledgePath = knowledgePath;
+        this.fileId = fileId;
         this.knowledgeSize = knowledgeSize;
         this.knowledgeType = knowledgeType;
         this.sourceKnowledgeId = sourceKnowledgeId;
