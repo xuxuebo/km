@@ -110,22 +110,13 @@
                     <span class="yfont-icon">&#xe656;</span><span class="txt">公共库</span>
                 </a>
                 <ul class="y-menu__sub">
-                    <li class="y-menu__item active">
-                        <!-- TODO id must -->
-                        <a href="#public/23" data-id="23" class="y-menu__item__title">
-                            <span class="txt">公共类别1</span>
-                        </a>
-                    </li>
-                    <li class="y-menu__item">
-                        <a href="#public/12" data-id="12" class="y-menu__item__title">
-                            <span class="txt">公共类别2</span>
-                        </a>
-                    </li>
-                    <li class="y-menu__item">
-                        <a href="#public/123" data-id="123" class="y-menu__item__title">
-                            <span class="txt">公共类别3</span>
-                        </a>
-                    </li>-->
+                    <#list firstLevelLibrary as fl>
+                        <li class="y-menu__item active">
+                            <a href="#public/23" data-id="${fl.id}" class="y-menu__item__title">
+                                <span class="txt">${fl.libraryName}</span>
+                            </a>
+                        </li>
+                    </#list>
                 </ul>
             </li>
 

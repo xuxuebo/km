@@ -17,7 +17,7 @@ public interface KnowledgeService extends BaseService<Knowledge> {
      * 获取个人云库的文件列表
      * @return
      */
-    List<Knowledge> getKnowledgeByCreateBy();
+    List<Knowledge> getKnowledgeByCreateBy(String libraryTYpe);
 
     /**
      * 分享至公共库

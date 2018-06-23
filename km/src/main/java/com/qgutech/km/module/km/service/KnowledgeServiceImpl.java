@@ -64,16 +64,13 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Knowledge> getKnowledgeByCreateBy() {
+    public List<Knowledge> getKnowledgeByCreateBy(String libraryType) {
         List<Knowledge> knowledgeList = new ArrayList<>();
-        Conjunction conjunction = getConjunction();
-        //添加查询条件 1.corpCode createBy
-        conjunction.add(Restrictions.eq(Knowledge.CORP_CODE,ExecutionContext.getCorpCode()));
-        conjunction.add(Restrictions.eq(Knowledge.CREATE_BY,ExecutionContext.getUserId()));
+
         //添加id in
         List<String> knowledgeIds = new ArrayList<>();
         //查询我的个人库的id
-        Library library = libraryService.getUserLibraryByLibraryType(KnowledgeConstant.MY_LIBRARY);
+        Library library = libraryService.getUserLibraryByLibraryType(libraryType);
         if(library==null){
             return new ArrayList<>(0);
         }
@@ -101,7 +98,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
     @Transactional(readOnly = false)
     public int shareToPublic(Share share) {
         if(null==share || StringUtils.isEmpty(share.getKnowledgeId())||StringUtils.isEmpty(share.getShareLibraryId())){
-            throw  new PeException("knowledgeId or libraryId is null ");
+            return 0;
         }
         //保存公共库
         KnowledgeRel knowledgeRel = new KnowledgeRel();
@@ -109,7 +106,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         knowledgeRel.setLibraryId(share.getShareLibraryId());
         String knowledgeRelId = knowledgeRelService.save(knowledgeRel);
         //保存分享记录
-        share.setShareType(KnowledgeConstant.SHARE_PLAIN_TEXT);
+        share.setShareType(KnowledgeConstant.SHARE_NO_PASSWORD);
         share.setExpireTime(KnowledgeConstant.SHARE_PERMANENT_VALIDITY);
         String shareId = shareService.save(share);
         //保存共享统计记录

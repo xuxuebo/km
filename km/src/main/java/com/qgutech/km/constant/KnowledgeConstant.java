@@ -18,9 +18,9 @@ public class KnowledgeConstant {
 
     //分享有效期 永久有效
     public static String SHARE_PERMANENT_VALIDITY = "permanent_validity";
-    //密文
-    public static String SHARE_CIPHER_TEXT = "ciphertext";
-    //明文
-    public static String SHARE_PLAIN_TEXT = "plaintext";
+    //有密码
+    public static String SHARE_HAVE_PASSWORD = "password";
+    //无密码
+    public static String SHARE_NO_PASSWORD = "no_password";
 
 }

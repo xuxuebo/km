@@ -5,6 +5,7 @@ import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.vo.JsonResult;
+import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.constant.PeConstant;
 import com.qgutech.km.module.km.model.Knowledge;
 import com.qgutech.km.module.km.model.Share;
@@ -181,7 +182,7 @@ public class KnowledgeController {
     @ResponseBody
     @RequestMapping("manage/search")
     public List<Knowledge> search(){
-        List<Knowledge> list = knowledgeService.getKnowledgeByCreateBy();
+        List<Knowledge> list = knowledgeService.getKnowledgeByCreateBy(KnowledgeConstant.MY_LIBRARY);
         if(CollectionUtils.isEmpty(list)){
             list = new ArrayList<>(0);
         }
@@ -189,19 +190,40 @@ public class KnowledgeController {
     }
 
     /**
+     * 我的回收站文件列表
+     *
+     * 云库表  云库和文件关系表  文件表
+     */
+    @ResponseBody
+    @RequestMapping("manage/searchRecycle")
+    public List<Knowledge> searchRecycle(){
+        List<Knowledge> list = knowledgeService.getKnowledgeByCreateBy(KnowledgeConstant.RECYCLE_LIBRARY);
+        if(CollectionUtils.isEmpty(list)){
+            list = new ArrayList<>(0);
+        }
+        return list;
+    }
+
+
+
+    /**
      * 分享到公共库
      * @return
-     * 1.添加个人的分析记录
+     * 1.添加个人的分享记录
      * 2.在公共库添加此文件记录
      * 3.统计表
-     * 4.操作表
      */
     @ResponseBody
     @RequestMapping("shareToPublic")
     public JsonResult shareToPublic(Share share){
         JsonResult jsonResult = new JsonResult();
-        knowledgeService.shareToPublic(share);
-        jsonResult.setMessage("分享成功");
+        int count = knowledgeService.shareToPublic(share);
+        if(count<=0){
+            jsonResult.setSuccess(false);
+            jsonResult.setMessage("分享失败");
+        }else{
+            jsonResult.setMessage("分享成功");
+        }
         return jsonResult;
     }
 
