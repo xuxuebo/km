@@ -85,7 +85,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         }
         Criterion criterion = Restrictions.and(
                 Restrictions.eq(Knowledge.CORP_CODE, ExecutionContext.getCorpCode()),
-                Restrictions.ne(Knowledge.CREATE_BY, ExecutionContext.getUserId()),
+                Restrictions.eq(Knowledge.CREATE_BY, ExecutionContext.getUserId()),
                 Restrictions.in(Knowledge.ID,knowledgeIds)
                 );
         knowledgeList = listByCriterion((criterion),
