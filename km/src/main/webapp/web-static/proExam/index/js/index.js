@@ -1,5 +1,4 @@
-'use strict';
-requirejs(['jquery', 'underscore', "layer", "upload"], function ($, _, layer, upload) {
+$(function(){
     var $yunContentBody = $('#yunContentBody');
     var $yAside = $('#YAside');
     //路由
@@ -72,11 +71,11 @@ requirejs(['jquery', 'underscore', "layer", "upload"], function ($, _, layer, up
         }
         if (routeInfo.cb) {
             route[routeInfo.cb]($yunContentBody, routeInfo, cb);
-           /* try {
+            /* try {
 
-            } catch (e) {
-                console.error("没有此" + routeInfo.cb + "方法", e);
-            }*/
+             } catch (e) {
+             console.error("没有此" + routeInfo.cb + "方法", e);
+             }*/
         }
     }
 
@@ -126,10 +125,10 @@ requirejs(['jquery', 'underscore', "layer", "upload"], function ($, _, layer, up
         var hash = window.location.hash;
         var processor = "DOC";
         /*if (hash) {
-            processor = hash.substring(1);
-        }*/
+         processor = hash.substring(1);
+         }*/
 
-        upload.uploadFile({
+        window.uploadFile({
             swf: "/km/web-static/flash/Uploader.swf",
             server: "http://192.168.0.35/fs/file/uploadFile",
             pick: "#filePicker",
@@ -190,6 +189,11 @@ requirejs(['jquery', 'underscore', "layer", "upload"], function ($, _, layer, up
                 layer.msg("请先选择操作项");
                 return;
             }
+            var knowledgeIds ="";
+            for(var i = 0;i<selectList.length;i++){
+                knowledgeIds += selectList[i] +",";
+            }
+            knowledgeIds = knowledgeIds.substring(0,knowledgeIds.length-1);
             //分享弹框
             PEMO.DIALOG.confirmL({
                 content: _.template($('#shareToPublic').html())({}),
@@ -200,10 +204,10 @@ requirejs(['jquery', 'underscore', "layer", "upload"], function ($, _, layer, up
                 resize:false,
                 btnAlign: 'c',
                 btn1: function () {
-                    var libraryId = $('input[name="libraryId"]').val();
+                    var libraryId = $('input[name="shareLibraryId"]').val();
                     PEBASE.ajaxRequest({
-                        url: pageContext.rootPath + '/km/shareToPublic',
-                        data: {'knowledgeId': selectList, 'libraryId': libraryId},
+                        url: pageContext.rootPath + '/km/km/shareToPublic',
+                        data: {'knowledgeId': knowledgeIds, 'shareLibraryId': libraryId},
                         success: function (data) {
                             if (data.success) {
                                 layer.closeAll();
@@ -234,7 +238,7 @@ requirejs(['jquery', 'underscore', "layer", "upload"], function ($, _, layer, up
                         isOpen:true,
                         dataUrl: pageContext.rootPath + '/km/library/listTree',
                         clickNode: function (treeNode) {
-                            $('input[name="libraryId"]').val(treeNode.id);
+                            $('input[name="shareLibraryId"]').val(treeNode.id);
                             //$('.show-org-name').val(treeNode.name);
                         },
                         treePosition:'inputDropDown'
@@ -253,14 +257,54 @@ requirejs(['jquery', 'underscore', "layer", "upload"], function ($, _, layer, up
                 return;
             }
         });
-        //上传
-        $('.js-upload').on('click', function () {
-
-        });
 
         //新建文件夹
         $('.js-newFolder').on('click', function () {
+            PEMO.DIALOG.confirmL({
+                content: _.template($('#addNewFolder').html())(),
+                title: '新增文件夹',
+                btnAlign:'l',
+                area:['475px'],
+                skin: 'pe-layer-confirm pe-knowledge-manage-layer',
+                btn: ['确定','取消'],
+                btn1: function () {
+                    var libraryName = $('input[name="libraryName"]').val();
+                    //校验文件夹名称
+                    if(libraryName==null||libraryName==''||libraryName==undefined){
+                        return false;
+                    }
+                    PEBASE.ajaxRequest({
+                        url: pageContext.rootPath + '/km/library/addFolder',
+                        data: {
+                            "libraryName": libraryName
+                        },
+                        success: function (data) {
 
+                            if (data.success) {
+                                PEMO.DIALOG.tips({
+                                    content: '新增成功',
+                                    time: 1000,
+                                    //TODO  刷新列表
+                                });
+                                layer.closeAll();
+
+                            }else{
+                                PEMO.DIALOG.alert({
+                                    content: data.message,
+                                    btn: ['我知道了'],
+                                    yes: function (index) {
+                                        layer.close(index);
+                                    }
+                                });
+                            }
+
+                        }
+                    });
+                },
+                btn2:function(){
+                    layer.closeAll();
+                },
+            });
         });
 
     }
@@ -375,4 +419,4 @@ requirejs(['jquery', 'underscore', "layer", "upload"], function ($, _, layer, up
         };
     }
 
-});
+})

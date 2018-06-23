@@ -7,34 +7,27 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>云库</title>
     <link href="https://cdn.bootcss.com/layer/3.1.0/theme/default/layer.css" rel="stylesheet">
+    <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/pro_exam_plugin_min.css?_v=${(resourceVersion)!}" type="text/css">
+    <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/pro_exam_base.css?_v=${(resourceVersion)!}" type="text/css"/>
+
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/index/css/index.css">
-<#--
-    <script src="${resourcePath!}/web-static/js/webuploader.js" type="text/javascript" charset="utf-8"></script>
-    <script src="${resourcePath!}/web-static/js/upload.js" type="text/javascript" charset="utf-8"></script>
--->
-    <script src="${resourcePath!}/web-static/proExam/index/js/require.js"></script>
-    <script type="text/javascript">
-        requirejs.config({
-            urlArgs: 'v=',
-            baseUrl: '${resourcePath!}/web-static/proExam/index/js/',
-            paths: {
-                jquery: 'jquery.min',
-                underscore: 'underscore-min',
-                layer: 'layer',
-                webuploader:'webuploader',
-                upload:'upload'
-            },
-            shim: {
-                'upload':{
-                    deps:["webuploader"]
-                }
-            }
-        });
-        pageContext = {
+    <script>
+        var pageContext = {
             resourcePath:'${resourcePath!}',
             rootPath:'${ctx!}'
         };
     </script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/underscore-min.js"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/layer/layer.js?_v=${(resourceVersion)!}"></script>
+    <script src="${resourcePath!}/web-static/proExam/index/js/webuploader.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${resourcePath!}/web-static/proExam/index/js/upload.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.core.js?_v=0.1"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.excheck.js?_v=0.1"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.exedit.js?_v=0.1"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.mCustomScrollbar.concat.min.js?_v=0.1"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/pro_exam_base.js"></script>
+
 </head>
 <body class="y-body">
 <header class="y-head">
@@ -248,7 +241,7 @@
 <script type="text/template" id="tplYun">
     <h4 class="y-content__title"><%=title%></h4>
     <div class="y-content__opt__bar">
-        <button class="y-btn y-btn__blue my-upload" id="filePicker" type="button">上传</button>
+        <button class="y-btn y-btn__blue js-upload" id="filePicker" type="button">上传</button>
         <button class="y-btn y-btn__green js-download" type="button">下载</button>
         <button class="y-btn y-btn__green js-share" type="button">分享至共享库</button>
         <button class="y-btn y-btn__orange js-newFolder" type="button">新建文件夹</button>
@@ -264,11 +257,27 @@
 
 <#--分享至公共库-->
 <script type="text/template" id="shareToPublic">
-       <input name="libraryId" type="hidden">
+       <input name="shareLibraryId" type="hidden">
        <div class="pe-select-tree-wrap pe-input-tree-wrap-drop">
            <ul id="editOrgTree" class="ztree pe-tree-container"></ul>
        </div>
 </script>
+
+
+<script type="text/template" id="addNewFolder" >
+    <div class="clearF">
+            <div class="validate-form-cell" style="margin-left:80px;">
+            <em class="error" style="display: none;"></em>
+            </div>
+            <label class="floatL">
+            <span class="pe-label-name floatL">文件夹名称:</span>
+    <input class="pe-table-form-text pe-stand-filter-form-input pe-km-tree-name" type="text" placeholder="请输入文件夹名称"
+    name="libraryName" >
+            </label>
+            </div>
+
+</script >
+
 
 <#--公共库-->
 <script type="text/template" id="tplPublic">

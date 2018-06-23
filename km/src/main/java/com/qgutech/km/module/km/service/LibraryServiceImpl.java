@@ -5,6 +5,7 @@ import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.base.vo.PeTreeNode;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.module.km.model.Knowledge;
+import com.qgutech.km.module.km.model.KnowledgeRel;
 import com.qgutech.km.module.km.model.Library;
 import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.criterion.Conjunction;
@@ -14,6 +15,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,11 @@ import java.util.List;
  */
 @Service("libraryService")
 public class LibraryServiceImpl extends BaseServiceImpl<Library> implements LibraryService{
+
+    @Resource
+    private KnowledgeService knowledgeService;
+    @Resource
+    private KnowledgeRelService knowledgeRelService;
 
     @Override
     @Transactional(readOnly = true)
@@ -79,7 +86,16 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
         return peTreeNodes;
     }
 
-
+    /**
+     * 新建文件夹
+     * 1.文件夹本身也是文件  同时也是一个个人库
+     * 2.rel关系
+     *
+     * 1.新增文件
+     * 2.新增
+     * @param libraryName
+     * @return
+     */
     @Override
     @Transactional(readOnly = false)
     public String addFolder(String libraryName) {
@@ -88,9 +104,32 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
         library.setLibraryName(libraryName);
         library.setParentId(myLibrary.getId());
         library.setLibraryType(KnowledgeConstant.MY_LIBRARY);
+        library.setIdPath("");
         library.setShowOrder(getMaxShowOrderByParentId(myLibrary.getId())+1);
         String id = save(library);
         update(id,Library.ID_PATH,myLibrary.getIdPath()+"."+id);
+
+        Knowledge knowledge = new Knowledge();
+        knowledge.setKnowledgeName(libraryName);
+        knowledge.setKnowledgeType("file");
+        knowledge.setFolder(id);
+        knowledge.setFileId("");
+        knowledge.setKnowledgeSize(0);
+        knowledge.setSourceKnowledgeId(id);
+        knowledge.setShowOrder(0);
+        String  knowledgeId =knowledgeService.save(knowledge);
+
+        KnowledgeRel knowledgeRel = new KnowledgeRel();
+        knowledgeRel.setLibraryId(id);
+        knowledgeRel.setKnowledgeId(knowledgeId);
+        knowledgeRelService.save(knowledgeRel);
+
+        KnowledgeRel k = new KnowledgeRel();
+        k.setLibraryId(myLibrary.getId());
+        k.setKnowledgeId(knowledgeId);
+        knowledgeRelService.save(k);
+
+
         return id;
     }
 

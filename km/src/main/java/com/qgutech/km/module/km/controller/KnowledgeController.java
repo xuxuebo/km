@@ -185,8 +185,8 @@ public class KnowledgeController {
         if(StringUtils.isEmpty(knowledgeIds)){
             return;
         }
-        String[] knowledgeIdArr = knowledgeIds.split(",");
-
+        List<String> knowledgeIdList = Arrays.asList(knowledgeIds.split(","));
+        //文件系统的文件id
         String fileName = "UserTemplate.xls";
         response.setCharacterEncoding("utf-8");
         response.setContentType("multipart/form-data");

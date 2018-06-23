@@ -625,6 +625,9 @@ var PEMO = {
             var zTree;
             $(function () {
                 //ztree 默认展开级别数
+                console.log($.fn.zTree.init);
+
+
                 $.fn.zTree.init($('#' + domId), settingDbClick, nodesJson);
                 ztreeArgu.zTreeObj  = zTree = $.fn.zTree.getZTreeObj(domId);
                 zTree.opt = settingUrl.optUrl;

@@ -1,5 +1,5 @@
 'use strict';
-define(['jquery', "webuploader"], function ($, WebUploader) {
+$(function () {
     var business = {};
     var uploader = null;
 
@@ -168,115 +168,114 @@ define(['jquery', "webuploader"], function ($, WebUploader) {
     });
 
 
-    return {
-        uploadFile: function (wu, param) {
-            business = $.extend(true, business, param);
-            business.uploadFileUrl = wu.server;
-            business.chunkSize = wu.chunkSize || 5000 * 1024;
-            business.responseFormat = param.responseFormat || "json";
-            var processor = business.processor;
-            if (processor == "VID") {
-                wu.accept = {
-                    title: "不支持的视频类型",
-                    extensions: 'wmv,flv,mp4,rmvb,mkv,mov,avi,m4v,asf'
-                };
-            } else if (processor == "AUD") {
-                wu.accept = {
-                    title: "不支持的音频类型",
-                    extensions: 'mp3,ape'
-                };
-            } else if (processor == "IMG") {
-                wu.accept = {
-                    title: "不支持的图片类型",
-                    mimeTypes: "image/bmp,image/png,image/gif,image/jpeg,image/tiff",
-                    extensions: 'bmp,png,gif,jpg,jpeg,tif'
-                };
-            } else if (processor == "DOC") {
-                wu.accept = {
-                    title: "不支持的文档类型",
-                    mimeTypes: "application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.ms-excel,pplication/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,text/plain",
-                    extensions: 'doc,docx,ppt,pptx,xls,xlsx,pdf,txt'
-                };
-            } else if (processor != "FILE") {
-                wu.accept = {
-                    title: "不支持的压缩类型",
-                    //mimeTypes: "application/zip,application/x-rar-compressed,application/application/x-7z-compressed",
-                    extensions: 'zip,rar,7z'
-                };
-            }
-
-            wu.formData = function () {
-                return $.extend(true, {resumeType: "chunkUpload"}, business);
+    window.uploadFile = function (wu, param) {
+        business = $.extend(true, business, param);
+        business.uploadFileUrl = wu.server;
+        business.chunkSize = wu.chunkSize || 5000 * 1024;
+        business.responseFormat = param.responseFormat || "json";
+        var processor = business.processor;
+        if (processor == "VID") {
+            wu.accept = {
+                title: "不支持的视频类型",
+                extensions: 'wmv,flv,mp4,rmvb,mkv,mov,avi,m4v,asf'
             };
-            uploader = WebUploader.create(wu);
+        } else if (processor == "AUD") {
+            wu.accept = {
+                title: "不支持的音频类型",
+                extensions: 'mp3,ape'
+            };
+        } else if (processor == "IMG") {
+            wu.accept = {
+                title: "不支持的图片类型",
+                mimeTypes: "image/bmp,image/png,image/gif,image/jpeg,image/tiff",
+                extensions: 'bmp,png,gif,jpg,jpeg,tif'
+            };
+        } else if (processor == "DOC") {
+            wu.accept = {
+                title: "不支持的文档类型",
+                mimeTypes: "application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.ms-excel,pplication/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,text/plain",
+                extensions: 'doc,docx,ppt,pptx,xls,xlsx,pdf,txt'
+            };
+        } else if (processor != "FILE") {
+            wu.accept = {
+                title: "不支持的压缩类型",
+                //mimeTypes: "application/zip,application/x-rar-compressed,application/application/x-7z-compressed",
+                extensions: 'zip,rar,7z'
+            };
+        }
 
-            uploader.on("fileQueued", function (file) {
-                $("#theList").html('');
-                $("#theList").append('<li id="' + file.id + '">'
-                    + '<img /><span>' + file.name
-                    + '</span><span class="itemUpload">上传</span><span class="itemStop">'
-                    + '暂停</span><span class="itemDel">删除</span>'
-                    + '<div class="percentage"></div>'
-                    + '<div class="progressBar"><div id="bar"><span class="percent"></span></div></div>'
-                    + '</li>');
-                var $img = $("#" + file.id).find("img");
-                uploader.makeThumb(file, function (error, src) {
-                    if (error) {
-                        $img.replaceWith("<span>不能预览</span>");
-                    }
+        wu.formData = function () {
+            return $.extend(true, {resumeType: "chunkUpload"}, business);
+        };
+        uploader = WebUploader.create(wu);
 
-                    $img.attr("src", src);
-                });
+        uploader.on("fileQueued", function (file) {
+            $("#theList").html('');
+            $("#theList").append('<li id="' + file.id + '">'
+                + '<img /><span>' + file.name
+                + '</span><span class="itemUpload">上传</span><span class="itemStop">'
+                + '暂停</span><span class="itemDel">删除</span>'
+                + '<div class="percentage"></div>'
+                + '<div class="progressBar"><div id="bar"><span class="percent"></span></div></div>'
+                + '</li>');
+            var $img = $("#" + file.id).find("img");
+            uploader.makeThumb(file, function (error, src) {
+                if (error) {
+                    $img.replaceWith("<span>不能预览</span>");
+                }
+
+                $img.attr("src", src);
             });
+        });
 
-            uploader.on('beforeFileQueued', function (file) {
-                if (this && this.options && this.options.accept
-                    && this.options.accept instanceof Array
-                    && this.options.accept[0]) {
-                    var accept = this.options.accept[0];
-                    if (accept.extensions) {
-                        if (accept.extensions.indexOf(file.ext.toLowerCase()) < 0) {
-                            alert(accept.title);
-                        }
+        uploader.on('beforeFileQueued', function (file) {
+            if (this && this.options && this.options.accept
+                && this.options.accept instanceof Array
+                && this.options.accept[0]) {
+                var accept = this.options.accept[0];
+                if (accept.extensions) {
+                    if (accept.extensions.indexOf(file.ext.toLowerCase()) < 0) {
+                        alert(accept.title);
                     }
                 }
-            });
+            }
+        });
 
-            uploader.on('uploadError', function (file) {
+        uploader.on('uploadError', function (file) {
 
-            });
+        });
 
-            uploader.on('uploadComplete', function (file) {
+        uploader.on('uploadComplete', function (file) {
 
-            });
+        });
 
-            $("#theList").on("click", ".itemUpload", function () {
-                uploader.upload();
-                //"上传"-->"暂停"
-                $(this).hide();
-                $(".itemStop").show();
-            });
+        $("#theList").on("click", ".itemUpload", function () {
+            uploader.upload();
+            //"上传"-->"暂停"
+            $(this).hide();
+            $(".itemStop").show();
+        });
 
-            $("#theList").on("click", ".itemStop", function () {
-                uploader.stop(true);
-                //"暂停"-->"上传"
-                $(this).hide();
-                $(".itemUpload").show();
-            });
+        $("#theList").on("click", ".itemStop", function () {
+            uploader.stop(true);
+            //"暂停"-->"上传"
+            $(this).hide();
+            $(".itemUpload").show();
+        });
 
-            $("#theList").on("click", ".itemDel", function () {
-                uploader.removeFile($(this).parent().attr("id"));	//从上传文件列表中删除
-                $(this).parent().remove();	//从上传列表dom中删除
-            });
+        $("#theList").on("click", ".itemDel", function () {
+            uploader.removeFile($(this).parent().attr("id"));	//从上传文件列表中删除
+            $(this).parent().remove();	//从上传列表dom中删除
+        });
 
-            uploader.on("uploadProgress", function (file, percentage) {
-                $("#bar").css("background", "#5EC4EA");
-                $("#bar").css("width", percentage * 800 + "px");
-                $("#" + file.id + " .percentage").text(percentage * 100 + "%");
-                $("#" + file.id + " .percent").text(parseInt(percentage * 10000) / 100.0 + "%");
-            });
+        uploader.on("uploadProgress", function (file, percentage) {
+            $("#bar").css("background", "#5EC4EA");
+            $("#bar").css("width", percentage * 800 + "px");
+            $("#" + file.id + " .percentage").text(percentage * 100 + "%");
+            $("#" + file.id + " .percent").text(parseInt(percentage * 10000) / 100.0 + "%");
+        });
 
-            return uploader;
-        }
+        return uploader;
     }
-});
+
+})

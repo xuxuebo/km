@@ -39,10 +39,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 
 @Service("knowledgeService")
@@ -89,7 +87,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
                 Restrictions.in(Knowledge.ID,knowledgeIds)
                 );
         knowledgeList = listByCriterion((criterion),
-                new Order[]{Order.asc(Knowledge.CREATE_TIME)});
+                new Order[]{Order.desc(Knowledge.CREATE_TIME)});
         return knowledgeList;
     }
 
@@ -99,18 +97,37 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         if(null==share || StringUtils.isEmpty(share.getKnowledgeId())||StringUtils.isEmpty(share.getShareLibraryId())){
             return 0;
         }
-        //保存公共库
-        KnowledgeRel knowledgeRel = new KnowledgeRel();
-        knowledgeRel.setKnowledgeId(share.getKnowledgeId());
-        knowledgeRel.setLibraryId(share.getShareLibraryId());
-        String knowledgeRelId = knowledgeRelService.save(knowledgeRel);
-        //保存分享记录
-        share.setShareType(KnowledgeConstant.SHARE_NO_PASSWORD);
-        share.setExpireTime(KnowledgeConstant.SHARE_PERMANENT_VALIDITY);
-        String shareId = shareService.save(share);
+        String knowledgeIds = share.getKnowledgeId();
+        List<String> knowledgeIdList= Arrays.asList(knowledgeIds.split(",")) ;
+        List<KnowledgeRel> knowledgeRelList = new ArrayList<>(knowledgeIdList.size());
+        List<Share> shareList = new ArrayList<>(knowledgeIdList.size());
+        List<Statistic> statisticList = new ArrayList<>(knowledgeIdList.size());
+        KnowledgeRel knowledgeRel;
+        Statistic statistic;
+        for(String knowledgeId : knowledgeIdList){
+            //保存公共库
+            knowledgeRel = new KnowledgeRel();
+            knowledgeRel.setKnowledgeId(share.getKnowledgeId());
+            knowledgeRel.setLibraryId(share.getShareLibraryId());
+            knowledgeRelList.add(knowledgeRel);
+
+            //保存分享记录
+            share.setShareType(KnowledgeConstant.SHARE_NO_PASSWORD);
+            share.setExpireTime(KnowledgeConstant.SHARE_PERMANENT_VALIDITY);
+            share.setKnowledgeId(knowledgeId);
+            share.setPassword("");
+            shareList.add(share);
+        }
+
+        knowledgeRelService.batchSave(knowledgeRelList);
+        List<String> shareIds = shareService.batchSave(shareList);
+
+        for(String shareId : shareIds){
+            statistic = new Statistic(shareId,0,0,0);
+            statisticList.add(statistic);
+        }
         //保存共享统计记录
-        Statistic statistic = new Statistic(shareId,0,0,0);
-        statisticService.save(statistic);
+        statisticService.batchSave(statisticList);
         return 1;
     }
 
