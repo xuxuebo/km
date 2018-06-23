@@ -185,9 +185,11 @@ public class KnowledgeController {
         if(StringUtils.isEmpty(knowledgeIds)){
             return;
         }
-        List<String> knowledgeIdList = Arrays.asList(knowledgeIds.split(","));
-        //文件系统的文件id
-        String fileName = "UserTemplate.xls";
+        String paths = "http://192.168.0.35/fs/file/getFile/stt/aacb385b1582c02ea06948b83f9ffae3_1529749901803/lbox/km/src/doc/1806/1529749888809";
+
+        /*List<String> knowledgeIdList = Arrays.asList(knowledgeIds.split(","));
+        //文件系统的文件id*/
+        String fileName = "402880a363af22d301642c33126a0024.txt";
         response.setCharacterEncoding("utf-8");
         response.setContentType("multipart/form-data");
         response.setHeader("Content-Disposition", "attachment;fileName="
@@ -195,8 +197,8 @@ public class KnowledgeController {
         OutputStream os = null;
         InputStream inputStream = null;
         try {
-            String path = request.getSession().getServletContext().getRealPath("") + "/template";
-            inputStream = new FileInputStream(getFile(path, fileName));
+            //String path = request.getSession().getServletContext().getRealPath("") + "/template";
+            inputStream = new FileInputStream(getFile(paths, fileName));
             os = response.getOutputStream();
             byte[] b = new byte[2048];
             int length;
@@ -265,6 +267,19 @@ public class KnowledgeController {
         return jsonResult;
     }
 
+    /**
+     * 公共库列表
+     * @param libraryId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("publicByLibraryId")
+    public List<Knowledge> publicByLibraryId(String libraryId){
+        if(StringUtils.isEmpty(libraryId)){
+            return new ArrayList<>(0);
+        }
+        return knowledgeService.getByLibraryId(libraryId);
+    }
 
 
 }

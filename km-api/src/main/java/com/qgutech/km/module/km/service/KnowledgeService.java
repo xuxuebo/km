@@ -32,4 +32,6 @@ public interface KnowledgeService extends BaseService<Knowledge> {
      */
     List<Knowledge> getKnowledgeByKnowledgeIds(List<String> knowledgeIdList);
 
+    List<Knowledge> getByLibraryId(String libraryId);
+
 }

@@ -2,6 +2,8 @@ $(function(){
     var $yunContentBody = $('#yunContentBody');
     var $yAside = $('#YAside');
     //路由
+    var publicId = "";
+    var publicName = "";
     var route = {
         routes: {
             'yun': {
@@ -9,7 +11,7 @@ $(function(){
                 nav: 'my-yun',
                 cb: "YunCb"
             },
-            'public/.+': {
+            'public/': {
                 "templateId": '#tplPublic',
                 nav: 'public-yun',
                 cb: "publicCb"
@@ -50,6 +52,9 @@ $(function(){
         var routeInfo;
         if (hashArr.length > 1) {
             var subNav = hashArr[1];
+            var subName = hashArr[2];
+            publicId = subNav;
+            publicName = subName;
             $yAside.find('a[data-id="' + subNav + '"]').parent().addClass('active').siblings().removeClass('active');
             for (var key in route.routes) {
                 if (new RegExp(key).test(_hash)) {
@@ -153,6 +158,7 @@ $(function(){
             duplicate: true
         }, {
             uploadCompleted: function (data) {
+                console.log(data);
                 if (data == undefined || data == null) {
                     return;
                 }
@@ -256,6 +262,8 @@ $(function(){
                 layer.msg("请先选择操作项");
                 return;
             }
+            var  dd = 1;
+            window.open('http://192.168.0.35/fs/file/getFile/stt/aacb385b1582c02ea06948b83f9ffae3_1529749901803/lbox/km/src/doc/1806/1529749888809/402880a363af22d301642c33126a0024.txt');
         });
 
         //新建文件夹
@@ -310,8 +318,41 @@ $(function(){
     }
 
     //公共库
-    function initPublicPage() {
-
+    function initPublicPage(container, routeInfo) {
+        var libraryId = publicId;
+        var libraryName = publicName;
+        console.log(libraryName);
+        var _tpl = $(routeInfo.templateId).html();
+        container.html(_.template(_tpl)({title: '公共库>'+libraryName}));
+        //table渲染
+        var _table = $("#tplYunTable").html();
+        var $yunTable = $('#publicTable');
+        var data = [];
+        $.ajax({
+            async: false,
+            type: "POST",
+            url: pageContext.resourcePath + '/km/publicByLibraryId',//公共库的查询列表
+            data:{"libraryId":libraryId},
+            dataType: 'json',
+            success: function (result) {
+                data = result;
+            }
+        });
+        var table, initSort = {
+            name: "desc",
+            size: "desc",
+            uploadTime: "desc"
+        };
+        renderTable();
+        function renderTable() {
+            $yunTable.html(_.template(_table)({list: data, sort: initSort}));
+            table = initTable($yunTable);
+            $yunTable.find('.sort').click(function () {
+                $yunTable.html(_.template(_table)({
+                    list: data, sort: $.extend({}, initSort, {name: 'asc'})
+                }));
+            });
+        }
     }
 
     //我的分享

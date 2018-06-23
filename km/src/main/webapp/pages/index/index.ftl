@@ -84,7 +84,7 @@
                 <ul class="y-menu__sub">
                     <#list firstLevelLibrary as fl>
                         <li class="y-menu__item">
-                            <a href="#public/${fl.id}" data-id="${fl.id}" class="y-menu__item__title">
+                            <a href="#public/${fl.id}/${fl.libraryName}" data-id="${fl.id}" class="y-menu__item__title">
                                 <span class="txt">${fl.libraryName}</span>
                             </a>
                         </li>

@@ -139,4 +139,22 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
                 Restrictions.eq(Knowledge.CORP_CODE,ExecutionContext.getCorpCode()));
         return listByCriterion(criterion,new Order[]{Order.desc(Knowledge.CREATE_TIME)});
     }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Knowledge> getByLibraryId(String libraryId) {
+        List<KnowledgeRel> relList = new ArrayList<>();
+        Criterion criterion = Restrictions.and(Restrictions.eq(KnowledgeRel.CORP_CODE,ExecutionContext.getCorpCode()),
+                Restrictions.eq(KnowledgeRel.LIBRARY_ID,libraryId));
+        relList = knowledgeRelService.listByCriterion(criterion,new Order[]{Order.desc(KnowledgeRel.CREATE_TIME)});
+        if(CollectionUtils.isEmpty(relList)){
+            return new ArrayList<>();
+        }
+        List<String> ids = new ArrayList<>(relList.size());
+        for(KnowledgeRel kn : relList){
+            ids.add(kn.getKnowledgeId());
+        }
+        return getKnowledgeByKnowledgeIds(ids);
+    }
 }
