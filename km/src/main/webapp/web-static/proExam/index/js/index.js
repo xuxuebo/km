@@ -175,9 +175,12 @@ requirejs(['jquery', 'underscore', "layer", "upload"], function ($, _, layer, up
             var selectList = table.getSelect();
             if (selectList.length === 0) {
                 layer.msg("请先选择操作项");
-                return;
+                return false;
             }
-
+            var knowledgeId = "";
+            for(var i=0;i<selectList.length;i++){
+                knowledgeId += selectList[i].id+",";
+            }
         });
         //下载
         $('.js-download').on('click', function () {
@@ -245,7 +248,41 @@ requirejs(['jquery', 'underscore', "layer", "upload"], function ($, _, layer, up
     }
 
     //回收站
-    function initRecyclePage() {
+    function initRecyclePage(container, routeInfo) {
+        var _tpl = $(routeInfo.templateId).html();
+        container.html(_.template(_tpl)({title: '我的回收站'}));
+        //table渲染
+        var _table = $("#tplYunTable").html();
+        var $yunTable = $('#recycleTable');
+        var data = [];
+        $.ajax({
+            async: false,//此值要设置为FALSE  默认为TRUE 异步调用
+            type : "POST",
+            url : pageContext.resourcePath + '/km/manage/searchRecycle',
+            dataType : 'json',
+            success : function(result) {
+                data = result;
+            }
+        });
+        var table, initSort = {
+            name: "desc",
+            size: "desc",
+            uploadTime: "desc"
+        };
+        renderTable();
+        function renderTable() {
+            $yunTable.html(_.template(_table)({list: data, sort: initSort}));
+            table = initTable($yunTable);
+            $yunTable.find('.sort').click(function () {
+                $yunTable.html(_.template(_table)({
+                    list: data, sort: $.extend({}, initSort, {name: 'asc'})
+                }));
+            });
+        }
+        //绑定事件
+
+
+
 
     }
 

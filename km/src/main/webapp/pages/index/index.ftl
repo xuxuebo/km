@@ -89,22 +89,13 @@
                     <span class="yfont-icon">&#xe656;</span><span class="txt">公共库</span>
                 </a>
                 <ul class="y-menu__sub">
-                    <li class="y-menu__item active">
-                        <!-- TODO id must -->
-                        <a href="#public/23" data-id="23" class="y-menu__item__title">
-                            <span class="txt">公共类别1</span>
-                        </a>
-                    </li>
-                    <li class="y-menu__item">
-                        <a href="#public/12" data-id="12" class="y-menu__item__title">
-                            <span class="txt">公共类别2</span>
-                        </a>
-                    </li>
-                    <li class="y-menu__item">
-                        <a href="#public/123" data-id="123" class="y-menu__item__title">
-                            <span class="txt">公共类别3</span>
-                        </a>
-                    </li>-->
+                    <#list firstLevelLibrary as fl>
+                        <li class="y-menu__item active">
+                            <a href="#public/23" data-id="${fl.id}" class="y-menu__item__title">
+                                <span class="txt">${fl.libraryName}</span>
+                            </a>
+                        </li>
+                    </#list>
                 </ul>
             </li>
 
@@ -259,17 +250,24 @@
     <div class="y-content__opt__bar">
         <button class="y-btn y-btn__blue my-upload" id="filePicker" type="button">上传</button>
         <button class="y-btn y-btn__green js-download" type="button">下载</button>
-        <button class="y-btn y-btn__green js-copy" type="button">分享至共享库</button>
-        <button class="y-btn y-btn__orange js-del" type="button">新建文件夹</button>
-        <div id="theList"></div>
+        <button class="y-btn y-btn__green js-share" type="button">分享至共享库</button>
+        <button class="y-btn y-btn__orange js-newFolder" type="button">新建文件夹</button>
     </div>
     <#--表格包裹的div-->
     <div class="pe-stand-table-main-panel">
         <div class="y-content__table" id="yunTable">
-        <div class="pe-stand-table-pagination"></div>
     </div>
     </div>
 </script>
+
+<#-- 分享公共库模板-->
+<script type="text/template" id="shareToPublic">
+    <input  type="hidden" name="knowledgeId">
+    <input  type="hidden" name="libraryId">
+<span>分享的呀</span>
+
+</script>
+
 
 <#--公共库-->
 <script type="text/template" id="tplPublic">

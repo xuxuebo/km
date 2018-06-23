@@ -128,7 +128,7 @@ var EnCheck = {
     },
     network: function () {
         var startTime = new Date().getTime();
-        var testImg = '<img  id="netTestImg" alt="测试图片" width=0 height=0 src="' + pageContext.resourcePath + '/web-static/proExam/images/test-network.jpg"  onload="EnCheck.testNetWork(' + startTime + ');">';
+        var testImg = '<img  id="netTestImg" alt="测试图片" width=0 height=0 src="/web-static/proExam/images/test-network.jpg"  onload="EnCheck.testNetWork(' + startTime + ');">';
         $('body').append(testImg);
     },
     testNetWork: function (startTime) {

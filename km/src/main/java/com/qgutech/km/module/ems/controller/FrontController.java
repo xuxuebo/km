@@ -1,6 +1,7 @@
 package com.qgutech.km.module.ems.controller;
 
 import com.qgutech.km.base.service.CorpService;
+import com.qgutech.km.module.km.service.LibraryService;
 import com.qgutech.km.module.sfm.service.FileServerService;
 import com.qgutech.km.module.uc.model.SessionContext;
 import com.qgutech.km.module.uc.model.User;
@@ -32,6 +33,8 @@ public class FrontController {
 
     @Resource
     private CorpService corpService;
+    @Resource
+    private LibraryService libraryService;
 
 
     //首页  我的云库
@@ -39,6 +42,7 @@ public class FrontController {
     public String index(Model model){
         model.addAttribute("userName", SessionContext.get().getUserName());
         model.addAttribute("admin", SessionContext.get().isAdmin());
+        model.addAttribute("firstLevelLibrary",libraryService.getFirstLevelLibrary());
         return "index/index";
     }
 
