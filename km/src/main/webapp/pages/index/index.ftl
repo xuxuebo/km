@@ -362,6 +362,29 @@
     </div>
 </script>
 
+<script type="text/template" id="reduction" >
+    <div class="clearF">
+        <div class="validate-form-cell" style="margin-left:80px;">
+            <em class="error" style="display: none;"></em>
+        </div>
+        <label class="floatL">
+            <span class="pe-label-name floatL">确定还原选中的文件?</span>
+        </label>
+    </div>
+
+</script >
+
+<script type="text/template" id="emptyRecycle" >
+    <div class="clearF">
+        <div class="validate-form-cell" style="margin-left:80px;">
+            <em class="error" style="display: none;"></em>
+        </div>
+        <label class="floatL">
+            <span class="pe-label-name floatL">确定清空回收站?</span>
+        </label>
+    </div>
+
+</script >
 
 
 <script src="${resourcePath!}/web-static/proExam/index/js/index.js"></script>

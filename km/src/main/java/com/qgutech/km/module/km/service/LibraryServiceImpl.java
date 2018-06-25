@@ -193,8 +193,13 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
                 Restrictions.eq(Library.LIBRARY_NAME,library.getLibraryName()),
                 Restrictions.eq(Library.LIBRARY_TYPE,KnowledgeConstant.PUBLIC_LIBRARY),Restrictions.eq(Library.PARENT_ID,"0"));
         Library library1 = getByCriterion(criterion);
-        if(StringUtils.isEmpty(library.getId())&&library1!=null){
-            return true;
+        if(StringUtils.isEmpty(library.getId())){
+            if(library1!=null){
+                return true;
+            }else{
+                return false;
+            }
+
         }
         Library old = get(library.getId());
         if(old==null){
