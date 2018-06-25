@@ -1,6 +1,7 @@
 package com.qgutech.km.module.km.controller;
 
 import com.alibaba.fastjson.util.IOUtils;
+import com.qgutech.fs.utils.FsFileManagerUtil;
 import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
@@ -19,6 +20,7 @@ import com.qgutech.km.module.sfm.service.FileServerService;
 import com.qgutech.km.module.uc.model.User;
 import com.qgutech.km.utils.PeException;
 import com.qgutech.km.utils.PeFileUtils;
+import com.qgutech.km.utils.PropertiesUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -36,6 +38,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 文件服务器 控制层
@@ -180,38 +183,33 @@ public class KnowledgeController {
      * @param response
      * @param knowledgeIds  文件id
      */
+    @ResponseBody
     @RequestMapping("downloadKnowledge")
-    public void downLoadUserTemplate(HttpServletRequest request, HttpServletResponse response,String knowledgeIds) {
+    public JsonResult downLoadUserTemplate(HttpServletRequest request, HttpServletResponse response,String knowledgeIds) {
+        JsonResult jsonResult = new JsonResult();
         if(StringUtils.isEmpty(knowledgeIds)){
-            return;
+            jsonResult.setSuccess(false);
+            jsonResult.setMessage("请选择文件");
+            return jsonResult;
         }
-        String paths = "http://192.168.0.35/fs/file/getFile/stt/aacb385b1582c02ea06948b83f9ffae3_1529749901803/lbox/km/src/doc/1806/1529749888809";
-
-        /*List<String> knowledgeIdList = Arrays.asList(knowledgeIds.split(","));
-        //文件系统的文件id*/
-        String fileName = "402880a363af22d301642c33126a0024.txt";
-        response.setCharacterEncoding("utf-8");
-        response.setContentType("multipart/form-data");
-        response.setHeader("Content-Disposition", "attachment;fileName="
-                + fileName);
-        OutputStream os = null;
-        InputStream inputStream = null;
-        try {
-            //String path = request.getSession().getServletContext().getRealPath("") + "/template";
-            inputStream = new FileInputStream(getFile(paths, fileName));
-            os = response.getOutputStream();
-            byte[] b = new byte[2048];
-            int length;
-            while ((length = inputStream.read(b)) > 0) {
-                os.write(b, 0, length);
+        List<String> ids =Arrays.asList(knowledgeIds.split(","));
+        List<Knowledge> knowledgeList = knowledgeService.getKnowledgeByKnowledgeIds(ids);
+        List<String> fileIds = new ArrayList<>(knowledgeList.size());
+        for(Knowledge s : knowledgeList){
+            if(!s.getKnowledgeType().equals("file")){
+                fileIds.add(s.getFileId());
             }
-            os.flush();
-        } catch (IOException e) {
-            LOG.error(e);
-        } finally {
-            IOUtils.close(os);
-            IOUtils.close(inputStream);
         }
+        //批量文件的路径
+        List<String> fileUrls = new ArrayList<>(fileIds.size());
+        for(String s : fileIds){
+            String fileUrl = FsFileManagerUtil.getFileUrl(PropertiesUtils.getConfigProp().getProperty("fs.server.host"),s, UUID.randomUUID().toString());
+            fileUrls.add(fileUrl);
+        }
+        jsonResult.setData(fileUrls);
+        jsonResult.setSuccess(true);
+        return jsonResult;
+
     }
 
     /**

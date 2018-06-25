@@ -128,10 +128,8 @@ $(function(){
         }
 
         var hash = window.location.hash;
-        var processor = "DOC";
-        /*if (hash) {
-         processor = hash.substring(1);
-         }*/
+        var processor = "FILE";
+
 
         window.uploadFile({
             swf: "/km/web-static/flash/Uploader.swf",
@@ -158,13 +156,11 @@ $(function(){
             duplicate: true
         }, {
             uploadCompleted: function (data) {
-                console.log(data);
                 if (data == undefined || data == null) {
                     return;
                 }
-
                 var url = pageContext.rootPath + '/km/km/saveKnowledge';
-                console.log(url);
+                pro = data.processor;
                 $.ajax({
                     type: 'post',
                     dataType: 'json',
@@ -262,8 +258,37 @@ $(function(){
                 layer.msg("请先选择操作项");
                 return;
             }
-            var  dd = 1;
-            window.open('http://192.168.0.35/fs/file/getFile/stt/aacb385b1582c02ea06948b83f9ffae3_1529749901803/lbox/km/src/doc/1806/1529749888809/402880a363af22d301642c33126a0024.txt');
+            var knIds = "";
+            for(var i = 0 ;i<selectList.length;i++){
+                knIds += selectList[i]+",";
+            }
+            knIds = knIds.substring(0,knIds.length-1);
+
+            var fileIds = [];
+            PEBASE.ajaxRequest({
+                url: pageContext.rootPath + '/km/km/downloadKnowledge',
+                async: false,
+                data: {'knowledgeIds':knIds},
+                success: function (data) {
+                    if (data.success) {
+                        fileIds = data.data;
+                    }else{
+                        PEMO.DIALOG.alert({
+                            content: data.message,
+                            btn: ['我知道了'],
+                            yes: function (index) {
+                                layer.close(index);
+                            }
+                        });
+                    }
+
+                }
+            });
+            for(var i=0;i<fileIds.length;i++){
+                //console.log(fileIds[i]);
+                downloadFile(fileIds[i],null);
+                //window.open(fileIds[i]);
+            }
         });
 
         //新建文件夹
@@ -461,3 +486,22 @@ $(function(){
     }
 
 })
+
+function downloadFile(path,params) {
+    $("#downloadform").remove();
+    var form = $("<form>");//定义一个form表单
+    form.attr("id", "downloadform");
+    form.attr("style", "display:none");
+    form.attr("target", "");
+    form.attr("method", "get");
+    form.attr("action", path);
+    for(var key in params){
+        var input1 = $("<input>");
+        input1.attr("type", "hidden");
+        input1.attr("name", key);
+        input1.attr("value", params[key]);
+        form.append(input1);
+    }
+    $("body").append(form);//将表单放置在web中
+    form.submit();//表单提交()
+}

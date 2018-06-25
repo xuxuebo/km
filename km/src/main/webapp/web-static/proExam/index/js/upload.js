@@ -194,13 +194,19 @@ $(function () {
             wu.accept = {
                 title: "不支持的文档类型",
                 mimeTypes: "application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.ms-excel,pplication/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,text/plain",
-                extensions: 'doc,docx,ppt,pptx,xls,xlsx,pdf,txt'
+                extensions: 'wmv,flv,mp4,rmvb,mkv,mov,avi,m4v,asf,mp3,ape,bmp,png,gif,jpg,jpeg,tif,doc,docx,ppt,pptx,xls,xlsx,pdf,txt,zip,rar,7z'
             };
-        } else if (processor != "FILE") {
+        } /*else if (processor = "FILE") {
             wu.accept = {
                 title: "不支持的压缩类型",
                 //mimeTypes: "application/zip,application/x-rar-compressed,application/application/x-7z-compressed",
                 extensions: 'zip,rar,7z'
+            };
+        }*/else if(processor == 'FILE' ){
+            wu.accept = {
+                title: "不支持的压缩类型",
+                //mimeTypes: "application/zip,application/x-rar-compressed,application/application/x-7z-compressed",
+                extensions: 'wmv,flv,mp4,rmvb,mkv,mov,avi,m4v,asf,mp3,ape,bmp,png,gif,jpg,jpeg,tif,doc,docx,ppt,pptx,xls,xlsx,pdf,txt,zip,rar,7z'
             };
         }
 
