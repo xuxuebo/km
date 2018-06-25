@@ -1,11 +1,9 @@
 package com.qgutech.km.module.km.model;
 
 import com.qgutech.km.base.model.BaseModel;
+import org.apache.http.annotation.ThreadSafe;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 智慧云文件实体
@@ -61,6 +59,10 @@ public class Knowledge extends BaseModel {
      */
     @Column
     private float showOrder;
+
+    @Transient
+    private String createTimeStr;
+
 
     public String getKnowledgeName() {
         return knowledgeName;
@@ -129,5 +131,13 @@ public class Knowledge extends BaseModel {
         this.sourceKnowledgeId = sourceKnowledgeId;
         this.folder = folder;
         this.showOrder = showOrder;
+    }
+
+    public String getCreateTimeStr() {
+        return createTimeStr;
+    }
+
+    public void setCreateTimeStr(String createTimeStr) {
+        this.createTimeStr = createTimeStr;
     }
 }

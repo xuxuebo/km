@@ -52,9 +52,10 @@ $(function(){
         var routeInfo;
         if (hashArr.length > 1) {
             var subNav = hashArr[1];
-            var subName = hashArr[2];
             publicId = subNav;
+            var subName =$yAside.find('a[data-id="' + subNav + '"]').children('span').data("name");
             publicName = subName;
+            //元素同胞
             $yAside.find('a[data-id="' + subNav + '"]').parent().addClass('active').siblings().removeClass('active');
             for (var key in route.routes) {
                 if (new RegExp(key).test(_hash)) {
@@ -287,9 +288,7 @@ $(function(){
                 }
             });
             for(var i=0;i<fileIds.length;i++){
-                //console.log(fileIds[i]);
                 downloadFile(fileIds[i],null);
-                //window.open(fileIds[i]);
             }
         });
 
@@ -350,7 +349,6 @@ $(function(){
     function initPublicPage(container, routeInfo) {
         var libraryId = publicId;
         var libraryName = publicName;
-        console.log(libraryName);
         var _tpl = $(routeInfo.templateId).html();
         container.html(_.template(_tpl)({title: '公共库>'+libraryName}));
         //table渲染
@@ -425,7 +423,44 @@ $(function(){
     }
 
     //回收站
-    function initRecyclePage() {
+    function initRecyclePage(container, routeInfo) {
+        var _tpl = $(routeInfo.templateId).html();
+        container.html(_.template(_tpl)({title: '我的回收站'}));
+        //table渲染
+        var _table = $("#tplRecycleTable").html();
+        var $yunTable = $('#recycleTable');
+        var data = [];
+        $.ajax({
+            async: false,//此值要设置为FALSE  默认为TRUE 异步调用
+            type: "POST",
+            url: pageContext.resourcePath + '/km/manage/searchRecycle',
+            dataType: 'json',
+            success: function (result) {
+                data = result;
+            }
+        });
+        var table, initSort = {
+            name: "desc",
+            size: "desc",
+            uploadTime: "desc"
+        };
+        renderTable();
+        function renderTable() {
+            $yunTable.html(_.template(_table)({list: data, sort: initSort}));
+            table = initTable($yunTable);
+        }
+        //绑定事件
+        $('.js-reduction').on('click', function () {
+            var selectList = table.getSelect();
+            if (selectList.length === 0) {
+                layer.msg("请先选择操作项");
+                return;
+            }
+        });
+        $('.js-emptyRecycle').on('click', function () {
+                layer.msg("清空回收站");
+                return;
+        });
 
     }
 

@@ -18,6 +18,7 @@ import com.qgutech.km.module.km.service.LibraryService;
 import com.qgutech.km.module.sfm.model.PeFile;
 import com.qgutech.km.module.sfm.service.FileServerService;
 import com.qgutech.km.module.uc.model.User;
+import com.qgutech.km.utils.PeDateUtils;
 import com.qgutech.km.utils.PeException;
 import com.qgutech.km.utils.PeFileUtils;
 import com.qgutech.km.utils.PropertiesUtils;
@@ -224,6 +225,9 @@ public class KnowledgeController {
         if(CollectionUtils.isEmpty(list)){
             list = new ArrayList<>(0);
         }
+        for(Knowledge knowledge : list){
+            knowledge.setCreateTimeStr(PeDateUtils.format(knowledge.getCreateTime(),PeDateUtils.FORMAT_YYYY_MM_DD_HH_MM));
+        }
         return list;
     }
 
@@ -238,6 +242,9 @@ public class KnowledgeController {
         List<Knowledge> list = knowledgeService.getKnowledgeByCreateBy(KnowledgeConstant.RECYCLE_LIBRARY);
         if(CollectionUtils.isEmpty(list)){
             list = new ArrayList<>(0);
+        }
+        for(Knowledge knowledge : list){
+            knowledge.setCreateTimeStr(PeDateUtils.format(knowledge.getCreateTime(),PeDateUtils.FORMAT_YYYY_MM_DD_HH_MM));
         }
         return list;
     }
@@ -276,7 +283,11 @@ public class KnowledgeController {
         if(StringUtils.isEmpty(libraryId)){
             return new ArrayList<>(0);
         }
-        return knowledgeService.getByLibraryId(libraryId);
+        List<Knowledge> list = knowledgeService.getByLibraryId(libraryId);
+        for(Knowledge knowledge : list){
+            knowledge.setCreateTimeStr(PeDateUtils.format(knowledge.getCreateTime(),PeDateUtils.FORMAT_YYYY_MM_DD_HH_MM));
+        }
+        return list;
     }
 
 

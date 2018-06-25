@@ -85,7 +85,7 @@
                     <#list firstLevelLibrary as fl>
                         <li class="y-menu__item">
                             <a href="#public/${fl.id}/${fl.libraryName}" data-id="${fl.id}" class="y-menu__item__title">
-                                <span class="txt">${fl.libraryName}</span>
+                                <span class="txt" data-name="${fl.libraryName}">${fl.libraryName}</span>
                             </a>
                         </li>
                     </#list>
@@ -130,7 +130,7 @@
                 <span class="sort  <%if(sort.size === 'desc'){%>desc<%}else{%>asc<%}%>">大小</span>
             </th>
             <th class="y-table__td create-time">
-                <span class="sort  <%if(sort.createTime === 'desc'){%>desc<%}else{%>asc<%}%>">上传时间</span>
+                <span class="sort  <%if(sort.createTimeStr === 'desc'){%>desc<%}else{%>asc<%}%>">上传时间</span>
             </th>
         </tr>
         </thead>
@@ -156,7 +156,58 @@
                 <%=item.knowledgeSize%>
             </td>
             <td class="y-table__td upload-time">
-                <%=item.createTime%>
+                <%=item.createTimeStr%>
+            </td>
+        </tr>
+        <%})%>
+        </tbody>
+    </table>
+</script>
+
+<script type="text/template" id="tplRecycleTable">
+    <table class="y-table">
+        <thead class="y-table__header">
+        <tr>
+            <th class="y-table__td checkbox">
+                <label class="y-checkbox">
+                    <input type="checkbox">
+                    <span class="y-checkbox__span"></span>
+                </label>
+            </th>
+            <th class="y-table__td name">
+                <span class="">文件名</span>
+            </th>
+            <th class="y-table__td size">
+                <span class="">大小</span>
+            </th>
+            <th class="y-table__td create-time">
+                <span class="">删除时间</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <%_.each(list,function(item,i){%>
+        <tr class="y-table__tr" data-id="<%=item.id%>">
+            <td class="y-table__td checkbox">
+                <label class="y-checkbox">
+                    <input type="checkbox">
+                    <span class="y-checkbox__span"></span>
+                </label>
+            </td>
+            <td class="y-table__td name">
+                <div class="y-table__opt__bar">
+                    <button type="button" class="yfont-icon opt-item js-opt-download">&#xe64f;</button>
+                    <button type="button" class="yfont-icon opt-item js-opt-more">&#xe652;</button>
+                </div>
+                <div class="y-table__filed_name type-<%=item.knowledgeType%>">
+                    <%=item.knowledgeName%>
+                </div>
+            </td>
+            <td class="y-table__td size">
+                <%=item.knowledgeSize%>
+            </td>
+            <td class="y-table__td upload-time">
+                <%=item.createTimeStr%>
             </td>
         </tr>
         <%})%>
@@ -214,10 +265,10 @@
                 </div>
             </td>
             <td class="y-table__td create-time">
-                <%=item.createTime%>
+                <%=item.createTimeStr%>
             </td>
             <td class="y-table__td expire-time">
-                <%=item.expireTime%>
+                <%=item.expireTimeStr%>
             </td>
             <td class="y-table__td view-count">
                 <%=item.viewCount%>
@@ -304,8 +355,8 @@
 <script type="text/template" id="tplRecycle">
     <h4 class="y-content__title"><%=title%></h4>
     <div class="y-content__opt__bar">
-        <button class="y-btn y-btn__blue" type="button" >还原文件</button>
-        <button class="y-btn y-btn__green" type="button">清空回收站</button>
+        <button class="y-btn y-btn__blue js-reduction" type="button" >还原文件</button>
+        <button class="y-btn y-btn__green js-emptyRecycle" type="button">清空回收站</button>
     </div>
     <div class="y-content__table" id="recycleTable">
     </div>
