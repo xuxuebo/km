@@ -3,7 +3,10 @@ package com.qgutech.km.module.uc.service;
 import com.alibaba.fastjson.JSON;
 import com.qgutech.km.base.model.Category;
 import com.qgutech.km.base.service.*;
+import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.module.im.service.MsgSendService;
+import com.qgutech.km.module.km.model.Library;
+import com.qgutech.km.module.km.service.LibraryService;
 import com.qgutech.km.module.sfm.service.FileServerService;
 import com.qgutech.km.module.uc.model.*;
 import com.qgutech.km.utils.*;
@@ -68,6 +71,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     private PositionService positionService;
     @Resource
     private CategoryService categoryService;
+    @Resource
+    private LibraryService libraryService;
 
     @Override
     @Transactional(readOnly = true)
@@ -556,6 +561,19 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         List<String> positionIds = new ArrayList<>();
         CollectionUtils.addAll(positionIds, user.getPositionId().split(PeConstant.COMMA));
         updatePosition(Collections.singletonList(user.getId()), positionIds);
+        //保存用户之后需要初始化用户的个人云库和个人回收站
+        Library myYun = new Library();
+        Library recycle = new Library();
+        myYun.setLibraryName("我的云库");
+        myYun.setLibraryType(KnowledgeConstant.MY_LIBRARY);
+        myYun.setShowOrder(1);
+        recycle.setLibraryName("回收站");
+        recycle.setLibraryType(KnowledgeConstant.RECYCLE_LIBRARY);
+        recycle.setShowOrder(1);
+        libraryService.save(myYun);
+        libraryService.save(recycle);
+        libraryService.update(myYun.getId(),Library.CREATE_BY,user.getId());
+        libraryService.update(recycle.getId(),Library.CREATE_BY,user.getId());
         return user.getId();
     }
 

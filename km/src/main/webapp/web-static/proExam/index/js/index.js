@@ -171,6 +171,8 @@ $(function(){
                             content: '保存成功',
                             time: 1000
                         });
+                        //刷新列表
+                        route['YunCb']($yunContentBody, route.routes.yun, null);
                     }
                 });
             },
@@ -318,9 +320,11 @@ $(function(){
                                     content: '新增成功',
                                     time: 1000,
                                     //TODO  刷新列表
+
                                 });
                                 layer.closeAll();
-
+                                //刷新列表
+                                route['YunCb']($yunContentBody, route.routes.yun, null);
                             }else{
                                 PEMO.DIALOG.alert({
                                     content: data.message,

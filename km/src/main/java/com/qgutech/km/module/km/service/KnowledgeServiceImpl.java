@@ -87,7 +87,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
                 Restrictions.in(Knowledge.ID,knowledgeIds)
                 );
         knowledgeList = listByCriterion((criterion),
-                new Order[]{Order.desc(Knowledge.CREATE_TIME)});
+                new Order[]{Order.asc(Knowledge.FILE_ID),Order.desc(Knowledge.CREATE_TIME)});
         return knowledgeList;
     }
 
