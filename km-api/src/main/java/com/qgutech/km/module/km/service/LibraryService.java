@@ -1,5 +1,7 @@
 package com.qgutech.km.module.km.service;
 
+import com.qgutech.km.base.model.Page;
+import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseService;
 import com.qgutech.km.base.vo.PeTreeNode;
 import com.qgutech.km.module.km.model.Library;
@@ -27,4 +29,13 @@ public interface LibraryService extends BaseService<Library> {
     List<PeTreeNode> listTree();
 
     String addFolder(String libraryName);
+
+    Page<Library> search(PageParam pageParam,Library library);
+
+    String saveLibrary(Library library);
+
+    boolean checkName(Library library);
+
+    String updateLibrary(Library library);
+
 }

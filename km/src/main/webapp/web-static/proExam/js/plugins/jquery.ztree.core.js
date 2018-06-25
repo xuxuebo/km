@@ -1942,5 +1942,4 @@
 	var zt = $.fn.zTree,
 	$$ = tools.$,
 	consts = zt.consts;
-	console.log(zt)
 })(jQuery);

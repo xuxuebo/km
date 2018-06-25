@@ -18,6 +18,12 @@ import javax.persistence.Table;
 @Table(name = "t_km_label", indexes = {@Index(name = "i_km_label", columnList = "corpCode")})
 public class Label extends BaseModel {
 
+    public static String PARENT_ID = "parentId";
+
+    public static String LABEL_NAME = "labelName";
+
+    public static String SHOW_ORDER = "showOrder";
+
     /**
      * 父类主键
      */

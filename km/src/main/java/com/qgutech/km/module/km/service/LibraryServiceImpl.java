@@ -1,13 +1,17 @@
 package com.qgutech.km.module.km.service;
 
 import com.qgutech.km.base.ExecutionContext;
+import com.qgutech.km.base.model.Page;
+import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.base.vo.PeTreeNode;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.module.km.model.Knowledge;
 import com.qgutech.km.module.km.model.KnowledgeRel;
 import com.qgutech.km.module.km.model.Library;
+import com.qgutech.km.utils.PeException;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
@@ -146,5 +150,70 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
             return 0f;
         }
         return libraries.get(0).getShowOrder();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Library> search(PageParam pageParam, Library library) {
+        Conjunction conjunction = getConjunction();
+        conjunction.add(Restrictions.and(Restrictions.eq(Library.CORP_CODE,ExecutionContext.getCorpCode()),
+                Restrictions.eq(Library.PARENT_ID,"0"),
+                Restrictions.eq(Library.LIBRARY_TYPE,KnowledgeConstant.PUBLIC_LIBRARY)));
+        Page<Library> page = search(pageParam,conjunction,new Order[]{Order.desc(Library.CREATE_TIME)},Library.ID,Library.LIBRARY_NAME);
+        if(CollectionUtils.isEmpty(page.getRows())){
+            return new Page<>();
+        }
+        return page;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public String saveLibrary(Library library) {
+        boolean hasName = checkName(library);
+        if(hasName){
+            return "库名重复";
+        }
+        library.setLibraryType(KnowledgeConstant.PUBLIC_LIBRARY);
+        library.setShowOrder(0);
+        library.setParentId("0");
+        library.setIdPath("");
+        String id = save(library);
+        update(id,Library.ID_PATH,id);
+        return id;
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean checkName(Library library) {
+        if(library==null|| StringUtils.isEmpty(library.getLibraryName())){
+            throw  new PeException(" checkName error ");
+        }
+        Criterion criterion = Restrictions.and(Restrictions.eq(Library.CORP_CODE,ExecutionContext.getCorpCode()),
+                Restrictions.eq(Library.LIBRARY_NAME,library.getLibraryName()),
+                Restrictions.eq(Library.LIBRARY_TYPE,KnowledgeConstant.PUBLIC_LIBRARY),Restrictions.eq(Library.PARENT_ID,"0"));
+        Library library1 = getByCriterion(criterion);
+        if(StringUtils.isEmpty(library.getId())&&library1!=null){
+            return true;
+        }
+        Library old = get(library.getId());
+        if(old==null){
+            throw  new PeException(" checkName error ");
+        }
+        if(library1!=null&&!library1.getId().equals(old.getId())){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public String updateLibrary(Library library) {
+        boolean hasName = checkName(library);
+        if(hasName){
+            return "库名重复";
+        }
+        update(library.getId(),Library.LIBRARY_NAME,library.getLibraryName());
+        return library.getId();
     }
 }

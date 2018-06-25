@@ -89,6 +89,11 @@
                     <span class="yfont-icon">&#xe643;</span><span class="txt">标签管理</span>
                 </a>
             </li>
+            <li class="y-menu__item y-library">
+                <a href="#library" class="y-menu__item__title y-aside__menu__item__title">
+                    <span class="yfont-icon">&#xe643;</span><span class="txt">公共库管理</span>
+                </a>
+            </li>
         </ul>
     </aside>
     <section class="y-content">
@@ -211,6 +216,14 @@
         <button class="y-btn y-btn__blue js-addLabel" type="button">新增标签</button>
     </div>
     <div class="y-content__table" id="labelTable"></div>
+</script>
+
+<script type="text/template" id="tplLibrary">
+    <h4 class="y-content__title"><%=title%></h4>
+    <div class="y-content__opt__bar">
+        <button class="y-btn y-btn__blue js-addLibrary" type="button">新增公共库</button>
+    </div>
+    <div class="y-content__table" id="libraryTable"></div>
 </script>
 
 <script src="${resourcePath!}/web-static/proExam/index/js/settingIndex.js"></script>

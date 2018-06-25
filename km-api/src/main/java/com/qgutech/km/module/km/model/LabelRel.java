@@ -18,6 +18,8 @@ import javax.persistence.Table;
 @Table(name = "t_km_label_rel", indexes = {@Index(name = "i_km_label_rel", columnList = "corpCode,knowledgeId")})
 public class LabelRel extends BaseModel {
 
+    public static String LABEL_ID = "labelId";
+
     /**
      * 文件主键
      */
