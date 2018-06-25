@@ -102,9 +102,9 @@
                                         end: function () {
                                             layer.closeAll('page');
                                             $('#peZtreeMain').mCustomScrollbar('destroy');
+                                            PEMO.ZTREE.initTree('peZtreeMain', settingUrl);
                                         }
                                     });
-                                $('.pe-stand-table-wrap').peGrid('load', $('#exerciseManageForm').serializeArray());
                                     return false;
                                 }
 
