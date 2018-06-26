@@ -112,6 +112,7 @@
             chunkSize: chunkSize
         };
 
+        var processor = "FILE";
         window.uploadFile({
             auto: true,
             swf: "/km/web-static/flash/Uploader.swf",
@@ -136,14 +137,12 @@
             fileSingleSizeLimit: 10 * 1024 * 1024 * 1024,
             duplicate: true
         }, {
-            var result = null;
             uploadCompleted: function (data) {
-                result = data;
                 if (data == undefined || data == null) {
                     return;
                 }
                 console.log(data);
-                //TODO
+                processor = data.suffix
                 $('.js-file-name').attr("title", data.storedFileName)
                         .html(data.storedFileName + "&nbsp;&nbsp;" +
                                 "<input type='hidden' name='fileId' value='{{fileId}}' />".replace("{{fileId}}", data.id)
@@ -152,9 +151,8 @@
                                 + "<input type='hidden' name='knowledgeSize' value='{{knowledgeSize}}' />".replace("{{knowledgeSize}}", data.fileSize)
                         );
             },
-
             appCode: "km",
-            processor: result.suffix,
+            processor: processor,
             //extractPoint: true,
             corpCode: "lbox",
             businessId: (new Date()).getTime(),

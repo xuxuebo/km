@@ -676,6 +676,12 @@ body, html {
     background-image: -webkit-image-set(url('../img/ico_rar.png') 1x, url('../img/ico_rar@2x.png') 2x)
 }
 
+.y-table__filed_name.type-7z {
+    background-image: url(../img/ico_rar.png);
+    background-image: image-set(url('../img/ico_rar.png') 1x, url('../img/ico_rar@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_rar.png') 1x, url('../img/ico_rar@2x.png') 2x)
+}
+
 .y-table__opt__bar {
     display: none;
     float: right
