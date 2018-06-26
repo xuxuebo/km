@@ -134,4 +134,41 @@
         <property name="maxPoolSize" value="100"/>
         <property name="queueCapacity" value="2000"/>
     </bean>
+
+    <!--全文搜索管理类-->
+    <bean id="kmFullTextSearchManager" class="com.qgutech.km.module.km.service.FullTextSearchManager">
+        <property name="analyzerWrapper" ref="analyzerWrapper"/>
+        <property name="keywordAnalyzer" ref="keywordAnalyzer"/>
+        <property name="indexRootDir" value="${km.index.path}"/>
+    </bean>
+
+    <!--分词器包装器-->
+    <bean id="analyzerWrapper" class="org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper">
+        <constructor-arg index="0" ref="contentAnalyzer"/>
+        <constructor-arg index="1">
+            <map>
+                <entry key="tags" value-ref="keywordAnalyzer"/>
+                <entry key="content" value-ref="contentAnalyzer"/>
+                <entry key="introduction" value-ref="contentAnalyzer"/>
+                <entry key="uploaderUserName" value-ref="likeAnalyzer"/>
+                <entry key="knowledgeName" value-ref="likeAnalyzer"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <!--内容分词器-->
+    <bean id="contentAnalyzer" class="org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer">
+        <constructor-arg type="org.apache.lucene.util.Version" value="LUCENE_46"/>
+    </bean>
+
+    <!--像数据库like一样的分词器-->
+    <bean id="likeAnalyzer" class="com.qgutech.km.module.km.service.LikeAnalyzer"/>
+
+    <!--搜索关键字的分词器（空白分词器）-->
+    <bean id="keywordAnalyzer" class="org.apache.lucene.analysis.core.WhitespaceAnalyzer">
+        <constructor-arg type="org.apache.lucene.util.Version" value="LUCENE_46"/>
+    </bean>
+
+    <!--抽取文档内容-->
+    <bean id="tika" class="org.apache.tika.Tika"/>
 </beans>

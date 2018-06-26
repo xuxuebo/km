@@ -1,24 +1,15 @@
 package com.qgutech.km.module.km.controller;
 
-import com.alibaba.fastjson.util.IOUtils;
 import com.qgutech.fs.utils.FsFileManagerUtil;
-import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.vo.JsonResult;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.constant.PeConstant;
-import com.qgutech.km.module.km.model.Knowledge;
-import com.qgutech.km.module.km.model.KnowledgeRel;
-import com.qgutech.km.module.km.model.Library;
-import com.qgutech.km.module.km.model.Share;
-import com.qgutech.km.module.km.service.KnowledgeRelService;
-import com.qgutech.km.module.km.service.KnowledgeService;
-import com.qgutech.km.module.km.service.LibraryService;
-import com.qgutech.km.module.km.service.ShareService;
+import com.qgutech.km.module.km.model.*;
+import com.qgutech.km.module.km.service.*;
 import com.qgutech.km.module.sfm.model.PeFile;
 import com.qgutech.km.module.sfm.service.FileServerService;
-import com.qgutech.km.module.uc.model.User;
 import com.qgutech.km.utils.PeDateUtils;
 import com.qgutech.km.utils.PeException;
 import com.qgutech.km.utils.PeFileUtils;
@@ -37,7 +28,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -65,6 +57,8 @@ public class KnowledgeController {
     private LibraryService libraryService;
     @Resource
     private ShareService shareService;
+    @Resource
+    private KmFullTextSearchService kmFullTextSearchService;
 
     @ResponseBody
     @RequestMapping("uploadFile")
@@ -104,6 +98,9 @@ public class KnowledgeController {
                 Library myLibrary = libraryService.getUserLibraryByLibraryType("MY_LIBRARY");
                 knowledgeRel.setLibraryId(myLibrary.getId());
                 knowledgeRelService.save(knowledgeRel);
+
+                IndexKnowledge indexKnowledge = convert(knowledge);
+                kmFullTextSearchService.add(indexKnowledge);
             } else {
                 knowledgeService.update(knowledge);
             }
@@ -112,6 +109,35 @@ public class KnowledgeController {
         } catch (PeException e) {
             return new JsonResult<>(false, e.getMessage());
         }
+    }
+
+    @ResponseBody
+    @RequestMapping("searchTest")
+    public JsonResult<Knowledge>  searchTest(){
+        Page<String> page = new Page<>();
+        page = kmFullTextSearchService.search("CAD", page);
+        System.out.println(page);
+        return new JsonResult<Knowledge>();
+    }
+
+    private IndexKnowledge convert(Knowledge knowledge) {
+        if (knowledge == null) {
+            throw new IllegalArgumentException("Knowledge is null!");
+        }
+
+        IndexKnowledge indexKnowledge = new IndexKnowledge();
+        indexKnowledge.setKnowledgeId(knowledge.getId());
+        indexKnowledge.setOptStatus("ENABLE");
+        indexKnowledge.setCorpCode(knowledge.getCorpCode());
+        indexKnowledge.setIntroduction("");
+        indexKnowledge.setKnowledgeName(knowledge.getKnowledgeName());
+        indexKnowledge.setKnowledgeType("DOC");
+        indexKnowledge.setStoredFileId(knowledge.getFileId());
+        indexKnowledge.setTags("");
+        indexKnowledge.setContent("");
+        indexKnowledge.setUploaderUserName("");
+
+        return indexKnowledge;
     }
 
     @ResponseBody
@@ -185,8 +211,6 @@ public class KnowledgeController {
             throw new PeException("目标文件不存在");
         }
         return file;
-
-
     }
 
     /**
@@ -384,7 +408,7 @@ public class KnowledgeController {
      */
     @ResponseBody
     @RequestMapping("publicLibraryData")
-    public Page<Knowledge> publicLibraryData(PageParam pageParam,Knowledge knowledge,String libraryId){
+    public Page<Knowledge> publicLibraryData(PageParam pageParam, Knowledge knowledge, String libraryId){
         if(StringUtils.isEmpty(libraryId)){
             return new Page<Knowledge>();
         }

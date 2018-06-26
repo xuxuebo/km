@@ -19,7 +19,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.document.*;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queries.TermFilter;
@@ -32,8 +35,10 @@ import org.apache.poi.hslf.model.Slide;
 import org.apache.poi.hslf.model.TextRun;
 import org.apache.poi.hslf.usermodel.SlideShow;
 import org.apache.tika.Tika;
-import redis.clients.jedis.JedisCommands;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -46,6 +51,7 @@ import java.util.*;
  * @version 1.0
  * @since 2014-05-19
  */
+@Service("kmFullTextSearchService")
 public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
     //索引文件的属性：知识主键
     private static final String DOC_FIELD_KNOWLEDGE_ID = "knowledgeId";
@@ -87,14 +93,17 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
     public static final Log LOG = LogFactory.getLog(KmFullTextSearchServiceImpl.class);
 
     //全文搜索的管理类，用于获取IndexWriter和IndexReader
+    @Resource
     private FullTextSearchManager fullTextSearchManager;
     //全文搜索的最大搜索数
+    @Value("${km.max.search.count}")
     private int maxSearchCount;
 //    //文件服务器管理对象
     private FileServerService fileServerManager;
-    //redis客户端
-    private JedisCommands jedis;
+//    //redis客户端
+//    private JedisCommands jedis;
     //用于抽取文档内容
+    @Resource
     private Tika tika;
     //调度者的调度名
     private String schedulerName;
@@ -104,7 +113,7 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
     @Override
     public void add(IndexKnowledge indexKnowledge) {
         checkKnowledge(indexKnowledge);
-        add(Arrays.asList(indexKnowledge), false);
+        add(Arrays.asList(indexKnowledge));
     }
 
     @Override
@@ -120,11 +129,11 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
             try {
                 checkKnowledge(indexKnowledge);
                 String corpCode = indexKnowledge.getCorpCode();
-                if (!assign && indexKnowledge.isAssign()) {
-                    assign = true;
-                }
+//                if (!assign && indexKnowledge.isAssign()) {
+//                    assign = true;
+//                }
 
-                if (KNOWLEDGE_TYPE_OF_DOC.equalsIgnoreCase(indexKnowledge.getKnowledgeType()) && assign) {
+                if (KNOWLEDGE_TYPE_OF_DOC.equalsIgnoreCase(indexKnowledge.getKnowledgeType()) ) {
                     String content = getContent(corpCode, indexKnowledge.getStoredFileId(), null);
                     indexKnowledge.setContent(content);
                 }
@@ -206,9 +215,9 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
                 knowledgeAddFlag = KNOWLEDGE_ADD_FLAG_FAILED;
             }
 
-            for (String knowledgeId : knowledgeIdList) {
-                jedis.set(KNOWLEDGE_ID_NAMESPACE + knowledgeId, knowledgeAddFlag);
-            }
+//            for (String knowledgeId : knowledgeIdList) {
+//                jedis.set(KNOWLEDGE_ID_NAMESPACE + knowledgeId, knowledgeAddFlag);
+//            }
         }
     }
 
@@ -806,13 +815,13 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
         this.maxSearchCount = maxSearchCount;
     }
 
-    public JedisCommands getJedis() {
-        return jedis;
-    }
-
-    public void setJedis(JedisCommands jedis) {
-        this.jedis = jedis;
-    }
+//    public JedisCommands getJedis() {
+//        return jedis;
+//    }
+//
+//    public void setJedis(JedisCommands jedis) {
+//        this.jedis = jedis;
+//    }
 
     public Tika getTika() {
         return tika;
