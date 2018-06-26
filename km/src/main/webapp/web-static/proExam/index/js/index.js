@@ -106,7 +106,7 @@ $(function(){
         $.ajax({
             async: false,//此值要设置为FALSE  默认为TRUE 异步调用
             type: "POST",
-            url: pageContext.resourcePath + '/km/manage/search',
+            url: pageContext.resourcePath + '/knowledge/manage/search',
             dataType: 'json',
             success: function (result) {
                 data = result;
@@ -137,7 +137,6 @@ $(function(){
             server: "http://192.168.0.35/fs/file/uploadFile",
             pick: "#filePicker",
             resize: false,
-            dnd: "#theList",
             paste: document.body,
             disableGlobalDnd: true,
             thumb: {
@@ -160,8 +159,9 @@ $(function(){
                 if (data == undefined || data == null) {
                     return;
                 }
-                var url = pageContext.rootPath + '/km/km/saveKnowledge';
-                pro = data.processor;
+
+                var url = pageContext.rootPath + '/knowledge/km/saveKnowledge';
+                console.log(url);
                 $.ajax({
                     type: 'post',
                     dataType: 'json',
@@ -184,6 +184,26 @@ $(function(){
             businessId: (new Date()).getTime(),
             responseFormat: "json"
         });
+
+        // $('.js-upload').on('click', function () {
+        //     PEMO.DIALOG.selectorDialog({
+        //         content: pageContext.rootPath + '/km/knowledge/openUpload',
+        //         area: ['606px', '400px'],
+        //         title: '上传文件',
+        //         btn1: function () {
+        //         },
+        //         btn2: function () {
+        //             layer.closeAll();
+        //         },
+        //         success: function (d,index) {
+        //             var iframeBody = layer.getChildFrame('body', index);
+        //             var hasPicSrc = $('.pe-user-head-edit-btn').find('img').attr('src');
+        //             if(hasPicSrc){
+        //                 $(iframeBody).find('.jcrop-preview').prop("src", hasPicSrc);
+        //             }
+        //         }
+        //     });
+        // });
 
         //绑定事件
         //分享到云库
@@ -317,7 +337,7 @@ $(function(){
                             if (data.success) {
                                 PEMO.DIALOG.tips({
                                     content: '新增成功',
-                                    time: 1000,
+                                    time: 1000
                                     //TODO  刷新列表
 
                                 });

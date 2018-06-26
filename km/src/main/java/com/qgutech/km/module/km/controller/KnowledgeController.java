@@ -27,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -49,7 +50,7 @@ import java.util.UUID;
  * @since 2016年10月10日10:32:33
  */
 @Controller
-@RequestMapping("km")
+@RequestMapping("knowledge")
 public class KnowledgeController {
 
     private static final Log LOG = LogFactory.getLog(KnowledgeController.class);
@@ -80,6 +81,13 @@ public class KnowledgeController {
             LOG.error(ex);
             return new JsonResult<>(false, ex.getMessage());
         }
+    }
+
+    @RequestMapping("openUpload")
+    public String openUpload(Model model) {
+        model.addAttribute("sourceUrl", "");
+        model.addAttribute("targetUrl", "");
+        return "km/uploadFile";
     }
 
     @ResponseBody
