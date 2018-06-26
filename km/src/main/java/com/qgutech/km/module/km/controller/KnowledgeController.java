@@ -311,5 +311,91 @@ public class KnowledgeController {
         return shareService.getMyShare();
     }
 
+    /**
+     * 还原我的回收站文件
+     * @param knowledgeIds  文件id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("reduction")
+    public JsonResult reduction(String knowledgeIds){
+        JsonResult jsonResult = new JsonResult();
+        try {
+            knowledgeService.reductionOrDelete(knowledgeIds,KnowledgeConstant.RECYCLE_LIBRARY);
+        }catch (Exception e){
+            jsonResult.setSuccess(false);
+            jsonResult.setMessage(e.getMessage());
+            return jsonResult;
+        }
+        jsonResult.setSuccess(true);
+        return jsonResult;
+    }
+
+    /**
+     * 清空我的回收站
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("emptyTrash")
+    public JsonResult emptyTrash(){
+        JsonResult jsonResult = new JsonResult();
+        try {
+            knowledgeService.emptyTrash();
+        }catch (Exception e){
+            jsonResult.setSuccess(false);
+            jsonResult.setMessage(e.getMessage());
+            return jsonResult;
+        }
+        jsonResult.setSuccess(true);
+        return jsonResult;
+    }
+
+    /**
+     * 删除我的云库文件
+     * @param knowledgeIds  文件id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("delete")
+    public JsonResult delete(String knowledgeIds){
+        JsonResult jsonResult = new JsonResult();
+        try {
+            knowledgeService.reductionOrDelete(knowledgeIds,KnowledgeConstant.MY_LIBRARY);
+        }catch (Exception e){
+            jsonResult.setSuccess(false);
+            jsonResult.setMessage(e.getMessage());
+            return jsonResult;
+        }
+        jsonResult.setSuccess(true);
+        return jsonResult;
+    }
+
+    @RequestMapping("initPublicLibraryPage")
+    public String initPublicLibraryPage(String libraryId,Model model){
+        model.addAttribute("libraryId",libraryId);
+        return "km/knowledge/publicLibraryPage";
+    }
+
+    /**
+     * 公共库分页
+     * @param pageParam
+     * @param knowledge
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("publicLibraryData")
+    public Page<Knowledge> publicLibraryData(PageParam pageParam,Knowledge knowledge,String libraryId){
+        if(StringUtils.isEmpty(libraryId)){
+            return new Page<Knowledge>();
+        }
+        if(pageParam==null){
+            pageParam = new PageParam();
+        }
+        if(knowledge == null){
+            knowledge = new Knowledge();
+        }
+
+        return new Page<Knowledge>();
+    }
 
 }

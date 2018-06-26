@@ -27,7 +27,9 @@
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.exedit.js?_v=0.1"></script>
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.mCustomScrollbar.concat.min.js?_v=0.1"></script>
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/pro_exam_base.js"></script>
-
+    <style type="text/css">
+        .y-content__opt__bar .webuploader-container .webuploader-pick{background-color: transparent}
+    </style>
 </head>
 <body class="y-body">
 <header class="y-head">
@@ -106,7 +108,7 @@
         </ul>
     </aside>
     <section class="y-content">
-        <div class="y-content-body" id="yunContentBody">
+        <div class="y-content-body" id="yunLContentBody">
         </div>
     <#--<footer class="y-footer">-->
     <#--国家电网江苏省电力公司 ©苏ICP备15007035号-1-->

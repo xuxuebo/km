@@ -1,5 +1,5 @@
 $(function(){
-    var $yunContentBody = $('#yunContentBody');
+    var $yunContentBody = $('#yunLContentBody');
     var $yAside = $('#YAside');
     //路由
     var publicId = "";
@@ -57,12 +57,15 @@ $(function(){
             publicName = subName;
             //元素同胞
             $yAside.find('a[data-id="' + subNav + '"]').parent().addClass('active').siblings().removeClass('active');
-            for (var key in route.routes) {
+
+            //$('#yunLContentBody').html('<iframe style="width:100%;height: 100%;margin-left: -170px;" src="/km/front/manage/initPage#url=/km/knowledge/initPublicLibraryPage"></iframe>');
+            $('#yunLContentBody').html('<iframe style="width:100%;height: 100%;margin-left: -170px;" src="/km/front/manage/initPage#url=/km/knowledge/initPublicLibraryPage?libraryId='+publicId+'"></iframe>');
+            /*for (var key in route.routes) {
                 if (new RegExp(key).test(_hash)) {
                     routeInfo = route.routes[key];
                     break;
                 }
-            }
+            }*/
         } else {
             routeInfo = route.routes[hashArr[0]]
         }
@@ -129,81 +132,29 @@ $(function(){
         }
 
         var hash = window.location.hash;
-        var processor = "FILE";
 
 
-        window.uploadFile({
-            swf: "/km/web-static/flash/Uploader.swf",
-            server: "http://192.168.0.35/fs/file/uploadFile",
-            pick: "#filePicker",
-            resize: false,
-            paste: document.body,
-            disableGlobalDnd: true,
-            thumb: {
-                width: 100,
-                height: 100,
-                quality: 70,
-                allowMagnify: true,
-                crop: true
-            },
-            compress: false,
-            prepareNextFile: true,
-            chunked: true,
-            chunkSize: 5000 * 1024,
-            threads: true,
-            fileNumLimit: 1,
-            fileSingleSizeLimit: 10 * 1024 * 1024 * 1024,
-            duplicate: true
-        }, {
-            uploadCompleted: function (data) {
-                if (data == undefined || data == null) {
-                    return;
-                }
 
-                var url = pageContext.rootPath + '/knowledge/km/saveKnowledge';
-                console.log(url);
-                $.ajax({
-                    type: 'post',
-                    dataType: 'json',
-                    data: {fileId:data.id, knowledgeName: data.storedFileName, knowledgeType: data.processor, knowledgeSize: data.fileSize, showOrder: 0},
-                    url: url,
-                    success: function (data) {
-                        PEMO.DIALOG.tips({
-                            content: '保存成功',
-                            time: 1000
-                        });
-                        //刷新列表
-                        route['YunCb']($yunContentBody, route.routes.yun, null);
-                    }
-                });
-            },
-            appCode: "km",
-            processor: processor,
-            //extractPoint: true,
-            corpCode: "lbox",
-            businessId: (new Date()).getTime(),
-            responseFormat: "json"
-        });
 
-        // $('.js-upload').on('click', function () {
-        //     PEMO.DIALOG.selectorDialog({
-        //         content: pageContext.rootPath + '/km/knowledge/openUpload',
-        //         area: ['606px', '400px'],
-        //         title: '上传文件',
-        //         btn1: function () {
-        //         },
-        //         btn2: function () {
-        //             layer.closeAll();
-        //         },
-        //         success: function (d,index) {
-        //             var iframeBody = layer.getChildFrame('body', index);
-        //             var hasPicSrc = $('.pe-user-head-edit-btn').find('img').attr('src');
-        //             if(hasPicSrc){
-        //                 $(iframeBody).find('.jcrop-preview').prop("src", hasPicSrc);
-        //             }
-        //         }
-        //     });
-        // });
+         $('.js-upload').on('click', function () {
+             PEMO.DIALOG.selectorDialog({
+                 content: pageContext.rootPath + '/km/knowledge/openUpload',
+                 area: ['520px', '320px'],
+                 title: '上传文件',
+                 btn1: function () {
+                 },
+                 btn2: function () {
+                     layer.closeAll();
+                 },
+                 success: function (d,index) {
+                     var iframeBody = layer.getChildFrame('body', index);
+                     var hasPicSrc = $('.pe-user-head-edit-btn').find('img').attr('src');
+                     if(hasPicSrc){
+                         $(iframeBody).find('.jcrop-preview').prop("src", hasPicSrc);
+                     }
+                 }
+             });
+         });
 
         //绑定事件
         //分享到云库
@@ -289,7 +240,7 @@ $(function(){
 
             var fileIds = [];
             PEBASE.ajaxRequest({
-                url: pageContext.rootPath + '/km/km/downloadKnowledge',
+                url: pageContext.rootPath + '/km/knowledge/downloadKnowledge',
                 async: false,
                 data: {'knowledgeIds':knIds},
                 success: function (data) {
@@ -378,7 +329,7 @@ $(function(){
         $.ajax({
             async: false,
             type: "POST",
-            url: pageContext.resourcePath + '/km/publicByLibraryId',//公共库的查询列表
+            url: pageContext.resourcePath + '/knowledge/publicByLibraryId',//公共库的查询列表
             data:{"libraryId":libraryId},
             dataType: 'json',
             success: function (result) {
@@ -411,7 +362,7 @@ $(function(){
         $.ajax({
             async: false,
             type: "POST",
-            url: pageContext.resourcePath + '/km/myShare',
+            url: pageContext.resourcePath + '/knowledge/myShare',
             dataType: 'json',
             success: function (result) {
                 data = result;
@@ -493,7 +444,7 @@ $(function(){
         $.ajax({
             async: false,//此值要设置为FALSE  默认为TRUE 异步调用
             type: "POST",
-            url: pageContext.resourcePath + '/km/manage/searchRecycle',
+            url: pageContext.resourcePath + '/knowledge/manage/searchRecycle',
             dataType: 'json',
             success: function (result) {
                 data = result;
@@ -509,17 +460,93 @@ $(function(){
             $yunTable.html(_.template(_table)({list: data, sort: initSort}));
             table = initTable($yunTable);
         }
-        //绑定事件
+
+        //绑定事件 还原文件
         $('.js-reduction').on('click', function () {
             var selectList = table.getSelect();
             if (selectList.length === 0) {
                 layer.msg("请先选择操作项");
                 return;
             }
+            var knowledgeIds = "";
+            for(var i=0;i<selectList.length;i++){
+                knowledgeIds += selectList[i] + ",";
+            }
+            if(knowledgeIds.length<=1){
+                return false;
+            }
+            knowledgeIds =  knowledgeIds.substring(0,knowledgeIds.length-1);
+            PEMO.DIALOG.confirmL({
+                content:'<div><h3 class="pe-dialog-content-head">确定还原选中的记录的？</h3><p class="pe-dialog-content-tip">还原后,可在我的云库内查看。 </p></div>',
+                btn1: function () {
+
+                    PEBASE.ajaxRequest({
+                        url: pageContext.rootPath + '/km/knowledge/reduction',
+                        data: {
+                            "knowledgeIds": knowledgeIds
+                        },
+                        success: function (data) {
+                            if (data.success) {
+                                PEMO.DIALOG.tips({
+                                    content: '操作成功',
+                                    time: 1000,
+                                });
+                                layer.closeAll();
+                                //刷新列表
+                                route['recycleCb']($yunContentBody, route.routes.recycle, null);
+                            }else{
+                                PEMO.DIALOG.alert({
+                                    content: data.message,
+                                    btn: ['我知道了'],
+                                    yes: function (index) {
+                                        layer.close(index);
+                                    }
+                                });
+                            }
+
+                        }
+                    });
+                },
+                btn2:function(){
+                    layer.closeAll();
+                },
+            });
         });
+        //清空回收站
         $('.js-emptyRecycle').on('click', function () {
-                layer.msg("清空回收站");
-                return;
+            PEMO.DIALOG.confirmL({
+                content:'<div><h3 class="pe-dialog-content-head">确定清空回收站？</h3><p class="pe-dialog-content-tip">确认后,不可恢复,请谨慎操作！ </p></div>',
+                btn1: function () {
+                    PEBASE.ajaxRequest({
+                        url: pageContext.rootPath + '/km/knowledge/emptyTrash',
+                        data: {
+                        },
+                        success: function (data) {
+                            if (data.success) {
+                                PEMO.DIALOG.tips({
+                                    content: '操作成功',
+                                    time: 1000,
+                                });
+                                layer.closeAll();
+                                //刷新列表
+                                route['recycleCb']($yunContentBody, route.routes.recycle, null);
+                            }else{
+                                PEMO.DIALOG.alert({
+                                    content: data.message,
+                                    btn: ['我知道了'],
+                                    yes: function (index) {
+                                        layer.close(index);
+                                    }
+                                });
+                            }
+
+                        }
+                    });
+                },
+                btn2:function(){
+                    layer.closeAll();
+                },
+            });
         });
 
     }

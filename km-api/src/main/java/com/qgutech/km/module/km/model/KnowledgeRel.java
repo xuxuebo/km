@@ -20,6 +20,7 @@ public class KnowledgeRel extends BaseModel {
 
     public static String LIBRARY_ID = "libraryId";
 
+    public static String KNOWLEDGE_ID = "knowledgeId";
 
     @Column(nullable = false, length = 32)
     private String knowledgeId;

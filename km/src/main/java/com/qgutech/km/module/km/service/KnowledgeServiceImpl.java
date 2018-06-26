@@ -157,4 +157,61 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         }
         return getKnowledgeByKnowledgeIds(ids);
     }
+
+
+    @Override
+    @Transactional(readOnly = false)
+    public int reductionOrDelete(String knowledgeIds, String libraryType) {
+        if(StringUtils.isEmpty(knowledgeIds)){
+            return 0;
+        }
+        List<String> knowledgeIdList = Arrays.asList(knowledgeIds.split(","));
+        Library myLibrary = libraryService.getUserLibraryByLibraryType(KnowledgeConstant.MY_LIBRARY);
+        Library recycleLibrary = libraryService.getUserLibraryByLibraryType(KnowledgeConstant.RECYCLE_LIBRARY);
+        //删除操作 将文件至回收站
+        List<KnowledgeRel> list = new ArrayList<>();
+        if(KnowledgeConstant.MY_LIBRARY.equals(libraryType)){
+            list = knowledgeRelService.findByLibraryIdAndKnowledgeIds(myLibrary.getId(),knowledgeIdList);
+            for(KnowledgeRel kn : list){
+                kn.setLibraryId(recycleLibrary.getId());
+            }
+            knowledgeRelService.update(list,KnowledgeRel.LIBRARY_ID);
+        }else if(KnowledgeConstant.RECYCLE_LIBRARY.equals(libraryType)){//还原操作 将文件至个人云库
+            list = knowledgeRelService.findByLibraryIdAndKnowledgeIds(recycleLibrary.getId(),knowledgeIdList);
+            for(KnowledgeRel kn : list){
+                kn.setLibraryId(myLibrary.getId());
+            }
+            knowledgeRelService.update(list,KnowledgeRel.LIBRARY_ID);
+        }
+        return list.size();
+    }
+
+
+    @Override
+    @Transactional(readOnly = false)
+    public void emptyTrash() {
+        Library library = libraryService.getUserLibraryByLibraryType(KnowledgeConstant.RECYCLE_LIBRARY);
+        Criterion criterion = Restrictions.and(Restrictions.eq(KnowledgeRel.LIBRARY_ID,library.getId()));
+        knowledgeRelService.delete(criterion);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Knowledge> publicLibraryData(PageParam pageParam, Knowledge knowledge, String libraryId) {
+        if(StringUtils.isEmpty(libraryId)){
+            return new Page<Knowledge>();
+        }
+        List<KnowledgeRel> knowledgeRelList = knowledgeRelService.findByLibraryId(libraryId);
+        if(CollectionUtils.isEmpty(knowledgeRelList)){
+            return new Page<>();
+        }
+        List<String> knIds = new ArrayList<>(knowledgeRelList.size());
+        for(KnowledgeRel kn : knowledgeRelList){
+            knIds.add(kn.getKnowledgeId());
+        }
+        Criterion criterion = Restrictions.and(Restrictions.in(Knowledge.ID,knIds),
+                Restrictions.eq(Knowledge.CREATE_BY,ExecutionContext.getUserId()),
+                Restrictions.eq(Knowledge.CORP_CODE,ExecutionContext.getCorpCode()));
+        return null;
+    }
 }

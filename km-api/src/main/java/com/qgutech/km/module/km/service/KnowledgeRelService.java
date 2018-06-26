@@ -11,4 +11,6 @@ import java.util.List;
 public interface KnowledgeRelService extends BaseService<KnowledgeRel> {
 
     List<KnowledgeRel> findByLibraryId(String libraryId);
+
+    List<KnowledgeRel> findByLibraryIdAndKnowledgeIds(String libraryId,List<String> knowledgeIds);
 }

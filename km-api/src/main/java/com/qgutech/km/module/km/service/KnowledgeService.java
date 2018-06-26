@@ -1,5 +1,7 @@
 package com.qgutech.km.module.km.service;
 
+import com.qgutech.km.base.model.Page;
+import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseService;
 import com.qgutech.km.module.km.model.Knowledge;
 import com.qgutech.km.module.km.model.Share;
@@ -33,5 +35,20 @@ public interface KnowledgeService extends BaseService<Knowledge> {
     List<Knowledge> getKnowledgeByKnowledgeIds(List<String> knowledgeIdList);
 
     List<Knowledge> getByLibraryId(String libraryId);
+
+    /**
+     * 还原回收站文件或删除文件至回收站
+     * @param knowledgeIds
+     * @param libraryType
+     * @return
+     */
+    int reductionOrDelete(String knowledgeIds,String libraryType);
+
+    /**
+     * 清空我的回收站
+     */
+    void emptyTrash();
+
+    Page<Knowledge> publicLibraryData(PageParam pageParam, Knowledge knowledge, String libraryId);
 
 }

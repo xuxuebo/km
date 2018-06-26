@@ -36,7 +36,7 @@ public class ShareController {
         try {
             shareService.cancelShare(shareIds);
             jsonResult.setSuccess(true);
-        }catch (PeException e){
+        }catch (Exception e){
             jsonResult.setSuccess(false);
             jsonResult.setMessage(e.getMessage());
             return jsonResult;

@@ -37,4 +37,21 @@ public class KnowledgeRelServiceImpl extends BaseServiceImpl<KnowledgeRel> imple
         );
         return knowledgeRels;
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<KnowledgeRel> findByLibraryIdAndKnowledgeIds(String libraryId, List<String> knowledgeIds) {
+        if(StringUtils.isEmpty(libraryId)){
+            throw  new PeException("libraryId not be null ");
+        }
+        Criterion criterion = Restrictions.and(Restrictions.eq(KnowledgeRel.CORP_CODE, ExecutionContext.getCorpCode()),
+                Restrictions.eq(KnowledgeRel.LIBRARY_ID,libraryId),
+                Restrictions.in(KnowledgeRel.KNOWLEDGE_ID,knowledgeIds));
+
+        List<KnowledgeRel> knowledgeRels = new ArrayList<>();
+        knowledgeRels = listByCriterion(   criterion ,
+                new Order[]{Order.asc(Library.CREATE_TIME)}
+        );
+        return knowledgeRels;
+    }
 }
