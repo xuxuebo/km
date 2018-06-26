@@ -15,6 +15,7 @@ import com.qgutech.km.module.km.model.Share;
 import com.qgutech.km.module.km.service.KnowledgeRelService;
 import com.qgutech.km.module.km.service.KnowledgeService;
 import com.qgutech.km.module.km.service.LibraryService;
+import com.qgutech.km.module.km.service.ShareService;
 import com.qgutech.km.module.sfm.model.PeFile;
 import com.qgutech.km.module.sfm.service.FileServerService;
 import com.qgutech.km.module.uc.model.User;
@@ -62,6 +63,8 @@ public class KnowledgeController {
     private KnowledgeRelService knowledgeRelService;
     @Resource
     private LibraryService libraryService;
+    @Resource
+    private ShareService shareService;
 
     @ResponseBody
     @RequestMapping("uploadFile")
@@ -296,6 +299,16 @@ public class KnowledgeController {
             knowledge.setCreateTimeStr(PeDateUtils.format(knowledge.getCreateTime(),PeDateUtils.FORMAT_YYYY_MM_DD_HH_MM));
         }
         return list;
+    }
+
+    /**
+     * 我的分享
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("myShare")
+    public List<Knowledge> myShare(){
+        return shareService.getMyShare();
     }
 
 

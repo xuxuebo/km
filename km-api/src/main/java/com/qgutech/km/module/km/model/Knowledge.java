@@ -59,10 +59,33 @@ public class Knowledge extends BaseModel {
      */
     @Column
     private float showOrder;
-
+    /**
+     * 创建时间字符串
+     */
     @Transient
     private String createTimeStr;
-
+    /**
+     * 浏览次数
+     */
+    @Transient
+    private Integer viewCount;
+    /**
+     * 下载次数
+     */
+    @Transient
+    private Integer downloadCount;
+    /**
+     * 复制次数
+     */
+    @Transient
+    private Integer copyCount;
+    /**
+     * 文件分享有效期
+     */
+    @Transient
+    private String expireTime;
+    @Transient
+    private String shareId;
 
     public String getKnowledgeName() {
         return knowledgeName;
@@ -139,5 +162,45 @@ public class Knowledge extends BaseModel {
 
     public void setCreateTimeStr(String createTimeStr) {
         this.createTimeStr = createTimeStr;
+    }
+
+    public Integer getViewCount() {
+        return viewCount;
+    }
+
+    public void setViewCount(Integer viewCount) {
+        this.viewCount = viewCount;
+    }
+
+    public Integer getDownloadCount() {
+        return downloadCount;
+    }
+
+    public void setDownloadCount(Integer downloadCount) {
+        this.downloadCount = downloadCount;
+    }
+
+    public Integer getCopyCount() {
+        return copyCount;
+    }
+
+    public void setCopyCount(Integer copyCount) {
+        this.copyCount = copyCount;
+    }
+
+    public String getExpireTime() {
+        return expireTime;
+    }
+
+    public void setExpireTime(String expireTime) {
+        this.expireTime = expireTime;
+    }
+
+    public String getShareId() {
+        return shareId;
+    }
+
+    public void setShareId(String shareId) {
+        this.shareId = shareId;
     }
 }

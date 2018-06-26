@@ -407,18 +407,16 @@ $(function(){
         var _tpl = $(routeInfo.templateId).html();
         container.html(_.template(_tpl)({title: '我的分享'}));
         //table渲染
-        var data = [
-            {
-                id: '1231',
-                fileType: 'file',
-                fileName: '2018/05/11',
-                createTime: '',
-                expireTime: '',
-                viewCount: '1',
-                downloadCount: '1',
-                copyCount: '1'
+        var data = [];
+        $.ajax({
+            async: false,
+            type: "POST",
+            url: pageContext.resourcePath + '/km/myShare',
+            dataType: 'json',
+            success: function (result) {
+                data = result;
             }
-        ];
+        });
         var _table = $("#tplShareTable").html();
         var $yunTable = $('#shareTable');
 
@@ -432,12 +430,54 @@ $(function(){
         //绑定事件
         //取消分享
         $('.js-cancelShare').on('click', function () {
-            var selectList = table.getSelect();
+            var selectList = table.getSelectShareId();
             if (selectList.length === 0) {
                 layer.msg("请先选择操作项");
                 return;
             }
-            //TODO
+            var shareIds = "";
+            for(var i=0;i<selectList.length;i++){
+                shareIds += selectList[i] + ",";
+            }
+            if(shareIds.length<=1){
+                return false;
+            }
+            shareIds =  shareIds.substring(0,shareIds.length-1);
+            PEMO.DIALOG.confirmL({
+                content:'<div><h3 class="pe-dialog-content-head">确定取消选中的分享记录的？</h3><p class="pe-dialog-content-tip">取消后，分享记录不可以恢复，请谨慎操作。 </p></div>',
+                btn1: function () {
+
+                    PEBASE.ajaxRequest({
+                        url: pageContext.rootPath + '/km/share/cancelShare',
+                        data: {
+                            "shareIds": shareIds
+                        },
+                        success: function (data) {
+                            if (data.success) {
+                                PEMO.DIALOG.tips({
+                                    content: '操作成功',
+                                    time: 1000,
+                                });
+                                layer.closeAll();
+                                //刷新列表
+                                route['shareCb']($yunContentBody, route.routes.share, null);
+                            }else{
+                                PEMO.DIALOG.alert({
+                                    content: data.message,
+                                    btn: ['我知道了'],
+                                    yes: function (index) {
+                                        layer.close(index);
+                                    }
+                                });
+                            }
+
+                        }
+                    });
+                },
+                btn2:function(){
+                    layer.closeAll();
+                },
+            });
         });
 
     }
@@ -537,6 +577,16 @@ $(function(){
                     var $item = $(item);
                     if ($item.get(0).checked) {
                         list.push($item.closest('.y-table__tr').attr('data-id'));
+                    }
+                });
+                return list;
+            },
+            getSelectShareId: function () {
+                var list = [];
+                $checkbox.each(function (i, item) {
+                    var $item = $(item);
+                    if ($item.get(0).checked) {
+                        list.push($item.closest('.y-table__tr').attr('data-shareid'));
                     }
                 });
                 return list;

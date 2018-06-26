@@ -248,7 +248,7 @@
         </thead>
         <tbody>
         <%_.each(list,function(item,i){%>
-        <tr class="y-table__tr" data-id="<%=item.id%>">
+        <tr class="y-table__tr" data-id="<%=item.id%>" data-shareid="<%=item.shareId%>">
             <td class="y-table__td checkbox">
                 <label class="y-checkbox">
                     <input type="checkbox">
@@ -256,19 +256,15 @@
                 </label>
             </td>
             <td class="y-table__td name">
-                <div class="y-table__opt__bar">
-                    <button type="button" class="yfont-icon opt-item js-opt-download">&#xe64f;</button>
-                    <button type="button" class="yfont-icon opt-item js-opt-more">&#xe652;</button>
-                </div>
-                <div class="y-table__filed_name type-<%=item.fileType%>">
-                    <%=item.fileName%>
+                <div class="y-table__filed_name type-<%=item.knowledgeType%>">
+                    <%=item.knowledgeName%>
                 </div>
             </td>
             <td class="y-table__td create-time">
                 <%=item.createTimeStr%>
             </td>
             <td class="y-table__td expire-time">
-                <%=item.expireTimeStr%>
+                <%=item.expireTime%>
             </td>
             <td class="y-table__td view-count">
                 <%=item.viewCount%>
@@ -276,7 +272,7 @@
             <td class="y-table__td download-count">
                 <%=item.downloadCount%>
             </td>
-            <td class="y-table__td copy-count">
+            <td  class="y-table__td copy-count">
                 <%=item.copyCount%>
             </td>
         </tr>
@@ -351,6 +347,21 @@
     </div>
 </script>
 
+<script type="text/template" id="cancelShare" >
+    <div class="clearF">
+        <div class="validate-form-cell" style="">
+            <em class="error" style="display: none;"></em>
+        </div>
+        <label class="floatL">
+            <span style="margin-left:60px;" class="pe-label-name floatL">确定将选中的文件取消分享?</span>
+        </label>
+    </div>
+
+</script>
+
+
+
+
 <#--回收站-->
 <script type="text/template" id="tplRecycle">
     <h4 class="y-content__title"><%=title%></h4>
@@ -372,7 +383,7 @@
         </label>
     </div>
 
-</script >
+</script>
 
 <script type="text/template" id="emptyRecycle" >
     <div class="clearF">

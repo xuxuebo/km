@@ -71,7 +71,6 @@
             </map>
         </property>
     </bean>
-    
 
     <!--<PeFreeMarkerViewResolverlver -->
     <bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">

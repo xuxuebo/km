@@ -15,6 +15,7 @@ import javax.persistence.Table;
             @Index(name = "i_km_statistic", columnList = "shareId")})
 public class Statistic extends BaseModel {
 
+    public static String SHARE_ID = "shareId";
 
     /**
      * 共享主键
@@ -48,6 +49,38 @@ public class Statistic extends BaseModel {
         this.shareId = shareId;
         this.viewCount = viewCount;
         this.downloadCount = downloadCount;
+        this.copyCount = copyCount;
+    }
+
+    public String getShareId() {
+        return shareId;
+    }
+
+    public void setShareId(String shareId) {
+        this.shareId = shareId;
+    }
+
+    public Integer getViewCount() {
+        return viewCount;
+    }
+
+    public void setViewCount(Integer viewCount) {
+        this.viewCount = viewCount;
+    }
+
+    public Integer getDownloadCount() {
+        return downloadCount;
+    }
+
+    public void setDownloadCount(Integer downloadCount) {
+        this.downloadCount = downloadCount;
+    }
+
+    public Integer getCopyCount() {
+        return copyCount;
+    }
+
+    public void setCopyCount(Integer copyCount) {
         this.copyCount = copyCount;
     }
 }
