@@ -51,4 +51,6 @@ public interface KnowledgeService extends BaseService<Knowledge> {
 
     Page<Knowledge> publicLibraryData(PageParam pageParam, Knowledge knowledge, String libraryId);
 
+    void copyToMyLibrary(String knowledgeIds);
+
 }

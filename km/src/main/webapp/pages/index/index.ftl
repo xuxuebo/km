@@ -126,13 +126,13 @@
                 </label>
             </th>
             <th class="y-table__td name">
-                <span class="sort <%if(sort.name === 'desc'){%>desc<%}else{%>asc<%}%>">文件名</span>
+                <span class="">文件名</span>
             </th>
             <th class="y-table__td size">
-                <span class="sort  <%if(sort.size === 'desc'){%>desc<%}else{%>asc<%}%>">大小</span>
+                <span class="">大小</span>
             </th>
             <th class="y-table__td create-time">
-                <span class="sort  <%if(sort.createTimeStr === 'desc'){%>desc<%}else{%>asc<%}%>">上传时间</span>
+                <span class="">上传时间</span>
             </th>
         </tr>
         </thead>
@@ -147,8 +147,59 @@
             </td>
             <td class="y-table__td name">
                 <div class="y-table__opt__bar">
-                    <button type="button" class="yfont-icon opt-item js-opt-download">&#xe64f;</button>
-                    <button type="button" class="yfont-icon opt-item js-opt-more">&#xe652;</button>
+                    <button type="button" title="点击下载" data-id="<%=item.id%>" class="yfont-icon opt-item js-opt-download">&#xe64f;</button>
+                    <button type="button" title="分享" data-id="<%=item.id%>" class="yfont-icon opt-item js-opt-share">&#xe652;</button>
+                    <button type="button" title="删除" data-id="<%=item.id%>" class="yfont-icon opt-item js-opt-delete">&#xe652;</button>
+                </div>
+                <div class="y-table__filed_name type-<%=item.knowledgeType%>">
+                    <%=item.knowledgeName%>
+                </div>
+            </td>
+            <td class="y-table__td size">
+                <%=item.knowledgeSize%>
+            </td>
+            <td class="y-table__td upload-time">
+                <%=item.createTimeStr%>
+            </td>
+        </tr>
+        <%})%>
+        </tbody>
+    </table>
+</script>
+
+<script type="text/template" id="tplPublicTable">
+    <table class="y-table">
+        <thead class="y-table__header">
+        <tr>
+            <th class="y-table__td checkbox">
+                <label class="y-checkbox">
+                    <input type="checkbox">
+                    <span class="y-checkbox__span"></span>
+                </label>
+            </th>
+            <th class="y-table__td name">
+                <span class="">文件名</span>
+            </th>
+            <th class="y-table__td size">
+                <span class="">大小</span>
+            </th>
+            <th class="y-table__td create-time">
+                <span class="">上传时间</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <%_.each(list,function(item,i){%>
+        <tr class="y-table__tr" data-id="<%=item.id%>">
+            <td class="y-table__td checkbox">
+                <label class="y-checkbox">
+                    <input type="checkbox">
+                    <span class="y-checkbox__span"></span>
+                </label>
+            </td>
+            <td class="y-table__td name">
+                <div class="y-table__opt__bar">
+                    <button type="button" title="点击下载" data-id="<%=item.id%>" class="yfont-icon opt-item js-opt-download">&#xe64f;</button>
                 </div>
                 <div class="y-table__filed_name type-<%=item.knowledgeType%>">
                     <%=item.knowledgeName%>
@@ -332,8 +383,8 @@
 <script type="text/template" id="tplPublic">
     <h4 class="y-content__title"><%=title%></h4>
     <div class="y-content__opt__bar">
-        <button class="y-btn y-btn__blue" type="button">复制到我的云库</button>
-        <button class="y-btn y-btn__green" type="button">下载</button>
+        <button class="y-btn y-btn__blue js-opt-copy" type="button">复制到我的云库</button>
+        <button class="y-btn y-btn__green js-download" type="button">下载</button>
     </div>
     <div class="y-content__table" id="publicTable">
     </div>

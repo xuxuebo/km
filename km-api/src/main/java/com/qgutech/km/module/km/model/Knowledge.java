@@ -18,6 +18,8 @@ public class Knowledge extends BaseModel {
 
     public static String FILE_ID = "fileId";
 
+    public static String SHOW_ORDER = "showOrder";
+
     /**
      * 文件名称
      */

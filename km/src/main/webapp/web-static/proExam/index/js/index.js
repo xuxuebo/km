@@ -59,13 +59,13 @@ $(function(){
             $yAside.find('a[data-id="' + subNav + '"]').parent().addClass('active').siblings().removeClass('active');
 
             //$('#yunLContentBody').html('<iframe style="width:100%;height: 100%;margin-left: -170px;" src="/km/front/manage/initPage#url=/km/knowledge/initPublicLibraryPage"></iframe>');
-            $('#yunLContentBody').html('<iframe style="width:100%;height: 100%;margin-left: -170px;" src="/km/front/manage/initPage#url=/km/knowledge/initPublicLibraryPage?libraryId='+publicId+'"></iframe>');
-            /*for (var key in route.routes) {
+            //$('#yunLContentBody').html('<iframe style="width:100%;height: 100%;margin-left: -170px;" src="/km/front/manage/initPage#url=/km/knowledge/initPublicLibraryPage?libraryId='+publicId+'"></iframe>');
+            for (var key in route.routes) {
                 if (new RegExp(key).test(_hash)) {
                     routeInfo = route.routes[key];
                     break;
                 }
-            }*/
+            }
         } else {
             routeInfo = route.routes[hashArr[0]]
         }
@@ -182,7 +182,7 @@ $(function(){
                 btn1: function () {
                     var libraryId = $('input[name="shareLibraryId"]').val();
                     PEBASE.ajaxRequest({
-                        url: pageContext.rootPath + '/km/km/shareToPublic',
+                        url: pageContext.rootPath + '/km/knowledge/shareToPublic',
                         data: {'knowledgeId': knowledgeIds, 'shareLibraryId': libraryId},
                         success: function (data) {
                             if (data.success) {
@@ -262,6 +262,33 @@ $(function(){
                 downloadFile(fileIds[i],null);
             }
         });
+        $('.js-opt-download').on('click', function () {
+            var knIds =  $(this).data('id');
+            console.log(knIds);
+            var fileIds = [];
+            PEBASE.ajaxRequest({
+                url: pageContext.rootPath + '/km/knowledge/downloadKnowledge',
+                async: false,
+                data: {'knowledgeIds':knIds},
+                success: function (data) {
+                    if (data.success) {
+                        fileIds = data.data;
+                    }else{
+                        PEMO.DIALOG.alert({
+                            content: data.message,
+                            btn: ['我知道了'],
+                            yes: function (index) {
+                                layer.close(index);
+                            }
+                        });
+                    }
+
+                }
+            });
+            for(var i=0;i<fileIds.length;i++){
+                downloadFile(fileIds[i],null);
+            }
+        });
 
         //新建文件夹
         $('.js-newFolder').on('click', function () {
@@ -314,6 +341,110 @@ $(function(){
             });
         });
 
+        //删除
+        $('.js-opt-delete').on('click', function () {
+            var knowledgeIds = $(this).data("id");
+            if(knowledgeIds==null||knowledgeIds==undefined||knowledgeIds==''){
+                return false;
+            }
+            PEMO.DIALOG.confirmL({
+                content:'<div><h3 class="pe-dialog-content-head">确定删除？</h3><p class="pe-dialog-content-tip">删除后，可在我的回收站找回。 </p></div>',
+                btn1: function () {
+
+                    PEBASE.ajaxRequest({
+                        url: pageContext.rootPath + '/km/knowledge/delete',
+                        data: {
+                            "knowledgeIds": knowledgeIds
+                        },
+                        success: function (data) {
+                            if (data.success) {
+                                PEMO.DIALOG.tips({
+                                    content: '操作成功',
+                                    time: 1000,
+                                });
+                                layer.closeAll();
+                                //刷新列表
+                                route['YunCb']($yunContentBody, route.routes.yun, null);
+                            }else{
+                                PEMO.DIALOG.alert({
+                                    content: data.message,
+                                    btn: ['我知道了'],
+                                    yes: function (index) {
+                                        layer.close(index);
+                                    }
+                                });
+                            }
+
+                        }
+                    });
+                },
+                btn2:function(){
+                    layer.closeAll();
+                },
+            });
+        });
+
+        $('.js-opt-share').on('click', function () {
+
+            var knowledgeIds =$(this).data("id");
+            if(knowledgeIds==null||knowledgeIds==undefined||knowledgeIds==''){
+                    return false;
+            }
+            //分享弹框
+            PEMO.DIALOG.confirmL({
+                content: _.template($('#shareToPublic').html())({}),
+                area: ['468px','520px'],
+                title: '选择公共库',
+                btn: ['确定', '取消'],
+                skin: 'pe-layer-confirm pe-layer-has-tree organize-change-layer',
+                resize:false,
+                btnAlign: 'c',
+                btn1: function () {
+                    var libraryId = $('input[name="shareLibraryId"]').val();
+                    PEBASE.ajaxRequest({
+                        url: pageContext.rootPath + '/km/km/shareToPublic',
+                        data: {'knowledgeId': knowledgeIds, 'shareLibraryId': libraryId},
+                        success: function (data) {
+                            if (data.success) {
+                                layer.closeAll();
+                                PEMO.DIALOG.tips({
+                                    content: '操作成功',
+                                    time: 1000,
+                                });
+
+                                return false;
+                            }
+                            PEMO.DIALOG.alert({
+                                content: data.message,
+                                btn: ['我知道了'],
+                                yes: function () {
+                                    layer.closeAll();
+                                }
+                            });
+                        }
+                    });
+                },
+                btn2: function () {//取消按钮
+                    layer.closeAll();
+                },
+
+                success: function () {
+                    //初始化树
+                    var settingInputTree = {
+                        isOpen:true,
+                        dataUrl: pageContext.rootPath + '/km/library/listTree',
+                        clickNode: function (treeNode) {
+                            $('input[name="shareLibraryId"]').val(treeNode.id);
+                            //$('.show-org-name').val(treeNode.name);
+                        },
+                        treePosition:'inputDropDown'
+                    };
+                    PEMO.ZTREE.initTree('editOrgTree', settingInputTree);
+                    var treeObj = $.fn.zTree.getZTreeObj("editOrgTree");
+                    treeObj.expandAll(true);
+                }
+            });
+        });
     }
 
     //公共库
@@ -323,7 +454,7 @@ $(function(){
         var _tpl = $(routeInfo.templateId).html();
         container.html(_.template(_tpl)({title: '公共库>'+libraryName}));
         //table渲染
-        var _table = $("#tplYunTable").html();
+        var _table = $("#tplPublicTable").html();
         var $yunTable = $('#publicTable');
         var data = [];
         $.ajax({
@@ -351,6 +482,90 @@ $(function(){
                 }));
             });
         }
+        $('.js-download').on('click', function () {
+            var selectList = table.getSelect();
+            if (selectList.length === 0) {
+                layer.msg("请先选择操作项");
+                return;
+            }
+            var knIds = "";
+            for(var i = 0 ;i<selectList.length;i++){
+                knIds += selectList[i]+",";
+            }
+            knIds = knIds.substring(0,knIds.length-1);
+
+            var fileIds = [];
+            PEBASE.ajaxRequest({
+                url: pageContext.rootPath + '/km/knowledge/downloadKnowledge',
+                async: false,
+                data: {'knowledgeIds':knIds},
+                success: function (data) {
+                    if (data.success) {
+                        fileIds = data.data;
+                    }else{
+                        PEMO.DIALOG.alert({
+                            content: data.message,
+                            btn: ['我知道了'],
+                            yes: function (index) {
+                                layer.close(index);
+                            }
+                        });
+                    }
+
+                }
+            });
+            for(var i=0;i<fileIds.length;i++){
+                downloadFile(fileIds[i],null);
+            }
+        });
+        $('.js-opt-copy').on('click', function () {
+            var selectList = table.getSelect();
+            if (selectList.length === 0) {
+                layer.msg("请先选择操作项");
+                return;
+            }
+            var knowledgeIds = "";
+            for(var i=0;i<selectList.length;i++){
+                knowledgeIds += selectList[i] + ",";
+            }
+            if(knowledgeIds.length<=1){
+                return false;
+            }
+            knowledgeIds =  knowledgeIds.substring(0,knowledgeIds.length-1);
+            PEMO.DIALOG.confirmL({
+                content:'<div><h3 class="pe-dialog-content-head">确定复制选中的文件？</h3><p class="pe-dialog-content-tip">确认后,可在我的云库内查看。 </p></div>',
+                btn1: function () {
+
+                    PEBASE.ajaxRequest({
+                        url: pageContext.rootPath + '/km/knowledge/copyToMyLibrary',
+                        data: {
+                            "knowledgeIds": knowledgeIds
+                        },
+                        success: function (data) {
+                            if (data.success) {
+                                PEMO.DIALOG.tips({
+                                    content: '操作成功',
+                                    time: 1000,
+                                });
+                                layer.closeAll();
+                            }else{
+                                PEMO.DIALOG.alert({
+                                    content: data.message,
+                                    btn: ['我知道了'],
+                                    yes: function (index) {
+                                        layer.close(index);
+                                    }
+                                });
+                            }
+
+                        }
+                    });
+                },
+                btn2:function(){
+                    layer.closeAll();
+                },
+            });
+        });
     }
 
     //我的分享

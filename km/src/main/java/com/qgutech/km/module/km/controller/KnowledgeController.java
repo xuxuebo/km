@@ -419,7 +419,30 @@ public class KnowledgeController {
             knowledge = new Knowledge();
         }
 
-        return new Page<Knowledge>();
+        return knowledgeService.publicLibraryData(pageParam,knowledge,libraryId);
     }
 
+    /**
+     * 复制到我的云库
+     * @return
+     */
+    @RequestMapping("copyToMyLibrary")
+    @ResponseBody
+    public JsonResult copyToMyLibrary(String knowledgeIds){
+        JsonResult jsonResult = new JsonResult();
+        if(StringUtils.isEmpty(knowledgeIds)){
+            jsonResult.setSuccess(false);
+            jsonResult.setMessage("请选择操作对象");
+            return jsonResult;
+        }
+        try {
+            knowledgeService.copyToMyLibrary(knowledgeIds);
+        }catch (Exception e){
+            jsonResult.setSuccess(false);
+            jsonResult.setMessage(e.getMessage());
+            return jsonResult;
+        }
+        jsonResult.setSuccess(true);
+        return jsonResult;
+    }
 }

@@ -83,11 +83,10 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         }
         Criterion criterion = Restrictions.and(
                 Restrictions.eq(Knowledge.CORP_CODE, ExecutionContext.getCorpCode()),
-                Restrictions.eq(Knowledge.CREATE_BY, ExecutionContext.getUserId()),
                 Restrictions.in(Knowledge.ID,knowledgeIds)
                 );
         knowledgeList = listByCriterion((criterion),
-                new Order[]{Order.asc(Knowledge.FILE_ID),Order.desc(Knowledge.CREATE_TIME)});
+                new Order[]{Order.asc(Knowledge.FILE_ID),Order.desc(Knowledge.SHOW_ORDER)});
         return knowledgeList;
     }
 
@@ -212,6 +211,29 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         Criterion criterion = Restrictions.and(Restrictions.in(Knowledge.ID,knIds),
                 Restrictions.eq(Knowledge.CREATE_BY,ExecutionContext.getUserId()),
                 Restrictions.eq(Knowledge.CORP_CODE,ExecutionContext.getCorpCode()));
-        return null;
+        return search(pageParam,criterion,new Order[]{Order.asc(Knowledge.FILE_ID),Order.desc(Knowledge.CREATE_TIME)});
+    }
+
+    /**
+     * 复制到我的个人云库
+     * @param knowledgeIds
+     */
+    @Override
+    @Transactional(readOnly = false)
+    public void copyToMyLibrary(String knowledgeIds) {
+        if(StringUtils.isEmpty(knowledgeIds)){
+            throw  new PeException("knowledgeIds is null ");
+        }
+        Library myLibrary = libraryService.getUserLibraryByLibraryType(KnowledgeConstant.MY_LIBRARY);
+        List<String> knowledgeIdList = Arrays.asList(knowledgeIds.split(","));
+        List<KnowledgeRel> knowledgeRelList = new ArrayList<>(knowledgeIdList.size());
+        KnowledgeRel knowledgeRel;
+        for(String knId : knowledgeIdList){
+            knowledgeRel = new KnowledgeRel();
+            knowledgeRel.setKnowledgeId(knId);
+            knowledgeRel.setLibraryId(myLibrary.getId());
+            knowledgeRelList.add(knowledgeRel);
+        }
+        knowledgeRelService.batchSave(knowledgeRelList);
     }
 }
