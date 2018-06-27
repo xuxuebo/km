@@ -129,11 +129,7 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
             try {
                 checkKnowledge(indexKnowledge);
                 String corpCode = indexKnowledge.getCorpCode();
-//                if (!assign && indexKnowledge.isAssign()) {
-//                    assign = true;
-//                }
-
-                if (KNOWLEDGE_TYPE_OF_DOC.equalsIgnoreCase(indexKnowledge.getKnowledgeType()) ) {
+                if (KNOWLEDGE_TYPE_OF_DOC.equalsIgnoreCase(indexKnowledge.getKnowledgeType()) || "TXT".equalsIgnoreCase(indexKnowledge.getKnowledgeType())) {
                     String content = getContent(corpCode, indexKnowledge.getStoredFileId(), null);
                     indexKnowledge.setContent(content);
                 }
@@ -745,10 +741,6 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
 
         if (StringUtils.isEmpty(indexKnowledge.getKnowledgeType())) {
             throw new IllegalArgumentException("KnowledgeType is empty!");
-        }
-
-        if (StringUtils.isEmpty(indexKnowledge.getOptStatus())) {
-            throw new IllegalArgumentException("OptStatus is empty!");
         }
 
         if (StringUtils.isEmpty(indexKnowledge.getStoredFileId())

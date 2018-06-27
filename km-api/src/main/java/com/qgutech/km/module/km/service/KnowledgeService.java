@@ -42,7 +42,7 @@ public interface KnowledgeService extends BaseService<Knowledge> {
      * @param libraryType
      * @return
      */
-    int reductionOrDelete(String knowledgeIds,String libraryType);
+    int reductionOrDelete(List<String> knowledgeIdList,String libraryType);
 
     /**
      * 清空我的回收站

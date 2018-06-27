@@ -38,8 +38,8 @@
     </div>
     <div class="y-head__right">
         <form class="y-head__searcher" name="searchForm" action="javascript:void(0);">
-            <label><input type="text" class="y-nav__search__input" placeholder="搜索文件"/></label>
-            <button type="submit" class="y-nav__search__btn"><span class="yfont-icon">&#xe658;</span></button>
+            <label><input type="text" class="y-nav__search__input" id="searchKeyword" placeholder="搜索文件"/></label>
+            <button type="submit" class="y-nav__search__btn" id="searchBtn"><span class="yfont-icon">&#xe658;</span></button>
         </form>
         <div class="y-head__msg">
             <span class="yfont-icon">&#xe654;</span>

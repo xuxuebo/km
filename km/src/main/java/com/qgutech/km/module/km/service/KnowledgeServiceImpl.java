@@ -160,11 +160,10 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
     @Override
     @Transactional(readOnly = false)
-    public int reductionOrDelete(String knowledgeIds, String libraryType) {
-        if(StringUtils.isEmpty(knowledgeIds)){
+    public int reductionOrDelete(List<String> knowledgeIdList, String libraryType) {
+        if (CollectionUtils.isEmpty(knowledgeIdList)){
             return 0;
         }
-        List<String> knowledgeIdList = Arrays.asList(knowledgeIds.split(","));
         Library myLibrary = libraryService.getUserLibraryByLibraryType(KnowledgeConstant.MY_LIBRARY);
         Library recycleLibrary = libraryService.getUserLibraryByLibraryType(KnowledgeConstant.RECYCLE_LIBRARY);
         //删除操作 将文件至回收站

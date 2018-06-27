@@ -1,6 +1,7 @@
 package com.qgutech.km.module.km.controller;
 
 import com.qgutech.fs.utils.FsFileManagerUtil;
+import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.vo.JsonResult;
@@ -111,15 +112,6 @@ public class KnowledgeController {
         }
     }
 
-    @ResponseBody
-    @RequestMapping("searchTest")
-    public JsonResult<Knowledge>  searchTest(){
-        Page<String> page = new Page<>();
-        page = kmFullTextSearchService.search("CAD", page);
-        System.out.println(page);
-        return new JsonResult<Knowledge>();
-    }
-
     private IndexKnowledge convert(Knowledge knowledge) {
         if (knowledge == null) {
             throw new IllegalArgumentException("Knowledge is null!");
@@ -127,14 +119,13 @@ public class KnowledgeController {
 
         IndexKnowledge indexKnowledge = new IndexKnowledge();
         indexKnowledge.setKnowledgeId(knowledge.getId());
-        indexKnowledge.setOptStatus("ENABLE");
         indexKnowledge.setCorpCode(knowledge.getCorpCode());
-        indexKnowledge.setIntroduction("");
         indexKnowledge.setKnowledgeName(knowledge.getKnowledgeName());
-        indexKnowledge.setKnowledgeType("DOC");
+        indexKnowledge.setKnowledgeType(knowledge.getKnowledgeType());
         indexKnowledge.setStoredFileId(knowledge.getFileId());
         indexKnowledge.setTags("");
         indexKnowledge.setContent("");
+        indexKnowledge.setOptStatus("ENABLE");
         indexKnowledge.setUploaderUserName("");
 
         return indexKnowledge;
@@ -256,14 +247,51 @@ public class KnowledgeController {
     @ResponseBody
     @RequestMapping("manage/search")
     public List<Knowledge> search(){
-        List<Knowledge> list = knowledgeService.getKnowledgeByCreateBy(KnowledgeConstant.MY_LIBRARY);
-        if(CollectionUtils.isEmpty(list)){
-            list = new ArrayList<>(0);
+        List<Knowledge> knowledgeList = knowledgeService.getKnowledgeByCreateBy(KnowledgeConstant.MY_LIBRARY);
+        if(CollectionUtils.isEmpty(knowledgeList)){
+            return new ArrayList<Knowledge>(0);
         }
-        for(Knowledge knowledge : list){
+
+        for(Knowledge knowledge : knowledgeList){
             knowledge.setCreateTimeStr(PeDateUtils.format(knowledge.getCreateTime(),PeDateUtils.FORMAT_YYYY_MM_DD_HH_MM));
         }
-        return list;
+        return knowledgeList;
+    }
+
+    @ResponseBody
+    @RequestMapping("fullTextSearch")
+    public List<Knowledge> fullTextSearch(String keyword){
+        if (StringUtils.isBlank(keyword)){
+            List<Knowledge> knowledgeList = knowledgeService.getKnowledgeByCreateBy(KnowledgeConstant.MY_LIBRARY);
+            if(CollectionUtils.isEmpty(knowledgeList)){
+                return new ArrayList<Knowledge>(0);
+            }
+
+            for(Knowledge knowledge : knowledgeList){
+                knowledge.setCreateTimeStr(PeDateUtils.format(knowledge.getCreateTime(),PeDateUtils.FORMAT_YYYY_MM_DD_HH_MM));
+            }
+            return knowledgeList;
+        }
+
+        Page<String> page = new Page<>();
+        page.setAutoPaging(false);
+        page.setAutoCount(false);
+        page = kmFullTextSearchService.search(keyword, page);
+
+        List<String> fileIds = page.getRows();
+        if (CollectionUtils.isEmpty(fileIds)){
+            return new ArrayList<Knowledge>(0);
+        }
+
+        List<Knowledge> knowledgeList = knowledgeService.getKnowledgeByKnowledgeIds(fileIds);
+        if(CollectionUtils.isEmpty(knowledgeList)){
+            knowledgeList = new ArrayList<>(0);
+        }
+
+        for(Knowledge knowledge : knowledgeList){
+            knowledge.setCreateTimeStr(PeDateUtils.format(knowledge.getCreateTime(),PeDateUtils.FORMAT_YYYY_MM_DD_HH_MM));
+        }
+        return knowledgeList;
     }
 
     /**
@@ -345,7 +373,18 @@ public class KnowledgeController {
     public JsonResult reduction(String knowledgeIds){
         JsonResult jsonResult = new JsonResult();
         try {
-            knowledgeService.reductionOrDelete(knowledgeIds,KnowledgeConstant.RECYCLE_LIBRARY);
+            if(StringUtils.isBlank(knowledgeIds)){
+                jsonResult.setSuccess(true);
+                return jsonResult;
+            }
+
+            List<String> knowledgeIdList = Arrays.asList(knowledgeIds.split(","));
+            if (CollectionUtils.isEmpty(knowledgeIdList)){
+                jsonResult.setSuccess(true);
+                return jsonResult;
+            }
+
+            knowledgeService.reductionOrDelete(knowledgeIdList,KnowledgeConstant.RECYCLE_LIBRARY);
         }catch (Exception e){
             jsonResult.setSuccess(false);
             jsonResult.setMessage(e.getMessage());
@@ -384,7 +423,21 @@ public class KnowledgeController {
     public JsonResult delete(String knowledgeIds){
         JsonResult jsonResult = new JsonResult();
         try {
-            knowledgeService.reductionOrDelete(knowledgeIds,KnowledgeConstant.MY_LIBRARY);
+            if(StringUtils.isBlank(knowledgeIds)){
+                jsonResult.setSuccess(true);
+                return jsonResult;
+            }
+
+            List<String> knowledgeIdList = Arrays.asList(knowledgeIds.split(","));
+            if (CollectionUtils.isEmpty(knowledgeIdList)){
+                jsonResult.setSuccess(true);
+                return jsonResult;
+            }
+            knowledgeService.reductionOrDelete(knowledgeIdList,KnowledgeConstant.MY_LIBRARY);
+            for (String knowledgeId : knowledgeIdList) {
+                kmFullTextSearchService.delete(knowledgeId);
+            }
+
         }catch (Exception e){
             jsonResult.setSuccess(false);
             jsonResult.setMessage(e.getMessage());

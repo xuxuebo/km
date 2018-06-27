@@ -171,16 +171,6 @@
 
         // 文件上传过程中创建进度条实时显示。
         uploader.on( 'uploadProgress', function( file, percentage ) {
-            var $li = $( '#'+file.id ),$percent = $li.find('.progress .progress-bar');
-
-            // 避免重复创建
-            if ( !$percent.length ) {
-                $percent = $('<div class="progress progress-striped active">' +
-                        '<div class="progressBar" role="progressbar" style="width: 0%">' +
-                        '</div>' +
-                        '</div>').appendTo( $li ).find('.progress-bar');
-            }
-
             $('#uploadState').html('<span>上传中</span><span style="color: #2a9cfe">'+Math.round(percentage * 100) + '%</span>');
         });
 

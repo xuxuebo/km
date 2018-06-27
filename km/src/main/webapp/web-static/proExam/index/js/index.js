@@ -151,6 +151,25 @@ $(function(){
             });
         });
 
+        $("#searchBtn").on('click', function () {
+            var $searchKeyword = $("#searchKeyword");
+            console.log($searchKeyword);
+
+            var _keyword = $searchKeyword.val();
+            console.log(_keyword);
+            $.ajax({
+                async: false,//此值要设置为FALSE  默认为TRUE 异步调用
+                type: "POST",
+                url: pageContext.resourcePath + '/knowledge/fullTextSearch?keyword='+_keyword,
+                dataType: 'json',
+                success: function (result) {
+                    data = result;
+                }
+            });
+
+            renderTable();
+        });
+
         //绑定事件
         //分享到云库
         $('.js-share').on('click', function () {
