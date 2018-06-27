@@ -131,30 +131,25 @@ $(function(){
             });
         }
 
-        var hash = window.location.hash;
-
-
-
-
-         $('.js-upload').on('click', function () {
-             PEMO.DIALOG.selectorDialog({
-                 content: pageContext.rootPath + '/km/knowledge/openUpload',
-                 area: ['520px', '320px'],
-                 title: '上传文件',
-                 btn1: function () {
-                 },
-                 btn2: function () {
-                     layer.closeAll();
-                 },
-                 success: function (d,index) {
-                     var iframeBody = layer.getChildFrame('body', index);
-                     var hasPicSrc = $('.pe-user-head-edit-btn').find('img').attr('src');
-                     if(hasPicSrc){
-                         $(iframeBody).find('.jcrop-preview').prop("src", hasPicSrc);
-                     }
-                 }
-             });
-         });
+        $('.js-upload').on('click', function () {
+            PEMO.DIALOG.selectorDialog({
+                content: pageContext.rootPath + '/km/knowledge/openUpload',
+                area: ['600px', '400px'],
+                title: '上传文件',
+                btn1: function () {
+                },
+                btn2: function () {
+                    layer.closeAll();
+                },
+                success: function (d,index) {
+                    var iframeBody = layer.getChildFrame('body', index);
+                    var hasPicSrc = $('.pe-user-head-edit-btn').find('img').attr('src');
+                    if(hasPicSrc){
+                        $(iframeBody).find('.jcrop-preview').prop("src", hasPicSrc);
+                    }
+                }
+            });
+        });
 
         //绑定事件
         //分享到云库
