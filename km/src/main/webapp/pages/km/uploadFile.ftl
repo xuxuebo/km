@@ -204,7 +204,7 @@
         $("#cancelBtn").on('click', function() {
             $('#filePicker').show();
             $('#cancelBtn').hide();
-            $('#formData').html();
+            $('#formData').html('');
             $('.file-queue').html('<i style="color: #b3b2b2">请选择文件上传</i>'+
                                   '<div id="formData"></div>');
         });
