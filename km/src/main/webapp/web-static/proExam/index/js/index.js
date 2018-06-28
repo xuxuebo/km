@@ -257,12 +257,12 @@ $(function(){
 
             var fileIds = [];
             PEBASE.ajaxRequest({
-                url: pageContext.rootPath + '/km/knowledge/downloadKnowledge',
+                url: pageContext.rootPath + '/km/knowledge/downloadKnowledge2',
                 async: false,
                 data: {'knowledgeIds':knIds},
                 success: function (data) {
                     if (data.success) {
-                        fileIds = data.data;
+                        downloadFile(data.data.fileUrl,data.data.name);
                     }else{
                         PEMO.DIALOG.alert({
                             content: data.message,
@@ -275,21 +275,17 @@ $(function(){
 
                 }
             });
-            for(var i=0;i<fileIds.length;i++){
-
-                downloadFile(fileIds[i],null);
-            }
         });
         $('.pe-stand-table-main-panel').delegate('.js-opt-download', 'click', function () {
             var knIds =  $(this).data('id');
             var fileIds = [];
             PEBASE.ajaxRequest({
-                url: pageContext.rootPath + '/km/knowledge/downloadKnowledge',
+                url: pageContext.rootPath + '/km/knowledge/downloadKnowledge2',
                 async: false,
                 data: {'knowledgeIds':knIds},
                 success: function (data) {
                     if (data.success) {
-                        fileIds = data.data;
+                        downloadFile(data.data.fileUrl,data.data.name);
                     }else{
                         PEMO.DIALOG.alert({
                             content: data.message,
@@ -302,11 +298,6 @@ $(function(){
 
                 }
             });
-            for(var i=0;i<fileIds.length;i++){
-                //console.log(fileIds[i].fileUrl);
-                //funDownload(fileIds[i].name,fileIds[i].name);
-                downloadFile(fileIds[i],null);
-            }
         });
 
         //新建文件夹
@@ -531,12 +522,12 @@ $(function(){
 
             var fileIds = [];
             PEBASE.ajaxRequest({
-                url: pageContext.rootPath + '/km/knowledge/downloadKnowledge',
+                url: pageContext.rootPath + '/km/knowledge/downloadKnowledge2',
                 async: false,
                 data: {'knowledgeIds':knIds},
                 success: function (data) {
                     if (data.success) {
-                        fileIds = data.data;
+                        downloadFile(data.data.fileUrl,data.data.name);
                     }else{
                         PEMO.DIALOG.alert({
                             content: data.message,
@@ -549,9 +540,6 @@ $(function(){
 
                 }
             });
-            for(var i=0;i<fileIds.length;i++){
-                downloadFile(fileIds[i],null);
-            }
         });
         $('.js-opt-copy').on('click', function () {
             var selectList = table.getSelect();
@@ -609,12 +597,12 @@ $(function(){
 
             var fileIds = [];
             PEBASE.ajaxRequest({
-                url: pageContext.rootPath + '/km/knowledge/downloadKnowledge',
+                url: pageContext.rootPath + '/km/knowledge/downloadKnowledge2',
                 async: false,
                 data: {'knowledgeIds':knIds},
                 success: function (data) {
                     if (data.success) {
-                        fileIds = data.data;
+                        downloadFile(data.data.fileUrl,data.data.name);
                     }else{
                         PEMO.DIALOG.alert({
                             content: data.message,
@@ -627,9 +615,6 @@ $(function(){
 
                 }
             });
-            for(var i=0;i<fileIds.length;i++){
-                downloadFile(fileIds[i],null);
-            }
         });
     }
 
@@ -907,22 +892,15 @@ $(function(){
 })
 
 function downloadFile(path,params) {
-    $("#downloadform").remove();
-    var form = $("<form>");//定义一个form表单
-    form.attr("id", "downloadform");
-    form.attr("style", "display:none");
-    form.attr("target", "");
-    form.attr("method", "get");
-    form.attr("action", path);
-    for(var key in params){
-        var input1 = $("<input>");
-        input1.attr("type", "hidden");
-        input1.attr("name", key);
-        input1.attr("value", params[key]);
-        form.append(input1);
-    }
-    $("body").append(form);//将表单放置在web中
-    form.submit();//表单提交()
+    var a = document.createElement('a');
+    a.download = '';
+    a.style.display = 'none';
+    a.href='http://192.168.0.35/fs/file/testDownLoad?fileIds='+path+'&fileName='+params+'&corpCode=lbox';
+    // 触发点击
+    document.body.appendChild(a);
+    a.click();
+    // 然后移除
+    document.body.removeChild(a);
 }
 //
 function funDownload(content, filename) {
@@ -940,14 +918,6 @@ function funDownload(content, filename) {
     a.click();
     // 然后移除
     document.body.removeChild(a);
-
-
-    /*var a = document.createElement('a');
-    var url = href;
-    var filename = filename;
-    a.href = url;
-    a.download = filename; // 在没有download属性的情况，target="_blank"，仍会阻止打开
-    a.click();*/
 };
 //转换单位
 function conver(limit){

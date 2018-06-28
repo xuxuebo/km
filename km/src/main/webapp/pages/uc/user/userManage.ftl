@@ -49,11 +49,9 @@
                 </div>
                 <div class="pe-stand-table-panel">
                     <div class="pe-stand-table-top-panel" style="font-size:0;">
-                        <@authVerify authCode="USER_MANAGE_ADD">
                         <button type="button" class="pe-btn pe-btn-green pe-new-question-btn"
                                 style="margin-right:14px;">新增用户
                         </button>
-                        </@authVerify>
                         <button type="button" class="pe-btn pe-btn-white pe-upload-btn">导入</button>
 
                         <div class="pe-btn all-edit-btn">批量编辑

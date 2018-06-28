@@ -165,3 +165,23 @@ requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
     }
 
 });
+
+function loginOut() {
+    PEMO.DIALOG.confirmL({
+        content: '您确定退出吗？',
+        area: ['350px', '173px'],
+        title: '提示',
+        btn: ['取消', '确定'],
+        btnAlign: 'c',
+        skin: ' pe-layer-confirm pe-layer-has-tree login-out-dialog-layer',
+        btn1: function () {
+            layer.closeAll();
+        },
+        btn2: function () {
+            location.href = pageContext.rootPath + '/km/client/logout';
+        },
+        success: function () {
+            PEBASE.peFormEvent('checkbox');
+        }
+    });
+}

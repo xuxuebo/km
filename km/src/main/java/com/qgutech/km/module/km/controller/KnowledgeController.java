@@ -9,6 +9,7 @@ import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.constant.PeConstant;
 import com.qgutech.km.module.km.model.*;
 import com.qgutech.km.module.km.service.*;
+import com.qgutech.km.module.km.vo.FileVo;
 import com.qgutech.km.module.sfm.model.PeFile;
 import com.qgutech.km.module.sfm.service.FileServerService;
 import com.qgutech.km.utils.PeDateUtils;
@@ -27,10 +28,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -223,9 +228,7 @@ public class KnowledgeController {
         List<Knowledge> knowledgeList = knowledgeService.recursionList(ids);
         List<String> fileIds = new ArrayList<>(knowledgeList.size());
         for(Knowledge s : knowledgeList){
-            if(!s.getKnowledgeType().equals("file")){
-                fileIds.add(s.getFileId());
-            }
+            fileIds.add(s.getFileId());
         }
         //批量文件的路径
         List<String> fileUrls = new ArrayList<>(fileIds.size());
@@ -234,6 +237,7 @@ public class KnowledgeController {
             fileUrls.add(fileUrl);
         }else{
             String fileUrl = FsFileManagerUtil.getCompressFileUrl(PropertiesUtils.getConfigProp().getProperty("fs.server.host"),fileIds, UUID.randomUUID().toString());
+            fileUrl.replace("getFile","downloadFile");
             fileUrls.add(fileUrl);
         }
         jsonResult.setData(fileUrls);
@@ -501,4 +505,48 @@ public class KnowledgeController {
         jsonResult.setSuccess(true);
         return jsonResult;
     }
+
+    @ResponseBody
+    @RequestMapping("downloadKnowledge2")
+    public JsonResult downloadKnowledge(HttpServletRequest request, HttpServletResponse response,String knowledgeIds) {
+        JsonResult jsonResult = new JsonResult();
+        if(StringUtils.isEmpty(knowledgeIds)){
+            jsonResult.setSuccess(false);
+            jsonResult.setMessage("请选择文件");
+            return jsonResult;
+        }
+        List<String> ids =Arrays.asList(knowledgeIds.split(","));
+        List<Knowledge> knowledgeList = knowledgeService.recursionList(ids);
+        if(CollectionUtils.isEmpty(knowledgeList)){
+            jsonResult.setSuccess(false);
+            jsonResult.setMessage("请选择文件");
+            return jsonResult;
+        }
+        String name  = "";
+        if(knowledgeList.size()==1){
+            name = knowledgeList.get(0).getKnowledgeName();
+        }else{
+            name = UUID.randomUUID().toString().replace("-","")+".zip";
+        }
+        List<String> fileIds = new ArrayList<>(knowledgeList.size());
+        for(Knowledge s : knowledgeList){
+            fileIds.add(s.getFileId());
+        }
+        //批量文件的路径
+        List<String> fileUrls = new ArrayList<>(fileIds.size());
+        StringBuffer sb = new StringBuffer();
+        for(String s : fileIds){
+            String fileUrl = FsFileManagerUtil.getFileUrl(PropertiesUtils.getConfigProp().getProperty("fs.server.host"),s, UUID.randomUUID().toString());
+            sb.append(fileUrl).append(",");
+        }
+        fileUrls.add(sb.substring(0,sb.length()-1));
+        FileVo fileVo = new FileVo();
+        fileVo.setName(name);
+        fileVo.setFileUrl(sb.substring(0,sb.length()-1));
+        jsonResult.setData(fileVo);
+        jsonResult.setSuccess(true);
+        return jsonResult;
+
+    }
+
 }

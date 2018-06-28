@@ -38,7 +38,7 @@
         <div class="y-head__help">
             <span class="yfont-icon">&#xe64d;</span>
         </div>
-        <div class="y-head__user" title="${userName!}">
+        <div class="y-head__user" title="点击退出" onclick="loginOut()">
             <div class="y-head__avatar">
                 <img src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
             </div>
@@ -66,7 +66,7 @@
         <div class="y-content-body" id="yunContentBody">
         </div>
         <footer class="y-footer">
-            国家电网江苏省电力公司 ©苏ICP备15007035号-1
+
         </footer>
     </section>
 </section>
@@ -83,6 +83,29 @@
 </script>
 
 
+
 <#--<script src="${resourcePath!}/web-static/proExam/index/js/index.js"></script>-->
 </body>
 </html>
+
+<script type="application/javascript">
+    function loginOut() {
+        PEMO.DIALOG.confirmL({
+            content: '您确定退出吗？',
+            area: ['350px', '173px'],
+            title: '提示',
+            btn: ['取消', '确定'],
+            btnAlign: 'c',
+            skin: ' pe-layer-confirm pe-layer-has-tree login-out-dialog-layer',
+            btn1: function () {
+                layer.closeAll();
+            },
+            btn2: function () {
+                location.href = pageContext.rootPath + '/km/client/logout';
+            },
+            success: function () {
+                PEBASE.peFormEvent('checkbox');
+            }
+        });
+    }
+</script>
