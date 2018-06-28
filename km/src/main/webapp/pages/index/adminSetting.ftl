@@ -96,13 +96,13 @@
             </li>
         </ul>
     </aside>
-    <section class="y-content">
-        <div class="y-content-body" id="yunContentBody">
+    <div class="y-content">
+        <div class="y-content-body" id="yunContentBody" style="overflow: hidden;height: 100%;">
         </div>
         <#--<footer class="y-footer">-->
             <#--国家电网江苏省电力公司 ©苏ICP备15007035号-1-->
         <#--</footer>-->
-    </section>
+    </div>
 </section>
 <script type="text/template" id="tblUserTable">
     <table class="y-table">

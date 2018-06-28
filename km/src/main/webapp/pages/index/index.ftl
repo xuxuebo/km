@@ -9,6 +9,7 @@
     <link href="https://cdn.bootcss.com/layer/3.1.0/theme/default/layer.css" rel="stylesheet">
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/pro_exam_plugin_min.css?_v=${(resourceVersion)!}" type="text/css">
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/pro_exam_base.css?_v=${(resourceVersion)!}" type="text/css"/>
+    <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/pe-common.css?_v=${(resourceVersion)!}" type="text/css">
 
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/index/css/index.css">
     <script>
@@ -249,8 +250,8 @@
             </td>
             <td class="y-table__td name">
                 <div class="y-table__opt__bar">
-                    <button type="button" class="yfont-icon opt-item js-opt-download">&#xe64f;</button>
-                    <button type="button" class="yfont-icon opt-item js-opt-more">&#xe652;</button>
+                    <#--<button type="button" class="yfont-icon opt-item js-opt-download">&#xe64f;</button>
+                    <button type="button" class="yfont-icon opt-item js-opt-more">&#xe652;</button>-->
                 </div>
                 <div class="y-table__filed_name type-<%=item.knowledgeType%>">
                     <%=item.knowledgeName%>
@@ -270,68 +271,75 @@
 
 
 <script type="text/template" id="tplShareTable">
-    <table class="y-table">
-        <thead class="y-table__header">
-        <tr>
-            <th class="y-table__td checkbox">
-                <label class="y-checkbox">
-                    <input type="checkbox">
-                    <span class="y-checkbox__span"></span>
-                </label>
-            </th>
-            <th class="y-table__td name">
-                <span class=" ">文件名</span>
-            </th>
-            <th class="y-table__td create-time">
-                <span class="  ">分享时间</span>
-            </th>
-            <th class="y-table__td expire-time">
-                <span class="  ">失效时间</span>
-            </th>
-            <th class="y-table__td view-count">
-                <span class="  ">浏览次数</span>
-            </th>
-            <th class="y-table__td download-count">
-                <span class=" ">复制次数</span>
-            </th>
-            <th class="y-table__td copy-count">
-                <span class="  ">下载次数</span>
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <%_.each(list,function(item,i){%>
-        <tr class="y-table__tr" data-id="<%=item.id%>" data-shareid="<%=item.shareId%>">
-            <td class="y-table__td checkbox">
-                <label class="y-checkbox">
-                    <input type="checkbox">
-                    <span class="y-checkbox__span"></span>
-                </label>
-            </td>
-            <td class="y-table__td name">
-                <div class="y-table__filed_name type-<%=item.knowledgeType%>">
-                    <%=item.knowledgeName%>
-                </div>
-            </td>
-            <td class="y-table__td create-time">
-                <%=item.createTimeStr%>
-            </td>
-            <td class="y-table__td expire-time">
-                <%=item.expireTime%>
-            </td>
-            <td class="y-table__td view-count">
-                <%=item.viewCount%>
-            </td>
-            <td class="y-table__td download-count">
-                <%=item.downloadCount%>
-            </td>
-            <td  class="y-table__td copy-count">
-                <%=item.copyCount%>
-            </td>
-        </tr>
-        <%})%>
-        </tbody>
-    </table>
+    <div>
+        <table class="y-table">
+            <thead class="y-table__header">
+            <tr>
+                <th class="y-table__td checkbox">
+                    <label class="y-checkbox">
+                        <input type="checkbox">
+                        <span class="y-checkbox__span"></span>
+                    </label>
+                </th>
+                <th class="y-table__td name">
+                    <span class=" ">文件名</span>
+                </th>
+                <th class="y-table__td create-time">
+                    <span class="  ">分享时间</span>
+                </th>
+                <th class="y-table__td expire-time">
+                    <span class="  ">失效时间</span>
+                </th>
+                <th class="y-table__td view-count">
+                    <span class="  ">浏览次数</span>
+                </th>
+                <th class="y-table__td download-count">
+                    <span class=" ">复制次数</span>
+                </th>
+                <th class="y-table__td copy-count">
+                    <span class="  ">下载次数</span>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <%if(list.length !== 0){%>
+            <%_.each(list,function(item,i){%>
+            <tr class="y-table__tr" data-id="<%=item.id%>" data-shareid="<%=item.shareId%>">
+                <td class="y-table__td checkbox">
+                    <label class="y-checkbox">
+                        <input type="checkbox">
+                        <span class="y-checkbox__span"></span>
+                    </label>
+                </td>
+                <td class="y-table__td name">
+                    <div class="y-table__filed_name type-<%=item.knowledgeType%>">
+                        <%=item.knowledgeName%>
+                    </div>
+                </td>
+                <td class="y-table__td create-time">
+                    <%=item.createTimeStr%>
+                </td>
+                <td class="y-table__td expire-time">
+                    <%=item.expireTime%>
+                </td>
+                <td class="y-table__td view-count">
+                    <%=item.viewCount%>
+                </td>
+                <td class="y-table__td download-count">
+                    <%=item.downloadCount%>
+                </td>
+                <td  class="y-table__td copy-count">
+                    <%=item.copyCount%>
+                </td>
+            </tr>
+            <%})}%>
+            </tbody>
+        </table>
+        <%if(list.length === 0){%>
+        <div class="table__none">--暂无数据--</div>
+        <%}%>
+    </div>
+
 </script>
 
 
@@ -386,7 +394,11 @@
         <button class="y-btn y-btn__blue js-opt-copy" type="button">复制到我的云库</button>
         <button class="y-btn y-btn__green js-download" type="button">下载</button>
     </div>
-    <div class="y-content__table" id="publicTable">
+    <div class="pe-stand-table-main-panel">
+        <div class="y-content__table" id="publicTable">
+            <div class="pe-stand-table-pagination"></div>
+        </div>
+    </div>
     </div>
 </script>
 

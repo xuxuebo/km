@@ -280,7 +280,7 @@ $(function(){
                 downloadFile(fileIds[i],null);
             }
         });
-        $('.js-opt-download').on('click', function () {
+        $('.pe-stand-table-main-panel').delegate('.js-opt-download', 'click', function () {
             var knIds =  $(this).data('id');
             var fileIds = [];
             PEBASE.ajaxRequest({
@@ -361,7 +361,7 @@ $(function(){
         });
 
         //删除
-        $('.js-opt-delete').on('click', function () {
+        $('.pe-stand-table-main-panel').delegate('.js-opt-delete', 'click', function () {
             var knowledgeIds = $(this).data("id");
             if(knowledgeIds==null||knowledgeIds==undefined||knowledgeIds==''){
                 return false;
@@ -403,7 +403,7 @@ $(function(){
             });
         });
 
-        $('.js-opt-share').on('click', function () {
+        $('.pe-stand-table-main-panel').delegate('.js-opt-share', 'click', function () {
 
             var knowledgeIds =$(this).data("id");
             if(knowledgeIds==null||knowledgeIds==undefined||knowledgeIds==''){
@@ -478,6 +478,7 @@ $(function(){
     }
 
     //公共库
+
     function initPublicPage(container, routeInfo) {
         var libraryId = publicId;
         var libraryName = publicName;
@@ -600,6 +601,8 @@ $(function(){
                 },
             });
         });
+
+
         $('.js-opt-download').on('click', function () {
 
             var knIds = $(this).data("id");
@@ -928,9 +931,10 @@ function funDownload(content, filename) {
     a.download = filename;
     a.style.display = 'none';
     // 字符内容转变成blob地址
-    var blob = new Blob([content]);
-    console.log(blob);
-    a.href = URL.createObjectURL(blob);
+    //var blob = new Blob([content]);
+    //console.log(blob);
+    //a.href = URL.createObjectURL(blob);
+    a.href=content;
     // 触发点击
     document.body.appendChild(a);
     a.click();

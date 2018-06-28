@@ -33,7 +33,7 @@ public class KnowledgeRelServiceImpl extends BaseServiceImpl<KnowledgeRel> imple
 
         List<KnowledgeRel> knowledgeRels = new ArrayList<>();
         knowledgeRels = listByCriterion(   criterion ,
-                new Order[]{Order.asc(Library.CREATE_TIME)}
+                new Order[]{Order.desc(Library.CREATE_TIME)}
         );
         return knowledgeRels;
     }

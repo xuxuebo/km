@@ -733,6 +733,11 @@ body, html {
     background-image: image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x);
     background-image: -webkit-image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x)
 }
+.y-table__filed_name.type-txt {
+    background-image: url(../img/txt.png);
+    background-image: image-set(url('../img/txt.png') 1x, url('../img/txt@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/txt.png') 1x, url('../img/txt@2x.png') 2x)
+}
 
 .y-table__opt__bar {
     display: none;
@@ -749,4 +754,10 @@ body, html {
 
 .y-table__opt__bar .opt-item:hover {
     color: #333
+}
+
+.table__none{
+    text-align: center;
+    height: 100px;
+    line-height: 100px;
 }
