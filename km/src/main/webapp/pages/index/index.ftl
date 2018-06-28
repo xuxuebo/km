@@ -138,6 +138,7 @@
         </tr>
         </thead>
         <tbody>
+        <%if(list.length !== 0){%>
         <%_.each(list,function(item,i){%>
         <tr class="y-table__tr js-opt-dbclick" data-fileid = "<%=item.fileId%>" data-folder = "<%=item.folder%>" data-id="<%=item.id%>">
             <td class="y-table__td checkbox">
@@ -163,9 +164,12 @@
                 <%=item.createTimeStr%>
             </td>
         </tr>
-        <%})%>
+        <%})}%>
         </tbody>
     </table>
+    <%if(list.length === 0){%>
+    <div class="table__none">--暂无数据--</div>
+    <%}%>
 </script>
 
 <script type="text/template" id="tplPublicTable">
@@ -190,6 +194,7 @@
         </tr>
         </thead>
         <tbody>
+        <%if(list.length !== 0){%>
         <%_.each(list,function(item,i){%>
         <tr class="y-table__tr js-opt-dbclick" data-id="<%=item.id%>" data-fileid="<%=item.fileId%>">
             <td class="y-table__td checkbox">
@@ -213,9 +218,12 @@
                 <%=item.createTimeStr%>
             </td>
         </tr>
-        <%})%>
+        <%})}%>
         </tbody>
     </table>
+    <%if(list.length === 0){%>
+    <div class="table__none">--暂无数据--</div>
+    <%}%>
 </script>
 
 <script type="text/template" id="tplRecycleTable">
@@ -240,6 +248,7 @@
         </tr>
         </thead>
         <tbody>
+        <%if(list.length !== 0){%>
         <%_.each(list,function(item,i){%>
         <tr class="y-table__tr" data-id="<%=item.id%>">
             <td class="y-table__td checkbox">
@@ -264,9 +273,12 @@
                 <%=item.createTimeStr%>
             </td>
         </tr>
-        <%})%>
+        <%})}%>
         </tbody>
     </table>
+    <%if(list.length === 0){%>
+    <div class="table__none">--暂无数据--</div>
+    <%}%>
 </script>
 
 
