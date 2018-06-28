@@ -138,7 +138,7 @@
         </thead>
         <tbody>
         <%_.each(list,function(item,i){%>
-        <tr class="y-table__tr" data-id="<%=item.id%>">
+        <tr class="y-table__tr js-opt-dbclick" data-fileid = "<%=item.fileId%>" data-folder = "<%=item.folder%>" data-id="<%=item.id%>">
             <td class="y-table__td checkbox">
                 <label class="y-checkbox">
                     <input type="checkbox">
@@ -190,7 +190,7 @@
         </thead>
         <tbody>
         <%_.each(list,function(item,i){%>
-        <tr class="y-table__tr" data-id="<%=item.id%>">
+        <tr class="y-table__tr js-opt-dbclick" data-id="<%=item.id%>" data-fileid="<%=item.fileId%>">
             <td class="y-table__td checkbox">
                 <label class="y-checkbox">
                     <input type="checkbox">

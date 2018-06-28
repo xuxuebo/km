@@ -19,7 +19,7 @@ public interface KnowledgeService extends BaseService<Knowledge> {
      * 获取个人云库的文件列表
      * @return
      */
-    List<Knowledge> getKnowledgeByCreateBy(String libraryTYpe);
+    List<Knowledge> getKnowledgeByCreateBy(String libraryTYpe,String libraryId);
 
     /**
      * 分享至公共库
@@ -38,7 +38,7 @@ public interface KnowledgeService extends BaseService<Knowledge> {
 
     /**
      * 还原回收站文件或删除文件至回收站
-     * @param knowledgeIds
+     * @param
      * @param libraryType
      * @return
      */
@@ -52,5 +52,7 @@ public interface KnowledgeService extends BaseService<Knowledge> {
     Page<Knowledge> publicLibraryData(PageParam pageParam, Knowledge knowledge, String libraryId);
 
     void copyToMyLibrary(String knowledgeIds);
+
+    List<Knowledge> recursionList(List<String> knowledgeIds);
 
 }

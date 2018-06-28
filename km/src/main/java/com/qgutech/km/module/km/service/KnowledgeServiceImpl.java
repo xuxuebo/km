@@ -62,7 +62,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Knowledge> getKnowledgeByCreateBy(String libraryType) {
+    public List<Knowledge> getKnowledgeByCreateBy(String libraryType,String libraryId) {
         List<Knowledge> knowledgeList = new ArrayList<>();
 
         //添加id in
@@ -73,13 +73,21 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             return new ArrayList<>(0);
         }
         //查询云库里面所有文件id
-        List<KnowledgeRel> knowledgeRelList = knowledgeRelService.findByLibraryId(library.getId());
+        List<KnowledgeRel> knowledgeRelList;
+        if(StringUtils.isEmpty(libraryId)){
+            knowledgeRelList = knowledgeRelService.findByLibraryId(library.getId());
+        }else{
+            knowledgeRelList = knowledgeRelService.findByLibraryId(libraryId);
+        }
+
         if(CollectionUtils.isEmpty(knowledgeRelList)){
             return new ArrayList<>(0);
         }
         //取我的云库里面所有文件id
+        Map<String,Date> dateMap = new HashMap<>();
         for(KnowledgeRel k : knowledgeRelList){
             knowledgeIds.add(k.getKnowledgeId());
+            dateMap.put(k.getKnowledgeId(),k.getUpdateTime());
         }
         Criterion criterion = Restrictions.and(
                 Restrictions.eq(Knowledge.CORP_CODE, ExecutionContext.getCorpCode()),
@@ -87,6 +95,11 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
                 );
         knowledgeList = listByCriterion((criterion),
                 new Order[]{Order.asc(Knowledge.FILE_ID),Order.desc(Knowledge.SHOW_ORDER)});
+        if(KnowledgeConstant.RECYCLE_LIBRARY.equals(libraryType)){
+            for(Knowledge k : knowledgeList){
+                k.setCreateTime(dateMap.get(k.getId()));
+            }
+        }
         return knowledgeList;
     }
 
@@ -234,5 +247,34 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             knowledgeRelList.add(knowledgeRel);
         }
         knowledgeRelService.batchSave(knowledgeRelList);
+    }
+
+    /**
+     *
+     * @param knowledgeIds
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Knowledge> recursionList(List<String> knowledgeIds) {
+        List<Knowledge> list  = getKnowledgeByKnowledgeIds(knowledgeIds);
+        List<Knowledge> all = new ArrayList<>();
+        all = getAllKnowledge(all,list);
+        return all;
+    }
+
+    private List<Knowledge> getAllKnowledge(List<Knowledge> all,List<Knowledge> targetList){
+        for(Knowledge knowledge : targetList){
+            if(!StringUtils.isEmpty(knowledge.getFileId())){
+                all.add(knowledge);
+            }else{//文件夹
+                if(!StringUtils.isEmpty(knowledge.getFolder())){
+                    List<Knowledge> dd = getByLibraryId(knowledge.getFolder());
+                    getAllKnowledge(all,dd);
+                }
+
+            }
+        }
+        return all;
     }
 }

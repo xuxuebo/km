@@ -35,7 +35,7 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
     private KnowledgeRelService knowledgeRelService;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = false)
     public Library getUserLibraryByLibraryType(String libraryType) {
 
         Criterion criterion = Restrictions.and(Restrictions.eq(Library.CORP_CODE, ExecutionContext.getCorpCode()),
@@ -48,7 +48,7 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
                 new Order[]{Order.asc(Library.CREATE_TIME)}
                 );
         if(CollectionUtils.isEmpty(libraries)){
-            return null;
+          return null;
         }
         return libraries.get(0);
     }
@@ -116,17 +116,12 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
         Knowledge knowledge = new Knowledge();
         knowledge.setKnowledgeName(libraryName);
         knowledge.setKnowledgeType("file");
-        knowledge.setFolder(id);
+        knowledge.setFolder(id);//所属文件夹
         knowledge.setFileId("");
         knowledge.setKnowledgeSize(0);
-        knowledge.setSourceKnowledgeId(id);
+        knowledge.setSourceKnowledgeId("");
         knowledge.setShowOrder(0);
         String  knowledgeId =knowledgeService.save(knowledge);
-
-        KnowledgeRel knowledgeRel = new KnowledgeRel();
-        knowledgeRel.setLibraryId(id);
-        knowledgeRel.setKnowledgeId(knowledgeId);
-        knowledgeRelService.save(knowledgeRel);
 
         KnowledgeRel k = new KnowledgeRel();
         k.setLibraryId(myLibrary.getId());

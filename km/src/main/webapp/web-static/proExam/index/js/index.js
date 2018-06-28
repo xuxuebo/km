@@ -27,8 +27,8 @@ $(function(){
                 cb: "shareCb"
             }
         },
-        YunCb: function (container, routeInfo, cb) {
-            initYunPage(container, routeInfo);
+        YunCb: function (container, routeInfo, cb,id) {
+            initYunPage(container, routeInfo,cb,id);
         },
         publicCb: function (container, routeInfo, cb) {
             initPublicPage(container, routeInfo);
@@ -98,8 +98,7 @@ $(function(){
 
 
     //初始化我的云库页面
-    function initYunPage(container, routeInfo) {
-
+    function initYunPage(container, routeInfo,cb,id) {
         var _tpl = $(routeInfo.templateId).html();
         container.html(_.template(_tpl)({title: '我的云库'}));
         //table渲染
@@ -110,11 +109,15 @@ $(function(){
             async: false,//此值要设置为FALSE  默认为TRUE 异步调用
             type: "POST",
             url: pageContext.resourcePath + '/knowledge/manage/search',
+            data:{'libraryId':id},
             dataType: 'json',
             success: function (result) {
                 data = result;
             }
         });
+        for(var  i=0;i<data.length;i++){
+            data[i].knowledgeSize = conver(data[i].knowledgeSize);
+        }
         var table, initSort = {
             name: "desc",
             size: "desc",
@@ -273,12 +276,12 @@ $(function(){
                 }
             });
             for(var i=0;i<fileIds.length;i++){
+
                 downloadFile(fileIds[i],null);
             }
         });
         $('.js-opt-download').on('click', function () {
             var knIds =  $(this).data('id');
-            console.log(knIds);
             var fileIds = [];
             PEBASE.ajaxRequest({
                 url: pageContext.rootPath + '/km/knowledge/downloadKnowledge',
@@ -300,6 +303,8 @@ $(function(){
                 }
             });
             for(var i=0;i<fileIds.length;i++){
+                //console.log(fileIds[i].fileUrl);
+                //funDownload(fileIds[i].name,fileIds[i].name);
                 downloadFile(fileIds[i],null);
             }
         });
@@ -335,7 +340,7 @@ $(function(){
                                 });
                                 layer.closeAll();
                                 //刷新列表
-                                route['YunCb']($yunContentBody, route.routes.yun, null);
+                                route['YunCb']($yunContentBody, route.routes.yun, null,null);
                             }else{
                                 PEMO.DIALOG.alert({
                                     content: data.message,
@@ -378,7 +383,7 @@ $(function(){
                                 });
                                 layer.closeAll();
                                 //刷新列表
-                                route['YunCb']($yunContentBody, route.routes.yun, null);
+                                route['YunCb']($yunContentBody, route.routes.yun, null,null);
                             }else{
                                 PEMO.DIALOG.alert({
                                     content: data.message,
@@ -459,6 +464,17 @@ $(function(){
                 }
             });
         });
+        $('.js-opt-dbclick').dblclick(function () {
+            var  folder = $(this).data('folder');
+            var  fileId = $(this).data('fileid');
+            console.log(fileId);
+            if(fileId==null||fileId==''){//没有文件id
+                route['YunCb']($yunContentBody, route.routes.yun, null,folder);
+            }else{
+                return false;
+            }
+
+        });
     }
 
     //公共库
@@ -481,6 +497,9 @@ $(function(){
                 data = result;
             }
         });
+        for(var  i=0;i<data.length;i++){
+            data[i].knowledgeSize = conver(data[i].knowledgeSize);
+        }
         var table, initSort = {
             name: "desc",
             size: "desc",
@@ -496,6 +515,7 @@ $(function(){
                 }));
             });
         }
+
         $('.js-download').on('click', function () {
             var selectList = table.getSelect();
             if (selectList.length === 0) {
@@ -579,6 +599,34 @@ $(function(){
                     layer.closeAll();
                 },
             });
+        });
+        $('.js-opt-download').on('click', function () {
+
+            var knIds = $(this).data("id");
+
+            var fileIds = [];
+            PEBASE.ajaxRequest({
+                url: pageContext.rootPath + '/km/knowledge/downloadKnowledge',
+                async: false,
+                data: {'knowledgeIds':knIds},
+                success: function (data) {
+                    if (data.success) {
+                        fileIds = data.data;
+                    }else{
+                        PEMO.DIALOG.alert({
+                            content: data.message,
+                            btn: ['我知道了'],
+                            yes: function (index) {
+                                layer.close(index);
+                            }
+                        });
+                    }
+
+                }
+            });
+            for(var i=0;i<fileIds.length;i++){
+                downloadFile(fileIds[i],null);
+            }
         });
     }
 
@@ -679,6 +727,9 @@ $(function(){
                 data = result;
             }
         });
+        for(var  i=0;i<data.length;i++){
+            data[i].knowledgeSize = conver(data[i].knowledgeSize);
+        }
         var table, initSort = {
             name: "desc",
             size: "desc",
@@ -869,4 +920,49 @@ function downloadFile(path,params) {
     }
     $("body").append(form);//将表单放置在web中
     form.submit();//表单提交()
+}
+//
+function funDownload(content, filename) {
+    // 创建隐藏的可下载链接
+    var a = document.createElement('a');
+    a.download = filename;
+    a.style.display = 'none';
+    // 字符内容转变成blob地址
+    var blob = new Blob([content]);
+    console.log(blob);
+    a.href = URL.createObjectURL(blob);
+    // 触发点击
+    document.body.appendChild(a);
+    a.click();
+    // 然后移除
+    document.body.removeChild(a);
+
+
+    /*var a = document.createElement('a');
+    var url = href;
+    var filename = filename;
+    a.href = url;
+    a.download = filename; // 在没有download属性的情况，target="_blank"，仍会阻止打开
+    a.click();*/
+};
+//转换单位
+function conver(limit){
+    var size = "";
+    if( limit < 0.1 * 1024 ){ //如果小于0.1KB转化成B
+        size = limit.toFixed(2) + "B";
+    }else if(limit < 0.1 * 1024 * 1024 ){//如果小于0.1MB转化成KB
+        size = (limit / 1024).toFixed(2) + "KB";
+    }else if(limit < 0.1 * 1024 * 1024 * 1024){ //如果小于0.1GB转化成MB
+        size = (limit / (1024 * 1024)).toFixed(2) + "MB";
+    }else{ //其他转化成GB
+        size = (limit / (1024 * 1024 * 1024)).toFixed(2) + "GB";
+    }
+
+    var sizestr = size + "";
+    var len = sizestr.indexOf("\.");
+    var dec = sizestr.substr(len + 1, 2);
+    if(dec == "00"){//当小数点后为00时 去掉小数部分
+        return sizestr.substring(0,len) + sizestr.substr(len + 3,2);
+    }
+    return sizestr;
 }

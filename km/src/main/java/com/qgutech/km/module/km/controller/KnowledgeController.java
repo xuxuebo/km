@@ -220,7 +220,7 @@ public class KnowledgeController {
             return jsonResult;
         }
         List<String> ids =Arrays.asList(knowledgeIds.split(","));
-        List<Knowledge> knowledgeList = knowledgeService.getKnowledgeByKnowledgeIds(ids);
+        List<Knowledge> knowledgeList = knowledgeService.recursionList(ids);
         List<String> fileIds = new ArrayList<>(knowledgeList.size());
         for(Knowledge s : knowledgeList){
             if(!s.getKnowledgeType().equals("file")){
@@ -229,8 +229,11 @@ public class KnowledgeController {
         }
         //批量文件的路径
         List<String> fileUrls = new ArrayList<>(fileIds.size());
-        for(String s : fileIds){
-            String fileUrl = FsFileManagerUtil.getFileUrl(PropertiesUtils.getConfigProp().getProperty("fs.server.host"),s, UUID.randomUUID().toString());
+        if(fileIds.size()<=1){
+            String fileUrl = FsFileManagerUtil.getFileUrl(PropertiesUtils.getConfigProp().getProperty("fs.server.host"),fileIds.get(0), UUID.randomUUID().toString());
+            fileUrls.add(fileUrl);
+        }else{
+            String fileUrl = FsFileManagerUtil.getCompressFileUrl(PropertiesUtils.getConfigProp().getProperty("fs.server.host"),fileIds, UUID.randomUUID().toString());
             fileUrls.add(fileUrl);
         }
         jsonResult.setData(fileUrls);
@@ -246,8 +249,8 @@ public class KnowledgeController {
      */
     @ResponseBody
     @RequestMapping("manage/search")
-    public List<Knowledge> search(){
-        List<Knowledge> knowledgeList = knowledgeService.getKnowledgeByCreateBy(KnowledgeConstant.MY_LIBRARY);
+    public List<Knowledge> search(String libraryId){
+        List<Knowledge> knowledgeList = knowledgeService.getKnowledgeByCreateBy(KnowledgeConstant.MY_LIBRARY,libraryId);
         if(CollectionUtils.isEmpty(knowledgeList)){
             return new ArrayList<Knowledge>(0);
         }
@@ -262,7 +265,7 @@ public class KnowledgeController {
     @RequestMapping("fullTextSearch")
     public List<Knowledge> fullTextSearch(String keyword){
         if (StringUtils.isBlank(keyword)){
-            List<Knowledge> knowledgeList = knowledgeService.getKnowledgeByCreateBy(KnowledgeConstant.MY_LIBRARY);
+            List<Knowledge> knowledgeList = knowledgeService.getKnowledgeByCreateBy(KnowledgeConstant.MY_LIBRARY,null);
             if(CollectionUtils.isEmpty(knowledgeList)){
                 return new ArrayList<Knowledge>(0);
             }
@@ -302,7 +305,7 @@ public class KnowledgeController {
     @ResponseBody
     @RequestMapping("manage/searchRecycle")
     public List<Knowledge> searchRecycle(){
-        List<Knowledge> list = knowledgeService.getKnowledgeByCreateBy(KnowledgeConstant.RECYCLE_LIBRARY);
+        List<Knowledge> list = knowledgeService.getKnowledgeByCreateBy(KnowledgeConstant.RECYCLE_LIBRARY,null);
         if(CollectionUtils.isEmpty(list)){
             list = new ArrayList<>(0);
         }
