@@ -70,7 +70,8 @@
     <script>
         var pageContext = {
             resourcePath:'${resourcePath!}',
-            rootPath:'${ctx!}'
+            rootPath:'${ctx!}',
+            downloadServerUrl:'${downloadServerUrl!}'
         };
     </script>
 </head>
@@ -110,7 +111,7 @@
 <script type="text/javascript">
     window.onload = function () {
         var chunkSize = 5000 * 1024;        //分块大小
-        var uploadFileUrl = "http://192.168.0.35/fs/file/uploadFile";
+        var uploadFileUrl = '${downloadServerUrl!}/file/uploadFile';
         var uploader = window.uploadFile({
             auto: false,
             dnd:'#uploader',

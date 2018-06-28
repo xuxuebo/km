@@ -172,7 +172,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (PropertiesUtils.getConfigProp().getProperty("https.open.corpCode").contains(corpCode)) {
             modelAndView.addObject("resourcePath", PropertiesUtils.getEnvProp().getProperty("static.resource.path.https"));
         }
-
+        modelAndView.addObject("downloadServerUrl", PropertiesUtils.getEnvProp().getProperty("download.server.url"));
     }
 
     private void processLoginPage(HttpServletRequest request, HttpServletResponse response, String channel, String mobileType) throws IOException {

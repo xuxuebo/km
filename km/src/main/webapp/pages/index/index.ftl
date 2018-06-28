@@ -33,6 +33,8 @@
     </style>
 </head>
 <body class="y-body">
+<input id="downloadServerUrl" value="${downloadServerUrl}" type="hidden">
+<input id="fsServerHost" value="${fsServerHost}" type="hidden">
 <header class="y-head">
     <div class="y-logo__wrap">
         <a href="${ctx!}/km/front/index" class="y-logo"></a>

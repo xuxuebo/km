@@ -10,6 +10,7 @@ import com.qgutech.km.module.uc.service.UserService;
 import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.model.CorpInfo;
 import com.qgutech.km.utils.PeDateUtils;
+import com.qgutech.km.utils.PropertiesUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +44,8 @@ public class FrontController {
         model.addAttribute("userName", SessionContext.get().getUserName());
         model.addAttribute("admin", SessionContext.get().isAdmin());
         model.addAttribute("firstLevelLibrary",libraryService.getFirstLevelLibrary());
+        model.addAttribute("downloadServerUrl", PropertiesUtils.getConfigProp().getProperty("download.server.url"));
+        model.addAttribute("fsServerHost", PropertiesUtils.getConfigProp().getProperty("fs.server.host"));
         return "index/index";
     }
 

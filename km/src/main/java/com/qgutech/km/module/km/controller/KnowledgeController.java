@@ -506,6 +506,13 @@ public class KnowledgeController {
         return jsonResult;
     }
 
+    /**
+     * 下载文件
+     * @param request
+     * @param response
+     * @param knowledgeIds  文件id
+     * @return
+     */
     @ResponseBody
     @RequestMapping("downloadKnowledge2")
     public JsonResult downloadKnowledge(HttpServletRequest request, HttpServletResponse response,String knowledgeIds) {
@@ -519,7 +526,7 @@ public class KnowledgeController {
         List<Knowledge> knowledgeList = knowledgeService.recursionList(ids);
         if(CollectionUtils.isEmpty(knowledgeList)){
             jsonResult.setSuccess(false);
-            jsonResult.setMessage("请选择文件");
+            jsonResult.setMessage("此文件夹内没有文件");
             return jsonResult;
         }
         String name  = "";

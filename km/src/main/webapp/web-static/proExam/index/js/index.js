@@ -892,10 +892,11 @@ $(function(){
 })
 
 function downloadFile(path,params) {
+    var downUrl = $('#downloadServerUrl').val();
     var a = document.createElement('a');
     a.download = '';
     a.style.display = 'none';
-    a.href='http://192.168.0.35/fs/file/testDownLoad?fileIds='+path+'&fileName='+params+'&corpCode=lbox';
+    a.href=downUrl+'/file/downLoadFiles?fileIds='+path+'&fileName='+params+'&corpCode=lbox';
     // 触发点击
     document.body.appendChild(a);
     a.click();
