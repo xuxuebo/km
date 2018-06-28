@@ -49,7 +49,7 @@
         <div class="y-head__help">
             <span class="yfont-icon">&#xe64d;</span>
         </div>
-        <div class="y-head__user" title="${userName!}">
+        <div class="y-head__user" title="点击退出" onclick="loginOut();">
             <div class="y-head__avatar">
                 <img src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
             </div>

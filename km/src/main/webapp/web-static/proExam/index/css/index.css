@@ -360,6 +360,7 @@ body, html {
     white-space: nowrap
 }
 
+
 .y-aside {
     position: absolute;
     height: 100%;
@@ -758,6 +759,6 @@ body, html {
 
 .table__none{
     text-align: center;
-    height: 100px;
-    line-height: 100px;
+    height: 50px;
+    line-height: 50px;
 }
