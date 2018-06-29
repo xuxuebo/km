@@ -128,7 +128,7 @@ public class KnowledgeController {
         indexKnowledge.setKnowledgeName(knowledge.getKnowledgeName());
         indexKnowledge.setKnowledgeType(knowledge.getKnowledgeType());
         indexKnowledge.setStoredFileId(knowledge.getFileId());
-        indexKnowledge.setTags("");
+        indexKnowledge.setTags(knowledge.getTag());
         indexKnowledge.setContent("");
         indexKnowledge.setOptStatus("ENABLE");
         indexKnowledge.setUploaderUserName("");

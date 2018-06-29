@@ -167,6 +167,9 @@ $(function(){
                 dataType: 'json',
                 success: function (result) {
                     data = result;
+                    for(var  i=0;i<data.length;i++){
+                        data[i].knowledgeSize = conver(data[i].knowledgeSize);
+                    }
                 }
             });
 

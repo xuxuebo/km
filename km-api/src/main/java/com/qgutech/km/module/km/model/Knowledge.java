@@ -88,6 +88,8 @@ public class Knowledge extends BaseModel {
     private String expireTime;
     @Transient
     private String shareId;
+    @Transient
+    private String tag;
 
     public String getKnowledgeName() {
         return knowledgeName;
@@ -204,5 +206,13 @@ public class Knowledge extends BaseModel {
 
     public void setShareId(String shareId) {
         this.shareId = shareId;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }

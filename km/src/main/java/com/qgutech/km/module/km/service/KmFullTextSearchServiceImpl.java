@@ -174,7 +174,7 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
                 Document document = convert(indexKnowledge);
                 iWriter.addDocument(document);
 
-                if (indexKnowledge.getKnowledgeType().equalsIgnoreCase(KNOWLEDGE_TYPE_OF_DOC)
+                if ((indexKnowledge.getKnowledgeType().equalsIgnoreCase(KNOWLEDGE_TYPE_OF_DOC))
                         && !indexKnowledge.isFromRedis() && !assign) {
                     Map<String, String> job = getKnowledgeMap(indexKnowledge);
 
@@ -233,7 +233,7 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
         for (IndexKnowledge indexKnowledge : indexKnowledgeList) {
             try {
                 checkKnowledge(indexKnowledge);
-                if (KNOWLEDGE_TYPE_OF_DOC.equalsIgnoreCase(indexKnowledge.getKnowledgeType())
+                if ((KNOWLEDGE_TYPE_OF_DOC.equalsIgnoreCase(indexKnowledge.getKnowledgeType()))
                         && !indexKnowledge.isFromRedis()) {
                     String content = this.getContent(indexKnowledge.getCorpCode(),
                             indexKnowledge.getStoredFileId(), null);
@@ -464,6 +464,7 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
         BooleanClause.Occur[] flags = {BooleanClause.Occur.SHOULD, BooleanClause.Occur.SHOULD,
                 BooleanClause.Occur.SHOULD, BooleanClause.Occur.SHOULD,
                 BooleanClause.Occur.SHOULD};
+
         //文件域的值
         String[] conditionValues = {keyword, keyword, keyword, keyword, keyword};
 
@@ -744,7 +745,7 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
         }
 
         if (StringUtils.isEmpty(indexKnowledge.getStoredFileId())
-                && KNOWLEDGE_TYPE_OF_DOC.equalsIgnoreCase(indexKnowledge.getKnowledgeType())) {
+                && (KNOWLEDGE_TYPE_OF_DOC.equalsIgnoreCase(indexKnowledge.getKnowledgeType()))) {
             throw new IllegalArgumentException("StoredFileId is empty!");
         }
 
