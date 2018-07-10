@@ -28,6 +28,17 @@
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.exedit.js?_v=0.1"></script>
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.mCustomScrollbar.concat.min.js?_v=0.1"></script>
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/pro_exam_base.js"></script>
+    <script type="text/javascript">
+        requirejs.config({
+            urlArgs: 'v=',
+            baseUrl: '${resourcePath!}/web-static/proExam/index/js/',
+            paths: {
+                jquery: 'jquery.min',
+                underscore: 'underscore-min',
+                layer: 'layer'
+            }
+        });
+    </script>
     <style type="text/css">
         .y-content__opt__bar .webuploader-container .webuploader-pick{background-color: transparent}
     </style>
