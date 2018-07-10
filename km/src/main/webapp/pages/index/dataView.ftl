@@ -7,19 +7,31 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>数据</title>
     <link href="https://cdn.bootcss.com/layer/3.1.0/theme/default/layer.css" rel="stylesheet">
+    <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/pro_exam_plugin_min.css?_v=${(resourceVersion)!}" type="text/css">
+    <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/pro_exam_base.css?_v=${(resourceVersion)!}" type="text/css"/>
+    <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/pe-common.css?_v=${(resourceVersion)!}" type="text/css">
+
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/index/css/index.css">
-    <script src="${resourcePath!}/web-static/proExam/index/js/require.js"></script>
-    <script type="text/javascript">
-        requirejs.config({
-            urlArgs: 'v=',
-            baseUrl: '${resourcePath!}/web-static/proExam/index/js/',
-            paths: {
-                jquery: 'jquery.min',
-                underscore: 'underscore-min',
-                layer: 'layer'
-            }
-        });
+    <script>
+        var pageContext = {
+            resourcePath:'${resourcePath!}',
+            rootPath:'${ctx!}'
+        };
     </script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/underscore-min.js"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/layer/layer.js?_v=${(resourceVersion)!}"></script>
+    <script src="${resourcePath!}/web-static/proExam/index/js/webuploader.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${resourcePath!}/web-static/proExam/index/js/upload.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.core.js?_v=0.1"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.excheck.js?_v=0.1"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.exedit.js?_v=0.1"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.mCustomScrollbar.concat.min.js?_v=0.1"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/pro_exam_base.js"></script>
+    <style type="text/css">
+        .y-content__opt__bar .webuploader-container .webuploader-pick{background-color: transparent}
+    </style>
+
 </head>
 <body class="y-body">
 <header class="y-head">
@@ -38,7 +50,7 @@
         <div class="y-head__help">
             <span class="yfont-icon">&#xe64d;</span>
         </div>
-        <div class="y-head__user" title="点击退出" onclick="loginOut()">
+        <div class="y-head__user" title="点击退出" onclick="loginOut();">
             <div class="y-head__avatar">
                 <img src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
             </div>
