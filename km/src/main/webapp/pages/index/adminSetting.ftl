@@ -61,7 +61,7 @@
     <nav class="y-nav">
         <ul class="y-nav__link">
             <li><a href="${ctx!}/km/front/index" class="y-nav__link__item "><span class="txt">云库</span></a></li>
-            <li><a href="${ctx!}/km/front/dataView" class="y-nav__link__item"><span class="txt">数据</span></a></li>
+            <#--<li><a href="${ctx!}/km/front/dataView" class="y-nav__link__item"><span class="txt">数据</span></a></li>-->
         <#if admin?? && admin>
             <li><a href="${ctx!}/km/front/adminSetting" class="y-nav__link__item active"><span class="txt">设置</span></a></li>
         </#if>

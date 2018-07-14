@@ -64,7 +64,7 @@
     <nav class="y-nav">
         <ul class="y-nav__link">
             <li><a href="${ctx!}/km/front/index" class="y-nav__link__item active"><span class="txt">云库</span></a></li>
-            <li><a href="${ctx!}/km/front/dataView" class="y-nav__link__item"><span class="txt">数据</span></a></li>
+            <#--<li><a href="${ctx!}/km/front/dataView" class="y-nav__link__item"><span class="txt">数据</span></a></li>-->
         <#if admin?? && admin>
             <li><a href="${ctx!}/km/front/adminSetting" class="y-nav__link__item"><span class="txt">设置</span></a></li>
         </#if>
@@ -154,7 +154,7 @@
                 <div class="y-table__opt__bar">
                     <button type="button" title="点击下载" data-id="<%=item.id%>" class="yfont-icon opt-item js-opt-download">&#xe64f;</button>
                     <button type="button" title="分享" data-id="<%=item.id%>" class="yfont-icon opt-item js-opt-share">&#xe652;</button>
-                    <button type="button" title="删除" data-id="<%=item.id%>" class="yfont-icon opt-item js-opt-delete">&#xe652;</button>
+                    <button type="button" title="删除" data-id="<%=item.id%>" class="yfont-icon opt-item js-opt-delete">&#xe65c;</button>
                 </div>
                 <div class="y-table__filed_name type-<%=item.knowledgeType%>">
                     <%=item.knowledgeName%>
@@ -290,28 +290,28 @@
         <table class="y-table">
             <thead class="y-table__header">
             <tr>
-                <th class="y-table__td checkbox">
+                <th class="y-table__td checkbox" style="width: 2%">
                     <label class="y-checkbox">
                         <input type="checkbox">
                         <span class="y-checkbox__span"></span>
                     </label>
                 </th>
-                <th class="y-table__td name">
+                <th class="y-table__td name" style="width: 35%">
                     <span class=" ">文件名</span>
                 </th>
-                <th class="y-table__td create-time">
+                <th class="y-table__td create-time" style="width: 8%">
                     <span class="  ">分享时间</span>
                 </th>
-                <th class="y-table__td expire-time">
-                    <span class="  ">失效时间</span>
+                <th class="y-table__td size" style="width: 8%">
+                    <span class="  ">大小</span>
                 </th>
-                <th class="y-table__td view-count">
+                <th class="y-table__td view-count" style="width: 8%">
                     <span class="  ">浏览次数</span>
                 </th>
-                <th class="y-table__td download-count">
+                <th class="y-table__td download-count" style="width: 8%">
                     <span class=" ">复制次数</span>
                 </th>
-                <th class="y-table__td copy-count">
+                <th class="y-table__td copy-count" style="width: 8%">
                     <span class="  ">下载次数</span>
                 </th>
             </tr>
@@ -328,14 +328,14 @@
                 </td>
                 <td class="y-table__td name">
                     <div class="y-table__filed_name type-<%=item.knowledgeType%>">
-                        <%=item.knowledgeName%>
+                        <span title="<%=item.knowledgeName%>"><%=item.knowledgeName%></span>
                     </div>
                 </td>
                 <td class="y-table__td create-time">
                     <%=item.createTimeStr%>
                 </td>
-                <td class="y-table__td expire-time">
-                    <%=item.expireTime%>
+                <td class="y-table__td size">
+                    <%=item.knowledgeSize%>
                 </td>
                 <td class="y-table__td view-count">
                     <%=item.viewCount%>
@@ -366,7 +366,7 @@
     <div class="y-content__opt__bar">
         <button class="y-btn y-btn__blue js-upload" id="filePicker" type="button">上传</button>
         <button class="y-btn y-btn__green js-download" type="button">下载</button>
-        <button class="y-btn y-btn__green js-share" type="button">分享至共享库</button>
+        <button class="y-btn y-btn__green js-share" type="button">分享至公共库</button>
         <button class="y-btn y-btn__orange js-newFolder" type="button">新建文件夹</button>
         <div id="theList"></div>
     </div>

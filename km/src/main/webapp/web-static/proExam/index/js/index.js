@@ -636,6 +636,9 @@ $(function(){
                 data = result;
             }
         });
+        for(var  i=0;i<data.length;i++){
+            data[i].knowledgeSize = conver(data[i].knowledgeSize);
+        }
         var _table = $("#tplShareTable").html();
         var $yunTable = $('#shareTable');
 
@@ -943,6 +946,13 @@ function conver(limit){
         return sizestr.substring(0,len) + sizestr.substr(len + 3,2);
     }
     return sizestr;
+}
+
+function handleName(name) {
+    if(name.length>=10){
+        name = name.substring(0,10);
+    }
+    return name;
 }
 
 function loginOut() {
