@@ -28,6 +28,17 @@ public class KnowledgeRel extends BaseModel {
     @Column(nullable = false, length = 32)
     private String libraryId;
 
+    @Column(nullable = false, length = 32)
+    private String shareId;
+
+    public String getShareId() {
+        return shareId;
+    }
+
+    public void setShareId(String shareId) {
+        this.shareId = shareId;
+    }
+
     public String getKnowledgeId() {
         return knowledgeId;
     }

@@ -523,7 +523,27 @@ $(function(){
             }
             knIds = knIds.substring(0,knIds.length-1);
 
-            var fileIds = [];
+            var shareIdArr = table.getPubLicShareId();
+            var shareIds = "";
+            for(var i = 0 ;i<shareIdArr.length;i++){
+                shareIds += shareIdArr[i]+",";
+            }
+            shareIds = shareIds.substring(0,shareIds.length-1);
+
+            PEBASE.ajaxRequest({
+                url: pageContext.rootPath + '/km/knowledge/updateDownCount',
+                async: false,
+                data: {'shareIds':shareIds},
+                success: function (data) {
+                    if (data.success) {
+                        console.log("修改成功");
+                    }else{
+                        console.log("修改失败");
+                    }
+
+                }
+            });
+
             PEBASE.ajaxRequest({
                 url: pageContext.rootPath + '/km/knowledge/downloadKnowledge2',
                 async: false,
@@ -543,6 +563,8 @@ $(function(){
 
                 }
             });
+
+
         });
         $('.js-opt-copy').on('click', function () {
             var selectList = table.getSelect();
@@ -558,6 +580,12 @@ $(function(){
                 return false;
             }
             knowledgeIds =  knowledgeIds.substring(0,knowledgeIds.length-1);
+            var shareIdArr = table.getPubLicShareId();
+            var shareIds = "";
+            for(var i = 0 ;i<shareIdArr.length;i++){
+                shareIds += shareIdArr[i]+",";
+            }
+            shareIds = shareIds.substring(0,shareIds.length-1);
             PEMO.DIALOG.confirmL({
                 content:'<div><h3 class="pe-dialog-content-head">确定复制选中的文件？</h3><p class="pe-dialog-content-tip">确认后,可在我的云库内查看。 </p></div>',
                 btn1: function () {
@@ -565,7 +593,7 @@ $(function(){
                     PEBASE.ajaxRequest({
                         url: pageContext.rootPath + '/km/knowledge/copyToMyLibrary',
                         data: {
-                            "knowledgeIds": knowledgeIds
+                            "knowledgeIds": knowledgeIds,"shareIds":shareIds
                         },
                         success: function (data) {
                             if (data.success) {
@@ -598,6 +626,20 @@ $(function(){
 
             var knIds = $(this).data("id");
 
+            var shareIds = knIds = $(this).data("id");
+            PEBASE.ajaxRequest({
+                url: pageContext.rootPath + '/km/knowledge/updateDownCount',
+                async: false,
+                data: {'shareIds':shareIds},
+                success: function (data) {
+                    if (data.success) {
+                        console.log("修改成功");
+                    }else{
+                        console.log("修改失败");
+                    }
+
+                }
+            });
             var fileIds = [];
             PEBASE.ajaxRequest({
                 url: pageContext.rootPath + '/km/knowledge/downloadKnowledge2',
@@ -872,6 +914,16 @@ $(function(){
 
         //选择
         return {
+            getPubLicShareId: function () {
+                var list = [];
+                $checkbox.each(function (i, item) {
+                    var $item = $(item);
+                    if ($item.get(0).checked) {
+                        list.push($item.closest('.y-table__tr').attr('data-shareid'));
+                    }
+                });
+                return list;
+            },
             getSelect: function () {
                 var list = [];
                 $checkbox.each(function (i, item) {

@@ -199,7 +199,7 @@
         <tbody>
         <%if(list.length !== 0){%>
         <%_.each(list,function(item,i){%>
-        <tr class="y-table__tr js-opt-dbclick" data-id="<%=item.id%>" data-fileid="<%=item.fileId%>">
+        <tr class="y-table__tr js-opt-dbclick" data-shareid="<%=item.shareId%>" data-id="<%=item.id%>" data-fileid="<%=item.fileId%>">
             <td class="y-table__td checkbox">
                 <label class="y-checkbox">
                     <input type="checkbox">
@@ -305,14 +305,11 @@
                 <th class="y-table__td size" style="width: 8%">
                     <span class="  ">大小</span>
                 </th>
-                <th class="y-table__td view-count" style="width: 8%">
-                    <span class="  ">浏览次数</span>
-                </th>
                 <th class="y-table__td download-count" style="width: 8%">
-                    <span class=" ">复制次数</span>
+                    <span class=" ">下载次数</span>
                 </th>
                 <th class="y-table__td copy-count" style="width: 8%">
-                    <span class="  ">下载次数</span>
+                    <span class="  ">复制次数</span>
                 </th>
             </tr>
             </thead>
@@ -336,9 +333,6 @@
                 </td>
                 <td class="y-table__td size">
                     <%=item.knowledgeSize%>
-                </td>
-                <td class="y-table__td view-count">
-                    <%=item.viewCount%>
                 </td>
                 <td class="y-table__td download-count">
                     <%=item.downloadCount%>

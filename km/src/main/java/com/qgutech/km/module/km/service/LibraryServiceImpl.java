@@ -135,6 +135,7 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
         KnowledgeRel k = new KnowledgeRel();
         k.setLibraryId(myLibrary.getId());
         k.setKnowledgeId(knowledgeId);
+        k.setShareId("");
         knowledgeRelService.save(k);
 
 

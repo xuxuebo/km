@@ -121,6 +121,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             knowledgeRel = new KnowledgeRel();
             knowledgeRel.setKnowledgeId(share.getKnowledgeId());
             knowledgeRel.setLibraryId(share.getShareLibraryId());
+            knowledgeRel.setShareId("");
             knowledgeRelList.add(knowledgeRel);
 
             //保存分享记录
@@ -133,7 +134,14 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
         knowledgeRelService.batchSave(knowledgeRelList);
         List<String> shareIds = shareService.batchSave(shareList);
-
+        Map<String,String> shareIdAndKnowledgeIdMap = new HashMap<>();
+        for(Share s : shareList){
+            shareIdAndKnowledgeIdMap.put(s.getKnowledgeId(),s.getId());
+        }
+        for(KnowledgeRel k : knowledgeRelList){
+            k.setShareId(shareIdAndKnowledgeIdMap.get(k.getKnowledgeId()));
+        }
+        knowledgeRelService.batchSaveOrUpdate(knowledgeRelList);
         for(String shareId : shareIds){
             statistic = new Statistic(shareId,0,0,0);
             statisticList.add(statistic);
@@ -153,6 +161,12 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         return listByCriterion(criterion,new Order[]{Order.desc(Knowledge.CREATE_TIME)});
     }
 
+    @Override
+    public List<Knowledge> getKnowledgeByIds(List<String> knowledgeIdList) {
+        Criterion criterion = Restrictions.and(Restrictions.in(Knowledge.ID,knowledgeIdList),
+                Restrictions.eq(Knowledge.CORP_CODE,ExecutionContext.getCorpCode()));
+        return listByCriterion(criterion,new Order[]{Order.desc(Knowledge.CREATE_TIME)});
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -164,11 +178,19 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         if(CollectionUtils.isEmpty(relList)){
             return new ArrayList<>();
         }
+        Map<String,String> map = new HashMap<>();
+        for(KnowledgeRel k : relList){
+            map.put(k.getKnowledgeId(),k.getShareId());
+        }
         List<String> ids = new ArrayList<>(relList.size());
         for(KnowledgeRel kn : relList){
             ids.add(kn.getKnowledgeId());
         }
-        return getKnowledgeByKnowledgeIds(ids);
+        List<Knowledge> knowledgeList = getKnowledgeByIds(ids);
+        for(Knowledge k : knowledgeList){
+            k.setShareId(map.get(k.getId()));
+        }
+        return knowledgeList;
     }
 
 
@@ -222,7 +244,6 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             knIds.add(kn.getKnowledgeId());
         }
         Criterion criterion = Restrictions.and(Restrictions.in(Knowledge.ID,knIds),
-                Restrictions.eq(Knowledge.CREATE_BY,ExecutionContext.getUserId()),
                 Restrictions.eq(Knowledge.CORP_CODE,ExecutionContext.getCorpCode()));
         return search(pageParam,criterion,new Order[]{Order.asc(Knowledge.FILE_ID),Order.desc(Knowledge.CREATE_TIME)});
     }
@@ -244,6 +265,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         for(String knId : knowledgeIdList){
             knowledgeRel = new KnowledgeRel();
             knowledgeRel.setKnowledgeId(knId);
+            knowledgeRel.setShareId("");
             knowledgeRel.setLibraryId(myLibrary.getId());
             knowledgeRelList.add(knowledgeRel);
         }

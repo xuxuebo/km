@@ -24,5 +24,8 @@ public interface ShareService extends BaseService<Share>{
     void cancelShare(String id);
 
     List<Share> getByKnowledgeIds(List<String> knowledgeIds);
-
+    //批量修改文件的下载次数
+    int updateDownCount(String shareIds);
+    //批量修改文件的复制次数
+    int updateCopyCount(String shareIds);
 }

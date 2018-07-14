@@ -122,4 +122,45 @@ public class ShareServiceImpl extends BaseServiceImpl<Share> implements ShareSer
     public List<Share> getByKnowledgeIds(List<String> knowledgeIds) {
         return null;
     }
+
+
+    @Override
+    public int updateDownCount(String shareIds) {
+        if(StringUtils.isEmpty(shareIds)){
+            return 0;
+        }
+        List<String> shareList = Arrays.asList(shareIds.split(","));
+        List<Statistic> statisticList = statisticService.getByShareIds(shareList);
+        if(CollectionUtils.isEmpty(statisticList)){
+            return 0;
+        }
+        for(Statistic s : statisticList){
+            int c = s.getDownloadCount()==null?0:s.getDownloadCount();
+            s.setDownloadCount(c+1);
+        }
+        statisticService.batchSaveOrUpdate(statisticList);
+        return statisticList.size();
+    }
+
+    @Override
+    public int updateCopyCount(String shareIds) {
+        if(StringUtils.isEmpty(shareIds)){
+            return 0;
+        }
+        List<String> shareList = Arrays.asList(shareIds.split(","));
+        List<Statistic> statisticList = statisticService.getByShareIds(shareList);
+        if(CollectionUtils.isEmpty(statisticList)){
+            return 0;
+        }
+        for(Statistic s : statisticList){
+            int c = s.getCopyCount()==null?0:s.getCopyCount();
+            s.setCopyCount(c+1);
+        }
+        statisticService.batchSaveOrUpdate(statisticList);
+        return statisticList.size();
+    }
+
+    public ShareServiceImpl() {
+        super();
+    }
 }

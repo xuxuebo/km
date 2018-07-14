@@ -103,6 +103,7 @@ public class KnowledgeController {
                 knowledgeRel.setKnowledgeId(knowledgeId);
                 Library myLibrary = libraryService.getUserLibraryByLibraryType("MY_LIBRARY");
                 knowledgeRel.setLibraryId(myLibrary.getId());
+                knowledgeRel.setShareId("");
                 knowledgeRelService.save(knowledgeRel);
 
                 IndexKnowledge indexKnowledge = convert(knowledge);
@@ -488,7 +489,7 @@ public class KnowledgeController {
      */
     @RequestMapping("copyToMyLibrary")
     @ResponseBody
-    public JsonResult copyToMyLibrary(String knowledgeIds){
+    public JsonResult copyToMyLibrary(String knowledgeIds,String shareIds){
         JsonResult jsonResult = new JsonResult();
         if(StringUtils.isEmpty(knowledgeIds)){
             jsonResult.setSuccess(false);
@@ -497,6 +498,7 @@ public class KnowledgeController {
         }
         try {
             knowledgeService.copyToMyLibrary(knowledgeIds);
+            shareService.updateCopyCount(shareIds);
         }catch (Exception e){
             jsonResult.setSuccess(false);
             jsonResult.setMessage(e.getMessage());
@@ -555,5 +557,31 @@ public class KnowledgeController {
         return jsonResult;
 
     }
+    @RequestMapping("updateDownCount")
+    @ResponseBody
+    public JsonResult updateDownCount(String shareIds){
+        JsonResult jsonResult = new JsonResult();
+        jsonResult.setSuccess(true);
+        try {
+            shareService.updateDownCount(shareIds);
+        }catch (Exception e){
+            jsonResult.setSuccess(false);
+            return jsonResult;
+        }
+        return jsonResult;
+    }
 
+    @RequestMapping("updateCopyCount")
+    @ResponseBody
+    public JsonResult updateCopyCount(String shareIds){
+        JsonResult jsonResult = new JsonResult();
+        jsonResult.setSuccess(true);
+        try {
+            shareService.updateCopyCount(shareIds);
+        }catch (Exception e){
+            jsonResult.setSuccess(false);
+            return jsonResult;
+        }
+        return jsonResult;
+    }
 }
