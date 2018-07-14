@@ -322,7 +322,7 @@ public class KnowledgeController {
 
 
     /**
-     * 分享到公共库
+     * 分享到公共库 如果此文件已分享则不添加记录
      * @return
      * 1.添加个人的分享记录
      * 2.在公共库添加此文件记录

@@ -15,6 +15,8 @@ import javax.persistence.Table;
 @Table(name = "t_km_share", indexes = {@Index(name = "t_km_share", columnList = "corpCode")})
 public class Share extends BaseModel {
 
+    public static final String KNOWLEDGE_ID="knowledgeId";
+
     /**
      * 共享类型
      */

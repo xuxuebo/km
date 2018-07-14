@@ -4,6 +4,7 @@ import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.base.service.SessionService;
 import com.qgutech.km.module.km.model.Knowledge;
+import com.qgutech.km.module.km.model.KnowledgeRel;
 import com.qgutech.km.module.km.model.Share;
 import com.qgutech.km.module.km.model.Statistic;
 import com.qgutech.km.module.uc.model.SessionContext;
@@ -34,6 +35,8 @@ public class ShareServiceImpl extends BaseServiceImpl<Share> implements ShareSer
     private StatisticService statisticService;
     @Resource
     private SessionService sessionService;
+    @Resource
+    private KnowledgeRelService knowledgeRelService;
 
     /**
      *1.我的分享--分享文件--分享统计
@@ -88,22 +91,35 @@ public class ShareServiceImpl extends BaseServiceImpl<Share> implements ShareSer
      * 取消分享
      * 1.删除分享记录
      * 2.删除分享记录的统计记录
-     * @param id
+     * 3.删除公共库的分享记录
      */
     @Override
     @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
-    public void cancelShare(String id) {
-        if(StringUtils.isEmpty(id)){
+    public void cancelShare(String knowledgeId) {
+        if(StringUtils.isEmpty(knowledgeId)){
             throw new PeException("id is null ");
         }
-        List<String> shareIds = Arrays.asList(id.split(","));
-        List<Share> shareList = listByCriterion(Restrictions.and(Restrictions.in(Share.ID,shareIds)));
-        if(CollectionUtils.isEmpty(shareIds)){
-            throw new PeException("shareList is null ");
+        List<String> knowledgeIds = Arrays.asList(knowledgeId.split(","));
+        List<Share> shareList = listByCriterion(Restrictions.and(Restrictions.in(Share.KNOWLEDGE_ID,knowledgeIds)));
+        if(CollectionUtils.isEmpty(shareList)){
+            return;
+        }
+        List<String> shareIds = new ArrayList<>(shareList.size());
+        List<String> libraryIds = new ArrayList<>(shareList.size());
+        for(Share share : shareList){
+            shareIds.add(share.getId());
+            libraryIds.add(share.getShareLibraryId());
         }
         delete(shareIds);
         statisticService.delete(Restrictions.and(Restrictions.in(Statistic.SHARE_ID,shareIds),
                 Restrictions.eq(Statistic.CORP_CODE,ExecutionContext.getCorpCode()),
                 Restrictions.eq(Statistic.CREATE_BY,ExecutionContext.getUserId())));
+        knowledgeRelService.delete(Restrictions.and(Restrictions.in(KnowledgeRel.LIBRARY_ID,libraryIds),
+                Restrictions.in(KnowledgeRel.KNOWLEDGE_ID,knowledgeIds)));
+    }
+
+    @Override
+    public List<Share> getByKnowledgeIds(List<String> knowledgeIds) {
+        return null;
     }
 }

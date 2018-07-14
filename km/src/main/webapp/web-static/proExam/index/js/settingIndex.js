@@ -1,5 +1,5 @@
-'use strict';
-requirejs(['jquery', 'underscore', "layer"], function ($, _, layer) {
+
+$(function(){
     var $yunContentBody = $('#yunContentBody');
     var $yAside = $('#YAside');
     //路由

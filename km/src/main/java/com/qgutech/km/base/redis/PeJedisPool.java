@@ -3,9 +3,11 @@ package com.qgutech.km.base.redis;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import redis.clients.jedis.Protocol;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 import redis.clients.util.JedisURIHelper;
 import redis.clients.util.Pool;
 
+import java.net.SocketTimeoutException;
 import java.net.URI;
 
 public class PeJedisPool extends Pool<PeJedis> {
@@ -95,8 +97,23 @@ public class PeJedisPool extends Pool<PeJedis> {
 
     @Override
     public PeJedis getResource() {
-        PeJedis jedis = super.getResource();
-        jedis.setPesDataSource(this);
-        return jedis;
+        int timeoutCount = 0;
+        while (true){
+            try {
+                PeJedis jedis = super.getResource();
+                jedis.setPesDataSource(this);
+                return jedis;
+            }catch (Exception e){
+                if(e instanceof JedisConnectionException || e instanceof SocketTimeoutException){
+                    timeoutCount++;
+                    if(timeoutCount>3){
+                        break;
+                    }
+                }else{
+                    break;
+                }
+            }
+        }
+        return null;
     }
 }

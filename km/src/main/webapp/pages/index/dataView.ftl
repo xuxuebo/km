@@ -6,7 +6,8 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>数据</title>
-    <link href="https://cdn.bootcss.com/layer/3.1.0/theme/default/layer.css" rel="stylesheet">
+    <#--<link href="https://cdn.bootcss.com/layer/3.1.0/theme/default/layer.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/layer.css">
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/pro_exam_plugin_min.css?_v=${(resourceVersion)!}" type="text/css">
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/pro_exam_base.css?_v=${(resourceVersion)!}" type="text/css"/>
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/pe-common.css?_v=${(resourceVersion)!}" type="text/css">
@@ -28,21 +29,9 @@
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.exedit.js?_v=0.1"></script>
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.mCustomScrollbar.concat.min.js?_v=0.1"></script>
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/pro_exam_base.js"></script>
-    <script type="text/javascript">
-        requirejs.config({
-            urlArgs: 'v=',
-            baseUrl: '${resourcePath!}/web-static/proExam/index/js/',
-            paths: {
-                jquery: 'jquery.min',
-                underscore: 'underscore-min',
-                layer: 'layer'
-            }
-        });
-    </script>
     <style type="text/css">
         .y-content__opt__bar .webuploader-container .webuploader-pick{background-color: transparent}
     </style>
-
 </head>
 <body class="y-body">
 <header class="y-head">

@@ -884,7 +884,7 @@ $(function(){
                 $checkbox.each(function (i, item) {
                     var $item = $(item);
                     if ($item.get(0).checked) {
-                        list.push($item.closest('.y-table__tr').attr('data-shareid'));
+                        list.push($item.closest('.y-table__tr').attr('data-id'));
                     }
                 });
                 return list;

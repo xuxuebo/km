@@ -23,4 +23,6 @@ public interface ShareService extends BaseService<Share>{
      */
     void cancelShare(String id);
 
+    List<Share> getByKnowledgeIds(List<String> knowledgeIds);
+
 }
