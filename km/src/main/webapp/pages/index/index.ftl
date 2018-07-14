@@ -296,7 +296,7 @@
                         <span class="y-checkbox__span"></span>
                     </label>
                 </th>
-                <th class="y-table__td name" style="width: 35%">
+                <th class="y-table__td name" style="width: 25%">
                     <span class=" ">文件名</span>
                 </th>
                 <th class="y-table__td create-time" style="width: 8%">
