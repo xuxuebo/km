@@ -148,6 +148,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
     @Transactional(readOnly = true)
     public List<Knowledge> getKnowledgeByKnowledgeIds(List<String> knowledgeIdList) {
         Criterion criterion = Restrictions.and(Restrictions.in(Knowledge.ID,knowledgeIdList),
+                Restrictions.eq(Knowledge.CREATE_BY,ExecutionContext.getUserId()),
                 Restrictions.eq(Knowledge.CORP_CODE,ExecutionContext.getCorpCode()));
         return listByCriterion(criterion,new Order[]{Order.desc(Knowledge.CREATE_TIME)});
     }
