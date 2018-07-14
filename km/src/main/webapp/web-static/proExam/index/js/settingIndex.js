@@ -25,11 +25,7 @@ $(function(){
                 nav:'y-position',
                 cb:"positionCb"
             },
-            'label':{
-                "templateId":'#tplLabel',
-                nav:'y-label',
-                cb:"labelCb"
-            },
+
             'library':{
                 "templateId":'#tplLibrary',
                 nav:'y-library',
@@ -41,22 +37,22 @@ $(function(){
             // initYunPage(container, routeInfo,'用户管理');
         },
         organizeCb: function (container, routeInfo, cb) {
-            $('#yunContentBody').html('<iframe style="width:100%;height: 100%;margin-left: -170px;" src="/km/front/manage/initPage#url=/km/uc/organize/manage/initPage"></iframe>');
+            $('#yunContentBody').html('<iframe style="width:100%;height: 100%;margin-left: 0;" src="/km/front/manage/initPage#url=/km/uc/organize/manage/initPage"></iframe>');
             //initYunPage(container, routeInfo,'部门管理');
         },
         // roleCb: function (container, routeInfo, cb) {
         //     initYunPage(container, routeInfo,'角色管理');
         // },
         positionCb: function (container, routeInfo, cb) {
-            $('#yunContentBody').html('<iframe style="width:100%;height: 100%;margin-left: -170px;" src="/km/front/manage/initPage#url=/km/uc/position/manage/initPage"></iframe>');
+            $('#yunContentBody').html('<iframe style="width:100%;height: 100%;margin-left:0;" src="/km/front/manage/initPage#url=/km/uc/position/manage/initPage"></iframe>');
             // initYunPage(container, routeInfo,'岗位管理');
         },
         labelCb: function (container, routeInfo, cb) {
-            $('#yunContentBody').html('<iframe style="width:100%;height: 100%;margin-left: -170px;" src="/km/front/manage/initPage#url=/km/km/label/initPage"></iframe>');
+            $('#yunContentBody').html('<iframe style="width:100%;height: 100%;margin-left: 0;" src="/km/front/manage/initPage#url=/km/km/label/initPage"></iframe>');
             //initYunPage(container, routeInfo,'标签管理');
         },
         libraryCb:function (container, routeInfo, cb) {
-            $('#yunContentBody').html('<iframe style="width:100%;height: 100%;margin-left: -170px;" src="/km/front/manage/initPage#url=/km/library/manage/initPage"></iframe>');
+            $('#yunContentBody').html('<iframe style="width:100%;height: 100%;margin-left:0;" src="/km/front/manage/initPage#url=/km/library/manage/initPage"></iframe>');
         }
     };
 

@@ -95,11 +95,11 @@
                     <span class="yfont-icon">&#xe643;</span><span class="txt">岗位管理</span>
                 </a>
             </li>
-            <li class="y-menu__item y-label">
-                <a href="#label" class="y-menu__item__title y-aside__menu__item__title">
-                    <span class="yfont-icon">&#xe643;</span><span class="txt">标签管理</span>
-                </a>
-            </li>
+            <#--<li class="y-menu__item y-label">-->
+                <#--<a href="#label" class="y-menu__item__title y-aside__menu__item__title">-->
+                    <#--<span class="yfont-icon">&#xe643;</span><span class="txt">标签管理</span>-->
+                <#--</a>-->
+            <#--</li>-->
             <li class="y-menu__item y-library">
                 <a href="#library" class="y-menu__item__title y-aside__menu__item__title">
                     <span class="yfont-icon">&#xe643;</span><span class="txt">公共库管理</span>

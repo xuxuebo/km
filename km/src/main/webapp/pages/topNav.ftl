@@ -59,6 +59,25 @@
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/zclip/jquery.zclip.js?_v=${(resourceVersion)!}"></script>
     <script type="text/javascript"
             src="${resourcePath!}/web-static/proExam/js/plugins/idangerous.swiper2.7.6.js?_v=${(resourceVersion)!}"></script>
+    <style>
+        /*修改智慧云部门管理样式*/
+        .pe-main-wrap,.pe-main-content{
+            width: auto;
+            min-width: 900px;
+        }
+        .pe-organize-manage-all-wrap .pe-classify-wrap{
+            width: 100%;
+        }
+        .pe-organize-manage-all-wrap .pe-tree-container, .pe-organize-manage-all-wrap .pe-tree-content-wrap, .pe-organize-manage-all-wrap .pe-tree-main-wrap{
+            width: auto !important;
+        }
+        .pe-break-nav-tip-container{
+            width: auto;
+        }
+        .exam-manage-all-wrap .pe-manage-content-right{
+            width: auto;
+        }
+    </style>
 </head>
 <body class="pe-container">
 <#--公用头部-->
