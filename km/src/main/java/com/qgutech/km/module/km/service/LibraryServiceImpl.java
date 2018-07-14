@@ -48,7 +48,16 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
                 new Order[]{Order.asc(Library.CREATE_TIME)}
                 );
         if(CollectionUtils.isEmpty(libraries)){
-          return null;
+          Library newLibrary = new Library();
+          newLibrary.setParentId("0");
+          newLibrary.setIdPath("");
+          newLibrary.setLibraryType(libraryType);
+          newLibrary.setLibraryName(KnowledgeConstant.MY_LIBRARY.equals(libraryType)?"我的云库":"我的回收站");
+          newLibrary.setShowOrder(1);
+          save(newLibrary);
+          newLibrary.setIdPath(newLibrary.getId());
+          update(newLibrary);
+          return newLibrary;
         }
         return libraries.get(0);
     }

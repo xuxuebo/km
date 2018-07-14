@@ -232,14 +232,14 @@ public class KnowledgeController {
         }
         //批量文件的路径
         List<String> fileUrls = new ArrayList<>(fileIds.size());
-        if(fileIds.size()<=1){
+        /*if(fileIds.size()<=1){
             String fileUrl = FsFileManagerUtil.getFileUrl(PropertiesUtils.getConfigProp().getProperty("fs.server.host"),fileIds.get(0), UUID.randomUUID().toString());
             fileUrls.add(fileUrl);
         }else{
             String fileUrl = FsFileManagerUtil.getCompressFileUrl(PropertiesUtils.getConfigProp().getProperty("fs.server.host"),fileIds, UUID.randomUUID().toString());
             fileUrl.replace("getFile","downloadFile");
             fileUrls.add(fileUrl);
-        }
+        }*/
         jsonResult.setData(fileUrls);
         jsonResult.setSuccess(true);
         return jsonResult;
@@ -252,7 +252,7 @@ public class KnowledgeController {
      * 云库表  云库和文件关系表  文件表
      */
     @ResponseBody
-    @RequestMapping("manage/search")
+    @RequestMapping("search")
     public List<Knowledge> search(String libraryId){
         List<Knowledge> knowledgeList = knowledgeService.getKnowledgeByCreateBy(KnowledgeConstant.MY_LIBRARY,libraryId);
         if(CollectionUtils.isEmpty(knowledgeList)){
@@ -307,7 +307,7 @@ public class KnowledgeController {
      * 云库表  云库和文件关系表  文件表
      */
     @ResponseBody
-    @RequestMapping("manage/searchRecycle")
+    @RequestMapping("searchRecycle")
     public List<Knowledge> searchRecycle(){
         List<Knowledge> list = knowledgeService.getKnowledgeByCreateBy(KnowledgeConstant.RECYCLE_LIBRARY,null);
         if(CollectionUtils.isEmpty(list)){

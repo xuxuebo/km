@@ -554,28 +554,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
         });
 
-        //保存用户之后需要初始化用户的个人云库和个人回收站
-        Library myYun = new Library();
-        Library recycle = new Library();
-        myYun.setLibraryName("我的云库");
-        myYun.setLibraryType(KnowledgeConstant.MY_LIBRARY);
-        myYun.setShowOrder(1);
-        myYun.setIdPath("0");
-        myYun.setParentId("0");
-        myYun.setCreateBy(user.getId());
-        myYun.setUpdateBy(user.getId());
-        recycle.setLibraryName("回收站");
-        recycle.setLibraryType(KnowledgeConstant.RECYCLE_LIBRARY);
-        recycle.setShowOrder(1);
-        recycle.setIdPath("0");
-        recycle.setParentId("0");
-        recycle.setCreateBy(user.getId());
-        recycle.setUpdateBy(user.getId());
-        libraryService.save(myYun);
-        libraryService.save(recycle);
-        libraryService.update(myYun.getId(),Library.ID_PATH,myYun.getId());
-        libraryService.update(recycle.getId(),Library.ID_PATH,recycle.getId());
-
         if (StringUtils.isBlank(user.getPositionId())) {
             return user.getId();
         }

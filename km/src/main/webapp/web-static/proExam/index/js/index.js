@@ -108,7 +108,7 @@ $(function(){
         $.ajax({
             async: false,//此值要设置为FALSE  默认为TRUE 异步调用
             type: "POST",
-            url: pageContext.resourcePath + '/knowledge/manage/search',
+            url: pageContext.resourcePath + '/knowledge/search',
             data:{'libraryId':id},
             dataType: 'json',
             success: function (result) {
@@ -415,7 +415,7 @@ $(function(){
                 btn1: function () {
                     var libraryId = $('input[name="shareLibraryId"]').val();
                     PEBASE.ajaxRequest({
-                        url: pageContext.rootPath + '/km/km/shareToPublic',
+                        url: pageContext.rootPath + '/km/knowledge/shareToPublic',
                         data: {'knowledgeId': knowledgeIds, 'shareLibraryId': libraryId},
                         success: function (data) {
                             if (data.success) {
@@ -712,7 +712,7 @@ $(function(){
         $.ajax({
             async: false,//此值要设置为FALSE  默认为TRUE 异步调用
             type: "POST",
-            url: pageContext.resourcePath + '/knowledge/manage/searchRecycle',
+            url: pageContext.resourcePath + '/knowledge/searchRecycle',
             dataType: 'json',
             success: function (result) {
                 data = result;
