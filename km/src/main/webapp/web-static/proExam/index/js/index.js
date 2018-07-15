@@ -987,9 +987,10 @@ $(function () {
 function downloadFile(path, params) {
     var downUrl = $('#downloadServerUrl').val();
     var a = document.createElement('a');
+    var corpCode = $('#corpCode').val();
     a.download = '';
     a.style.display = 'none';
-    a.href = downUrl + '/file/downLoadFiles?fileIds=' + path + '&fileName=' + params + '&corpCode=lbox';
+    a.href = downUrl + '/file/downLoadFiles?fileIds=' + path + '&fileName=' + params + '&corpCode='+corpCode;
     // 触发点击
     document.body.appendChild(a);
     a.click();

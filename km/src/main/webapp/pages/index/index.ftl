@@ -35,6 +35,7 @@
 </head>
 <body class="y-body">
 <input id="downloadServerUrl" value="${downloadServerUrl}" type="hidden">
+<input id="corpCode" value="${corpCode}" type="hidden">
 <input id="fsServerHost" value="${fsServerHost}" type="hidden">
 <input type="hidden" value="${myLibrary!}" id="myLibrary"/>
 <header class="y-head">
