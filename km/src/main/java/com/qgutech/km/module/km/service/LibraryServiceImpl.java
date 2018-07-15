@@ -111,16 +111,20 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
      */
     @Override
     @Transactional(readOnly = false)
-    public String addFolder(String libraryName) {
-        Library myLibrary = getUserLibraryByLibraryType(KnowledgeConstant.MY_LIBRARY);
+    public String addFolder(String libraryName,String libraryId) {
+        if(StringUtils.isEmpty(libraryId)){
+            Library myLibrary = getUserLibraryByLibraryType(KnowledgeConstant.MY_LIBRARY);
+            libraryId = myLibrary.getId();
+        }
+        Library oldLibrary = get(libraryId);
         Library library = new Library();
         library.setLibraryName(libraryName);
-        library.setParentId(myLibrary.getId());
+        library.setParentId(oldLibrary.getId());
         library.setLibraryType(KnowledgeConstant.MY_LIBRARY);
         library.setIdPath("");
-        library.setShowOrder(getMaxShowOrderByParentId(myLibrary.getId())+1);
+        library.setShowOrder(getMaxShowOrderByParentId(oldLibrary.getId())+1);
         String id = save(library);
-        update(id,Library.ID_PATH,myLibrary.getIdPath()+"."+id);
+        update(id,Library.ID_PATH,oldLibrary.getIdPath()+"."+id);
 
         Knowledge knowledge = new Knowledge();
         knowledge.setKnowledgeName(libraryName);
@@ -133,7 +137,7 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
         String  knowledgeId =knowledgeService.save(knowledge);
 
         KnowledgeRel k = new KnowledgeRel();
-        k.setLibraryId(myLibrary.getId());
+        k.setLibraryId(oldLibrary.getId());
         k.setKnowledgeId(knowledgeId);
         k.setShareId("");
         knowledgeRelService.save(k);

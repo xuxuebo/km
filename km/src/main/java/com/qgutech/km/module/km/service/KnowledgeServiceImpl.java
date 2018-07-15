@@ -280,7 +280,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
     @Override
     @Transactional(readOnly = true)
     public List<Knowledge> recursionList(List<String> knowledgeIds) {
-        List<Knowledge> list  = getKnowledgeByKnowledgeIds(knowledgeIds);
+        List<Knowledge> list  = getKnowledgeByIds(knowledgeIds);
         List<Knowledge> all = new ArrayList<>();
         all = getAllKnowledge(all,list);
         return all;

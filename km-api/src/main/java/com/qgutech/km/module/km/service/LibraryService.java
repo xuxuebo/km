@@ -28,7 +28,7 @@ public interface LibraryService extends BaseService<Library> {
 
     List<PeTreeNode> listTree();
 
-    String addFolder(String libraryName);
+    String addFolder(String libraryName,String libraryId);
 
     Page<Library> search(PageParam pageParam,Library library);
 

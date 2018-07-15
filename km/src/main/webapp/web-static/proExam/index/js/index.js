@@ -314,6 +314,7 @@ $(function(){
                 btn: ['确定','取消'],
                 btn1: function () {
                     var libraryName = $('input[name="libraryName"]').val();
+                    var libraryId = $('#myLibrary').val();
                     //校验文件夹名称
                     if(libraryName==null||libraryName==''||libraryName==undefined){
                         return false;
@@ -321,7 +322,7 @@ $(function(){
                     PEBASE.ajaxRequest({
                         url: pageContext.rootPath + '/km/library/addFolder',
                         data: {
-                            "libraryName": libraryName
+                            "libraryName": libraryName,"libraryId":libraryId
                         },
                         success: function (data) {
 
@@ -334,7 +335,8 @@ $(function(){
                                 });
                                 layer.closeAll();
                                 //刷新列表
-                                route['YunCb']($yunContentBody, route.routes.yun, null,null);
+                                var libraryId = $('#myLibrary').val();
+                                route['YunCb']($yunContentBody, route.routes.yun, null,libraryId);
                             }else{
                                 PEMO.DIALOG.alert({
                                     content: data.message,
@@ -461,8 +463,18 @@ $(function(){
         $('.js-opt-dbclick').dblclick(function () {
             var  folder = $(this).data('folder');
             var  fileId = $(this).data('fileid');
-            console.log(fileId);
             if(fileId==null||fileId==''){//没有文件id
+                console.log(folder);
+                PEBASE.ajaxRequest({
+                    url: pageContext.rootPath + '/km/knowledge/folder',
+                    data: {'folder': folder},
+                    success: function (data) {
+                        if (data.success) {
+
+                        }
+                    }
+                });
+                $('#myLibrary').val(folder);
                 route['YunCb']($yunContentBody, route.routes.yun, null,folder);
             }else{
                 return false;
@@ -625,8 +637,7 @@ $(function(){
         $('.js-opt-download').on('click', function () {
 
             var knIds = $(this).data("id");
-
-            var shareIds = knIds = $(this).data("id");
+            var shareIds = $(this).data("shareid");
             PEBASE.ajaxRequest({
                 url: pageContext.rootPath + '/km/knowledge/updateDownCount',
                 async: false,

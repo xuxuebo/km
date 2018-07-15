@@ -81,6 +81,7 @@
 <div id="uploader" class="wu-example">
     <form action="javascript:void(0);" name="kmAddForm" class="km-add-form clear">
         <input type="hidden" name="showOrder" value="0">
+        <input type="hidden" name="libraryId" id="floderId" value="">
         <div class="floatL" style="margin-bottom: 36px; margin-top: -15px;">
             <div>
                 <span class="pe-label-name floatL">文件：</span>
@@ -110,6 +111,7 @@
 </div>
 <script type="text/javascript">
     window.onload = function () {
+        $('#floderId').val(parent.document.getElementById("myLibrary").value);
         var chunkSize = 5000 * 1024;        //分块大小
         var uploadFileUrl = '${downloadServerUrl!}/file/uploadFile';
         var uploader = window.uploadFile({
@@ -226,7 +228,8 @@
                         });
                         window.parent.layer.closeAll()
                         //刷新列表
-                        window.parent.location.reload();
+                        //var folderId = $('#floderId').val();
+                        //route['YunCb']($parent.document.getElementById("yunLContentBody"), route.routes.yun, null,folderId);
                     }
                 });
             });

@@ -62,14 +62,14 @@ public class LibraryController {
      */
     @ResponseBody
     @RequestMapping("addFolder")
-    public JsonResult addFolder(String libraryName){
+    public JsonResult addFolder(String libraryName,String libraryId){
         JsonResult jsonResult = new JsonResult();
         if(StringUtils.isEmpty(libraryName)){
             jsonResult.setMessage("请输入文件夹名");
             jsonResult.setSuccess(false);
             return jsonResult;
         }
-        libraryService.addFolder(libraryName);
+        libraryService.addFolder(libraryName,libraryId);
         return jsonResult;
     }
 

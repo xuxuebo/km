@@ -101,8 +101,12 @@ public class KnowledgeController {
                 String knowledgeId = knowledgeService.save(knowledge);
                 KnowledgeRel knowledgeRel = new KnowledgeRel();
                 knowledgeRel.setKnowledgeId(knowledgeId);
-                Library myLibrary = libraryService.getUserLibraryByLibraryType("MY_LIBRARY");
-                knowledgeRel.setLibraryId(myLibrary.getId());
+                String libraryId = knowledge.getLibraryId();
+                if(StringUtils.isEmpty(knowledge.getLibraryId())){
+                    Library myLibrary = libraryService.getUserLibraryByLibraryType("MY_LIBRARY");
+                    libraryId = myLibrary.getId();
+                }
+                knowledgeRel.setLibraryId(libraryId);
                 knowledgeRel.setShareId("");
                 knowledgeRelService.save(knowledgeRel);
 
@@ -262,8 +266,18 @@ public class KnowledgeController {
 
         for(Knowledge knowledge : knowledgeList){
             knowledge.setCreateTimeStr(PeDateUtils.format(knowledge.getCreateTime(),PeDateUtils.FORMAT_YYYY_MM_DD_HH_MM));
+            knowledge.setKnowledgeSize(totalSize(knowledge.getId()));
         }
         return knowledgeList;
+    }
+
+    private long totalSize(String id){
+        List<Knowledge> knowledgeList = knowledgeService.recursionList(Arrays.asList(id));
+        long totalSize = 0;
+        for(Knowledge k : knowledgeList){
+            totalSize = totalSize + k.getKnowledgeSize();
+        }
+        return totalSize;
     }
 
     @ResponseBody
@@ -582,6 +596,16 @@ public class KnowledgeController {
             jsonResult.setSuccess(false);
             return jsonResult;
         }
+        return jsonResult;
+    }
+    @RequestMapping("folder")
+    @ResponseBody
+    public JsonResult folder(String folder,Model model){
+        JsonResult jsonResult = new JsonResult();
+        if(StringUtils.isEmpty(folder)){
+            folder = libraryService.getUserLibraryByLibraryType(KnowledgeConstant.MY_LIBRARY).getId();
+        }
+        model.addAttribute("folder",folder);
         return jsonResult;
     }
 }

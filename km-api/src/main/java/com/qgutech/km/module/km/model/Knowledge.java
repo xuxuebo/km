@@ -90,6 +90,8 @@ public class Knowledge extends BaseModel {
     private String shareId;
     @Transient
     private String tag;
+    @Transient
+    private String libraryId;
 
     public String getKnowledgeName() {
         return knowledgeName;
@@ -214,5 +216,13 @@ public class Knowledge extends BaseModel {
 
     public void setTag(String tag) {
         this.tag = tag;
+    }
+
+    public String getLibraryId() {
+        return libraryId;
+    }
+
+    public void setLibraryId(String libraryId) {
+        this.libraryId = libraryId;
     }
 }

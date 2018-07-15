@@ -663,15 +663,15 @@ body, html {
 }
 
 .y-table__filed_name.type-pptx {
-    background-image: url(../img/ico_ppt.png);
-    background-image: image-set(url('../img/ico_ppt.png') 1x, url('../img/ico_ppt@2x.png') 2x);
-    background-image: -webkit-image-set(url('../img/ico_ppt.png') 1x, url('../img/ico_ppt@2x.png') 2x)
+    background-image: url(../img/ico_pptx.png);
+    background-image: image-set(url('../img/ico_pptx.png') 1x, url('../img/ico_pptx@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_pptx.png') 1x, url('../img/ico_pptx@2x.png') 2x)
 }
 
 .y-table__filed_name.type-ppt {
-    background-image: url(../img/ico_ppt.png);
-    background-image: image-set(url('../img/ico_ppt.png') 1x, url('../img/ico_ppt@2x.png') 2x);
-    background-image: -webkit-image-set(url('../img/ico_ppt.png') 1x, url('../img/ico_ppt@2x.png') 2x)
+    background-image: url(../img/ico_pptx.png);
+    background-image: image-set(url('../img/ico_pptx.png') 1x, url('../img/ico_pptx@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_pptx.png') 1x, url('../img/ico_pptx@2x.png') 2x)
 }
 
 
@@ -738,6 +738,17 @@ body, html {
     background-image: url(../img/txt.png);
     background-image: image-set(url('../img/txt.png') 1x, url('../img/txt@2x.png') 2x);
     background-image: -webkit-image-set(url('../img/txt.png') 1x, url('../img/txt@2x.png') 2x)
+}
+.y-table__filed_name.type-pdf {
+    background-image: url(../img/ico_pdf.png);
+    background-image: image-set(url('../img/ico_pdf.png') 1x, url('../img/icon_pdf@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_pdf.png') 1x, url('../img/icon_pdf@2x.png') 2x)
+}
+
+.y-table__filed_name.type-PDF {
+    background-image: url(../img/ico_pdf.png);
+    background-image: image-set(url('../img/ico_pdf.png') 1x, url('../img/icon_pdf@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_pdf.png') 1x, url('../img/icon_pdf@2x.png') 2x)
 }
 
 .y-table__opt__bar {

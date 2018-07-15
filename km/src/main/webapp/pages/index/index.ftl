@@ -36,6 +36,7 @@
 <body class="y-body">
 <input id="downloadServerUrl" value="${downloadServerUrl}" type="hidden">
 <input id="fsServerHost" value="${fsServerHost}" type="hidden">
+<input type="hidden" value="${myLibrary!}" id="myLibrary"/>
 <header class="y-head">
     <div class="y-logo__wrap">
         <a href="${ctx!}/km/front/index" class="y-logo"></a>
@@ -113,6 +114,7 @@
     </aside>
     <section class="y-content">
         <div class="y-content-body" id="yunLContentBody">
+
         </div>
     <#--<footer class="y-footer">-->
     <#--国家电网江苏省电力公司 ©苏ICP备15007035号-1-->
@@ -208,7 +210,7 @@
             </td>
             <td class="y-table__td name">
                 <div class="y-table__opt__bar">
-                    <button type="button" title="点击下载" data-id="<%=item.id%>" class="yfont-icon opt-item js-opt-download">&#xe64f;</button>
+                    <button type="button" title="点击下载" data-shareid="<%=item.shareId%>" data-id="<%=item.id%>" class="yfont-icon opt-item js-opt-download">&#xe64f;</button>
                 </div>
                 <div class="y-table__filed_name type-<%=item.knowledgeType%>">
                     <%=item.knowledgeName%>

@@ -1,6 +1,7 @@
 package com.qgutech.km.module.ems.controller;
 
 import com.qgutech.km.base.service.CorpService;
+import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.module.km.service.LibraryService;
 import com.qgutech.km.module.sfm.service.FileServerService;
 import com.qgutech.km.module.uc.model.SessionContext;
@@ -46,6 +47,7 @@ public class FrontController {
         model.addAttribute("firstLevelLibrary",libraryService.getFirstLevelLibrary());
         model.addAttribute("downloadServerUrl", PropertiesUtils.getConfigProp().getProperty("download.server.url"));
         model.addAttribute("fsServerHost", PropertiesUtils.getConfigProp().getProperty("fs.server.host"));
+        model.addAttribute("myLibrary",libraryService.getUserLibraryByLibraryType(KnowledgeConstant.MY_LIBRARY).getId());
         return "index/index";
     }
 
