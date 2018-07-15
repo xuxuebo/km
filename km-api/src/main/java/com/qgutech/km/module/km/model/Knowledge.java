@@ -20,6 +20,8 @@ public class Knowledge extends BaseModel {
 
     public static String SHOW_ORDER = "showOrder";
 
+    public static String FOLDER = "folder";
+
     /**
      * 文件名称
      */

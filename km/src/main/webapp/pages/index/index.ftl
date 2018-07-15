@@ -367,6 +367,10 @@
         <div id="theList"></div>
     </div>
     <#--表格包裹的div-->
+    <ul class="y-bread-crumbs" id="breadCrumbs">
+        <li>全部</li>
+    </ul>
+
     <div class="pe-stand-table-main-panel">
         <div class="y-content__table" id="yunTable">
             <div class="pe-stand-table-pagination"></div>
@@ -472,6 +476,21 @@
     </div>
 
 </script >
+
+<#--面包屑-->
+<script  type="text/template" id="breadCrumbsTpl">
+    <%_.each(list,function(item,i){%>
+        <%if(list.length ==1){%>
+        <li><span><%=item.title%></span></li>
+        <%}else if(i==0){%>
+        <li><a href="javascript:void(0);" data-id="<%=item.id%>"><%=item.title%></a></li>
+        <%}else if(i===list.length-1){%>
+        <li><span class="split">&gt;</span><span><%=item.title%></span></li>
+        <%}else{%>
+        <li><span class="split">&gt;</span><a href="javascript:void(0);" data-id="<%=item.id%>"><%=item.title%></a></li>
+        <%}%>
+    <%})%>
+</script>
 
 
 <script src="${resourcePath!}/web-static/proExam/index/js/index.js"></script>

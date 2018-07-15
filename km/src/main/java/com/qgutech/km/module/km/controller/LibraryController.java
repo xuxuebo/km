@@ -120,4 +120,18 @@ public class LibraryController {
         return jsonResult;
     }
 
+    @ResponseBody
+    @RequestMapping("libraryName")
+    public JsonResult libraryName(String id){
+        Library library ;
+        if(StringUtils.isEmpty(id)){
+            library = libraryService.getUserLibraryByLibraryType(KnowledgeConstant.MY_LIBRARY);
+        }else{
+            library = libraryService.get(id);
+        }
+        JsonResult jsonResult = new JsonResult();
+        jsonResult.setData(library.getLibraryName());
+        return jsonResult;
+    }
+
 }

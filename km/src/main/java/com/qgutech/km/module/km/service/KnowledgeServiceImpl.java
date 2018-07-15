@@ -94,7 +94,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
                 Restrictions.in(Knowledge.ID,knowledgeIds)
                 );
         knowledgeList = listByCriterion((criterion),
-                new Order[]{Order.desc(Knowledge.CREATE_TIME),Order.asc(Knowledge.FILE_ID)});
+                new Order[]{Order.asc(Knowledge.FOLDER),Order.desc(Knowledge.CREATE_TIME)});
         if(KnowledgeConstant.RECYCLE_LIBRARY.equals(libraryType)){
             for(Knowledge k : knowledgeList){
                 k.setCreateTime(dateMap.get(k.getId()));

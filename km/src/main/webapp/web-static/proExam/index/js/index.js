@@ -1,9 +1,12 @@
-$(function(){
+$(function () {
     var $yunContentBody = $('#yunLContentBody');
     var $yAside = $('#YAside');
     //路由
     var publicId = "";
     var publicName = "";
+    var breadCrumbsList = [{title: '全部', id: $("#myLibrary").val()}];
+    var _breadCrumbsTpl = $("#breadCrumbsTpl").html();
+
     var route = {
         routes: {
             'yun': {
@@ -27,16 +30,19 @@ $(function(){
                 cb: "shareCb"
             }
         },
-        YunCb: function (container, routeInfo, cb,id) {
-            initYunPage(container, routeInfo,cb,id);
+        YunCb: function (container, routeInfo, cb, id) {
+            initYunPage(container, routeInfo, cb, id);
         },
         publicCb: function (container, routeInfo, cb) {
+            breadCrumbsList.length =1;
             initPublicPage(container, routeInfo);
         },
         recycleCb: function (container, routeInfo, cb) {
+            breadCrumbsList.length =1;
             initRecyclePage(container, routeInfo);
         },
         shareCb: function (container, routeInfo, cb) {
+            breadCrumbsList.length =1;
             initSharePage(container, routeInfo);
         }
     };
@@ -53,7 +59,7 @@ $(function(){
         if (hashArr.length > 1) {
             var subNav = hashArr[1];
             publicId = subNav;
-            var subName =$yAside.find('a[data-id="' + subNav + '"]').children('span').data("name");
+            var subName = $yAside.find('a[data-id="' + subNav + '"]').children('span').data("name");
             publicName = subName;
             //元素同胞
             $yAside.find('a[data-id="' + subNav + '"]').parent().addClass('active').siblings().removeClass('active');
@@ -98,7 +104,7 @@ $(function(){
 
 
     //初始化我的云库页面
-    function initYunPage(container, routeInfo,cb,id) {
+    function initYunPage(container, routeInfo, cb, id) {
         var _tpl = $(routeInfo.templateId).html();
         container.html(_.template(_tpl)({title: '我的云库'}));
         //table渲染
@@ -109,13 +115,13 @@ $(function(){
             async: false,//此值要设置为FALSE  默认为TRUE 异步调用
             type: "POST",
             url: pageContext.resourcePath + '/knowledge/search',
-            data:{'libraryId':id},
+            data: {'libraryId': id},
             dataType: 'json',
             success: function (result) {
                 data = result;
             }
         });
-        for(var  i=0;i<data.length;i++){
+        for (var i = 0; i < data.length; i++) {
             data[i].knowledgeSize = conver(data[i].knowledgeSize);
         }
         var table, initSort = {
@@ -134,6 +140,20 @@ $(function(){
             });
         }
 
+        //渲染面包屑
+        var $breadCrumbs = $('#breadCrumbs');
+        $breadCrumbs.html(_.template(_breadCrumbsTpl)({list: breadCrumbsList}));
+        $breadCrumbs.on("click", "a", function () {
+            var $this = $(this);
+            var id = $this.attr("data-id");
+            var index = $this.parent().index();
+            if (!id) {
+                return;
+            }
+            breadCrumbsList.length = index + 1;
+            route['YunCb']($yunContentBody, route.routes.yun, null, id);
+        });
+
         $('.js-upload').on('click', function () {
             PEMO.DIALOG.selectorDialog({
                 content: pageContext.rootPath + '/km/knowledge/openUpload',
@@ -144,10 +164,10 @@ $(function(){
                 btn2: function () {
                     layer.closeAll();
                 },
-                success: function (d,index) {
+                success: function (d, index) {
                     var iframeBody = layer.getChildFrame('body', index);
                     var hasPicSrc = $('.pe-user-head-edit-btn').find('img').attr('src');
-                    if(hasPicSrc){
+                    if (hasPicSrc) {
                         $(iframeBody).find('.jcrop-preview').prop("src", hasPicSrc);
                     }
                 }
@@ -163,11 +183,11 @@ $(function(){
             $.ajax({
                 async: false,//此值要设置为FALSE  默认为TRUE 异步调用
                 type: "POST",
-                url: pageContext.resourcePath + '/knowledge/fullTextSearch?keyword='+_keyword,
+                url: pageContext.resourcePath + '/knowledge/fullTextSearch?keyword=' + _keyword,
                 dataType: 'json',
                 success: function (result) {
                     data = result;
-                    for(var  i=0;i<data.length;i++){
+                    for (var i = 0; i < data.length; i++) {
                         data[i].knowledgeSize = conver(data[i].knowledgeSize);
                     }
                 }
@@ -185,19 +205,19 @@ $(function(){
                 layer.msg("请先选择操作项");
                 return;
             }
-            var knowledgeIds ="";
-            for(var i = 0;i<selectList.length;i++){
-                knowledgeIds += selectList[i] +",";
+            var knowledgeIds = "";
+            for (var i = 0; i < selectList.length; i++) {
+                knowledgeIds += selectList[i] + ",";
             }
-            knowledgeIds = knowledgeIds.substring(0,knowledgeIds.length-1);
+            knowledgeIds = knowledgeIds.substring(0, knowledgeIds.length - 1);
             //分享弹框
             PEMO.DIALOG.confirmL({
                 content: _.template($('#shareToPublic').html())({}),
-                area: ['468px','520px'],
+                area: ['468px', '520px'],
                 title: '选择公共库',
                 btn: ['确定', '取消'],
                 skin: 'pe-layer-confirm pe-layer-has-tree organize-change-layer',
-                resize:false,
+                resize: false,
                 btnAlign: 'c',
                 btn1: function () {
                     var libraryId = $('input[name="shareLibraryId"]').val();
@@ -231,13 +251,13 @@ $(function(){
                 success: function () {
                     //初始化树
                     var settingInputTree = {
-                        isOpen:true,
+                        isOpen: true,
                         dataUrl: pageContext.rootPath + '/km/library/listTree',
                         clickNode: function (treeNode) {
                             $('input[name="shareLibraryId"]').val(treeNode.id);
                             //$('.show-org-name').val(treeNode.name);
                         },
-                        treePosition:'inputDropDown'
+                        treePosition: 'inputDropDown'
                     };
                     PEMO.ZTREE.initTree('editOrgTree', settingInputTree);
                     var treeObj = $.fn.zTree.getZTreeObj("editOrgTree");
@@ -253,20 +273,20 @@ $(function(){
                 return;
             }
             var knIds = "";
-            for(var i = 0 ;i<selectList.length;i++){
-                knIds += selectList[i]+",";
+            for (var i = 0; i < selectList.length; i++) {
+                knIds += selectList[i] + ",";
             }
-            knIds = knIds.substring(0,knIds.length-1);
+            knIds = knIds.substring(0, knIds.length - 1);
 
             var fileIds = [];
             PEBASE.ajaxRequest({
                 url: pageContext.rootPath + '/km/knowledge/downloadKnowledge2',
                 async: false,
-                data: {'knowledgeIds':knIds},
+                data: {'knowledgeIds': knIds},
                 success: function (data) {
                     if (data.success) {
-                        downloadFile(data.data.fileUrl,data.data.name);
-                    }else{
+                        downloadFile(data.data.fileUrl, data.data.name);
+                    } else {
                         PEMO.DIALOG.alert({
                             content: data.message,
                             btn: ['我知道了'],
@@ -280,16 +300,16 @@ $(function(){
             });
         });
         $('.pe-stand-table-main-panel').delegate('.js-opt-download', 'click', function () {
-            var knIds =  $(this).data('id');
+            var knIds = $(this).data('id');
             var fileIds = [];
             PEBASE.ajaxRequest({
                 url: pageContext.rootPath + '/km/knowledge/downloadKnowledge2',
                 async: false,
-                data: {'knowledgeIds':knIds},
+                data: {'knowledgeIds': knIds},
                 success: function (data) {
                     if (data.success) {
-                        downloadFile(data.data.fileUrl,data.data.name);
-                    }else{
+                        downloadFile(data.data.fileUrl, data.data.name);
+                    } else {
                         PEMO.DIALOG.alert({
                             content: data.message,
                             btn: ['我知道了'],
@@ -308,21 +328,21 @@ $(function(){
             PEMO.DIALOG.confirmL({
                 content: _.template($('#addNewFolder').html())(),
                 title: '新增文件夹',
-                btnAlign:'l',
-                area:['475px'],
+                btnAlign: 'l',
+                area: ['475px'],
                 skin: 'pe-layer-confirm pe-knowledge-manage-layer',
-                btn: ['确定','取消'],
+                btn: ['确定', '取消'],
                 btn1: function () {
                     var libraryName = $('input[name="libraryName"]').val();
                     var libraryId = $('#myLibrary').val();
                     //校验文件夹名称
-                    if(libraryName==null||libraryName==''||libraryName==undefined){
+                    if (libraryName == null || libraryName == '' || libraryName == undefined) {
                         return false;
                     }
                     PEBASE.ajaxRequest({
                         url: pageContext.rootPath + '/km/library/addFolder',
                         data: {
-                            "libraryName": libraryName,"libraryId":libraryId
+                            "libraryName": libraryName, "libraryId": libraryId
                         },
                         success: function (data) {
 
@@ -336,8 +356,8 @@ $(function(){
                                 layer.closeAll();
                                 //刷新列表
                                 var libraryId = $('#myLibrary').val();
-                                route['YunCb']($yunContentBody, route.routes.yun, null,libraryId);
-                            }else{
+                                route['YunCb']($yunContentBody, route.routes.yun, null, libraryId);
+                            } else {
                                 PEMO.DIALOG.alert({
                                     content: data.message,
                                     btn: ['我知道了'],
@@ -350,7 +370,7 @@ $(function(){
                         }
                     });
                 },
-                btn2:function(){
+                btn2: function () {
                     layer.closeAll();
                 },
             });
@@ -359,11 +379,11 @@ $(function(){
         //删除
         $('.pe-stand-table-main-panel').delegate('.js-opt-delete', 'click', function () {
             var knowledgeIds = $(this).data("id");
-            if(knowledgeIds==null||knowledgeIds==undefined||knowledgeIds==''){
+            if (knowledgeIds == null || knowledgeIds == undefined || knowledgeIds == '') {
                 return false;
             }
             PEMO.DIALOG.confirmL({
-                content:'<div><h3 class="pe-dialog-content-head">确定删除？</h3><p class="pe-dialog-content-tip">删除后，可在我的回收站找回。 </p></div>',
+                content: '<div><h3 class="pe-dialog-content-head">确定删除？</h3><p class="pe-dialog-content-tip">删除后，可在我的回收站找回。 </p></div>',
                 btn1: function () {
 
                     PEBASE.ajaxRequest({
@@ -379,8 +399,8 @@ $(function(){
                                 });
                                 layer.closeAll();
                                 //刷新列表
-                                route['YunCb']($yunContentBody, route.routes.yun, null,null);
-                            }else{
+                                route['YunCb']($yunContentBody, route.routes.yun, null, null);
+                            } else {
                                 PEMO.DIALOG.alert({
                                     content: data.message,
                                     btn: ['我知道了'],
@@ -393,7 +413,7 @@ $(function(){
                         }
                     });
                 },
-                btn2:function(){
+                btn2: function () {
                     layer.closeAll();
                 },
             });
@@ -401,18 +421,18 @@ $(function(){
 
         $('.pe-stand-table-main-panel').delegate('.js-opt-share', 'click', function () {
 
-            var knowledgeIds =$(this).data("id");
-            if(knowledgeIds==null||knowledgeIds==undefined||knowledgeIds==''){
-                    return false;
+            var knowledgeIds = $(this).data("id");
+            if (knowledgeIds == null || knowledgeIds == undefined || knowledgeIds == '') {
+                return false;
             }
             //分享弹框
             PEMO.DIALOG.confirmL({
                 content: _.template($('#shareToPublic').html())({}),
-                area: ['468px','520px'],
+                area: ['468px', '520px'],
                 title: '选择公共库',
                 btn: ['确定', '取消'],
                 skin: 'pe-layer-confirm pe-layer-has-tree organize-change-layer',
-                resize:false,
+                resize: false,
                 btnAlign: 'c',
                 btn1: function () {
                     var libraryId = $('input[name="shareLibraryId"]').val();
@@ -446,13 +466,13 @@ $(function(){
                 success: function () {
                     //初始化树
                     var settingInputTree = {
-                        isOpen:true,
+                        isOpen: true,
                         dataUrl: pageContext.rootPath + '/km/library/listTree',
                         clickNode: function (treeNode) {
                             $('input[name="shareLibraryId"]').val(treeNode.id);
                             //$('.show-org-name').val(treeNode.name);
                         },
-                        treePosition:'inputDropDown'
+                        treePosition: 'inputDropDown'
                     };
                     PEMO.ZTREE.initTree('editOrgTree', settingInputTree);
                     var treeObj = $.fn.zTree.getZTreeObj("editOrgTree");
@@ -461,22 +481,24 @@ $(function(){
             });
         });
         $('.js-opt-dbclick').dblclick(function () {
-            var  folder = $(this).data('folder');
-            var  fileId = $(this).data('fileid');
-            if(fileId==null||fileId==''){//没有文件id
-                console.log(folder);
-                PEBASE.ajaxRequest({
-                    url: pageContext.rootPath + '/km/knowledge/folder',
-                    data: {'folder': folder},
-                    success: function (data) {
-                        if (data.success) {
-
-                        }
+            var folder = $(this).data('folder');
+            var fileId = $(this).data('fileid');
+            if (fileId == null || fileId == '') {//没有文件id
+                var title = "";
+                $.ajax({
+                    async: false,//此值要设置为FALSE  默认为TRUE 异步调用
+                    type: "POST",
+                    data: {'id': folder},
+                    url: pageContext.rootPath + '/km/library/libraryName',
+                    dataType: 'json',
+                    success: function (result) {
+                        title = result.data;
                     }
                 });
+                breadCrumbsList.push({id: folder, title: title});
                 $('#myLibrary').val(folder);
-                route['YunCb']($yunContentBody, route.routes.yun, null,folder);
-            }else{
+                route['YunCb']($yunContentBody, route.routes.yun, null, folder);
+            } else {
                 return false;
             }
 
@@ -489,7 +511,7 @@ $(function(){
         var libraryId = publicId;
         var libraryName = publicName;
         var _tpl = $(routeInfo.templateId).html();
-        container.html(_.template(_tpl)({title: '公共库>'+libraryName}));
+        container.html(_.template(_tpl)({title: '公共库>' + libraryName}));
         //table渲染
         var _table = $("#tplPublicTable").html();
         var $yunTable = $('#publicTable');
@@ -498,13 +520,13 @@ $(function(){
             async: false,
             type: "POST",
             url: pageContext.resourcePath + '/knowledge/publicByLibraryId',//公共库的查询列表
-            data:{"libraryId":libraryId},
+            data: {"libraryId": libraryId},
             dataType: 'json',
             success: function (result) {
                 data = result;
             }
         });
-        for(var  i=0;i<data.length;i++){
+        for (var i = 0; i < data.length; i++) {
             data[i].knowledgeSize = conver(data[i].knowledgeSize);
         }
         var table, initSort = {
@@ -530,26 +552,26 @@ $(function(){
                 return;
             }
             var knIds = "";
-            for(var i = 0 ;i<selectList.length;i++){
-                knIds += selectList[i]+",";
+            for (var i = 0; i < selectList.length; i++) {
+                knIds += selectList[i] + ",";
             }
-            knIds = knIds.substring(0,knIds.length-1);
+            knIds = knIds.substring(0, knIds.length - 1);
 
             var shareIdArr = table.getPubLicShareId();
             var shareIds = "";
-            for(var i = 0 ;i<shareIdArr.length;i++){
-                shareIds += shareIdArr[i]+",";
+            for (var i = 0; i < shareIdArr.length; i++) {
+                shareIds += shareIdArr[i] + ",";
             }
-            shareIds = shareIds.substring(0,shareIds.length-1);
+            shareIds = shareIds.substring(0, shareIds.length - 1);
 
             PEBASE.ajaxRequest({
                 url: pageContext.rootPath + '/km/knowledge/updateDownCount',
                 async: false,
-                data: {'shareIds':shareIds},
+                data: {'shareIds': shareIds},
                 success: function (data) {
                     if (data.success) {
                         console.log("修改成功");
-                    }else{
+                    } else {
                         console.log("修改失败");
                     }
 
@@ -559,11 +581,11 @@ $(function(){
             PEBASE.ajaxRequest({
                 url: pageContext.rootPath + '/km/knowledge/downloadKnowledge2',
                 async: false,
-                data: {'knowledgeIds':knIds},
+                data: {'knowledgeIds': knIds},
                 success: function (data) {
                     if (data.success) {
-                        downloadFile(data.data.fileUrl,data.data.name);
-                    }else{
+                        downloadFile(data.data.fileUrl, data.data.name);
+                    } else {
                         PEMO.DIALOG.alert({
                             content: data.message,
                             btn: ['我知道了'],
@@ -585,27 +607,27 @@ $(function(){
                 return;
             }
             var knowledgeIds = "";
-            for(var i=0;i<selectList.length;i++){
+            for (var i = 0; i < selectList.length; i++) {
                 knowledgeIds += selectList[i] + ",";
             }
-            if(knowledgeIds.length<=1){
+            if (knowledgeIds.length <= 1) {
                 return false;
             }
-            knowledgeIds =  knowledgeIds.substring(0,knowledgeIds.length-1);
+            knowledgeIds = knowledgeIds.substring(0, knowledgeIds.length - 1);
             var shareIdArr = table.getPubLicShareId();
             var shareIds = "";
-            for(var i = 0 ;i<shareIdArr.length;i++){
-                shareIds += shareIdArr[i]+",";
+            for (var i = 0; i < shareIdArr.length; i++) {
+                shareIds += shareIdArr[i] + ",";
             }
-            shareIds = shareIds.substring(0,shareIds.length-1);
+            shareIds = shareIds.substring(0, shareIds.length - 1);
             PEMO.DIALOG.confirmL({
-                content:'<div><h3 class="pe-dialog-content-head">确定复制选中的文件？</h3><p class="pe-dialog-content-tip">确认后,可在我的云库内查看。 </p></div>',
+                content: '<div><h3 class="pe-dialog-content-head">确定复制选中的文件？</h3><p class="pe-dialog-content-tip">确认后,可在我的云库内查看。 </p></div>',
                 btn1: function () {
 
                     PEBASE.ajaxRequest({
                         url: pageContext.rootPath + '/km/knowledge/copyToMyLibrary',
                         data: {
-                            "knowledgeIds": knowledgeIds,"shareIds":shareIds
+                            "knowledgeIds": knowledgeIds, "shareIds": shareIds
                         },
                         success: function (data) {
                             if (data.success) {
@@ -614,7 +636,7 @@ $(function(){
                                     time: 1000,
                                 });
                                 layer.closeAll();
-                            }else{
+                            } else {
                                 PEMO.DIALOG.alert({
                                     content: data.message,
                                     btn: ['我知道了'],
@@ -627,7 +649,7 @@ $(function(){
                         }
                     });
                 },
-                btn2:function(){
+                btn2: function () {
                     layer.closeAll();
                 },
             });
@@ -641,11 +663,11 @@ $(function(){
             PEBASE.ajaxRequest({
                 url: pageContext.rootPath + '/km/knowledge/updateDownCount',
                 async: false,
-                data: {'shareIds':shareIds},
+                data: {'shareIds': shareIds},
                 success: function (data) {
                     if (data.success) {
                         console.log("修改成功");
-                    }else{
+                    } else {
                         console.log("修改失败");
                     }
 
@@ -655,11 +677,11 @@ $(function(){
             PEBASE.ajaxRequest({
                 url: pageContext.rootPath + '/km/knowledge/downloadKnowledge2',
                 async: false,
-                data: {'knowledgeIds':knIds},
+                data: {'knowledgeIds': knIds},
                 success: function (data) {
                     if (data.success) {
-                        downloadFile(data.data.fileUrl,data.data.name);
-                    }else{
+                        downloadFile(data.data.fileUrl, data.data.name);
+                    } else {
                         PEMO.DIALOG.alert({
                             content: data.message,
                             btn: ['我知道了'],
@@ -689,7 +711,7 @@ $(function(){
                 data = result;
             }
         });
-        for(var  i=0;i<data.length;i++){
+        for (var i = 0; i < data.length; i++) {
             data[i].knowledgeSize = conver(data[i].knowledgeSize);
         }
         var _table = $("#tplShareTable").html();
@@ -711,15 +733,15 @@ $(function(){
                 return;
             }
             var shareIds = "";
-            for(var i=0;i<selectList.length;i++){
+            for (var i = 0; i < selectList.length; i++) {
                 shareIds += selectList[i] + ",";
             }
-            if(shareIds.length<=1){
+            if (shareIds.length <= 1) {
                 return false;
             }
-            shareIds =  shareIds.substring(0,shareIds.length-1);
+            shareIds = shareIds.substring(0, shareIds.length - 1);
             PEMO.DIALOG.confirmL({
-                content:'<div><h3 class="pe-dialog-content-head">确定取消选中的分享记录的？</h3><p class="pe-dialog-content-tip">取消后，分享记录不可以恢复，请谨慎操作。 </p></div>',
+                content: '<div><h3 class="pe-dialog-content-head">确定取消选中的分享记录的？</h3><p class="pe-dialog-content-tip">取消后，分享记录不可以恢复，请谨慎操作。 </p></div>',
                 btn1: function () {
 
                     PEBASE.ajaxRequest({
@@ -736,7 +758,7 @@ $(function(){
                                 layer.closeAll();
                                 //刷新列表
                                 route['shareCb']($yunContentBody, route.routes.share, null);
-                            }else{
+                            } else {
                                 PEMO.DIALOG.alert({
                                     content: data.message,
                                     btn: ['我知道了'],
@@ -749,7 +771,7 @@ $(function(){
                         }
                     });
                 },
-                btn2:function(){
+                btn2: function () {
                     layer.closeAll();
                 },
             });
@@ -774,7 +796,7 @@ $(function(){
                 data = result;
             }
         });
-        for(var  i=0;i<data.length;i++){
+        for (var i = 0; i < data.length; i++) {
             data[i].knowledgeSize = conver(data[i].knowledgeSize);
         }
         var table, initSort = {
@@ -796,15 +818,15 @@ $(function(){
                 return;
             }
             var knowledgeIds = "";
-            for(var i=0;i<selectList.length;i++){
+            for (var i = 0; i < selectList.length; i++) {
                 knowledgeIds += selectList[i] + ",";
             }
-            if(knowledgeIds.length<=1){
+            if (knowledgeIds.length <= 1) {
                 return false;
             }
-            knowledgeIds =  knowledgeIds.substring(0,knowledgeIds.length-1);
+            knowledgeIds = knowledgeIds.substring(0, knowledgeIds.length - 1);
             PEMO.DIALOG.confirmL({
-                content:'<div><h3 class="pe-dialog-content-head">确定还原选中的记录的？</h3><p class="pe-dialog-content-tip">还原后,可在我的云库内查看。 </p></div>',
+                content: '<div><h3 class="pe-dialog-content-head">确定还原选中的记录的？</h3><p class="pe-dialog-content-tip">还原后,可在我的云库内查看。 </p></div>',
                 btn1: function () {
 
                     PEBASE.ajaxRequest({
@@ -821,7 +843,7 @@ $(function(){
                                 layer.closeAll();
                                 //刷新列表
                                 route['recycleCb']($yunContentBody, route.routes.recycle, null);
-                            }else{
+                            } else {
                                 PEMO.DIALOG.alert({
                                     content: data.message,
                                     btn: ['我知道了'],
@@ -834,7 +856,7 @@ $(function(){
                         }
                     });
                 },
-                btn2:function(){
+                btn2: function () {
                     layer.closeAll();
                 },
             });
@@ -842,12 +864,11 @@ $(function(){
         //清空回收站
         $('.js-emptyRecycle').on('click', function () {
             PEMO.DIALOG.confirmL({
-                content:'<div><h3 class="pe-dialog-content-head">确定清空回收站？</h3><p class="pe-dialog-content-tip">确认后,不可恢复,请谨慎操作！ </p></div>',
+                content: '<div><h3 class="pe-dialog-content-head">确定清空回收站？</h3><p class="pe-dialog-content-tip">确认后,不可恢复,请谨慎操作！ </p></div>',
                 btn1: function () {
                     PEBASE.ajaxRequest({
                         url: pageContext.rootPath + '/km/knowledge/emptyTrash',
-                        data: {
-                        },
+                        data: {},
                         success: function (data) {
                             if (data.success) {
                                 PEMO.DIALOG.tips({
@@ -857,7 +878,7 @@ $(function(){
                                 layer.closeAll();
                                 //刷新列表
                                 route['recycleCb']($yunContentBody, route.routes.recycle, null);
-                            }else{
+                            } else {
                                 PEMO.DIALOG.alert({
                                     content: data.message,
                                     btn: ['我知道了'],
@@ -870,12 +891,11 @@ $(function(){
                         }
                     });
                 },
-                btn2:function(){
+                btn2: function () {
                     layer.closeAll();
-                },
+                }
             });
         });
-
     }
 
     //初始化table事件
@@ -958,14 +978,18 @@ $(function(){
         };
     }
 
+    window.refreshPage = function () {
+        var id = $('#myLibrary').val();
+        route['YunCb']($yunContentBody, route.routes.yun, null, id);
+    }
 })
 
-function downloadFile(path,params) {
+function downloadFile(path, params) {
     var downUrl = $('#downloadServerUrl').val();
     var a = document.createElement('a');
     a.download = '';
     a.style.display = 'none';
-    a.href=downUrl+'/file/downLoadFiles?fileIds='+path+'&fileName='+params+'&corpCode=lbox';
+    a.href = downUrl + '/file/downLoadFiles?fileIds=' + path + '&fileName=' + params + '&corpCode=lbox';
     // 触发点击
     document.body.appendChild(a);
     a.click();
@@ -982,7 +1006,7 @@ function funDownload(content, filename) {
     //var blob = new Blob([content]);
     //console.log(blob);
     //a.href = URL.createObjectURL(blob);
-    a.href=content;
+    a.href = content;
     // 触发点击
     document.body.appendChild(a);
     a.click();
@@ -990,30 +1014,30 @@ function funDownload(content, filename) {
     document.body.removeChild(a);
 };
 //转换单位
-function conver(limit){
+function conver(limit) {
     var size = "";
-    if( limit < 0.1 * 1024 ){ //如果小于0.1KB转化成B
+    if (limit < 0.1 * 1024) { //如果小于0.1KB转化成B
         size = limit.toFixed(2) + "B";
-    }else if(limit < 0.1 * 1024 * 1024 ){//如果小于0.1MB转化成KB
+    } else if (limit < 0.1 * 1024 * 1024) {//如果小于0.1MB转化成KB
         size = (limit / 1024).toFixed(2) + "KB";
-    }else if(limit < 0.1 * 1024 * 1024 * 1024){ //如果小于0.1GB转化成MB
+    } else if (limit < 0.1 * 1024 * 1024 * 1024) { //如果小于0.1GB转化成MB
         size = (limit / (1024 * 1024)).toFixed(2) + "MB";
-    }else{ //其他转化成GB
+    } else { //其他转化成GB
         size = (limit / (1024 * 1024 * 1024)).toFixed(2) + "GB";
     }
 
     var sizestr = size + "";
     var len = sizestr.indexOf("\.");
     var dec = sizestr.substr(len + 1, 2);
-    if(dec == "00"){//当小数点后为00时 去掉小数部分
-        return sizestr.substring(0,len) + sizestr.substr(len + 3,2);
+    if (dec == "00") {//当小数点后为00时 去掉小数部分
+        return sizestr.substring(0, len) + sizestr.substr(len + 3, 2);
     }
     return sizestr;
 }
 
 function handleName(name) {
-    if(name.length>=10){
-        name = name.substring(0,10);
+    if (name.length >= 10) {
+        name = name.substring(0, 10);
     }
     return name;
 }

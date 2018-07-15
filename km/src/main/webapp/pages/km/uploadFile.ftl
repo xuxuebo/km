@@ -97,11 +97,11 @@
             </div>
             <div class="clear"></div>
         </div>
-        <label class="floatL">
+        <#--<label class="floatL">
             <span class="pe-label-name floatL">标签：</span>
             <input class="pe-stand-filter-form-input" type="text" maxlength="10" placeholder="请输入标签" name="tag">
             <div class="clear"></div>
-        </label>
+        </label>-->
         <div class="clear"></div>
         <div class="km-opt-bar">
             <button class="pe-btn pe-btn-blue" id="saveKnowledge" type="submit">保存</button>
@@ -153,7 +153,7 @@
                         );
             },
             appCode: "km",
-            corpCode: "lbox",
+            corpCode: '${corpCode!}',
             processor: 'FILE',
             businessId: (new Date()).getTime(),
             responseFormat: "json"
@@ -227,6 +227,9 @@
                             time: 1000
                         });
                         window.parent.layer.closeAll()
+                        if(parent && parent.refreshPage && typeof parent.refreshPage == "function"){
+                            parent.refreshPage();
+                        }
                         //刷新列表
                         //var folderId = $('#floderId').val();
                         //route['YunCb']($parent.document.getElementById("yunLContentBody"), route.routes.yun, null,folderId);
