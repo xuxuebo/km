@@ -206,7 +206,7 @@ $(function () {
             wu.accept = {
                 title: "不支持的文件类型",
                 //mimeTypes: "application/zip,application/x-rar-compressed,application/application/x-7z-compressed",
-                extensions: 'wmv,flv,mp4,rmvb,mkv,mov,avi,m4v,asf,mp3,ape,bmp,png,gif,jpg,jpeg,tif,doc,docx,ppt,pptx,xls,xlsx,pdf,txt,zip,rar,7z'
+                extensions: 'exe,wmv,flv,mp4,rmvb,mkv,mov,avi,m4v,asf,mp3,ape,bmp,png,gif,jpg,jpeg,tif,doc,docx,ppt,pptx,xls,xlsx,pdf,txt,zip,rar,7z'
             };
         }else{
             wu.accept = {

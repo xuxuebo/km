@@ -694,6 +694,11 @@ body, html {
 }
 
 .y-table__filed_name.type-zip {
+     background-image: url(../img/ico_rar.png);
+     background-image: image-set(url('../img/ico_rar.png') 1x, url('../img/ico_rar@2x.png') 2x);
+     background-image: -webkit-image-set(url('../img/ico_rar.png') 1x, url('../img/ico_rar@2x.png') 2x)
+ }
+.y-table__filed_name.type-rar {
     background-image: url(../img/ico_rar.png);
     background-image: image-set(url('../img/ico_rar.png') 1x, url('../img/ico_rar@2x.png') 2x);
     background-image: -webkit-image-set(url('../img/ico_rar.png') 1x, url('../img/ico_rar@2x.png') 2x)
@@ -715,6 +720,16 @@ body, html {
     background-image: -webkit-image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x)
 }
 .y-table__filed_name.type-jpg {
+    background-image: url(../img/ico_png.png);
+    background-image: image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x)
+}
+.y-table__filed_name.type-jpeg {
+    background-image: url(../img/ico_png.png);
+    background-image: image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x)
+}
+.y-table__filed_name.type-bmp {
     background-image: url(../img/ico_png.png);
     background-image: image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x);
     background-image: -webkit-image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x)
@@ -751,6 +766,66 @@ body, html {
     background-image: -webkit-image-set(url('../img/ico_pdf.png') 1x, url('../img/icon_pdf@2x.png') 2x)
 }
 
+.y-table__filed_name.type-exe {
+    background-image: url(../img/icon_other.png);
+    background-image: image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x)
+}
+
+.y-table__filed_name.type-wmv {
+    background-image: url(../img/icon_other.png);
+    background-image: image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x)
+}
+
+.y-table__filed_name.type-flv {
+    background-image: url(../img/icon_other.png);
+    background-image: image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x)
+}
+.y-table__filed_name.type-rmvb {
+    background-image: url(../img/icon_other.png);
+    background-image: image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x)
+}
+.y-table__filed_name.type-mkv {
+    background-image: url(../img/icon_other.png);
+    background-image: image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x)
+}
+
+.y-table__filed_name.type-mov {
+    background-image: url(../img/icon_other.png);
+    background-image: image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x)
+}
+.y-table__filed_name.type-avi {
+    background-image: url(../img/icon_other.png);
+    background-image: image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x)
+}
+
+.y-table__filed_name.type-m4v {
+    background-image: url(../img/icon_other.png);
+    background-image: image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x)
+}
+.y-table__filed_name.type-asf {
+    background-image: url(../img/icon_other.png);
+    background-image: image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x)
+}
+
+.y-table__filed_name.type-ape {
+    background-image: url(../img/icon_other.png);
+    background-image: image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x)
+}
+.y-table__filed_name.type-tif {
+    background-image: url(../img/icon_other.png);
+    background-image: image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x)
+}
 .y-table__opt__bar {
     display: none;
     float: right
