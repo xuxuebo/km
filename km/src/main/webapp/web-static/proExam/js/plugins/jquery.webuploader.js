@@ -4110,7 +4110,7 @@
     
             // 完成上传。
             _finishFile: function( file, ret, hds ) {
-                var owner = this.owner;
+                var owner = this.beforeSendowner;
     
                 return owner
                         .request( 'after-send-file', arguments, function() {

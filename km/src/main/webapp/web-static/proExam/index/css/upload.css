@@ -1,13 +1,218 @@
-.itemDel, .itemStop, .itemUpload {
-    margin-left: 15px;
-    color: blue;
-    cursor: pointer;
+
+
+.y-table__filed_name {
+    background-repeat: no-repeat;
+    background-position: 20px center;
+    background-image: url(../img/icon_other.png);
+    background-image: image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/icon_other.png') 1x, url('../img/icon_other@2x.png') 2x)
 }
 
-#theList {
-    width: 80%;
-    min-height: 100px;
-    border: 1px solid red;
+.y-table__filed_name.type-file {
+    background-image: url(../img/ico_file.png);
+    background-image: image-set(url('../img/ico_file.png') 1x, url('../img/ico_file@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_file.png') 1x, url('../img/ico_file@2x.png') 2x)
+}
+
+.y-table__filed_name.type-FILE {
+    background-image: url(../img/ico_file.png);
+    background-image: image-set(url('../img/ico_file.png') 1x, url('../img/ico_file@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_file.png') 1x, url('../img/ico_file@2x.png') 2x)
+}
+
+.y-table__filed_name.type-audio {
+    background-image: url(../img/ico_mp3.png);
+    background-image: image-set(url('../img/ico_mp3.png') 1x, url('../img/ico_mp3@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_mp3.png') 1x, url('../img/ico_mp3@2x.png') 2x)
+}
+
+.y-table__filed_name.type-Mp3 {
+    background-image: url(../img/ico_mp3.png);
+    background-image: image-set(url('../img/ico_mp3.png') 1x, url('../img/ico_mp3@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_mp3.png') 1x, url('../img/ico_mp3@2x.png') 2x)
+}
+
+.y-table__filed_name.type-mp3 {
+    background-image: url(../img/ico_mp3.png);
+    background-image: image-set(url('../img/ico_mp3.png') 1x, url('../img/ico_mp3@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_mp3.png') 1x, url('../img/ico_mp3@2x.png') 2x)
+}
+
+.y-table__filed_name.type-video {
+    background-image: url(../img/ico_video.png);
+    background-image: image-set(url('../img/ico_video.png') 1x, url('../img/ico_video@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_video.png') 1x, url('../img/ico_video@2x.png') 2x)
+}
+
+.y-table__filed_name.type-Mp4 {
+    background-image: url(../img/ico_video.png);
+    background-image: image-set(url('../img/ico_video.png') 1x, url('../img/ico_video@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_video.png') 1x, url('../img/ico_video@2x.png') 2x)
+}
+
+.y-table__filed_name.type-mp4 {
+    background-image: url(../img/ico_video.png);
+    background-image: image-set(url('../img/ico_video.png') 1x, url('../img/ico_video@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_video.png') 1x, url('../img/ico_video@2x.png') 2x)
+}
+
+.y-table__filed_name.type-word {
+    background-image: url(../img/ico_docx.png);
+    background-image: image-set(url('../img/ico_docx.png') 1x, url('../img/ico_docx@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_docx.png') 1x, url('../img/ico_docx@2x.png') 2x)
+}
+
+.y-table__filed_name.type-doc {
+    background-image: url(../img/ico_docx.png);
+    background-image: image-set(url('../img/ico_docx.png') 1x, url('../img/ico_docx@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_docx.png') 1x, url('../img/ico_docx@2x.png') 2x)
+}
+
+.y-table__filed_name.type-DOC {
+    background-image: url(../img/ico_docx.png);
+    background-image: image-set(url('../img/ico_docx.png') 1x, url('../img/ico_docx@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_docx.png') 1x, url('../img/ico_docx@2x.png') 2x)
+}
+
+.y-table__filed_name.type-docx {
+    background-image: url(../img/ico_docx.png);
+    background-image: image-set(url('../img/ico_docx.png') 1x, url('../img/ico_docx@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_docx.png') 1x, url('../img/ico_docx@2x.png') 2x)
+}
+
+.y-table__filed_name.type-pptx {
+    background-image: url(../img/ico_pptx.png);
+    background-image: image-set(url('../img/ico_pptx.png') 1x, url('../img/ico_pptx@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_pptx.png') 1x, url('../img/ico_pptx@2x.png') 2x)
+}
+
+.y-table__filed_name.type-ppt {
+    background-image: url(../img/ico_pptx.png);
+    background-image: image-set(url('../img/ico_pptx.png') 1x, url('../img/ico_pptx@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_pptx.png') 1x, url('../img/ico_pptx@2x.png') 2x)
+}
+
+.y-table__filed_name.type-excel {
+    background-image: url(../img/ico_xlsx.png);
+    background-image: image-set(url('../img/ico_xlsx.png') 1x, url('../img/ico_xlsx@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_xlsx.png') 1x, url('../img/ico_xlsx@2x.png') 2x)
+}
+
+.y-table__filed_name.type-xls {
+    background-image: url(../img/ico_xlsx.png);
+    background-image: image-set(url('../img/ico_xlsx.png') 1x, url('../img/ico_xlsx@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_xlsx.png') 1x, url('../img/ico_xlsx@2x.png') 2x)
+}
+
+.y-table__filed_name.type-xlsx {
+    background-image: url(../img/ico_xlsx.png);
+    background-image: image-set(url('../img/ico_xlsx.png') 1x, url('../img/ico_xlsx@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_xlsx.png') 1x, url('../img/ico_xlsx@2x.png') 2x)
+}
+
+.y-table__filed_name.type-zip {
+    background-image: url(../img/ico_rar.png);
+    background-image: image-set(url('../img/ico_rar.png') 1x, url('../img/ico_rar@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_rar.png') 1x, url('../img/ico_rar@2x.png') 2x)
+}
+
+.y-table__filed_name.type-rar {
+    background-image: url(../img/ico_rar.png);
+    background-image: image-set(url('../img/ico_rar.png') 1x, url('../img/ico_rar@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_rar.png') 1x, url('../img/ico_rar@2x.png') 2x)
+}
+
+.y-table__filed_name.type-7z {
+    background-image: url(../img/ico_rar.png);
+    background-image: image-set(url('../img/ico_rar.png') 1x, url('../img/ico_rar@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_rar.png') 1x, url('../img/ico_rar@2x.png') 2x)
+}
+
+.y-table__filed_name.type-png {
+    background-image: url(../img/ico_png.png);
+    background-image: image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x)
+}
+
+.y-table__filed_name.type-Png {
+    background-image: url(../img/ico_png.png);
+    background-image: image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x)
+}
+
+.y-table__filed_name.type-jpg {
+    background-image: url(../img/ico_png.png);
+    background-image: image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x)
+}
+
+.y-table__filed_name.type-jpeg {
+    background-image: url(../img/ico_png.png);
+    background-image: image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x)
+}
+
+.y-table__filed_name.type-bmp {
+    background-image: url(../img/ico_png.png);
+    background-image: image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x)
+}
+
+.y-table__filed_name.type-Jpg {
+    background-image: url(../img/ico_png.png);
+    background-image: image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x)
+}
+
+.y-table__filed_name.type-gif {
+    background-image: url(../img/ico_png.png);
+    background-image: image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x)
+}
+
+.y-table__filed_name.type-Gif {
+    background-image: url(../img/ico_png.png);
+    background-image: image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_png.png') 1x, url('../img/ico_png@2x.png') 2x)
+}
+
+.y-table__filed_name.type-txt {
+    background-image: url(../img/txt.png);
+    background-image: image-set(url('../img/txt.png') 1x, url('../img/txt@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/txt.png') 1x, url('../img/txt@2x.png') 2x)
+}
+
+.y-table__filed_name.type-pdf {
+    background-image: url(../img/ico_pdf.png);
+    background-image: image-set(url('../img/ico_pdf.png') 1x, url('../img/icon_pdf@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_pdf.png') 1x, url('../img/icon_pdf@2x.png') 2x)
+}
+
+.y-table__filed_name.type-PDF {
+    background-image: url(../img/ico_pdf.png);
+    background-image: image-set(url('../img/ico_pdf.png') 1x, url('../img/icon_pdf@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_pdf.png') 1x, url('../img/icon_pdf@2x.png') 2x)
+}
+
+.finished-icon{
+    display: inline-block;
+    padding-left: 22px;
+    height: 16px;
+    vertical-align: middle;
+    font-size: 12px;
+    line-height: 16px;
+    color: #888888;
+    background-repeat: no-repeat;
+    background-image: url(../img/finish.png);
+    background-image: image-set(url('../img/finish.png') 1x, url('../img/finish@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/finish.png') 1x, url('../img/finish@2x.png') 2x)
+}
+
+.itemDel, .itemStop, .itemUpload {
+    color: #2196F3;
+    cursor: pointer;
+    font-size: 12px;
+    letter-spacing: 1px;
 }
 
 #theList .itemStop {
@@ -36,3 +241,58 @@
     left: 390px;
     top: 15px;
 }
+.webuploader-container{
+    width: 180px !important;
+}
+
+.webuploader-container .webuploader-pick + div, .webuploader-container {
+    height: 60px !important;
+    width: 180px !important;
+}
+
+.webuploader-container .webuploader-pick {
+    background: #24a4ec;
+    height: 60px;
+    width: 180px !important;
+    line-height: 60px;
+    border-radius: 3px;
+}
+
+.file-list li{
+    overflow: hidden;
+    line-height: 48px;
+    border-bottom:1px solid #f5f5f5;
+    padding-left: 52px;
+    padding-right: 10px;
+    position: relative;
+}
+.file-list .percentage{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom:0;
+    width: 0;
+    background-color: rgba(3, 130, 244, 0.1);
+    transition: width .2s;
+    -webkit-transition: width .2s;
+}
+#picker{
+    margin: 120px auto;
+    float: none;
+}
+.file-list .file-name{
+    width: 70%;
+    float: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.file-list .file-size{
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    float: left;
+    width: 16%;
+    padding-left: 5px;
+}
+

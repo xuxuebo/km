@@ -6,72 +6,35 @@
     <title>上传文件</title>
     <!--引入CSS-->
     <link rel="stylesheet" type="text/css" href="${resourcePath!}/web-static/proExam/index/css/webuploader.css">
+    <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/pro_exam_base.css?_v=${(resourceVersion)!}"
+          type="text/css"/>
     <link rel="stylesheet" type="text/css" href="${resourcePath!}/web-static/proExam/index/css/upload.css">
-    <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/pro_exam_base.css?_v=${(resourceVersion)!}" type="text/css"/>
-
     <!--引入JS-->
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/jquery.min.js"></script>
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/underscore-min.js"></script>
-    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/layer/layer.js?_v=${(resourceVersion)!}"></script>
-    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/webuploader.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript"
+            src="${resourcePath!}/web-static/proExam/js/plugins/layer/layer.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/webuploader.js"
+            type="text/javascript" charset="utf-8"></script>
+<#--
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/upload.js" type="text/javascript" charset="utf-8"></script>
-    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.core.js?_v=0.1"></script>
-    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.excheck.js?_v=0.1"></script>
-    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.exedit.js?_v=0.1"></script>
-    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.mCustomScrollbar.concat.min.js?_v=0.1"></script>
+-->
+    <script type="text/javascript"
+            src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.core.js?_v=0.1"></script>
+    <script type="text/javascript"
+            src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.excheck.js?_v=0.1"></script>
+    <script type="text/javascript"
+            src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.exedit.js?_v=0.1"></script>
+    <script type="text/javascript"
+            src="${resourcePath!}/web-static/proExam/js/plugins/jquery.mCustomScrollbar.concat.min.js?_v=0.1"></script>
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/pro_exam_base.js"></script>
 
-    <style type="text/css">
-        .km-add-form {
-            width: 320px;
-            margin: 60px auto;
-        }
 
-        .km-upload-btn-wrap {
-            margin: 0;
-            background-color: #00a0e9;
-        }
-
-        .webuploader-container .webuploader-pick + div, .webuploader-container {
-            height: 34px !important;
-        }
-
-        .webuploader-container .webuploader-pick {
-            background: #24a4ec;
-            height: 34px;
-            line-height: 34px;
-            border-radius: 3px;
-        }
-
-        .km-file-name {
-            float: left;
-            line-height: 32px;
-            max-width: 300px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .km-opt-bar{
-            margin-top: 30px;
-            margin-left: 50px;
-        }
-
-        .btn-default:hover, .btn-default:focus {
-            background-color: #e0e0e0;
-            background-position: 0 -15px;
-        }
-        .btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default {
-            color: #333;
-            background-color: #ebebeb;
-            border-color: #adadad;
-        }
-
-    </style>
     <script>
         var pageContext = {
-            resourcePath:'${resourcePath!}',
-            rootPath:'${ctx!}',
-            downloadServerUrl:'${downloadServerUrl!}'
+            resourcePath: '${resourcePath!}',
+            rootPath: '${ctx!}',
+            downloadServerUrl: '${downloadServerUrl!}'
         };
     </script>
 </head>
@@ -79,169 +42,267 @@
 <body style="background-color: #fff">
 
 <div id="uploader" class="wu-example">
-    <form action="javascript:void(0);" name="kmAddForm" class="km-add-form clear">
-        <input type="hidden" name="showOrder" value="0">
-        <input type="hidden" name="libraryId" id="floderId" value="">
-        <div class="floatL" style="margin-bottom: 36px; margin-top: -15px;">
-            <div>
-                <span class="pe-label-name floatL">文件：</span>
-                <div class="km-file-name file-queue">
-                    <i style="color: #b3b2b2">请选择文件上传</i>
-                </div>
-                <div id="formData"></div>
-            </div>
-            <div style="margin-top: 66px; margin-left: 46px">
-                <div class="km-upload-btn-wrap" id="filePicker">选择文件</div>
-                <button id="startBtn" style="padding: 5px 21px 9px; display: none;" class="pe-btn pe-btn-white btn-default">开始上传</button>
-                <button id="cancelBtn" style="padding: 5px 21px 9px; display: none;" class="pe-btn pe-btn-white btn-default">取消上传</button>
-            </div>
-            <div class="clear"></div>
-        </div>
-        <#--<label class="floatL">
-            <span class="pe-label-name floatL">标签：</span>
-            <input class="pe-stand-filter-form-input" type="text" maxlength="10" placeholder="请输入标签" name="tag">
-            <div class="clear"></div>
-        </label>-->
-        <div class="clear"></div>
-        <div class="km-opt-bar">
-            <button class="pe-btn pe-btn-blue" id="saveKnowledge" type="submit">保存</button>
-            <button class="pe-btn pe-btn-white js-cancel" type="button">取消</button>
-        </div>
-    </form>
+    <ul id="theList" class="file-list"></ul>
+    <div id="picker">选择文件</div>
 </div>
 <script type="text/javascript">
-    window.onload = function () {
-        $('#floderId').val(parent.document.getElementById("myLibrary").value);
-        var chunkSize = 5000 * 1024;        //分块大小
-        var uploadFileUrl = '${downloadServerUrl!}/file/uploadFile';
-        var uploader = window.uploadFile({
-            auto: false,
-            dnd:'#uploader',
-            swf: "/km/web-static/flash/Uploader.swf",
-            server: uploadFileUrl,
-            pick: "#filePicker",
-            resize: false,
-            paste: document.body,
-            disableGlobalDnd: true,
-            thumb: {
-                width: 100,
-                height: 100,
-                quality: 70,
-                allowMagnify: true,
-                crop: true
-            },
-            compress: false,
-            prepareNextFile: true,
-            chunked: true,
-            chunkSize: 5000 * 1024,
-            threads: true,
-            fileNumLimit: 1,
-            fileSingleSizeLimit: 10 * 1024 * 1024 * 1024,
-            duplicate: true
-        }, {
-            uploadCompleted: function (data) {
-                if (data == undefined || data == null) {
-                    return;
+    var chunkSize = 5000 * 1024;        //分块大小
+    var uploadFileUrl = "${downloadServerUrl!}/file/uploadFile";
+    var business = {
+        appCode: "km",
+        corpCode: '${corpCode!}',
+        processor: 'FILE',
+        businessId: (new Date()).getTime(),
+        responseFormat: "json",
+        chunkSize: chunkSize
+    };
+
+    WebUploader.Uploader.register({
+        "before-send-file": "beforeSendFile", "before-send": "beforeSend", "after-send-file": "afterSendFile"
+    }, {
+        beforeSendFile: function (file) {
+            var $file = $("#" + file.id);
+            $file.find('.itemDel').remove();
+            //秒传验证
+            var task = new $.Deferred();
+            var start = new Date().getTime();
+            (new WebUploader.Uploader()).md5File(file, 0, 10 * 1024 * 1024).progress(function (percentage) {
+            }).then(function (val) {
+                console.log('beforeSendFile', "总耗时: " + ((new Date().getTime()) - start) / 1000);
+                business.md5 = val;
+                business.chunks = Math.ceil(file.size / chunkSize);
+                business.storedFileName = file.name;
+                business.fileSize = file.size;
+                business.suffix = file.ext;
+                var md5Check = $.extend(true, {resumeType: "md5Check"}, business);
+                $.ajax({
+                    type: "POST",
+                    url: uploadFileUrl,
+                    data: md5Check,
+                    cache: false,
+                    dataType: "json"
+                }).then(function (data, textStatus, jqXHR) {
+                    if (data.status == "FAILED") {//FAILED表示参数错误或者程序执行错误，不需要上传文件
+                        task.reject();
+                        uploader.skipFile(file);
+                        alert(data.processMsg);
+                    } else if (data.status == "SUCCESS"
+                            || data.status == "PROCESSING") {//表示文件已存在并且处理正确或者处理中，不需要上传文件
+                        task.reject();
+                        uploader.skipFile(file);
+                        file.data = data;
+                        UploadComlate(file);
+                    } else {//表示文件不存在，需要上传文件
+                        task.resolve();
+                    }
+                }, function (jqXHR, textStatus, errorThrown) { //任何形式的验证失败，都触发重新上传
+                    task.resolve();
+                });
+            });
+            return $.when(task);
+        }, beforeSend: function (block) {
+            //分片验证是否已传过，用于断点续传
+            console.log('beforeSend', block)
+            var task = new $.Deferred();
+            var chunkCheck = {
+                resumeType: "chunkCheck",
+                chunk: block.chunk,
+                blockSize: (block.end - block.start)
+            };
+            $.ajax({
+                type: "POST",
+                url: uploadFileUrl,
+                data: $.extend(true, chunkCheck, business),
+                cache: false,
+                dataType: "json"
+            }).then(function (data, textStatus, jqXHR) {
+                if (data.status == "FAILED") {//FAILED表示参数错误，不需要上传分片，结束文件上传
+                    task.reject();
+                    uploader.skipFile(file);
+                    alert(data.processMsg);
+                } else if (data.status == "SUCCESS") {//SUCCESS表示分片已存在，不需要上传分片
+                    task.reject();
+                } else {//表示分片不存在，需要上传分片
+                    task.resolve();
+                }
+            }, function (jqXHR, textStatus, errorThrown) {    //任何形式的验证失败，都触发重新上传
+                task.resolve();
+            });
+
+            return $.when(task);
+        }, afterSendFile: function (file) {
+            console.log('afterSendFile', file)
+            var chunksTotal = Math.ceil(file.size / chunkSize);
+            if (chunksTotal > 1) {
+                //合并请求
+                var task = new $.Deferred();
+                $.ajax({
+                    type: "POST",
+                    url: uploadFileUrl,
+                    data: $.extend(true, {"resumeType": "chunksMerge"}, business),
+                    cache: false,
+                    dataType: "json"
+                }).then(function (data, textStatus, jqXHR) {
+
+                    //FAILED表示参数错误(包括实际分片总数和前台传来的分片总数不一致)或者程序执行错误，上传失败
+                    if (data.status == "FAILED") {
+                        task.reject();
+                        //uploader.skipFile(file);
+                        alert(data.processMsg);
+
+                    } else if (data.status == "SUCCESS"
+                            || data.status == "PROCESSING") {//SUCCESS表示分片已合并完成并且正确处理
+                        task.resolve();
+                        file.data = data;
+                        UploadComlate(file);
+                    } else {//表示文件正在合并或者合并失败
+                        task.resolve();
+                    }
+
+                }, function (jqXHR, textStatus, errorThrown) {
+                    task.reject();
+                });
+
+                return $.when(task);
+            } else {
+                UploadComlate(file);
+            }
+        }
+    });
+    var FLAG_FINISHED = false;
+    var uploader = WebUploader.create({
+        swf: "/km/web-static/flash/Uploader.swf",
+        server: uploadFileUrl,
+        pick: "#picker",
+        resize: false,
+        auto: true,
+        dnd: "#theList",
+        paste: document.body,
+        disableGlobalDnd: true,
+        thumb: {
+            width: 100,
+            height: 100,
+            quality: 70,
+            allowMagnify: true,
+            crop: true
+            //, type: "image/jpeg"
+        }
+//				, compress: {
+//					quality: 90
+//					, allowMagnify: false
+//					, crop: false
+//					, preserveHeaders: true
+//					, noCompressIfLarger: true
+//					,compressSize: 100000
+//				}
+        , compress: false,
+        prepareNextFile: false,
+        chunked: true,
+        chunkSize: chunkSize,
+        threads: true,
+        formData: function () {
+            return $.extend(true, {resumeType: "chunkUpload"}, business);
+        },
+        fileNumLimit: 10,
+        fileSingleSizeLimit: 10 * 1024 * 1024 * 1024,
+        duplicate: true,
+        accept: {
+            title: "不支持的文件类型",
+            //mimeTypes: "application/zip,application/x-rar-compressed,application/application/x-7z-compressed",
+            extensions: 'exe,wmv,flv,mp4,rmvb,mkv,mov,avi,m4v,asf,mp3,ape,bmp,png,gif,jpg,jpeg,tif,doc,docx,ppt,pptx,xls,xlsx,pdf,txt,zip,rar,7z'
+        }
+    });
+
+    function bytesToSize(bytes) {
+        if (bytes === 0) return '0 B';
+        var k = 1000, // or 1024
+                sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+                i = Math.floor(Math.log(bytes) / Math.log(k));
+
+        return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
+    }
+
+    uploader.on("fileQueued", function (file) {
+        $("#picker").hide()
+        $("#theList").append('<li id="' + file.id + '" class="y-table__filed_name type-' + file.ext + '">' +
+                '<span class="file-name" title="' + file.name + '">' + file.name + '</span><span class="file-size">' + bytesToSize(file.size) + '</span>' +
+                '<span class="itemDel">删除</span><span class="finished-icon" style="display: none"></span>' +
+                '<div class="percentage"></div>' +
+                '</li>');
+    });
+    /*
+
+
+        $("#theList").on("click", ".itemStop", function () {
+            uploader.stop(true);
+
+            //"暂停"-->"上传"
+            $(this).hide();
+            $(".itemUpload").show();
+        });
+    */
+
+    //todo 如果要删除的文件正在上传（包括暂停），则需要发送给后端一个请求用来清除服务器端的缓存文件
+    $("#theList").on("click", ".itemDel", function () {
+        uploader.removeFile($(this).parent().attr("id"));	//从上传文件列表中删除
+
+        $(this).parent().remove();	//从上传列表dom中删除
+    });
+
+    uploader.on("uploadProgress", function (file, percentage) {
+        $("#" + file.id + " .percentage").css({width: percentage * 100 + "%"});
+    });
+    var libraryId = parent.document.getElementById("myLibrary").value;
+    function UploadComlate(file) {
+        console.log(file);
+        var $file = $("#" + file.id);
+        $file.find('.percentage').css({width: "100%"});
+        var data = file.data
+        //TODO 上传成功后 请求km保存
+        var url = pageContext.rootPath + '/knowledge/saveKnowledge';
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            data: $.param({
+                showOrder: 0,
+                libraryId: libraryId,
+                fileId: data.id,
+                knowledgeName: data.storedFileName,
+                knowledgeType: data.suffix,
+                knowledgeSize: data.fileSize
+            }),
+            url: url,
+            success: function (data) {
+                $file.find('.percentage').hide();
+                $file.find('.finished-icon').show();
+
+                if(FLAG_FINISHED){
+                    window.parent.layer.closeAll()
+                    if (parent && parent.refreshPage && typeof parent.refreshPage == "function") {
+                        parent.refreshPage();
+                    }
                 }
 
-                $('#uploadState').text('已上传');
-
-                $('#formData').html("<input type='hidden' name='fileId' value='{{fileId}}' />".replace("{{fileId}}", data.id)
-                                + "<input type='hidden' name='knowledgeName' value='{{knowledgeName}}' />".replace("{{knowledgeName}}", data.storedFileName)
-                                + "<input type='hidden' name='knowledgeType' value='{{knowledgeType}}' />".replace("{{knowledgeType}}", data.suffix)
-                                + "<input type='hidden' name='knowledgeSize' value='{{knowledgeSize}}' />".replace("{{knowledgeSize}}", data.fileSize)
-                        );
-            },
-            appCode: "km",
-            corpCode: '${corpCode!}',
-            processor: 'FILE',
-            businessId: (new Date()).getTime(),
-            responseFormat: "json"
-        });
-
-        var $list = $(".file-queue");
-        uploader.on( 'fileQueued', function( file ) {
-            $list.html('');
-            $list.attr("data-id", file.id);
-            $list.append( '<div id="' + file.id + '" class="item">' +
-                    '<h4 class="info">' + file.name + '</h4>' +
-                    '<p id="uploadState">等待上传...</p>'  +
-                    '</div>' );
-
-            $('#startBtn').show();
-            $('#filePicker').hide();
-        });
-
-        // 文件上传过程中创建进度条实时显示。
-        uploader.on( 'uploadProgress', function( file, percentage ) {
-            $('#uploadState').html('<span>上传中</span><span style="color: #2a9cfe">'+Math.round(percentage * 100) + '%</span>');
-        });
-
-        uploader.on('uploadComplete', function(file) {
-            $( '#'+file.id ).find('.progress').fadeOut();
-        });
-
-        uploader.on('all', function(type) {
-            if (type === 'startUpload') {
-                var $startBtn = $('#startBtn');
-                $startBtn.html('暂停上传');
-                $('#filePicker').hide();
-            } else if (type === 'stopUpload') {
-                $('#startBtn').html('开始上传');
-            } else if (type === 'uploadFinished') {
-                $('#startBtn').hide();
-                $('#cancelBtn').show();
+                //刷新列表
+                //var folderId = $('#floderId').val();
+                //route['YunCb']($parent.document.getElementById("yunLContentBody"), route.routes.yun, null,folderId);
             }
         });
 
-        $("#cancelBtn").on('click', function() {
-            $('#filePicker').show();
-            $('#cancelBtn').hide();
-            $('#formData').html('');
-            $('.file-queue').html('<i style="color: #b3b2b2">请选择文件上传</i>'+
-                                  '<div id="formData"></div>');
-        });
+        /* $(".itemStop").hide();
+         $(".itemUpload").hide();
+         $(".itemDel").hide();
 
-        $("#startBtn").on('click', function() {
-            uploader.upload();
-        });
+         $("#theList").html('');*/
+    }
 
-        //保存
-        $("#saveKnowledge").on('click', function () {
-            var kmAddFormElem = document.kmAddForm;
-            $(kmAddFormElem).submit(function () {
-                if (!kmAddFormElem.elements.fileId || !kmAddFormElem.elements.fileId.value) {
-                    alert("请先选择文件上传！");
-                    return;
-                }
-                var url = pageContext.rootPath + '/knowledge/saveKnowledge';
-                console.log(url);
-                $.ajax({
-                    type: 'post',
-                    dataType: 'json',
-                    data: $(kmAddFormElem).serialize(),
-                    url: url,
-                    success: function (data) {
-                        PEMO.DIALOG.tips({
-                            content: '保存成功',
-                            time: 1000
-                        });
-                        window.parent.layer.closeAll()
-                        if(parent && parent.refreshPage && typeof parent.refreshPage == "function"){
-                            parent.refreshPage();
-                        }
-                        //刷新列表
-                        //var folderId = $('#floderId').val();
-                        //route['YunCb']($parent.document.getElementById("yunLContentBody"), route.routes.yun, null,folderId);
-                    }
-                });
-            });
+    uploader.on( 'uploadFinished', function( file, percentage ) {
+        PEMO.DIALOG.tips({
+            content: '上传完成',
+            time: 1000
         });
-
-        $('.js-cancel').click(function () {
-           window.parent.layer.closeAll()
-        });
-    };
+        FLAG_FINISHED = true;
+    });
 
 </script>
 
