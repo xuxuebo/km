@@ -10,6 +10,7 @@ import com.qgutech.km.module.km.model.Knowledge;
 import com.qgutech.km.module.km.model.KnowledgeRel;
 import com.qgutech.km.module.km.model.Library;
 import com.qgutech.km.utils.PeException;
+import com.qgutech.km.utils.PeUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.Conjunction;
@@ -229,5 +230,69 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
         }
         update(library.getId(),Library.LIBRARY_NAME,library.getLibraryName());
         return library.getId();
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public boolean checkName(String libraryId, String libraryName, String libraryType) {
+        if (StringUtils.isEmpty(libraryName) || StringUtils.isEmpty(libraryType)) {
+            throw new PeException("libraryName and libraryType must be not empty!");
+        }
+
+        Criterion criterion = Restrictions.and(Restrictions.eq(Library.CORP_CODE, ExecutionContext.getCorpCode()),
+                Restrictions.eq(Library.LIBRARY_NAME, libraryName),
+                Restrictions.eq(Library.LIBRARY_TYPE, libraryType),
+                Restrictions.eq(Library.PARENT_ID, "0"));
+        Library library = getByCriterion(criterion);
+        if (StringUtils.isEmpty(libraryId)) {
+            return library != null;
+        }
+
+        return library != null && !library.getId().equals(libraryId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String insert(Library library) {
+        if (library == null || StringUtils.isEmpty(library.getId())
+                || StringUtils.isEmpty(library.getLibraryName())
+                || StringUtils.isEmpty(library.getLibraryType())
+                || StringUtils.isEmpty(library.getIdPath())) {
+            throw new PeException("invalid library entity!");
+        }
+
+        library.setCorpCode(ExecutionContext.getCorpCode());
+        return baseService.save(library);
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public Page<Library> searchLibrary(PageParam page, Library library) {
+        PeUtils.validPage(page);
+        if (library == null || StringUtils.isEmpty(library.getLibraryType())) {
+            throw new PeException("library and libraryType must be not empty!");
+        }
+
+        Conjunction conjunction = getConjunction();
+        String parentId = library.getParentId();
+        if (StringUtils.isEmpty(parentId)) {
+            parentId = "0";
+        }
+
+        Conjunction criterion = Restrictions.and(Restrictions.eq(Library.CORP_CODE, ExecutionContext.getCorpCode()),
+                Restrictions.eq(Library.PARENT_ID, parentId),
+                Restrictions.eq(Library.LIBRARY_TYPE, library.getLibraryType()));
+        String libraryName = library.getLibraryName();
+        if (StringUtils.isNotEmpty(libraryName)) {
+            criterion.add(Restrictions.ilike(Library.LIBRARY_NAME, "%" + libraryName + "%"));
+        }
+
+        conjunction.add(criterion);
+        Page<Library> libraryPage = search(page, conjunction, new Order[]{Order.desc(Library.CREATE_TIME)}, Library.ID, Library.LIBRARY_NAME);
+        if (CollectionUtils.isEmpty(libraryPage.getRows())) {
+            return new Page<>();
+        }
+
+        return libraryPage;
     }
 }

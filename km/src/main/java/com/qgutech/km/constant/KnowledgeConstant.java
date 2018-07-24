@@ -12,6 +12,10 @@ public class KnowledgeConstant {
     public static String RECYCLE_LIBRARY = "RECYCLE_LIBRARY";
     //终极库
     public static String FINAL_LIBRARY = "FINAL_LIBRARY";
+    //专业分类
+    public static String SPECIALTY_LIBRARY = "SPECIALTY_LIBRARY";
+    //重点项目
+    public static String PROJECT_LIBRARY = "PROJECT_LIBRARY";
 
 
     //分享相关

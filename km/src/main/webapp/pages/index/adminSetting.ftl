@@ -95,14 +95,24 @@
                     <span class="yfont-icon">&#xe643;</span><span class="txt">岗位管理</span>
                 </a>
             </li>
-            <#--<li class="y-menu__item y-label">-->
-                <#--<a href="#label" class="y-menu__item__title y-aside__menu__item__title">-->
-                    <#--<span class="yfont-icon">&#xe643;</span><span class="txt">标签管理</span>-->
-                <#--</a>-->
-            <#--</li>-->
+            <li class="y-menu__item y-label">
+                <a href="#label" class="y-menu__item__title y-aside__menu__item__title">
+                    <span class="yfont-icon">&#xe643;</span><span class="txt">标签管理</span>
+                </a>
+            </li>
             <li class="y-menu__item y-library">
                 <a href="#library" class="y-menu__item__title y-aside__menu__item__title">
                     <span class="yfont-icon">&#xe643;</span><span class="txt">公共库管理</span>
+                </a>
+            </li>
+            <li class="y-menu__item y-project">
+                <a href="#project" class="y-menu__item__title y-aside__menu__item__title">
+                    <span class="yfont-icon">&#xe643;</span><span class="txt">重点项目管理</span>
+                </a>
+            </li>
+            <li class="y-menu__item y-specialty">
+                <a href="#specialty" class="y-menu__item__title y-aside__menu__item__title">
+                    <span class="yfont-icon">&#xe643;</span><span class="txt">专业分类管理</span>
                 </a>
             </li>
         </ul>
@@ -235,6 +245,22 @@
         <button class="y-btn y-btn__blue js-addLibrary" type="button">新增公共库</button>
     </div>
     <div class="y-content__table" id="libraryTable"></div>
+</script>
+
+<script type="text/template" id="tplProject">
+    <h4 class="y-content__title"><%=title%></h4>
+    <div class="y-content__opt__bar">
+        <button class="y-btn y-btn__blue js-addProject" type="button">新增公共库</button>
+    </div>
+    <div class="y-content__table" id="projectTable"></div>
+</script>
+
+<script type="text/template" id="tplSpecialty">
+    <h4 class="y-content__title"><%=title%></h4>
+    <div class="y-content__opt__bar">
+        <button class="y-btn y-btn__blue js-addSpecialty" type="button">新增公共库</button>
+    </div>
+    <div class="y-content__table" id="specialtyTable"></div>
 </script>
 
 <script src="${resourcePath!}/web-static/proExam/index/js/settingIndex.js"></script>
