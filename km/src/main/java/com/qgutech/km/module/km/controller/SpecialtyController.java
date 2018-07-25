@@ -34,18 +34,6 @@ public class SpecialtyController {
         return libraryService.getFirstLevelLibrary();
     }
 
-    @ResponseBody
-    @RequestMapping("manage/search")
-    public Page<Library> search(Library library, PageParam pageParam) {
-        if (library == null) {
-            library = new Library();
-        }
-        if (pageParam == null) {
-            pageParam = new PageParam();
-        }
-        return libraryService.searchLibrary(pageParam, library);
-    }
-
     @RequestMapping("manage/initPage")
     public String initPage() {
         return "km/specialty/specialtyManage";

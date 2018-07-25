@@ -1,7 +1,6 @@
 package com.qgutech.km.module.km.controller;
 
 import com.qgutech.fs.utils.FsFileManagerUtil;
-import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.vo.JsonResult;
@@ -28,14 +27,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -261,7 +256,7 @@ public class KnowledgeController {
     public List<Knowledge> search(String libraryId){
         List<Knowledge> knowledgeList = knowledgeService.getKnowledgeByCreateBy(KnowledgeConstant.MY_LIBRARY,libraryId);
         if(CollectionUtils.isEmpty(knowledgeList)){
-            return new ArrayList<Knowledge>(0);
+            return new ArrayList<>(0);
         }
 
         for(Knowledge knowledge : knowledgeList){
@@ -607,5 +602,21 @@ public class KnowledgeController {
         }
         model.addAttribute("folder",folder);
         return jsonResult;
+    }
+
+    @ResponseBody
+    @RequestMapping("searchKnowledge")
+    public List<Knowledge> searchKnowledge(Knowledge knowledge, PageParam pageParam) {
+        Page<Knowledge> page = knowledgeService.search(knowledge, pageParam);
+        List<Knowledge> knowledgeList = page.getRows();
+        if (CollectionUtils.isEmpty(knowledgeList)) {
+            return new ArrayList<>(0);
+        }
+
+        for (Knowledge know : knowledgeList) {
+            knowledge.setCreateTimeStr(PeDateUtils.format(know.getCreateTime(), PeDateUtils.FORMAT_YYYY_MM_DD_HH_MM));
+        }
+
+        return knowledgeList;
     }
 }

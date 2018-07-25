@@ -4,6 +4,7 @@ import com.qgutech.km.base.model.BaseModel;
 import org.apache.http.annotation.ThreadSafe;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * 智慧云文件实体
@@ -17,6 +18,7 @@ import javax.persistence.*;
 public class Knowledge extends BaseModel {
 
     public static String FILE_ID = "fileId";
+    public static String KNOWLEDGE_NAME = "knowledgeName";
 
     public static String SHOW_ORDER = "showOrder";
 
@@ -94,6 +96,10 @@ public class Knowledge extends BaseModel {
     private String tag;
     @Transient
     private String libraryId;
+    @Transient
+    private Date startDate;
+    @Transient
+    private Date endDate;
 
     public String getKnowledgeName() {
         return knowledgeName;
@@ -226,5 +232,21 @@ public class Knowledge extends BaseModel {
 
     public void setLibraryId(String libraryId) {
         this.libraryId = libraryId;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 }

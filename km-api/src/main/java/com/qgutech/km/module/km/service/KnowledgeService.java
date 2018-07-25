@@ -57,4 +57,19 @@ public interface KnowledgeService extends BaseService<Knowledge> {
 
     List<Knowledge> recursionList(List<String> knowledgeIds);
 
+    /**
+     * 根据条件分页查询知识信息
+     *
+     * @param knowledge 条件对象 <ul>
+     *                  <li>knowledgeName:知识名称</li>
+     *                  <li>libraryId:知识库</li>
+     *                  <li>createBy:创建人</li>
+     *                  <li>createTime:创建时间</li>
+     *                  </ul>
+     * @param pageParam 分页对象
+     * @return 包含知识的分页对象
+     * @throws RuntimeException 当page对象不符合分页数据或者knowledge为null或者libraryId为空时
+     * @since TangFD@HF 2018-7-25
+     */
+    Page<Knowledge> search(Knowledge knowledge, PageParam pageParam);
 }

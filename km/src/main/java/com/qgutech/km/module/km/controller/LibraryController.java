@@ -134,4 +134,17 @@ public class LibraryController {
         return jsonResult;
     }
 
+
+    @ResponseBody
+    @RequestMapping("manage/searchLibrary")
+    public Page<Library> searchLibrary(Library library, PageParam pageParam) {
+        if (library == null) {
+            library = new Library();
+        }
+        if (pageParam == null) {
+            pageParam = new PageParam();
+        }
+        return libraryService.searchLibrary(pageParam, library);
+    }
+
 }

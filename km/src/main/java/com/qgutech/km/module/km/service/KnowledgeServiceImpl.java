@@ -5,42 +5,21 @@ import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.constant.KnowledgeConstant;
-import com.qgutech.km.constant.PeConstant;
 import com.qgutech.km.module.km.model.*;
-import com.qgutech.km.module.sfm.model.PeFile;
-import com.qgutech.km.module.sfm.service.FileServerService;
-import com.qgutech.km.module.uc.model.Organize;
-import com.qgutech.km.module.uc.model.User;
-import com.qgutech.km.module.uc.model.UserPosition;
-import com.qgutech.km.module.uc.model.UserRole;
-import com.qgutech.km.utils.PeDateUtils;
 import com.qgutech.km.utils.PeException;
-import com.qgutech.km.utils.PropertiesUtils;
+import com.qgutech.km.utils.PeUtils;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.CropImageFilter;
-import java.awt.image.FilteredImageSource;
-import java.awt.image.ImageFilter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.*;
-import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service("knowledgeService")
@@ -299,5 +278,29 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             }
         }
         return all;
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public Page<Knowledge> search(Knowledge knowledge, PageParam pageParam) {
+        PeUtils.validPage(pageParam);
+        if (knowledge == null || StringUtils.isEmpty(knowledge.getLibraryId())) {
+            throw new PeException("knowledge and LibraryId must be empty!");
+        }
+
+        List<KnowledgeRel> relList = knowledgeRelService.findKnowledgeRel(knowledge);
+        if (CollectionUtils.isEmpty(relList)) {
+            return new Page<>();
+        }
+
+        List<String> knowledgeIds = new ArrayList<>(relList.stream().map(KnowledgeRel::getKnowledgeId).collect(Collectors.toList()));
+        Conjunction conjunction = Restrictions.and(Restrictions.in(Knowledge.ID, knowledgeIds));
+        conjunction.add(Restrictions.eq(Knowledge.CORP_CODE, ExecutionContext.getCorpCode()));
+        String knowledgeName = knowledge.getKnowledgeName();
+        if (StringUtils.isNotEmpty(knowledgeName)) {
+            conjunction.add(Restrictions.ilike(Knowledge.KNOWLEDGE_NAME, ExecutionContext.getUserId()));
+        }
+
+        return search(pageParam, conjunction, Order.desc(Knowledge.CREATE_TIME));
     }
 }

@@ -62,7 +62,7 @@ public interface LibraryService extends BaseService<Library> {
     String insert(Library library);
 
     /**
-     * 根据条件，分页查询不同类型的库数据（包含库的详情数据）
+     * 根据条件，分页查询不同类型的库数据
      *
      * @param page    分页对象
      * @param library 条件对象 <ul>

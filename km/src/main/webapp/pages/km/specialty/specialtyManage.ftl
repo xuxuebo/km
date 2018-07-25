@@ -99,7 +99,7 @@
         var exerciseManage = {
             init: function () {
                 $('.pe-stand-table-wrap').peGrid({
-                    url: pageContext.rootPath + '/specialty/manage/search',
+                    url: pageContext.rootPath + '/library/manage/searchLibrary',
                     formParam: $('#specialtyManageForm').serializeArray(),
                     tempId: 'peExerManaTemp',
                     showTotalDomId: 'showTotal',
