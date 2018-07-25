@@ -2,12 +2,12 @@ package com.qgutech.km.module.uc.service;
 
 import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.service.BaseServiceImpl;
+import com.qgutech.km.base.service.I18nService;
 import com.qgutech.km.base.vo.PeTreeNode;
 import com.qgutech.km.constant.PeConstant;
 import com.qgutech.km.module.uc.model.Organize;
 import com.qgutech.km.module.uc.model.User;
 import com.qgutech.km.utils.PeException;
-import com.qgutech.km.base.service.I18nService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -636,5 +636,41 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
         }
 
         return organizesMap;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PeTreeNode> listTreeNodeAndUsers() {
+        Criterion criterion = Restrictions.and(Restrictions.eq(Organize.CORP_CODE, ExecutionContext.getCorpCode()),
+                Restrictions.ne(Organize._organizeStauts, Organize.OrganizeStatus.DELETE));
+        List<Organize> organizes = listByCriterion((criterion),
+                new Order[]{Order.asc(Organize._showOrder), Order.desc(Organize.CREATE_TIME)});
+        if (CollectionUtils.isEmpty(organizes)) {
+            return new ArrayList<>(0);
+        }
+
+        List<PeTreeNode> peTreeNodes = new ArrayList<>(organizes.size());
+        for (Organize organize : organizes) {
+            PeTreeNode peTreeNode = new PeTreeNode();
+            peTreeNode.setName(organize.getOrganizeName());
+            peTreeNode.setpId(organize.getParentId());
+            peTreeNode.setId(organize.getId());
+            peTreeNode.setParent(true);
+            List<User> users = organize.getUsers();
+            if (CollectionUtils.isNotEmpty(users)) {
+                for (User user : users) {
+                    peTreeNode.add(user.getId(), user.getUserName());
+                }
+            }
+
+            peTreeNodes.add(peTreeNode);
+            if (!organize.isDefault()) {
+                continue;
+            }
+
+            peTreeNode.setCanEdit(false);
+        }
+
+        return peTreeNodes;
     }
 }

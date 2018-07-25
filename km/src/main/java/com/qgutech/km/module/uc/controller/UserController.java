@@ -1,17 +1,8 @@
 package com.qgutech.km.module.uc.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.qgutech.km.base.controller.BaseController;
-import com.qgutech.km.doc.uc.UserDoc;
-//import com.qgutech.km.module.ems.service.SystemSettingService;
-//import com.qgutech.km.module.ems.vo.Us;
-import com.qgutech.km.module.im.service.MsgSendService;
-import com.qgutech.km.module.sfm.model.PeFile;
-import com.qgutech.km.module.sfm.service.FileServerService;
-import com.qgutech.km.module.uc.model.*;
-import com.qgutech.km.module.uc.service.*;
-import com.qgutech.km.utils.*;
 import com.qgutech.km.base.ExecutionContext;
+import com.qgutech.km.base.controller.BaseController;
 import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.redis.PeRedisClient;
@@ -21,8 +12,15 @@ import com.qgutech.km.base.vo.JsonResult;
 import com.qgutech.km.base.vo.PeTreeNode;
 import com.qgutech.km.constant.PeConstant;
 import com.qgutech.km.constant.RedisKey;
+import com.qgutech.km.doc.uc.UserDoc;
 import com.qgutech.km.module.im.domain.ImReceiver;
 import com.qgutech.km.module.im.domain.ImTemplate;
+import com.qgutech.km.module.im.service.MsgSendService;
+import com.qgutech.km.module.sfm.model.PeFile;
+import com.qgutech.km.module.sfm.service.FileServerService;
+import com.qgutech.km.module.uc.model.*;
+import com.qgutech.km.module.uc.service.*;
+import com.qgutech.km.utils.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -47,6 +45,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.*;
+
+//import com.qgutech.km.module.ems.service.SystemSettingService;
+//import com.qgutech.km.module.ems.vo.Us;
 
 /**
  * 用户管理控制层
@@ -122,6 +123,15 @@ public class UserController extends BaseController {
     @ResponseBody
     @RequestMapping("manage/listTree")
     public List<PeTreeNode> listTree() {
+        return organizeService.listTreeNode();
+    }
+
+    /**
+     * 部门类别树包含人员信息
+     */
+    @ResponseBody
+    @RequestMapping("manage/listOrgTreeAndUsers")
+    public List<PeTreeNode> listOrgTreeAndUsers() {
         return organizeService.listTreeNode();
     }
 

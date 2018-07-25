@@ -1,8 +1,8 @@
 package com.qgutech.km.module.uc.service;
 
-import com.qgutech.km.module.uc.model.Organize;
 import com.qgutech.km.base.service.BaseService;
 import com.qgutech.km.base.vo.PeTreeNode;
+import com.qgutech.km.module.uc.model.Organize;
 
 import java.util.List;
 import java.util.Map;
@@ -165,4 +165,12 @@ public interface OrganizeService extends BaseService<Organize> {
      * @since 2017-11-14 09:05:03
      */
     int syncOrganize(List<Organize> organizes);
+
+    /**
+     * 获取部门树形结构的节点实体以及各部门下的人员信息集合
+     *
+     * @return 部门的树形结构的节点实体以及各部门下的人员信息集合
+     * @since TangFD@HF 2018-7-25
+     */
+    List<PeTreeNode> listTreeNodeAndUsers();
 }
