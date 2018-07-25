@@ -22,6 +22,7 @@ import com.qgutech.km.module.uc.model.*;
 import com.qgutech.km.module.uc.service.*;
 import com.qgutech.km.utils.*;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -207,7 +208,7 @@ public class UserController extends BaseController {
         if (user != null && user.getId().equals(ExecutionContext.getUserId())) {
             return new JsonResult(false, i18nService.getI18nValue("email.old.new.wrong"));
         }
-        if ((user != null && !User.UserStatus.DELETED.equals(user.getStatus()))) {
+        if ((user != null && !User.UserStatus.DELETED.name().equalsIgnoreCase(user.getStatus().name()))) {
             return new JsonResult(false, i18nService.getI18nValue("error.email.exist"));
         }
         User userData = userRedisService.get(ExecutionContext.getUserId());
@@ -626,8 +627,9 @@ public class UserController extends BaseController {
     }
 
     private void downUserExcel(List<User> users, HttpServletResponse response, HttpServletRequest request) {
+        FileInputStream inputStream = null;
         try {
-            FileInputStream inputStream = new FileInputStream(request.getSession().getServletContext().getRealPath("") + "/template/exportUser.xls");
+            inputStream = new FileInputStream(request.getSession().getServletContext().getRealPath("") + "/template/exportUser.xls");
             POIFSFileSystem ps = new POIFSFileSystem(inputStream);
             HSSFWorkbook workbook = new HSSFWorkbook(ps);
             HSSFSheet sheet = workbook.getSheetAt(0);
@@ -689,6 +691,8 @@ public class UserController extends BaseController {
             out.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(inputStream);
         }
     }
 

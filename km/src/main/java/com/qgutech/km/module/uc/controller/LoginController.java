@@ -432,7 +432,7 @@ public class LoginController extends BaseController {
             throw new IllegalArgumentException("User parameter is illegal!");
         }
 
-        if (newPwd.equals(redisUser.getPassword())) {
+        if (newPwd.equalsIgnoreCase(redisUser.getPassword())) {
             return new JsonResult(false, i18nService.getI18nValue("newPwd.equals.oldPwd"));
         }
 

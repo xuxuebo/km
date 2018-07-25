@@ -3,6 +3,7 @@ package com.qgutech.km.utils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
+import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -37,7 +38,7 @@ public final class ReflectUtil {
         }
 
         try {
-            field.setAccessible(true);
+            ReflectionUtils.makeAccessible(field);
             return field.get(obj);
         } catch (Exception e) {
             LOG.error("Can't get value by reflect!", e);
@@ -78,7 +79,7 @@ public final class ReflectUtil {
         value = adapterValue(field, value);
 
         try {
-            field.setAccessible(true);
+            ReflectionUtils.makeAccessible(field);
             field.set(obj, value);
             return true;
         } catch (Exception e) {

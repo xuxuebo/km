@@ -475,7 +475,6 @@ $(function () {
                 exerciseModel.tips({
                     content: "练习暂存成功!",
                     end: function () {
-                        window.opener.location.href = CFG.ctx + '/front/initPage';
                         window.close();
                     }
                 });
@@ -572,7 +571,6 @@ $(function () {
                     btnAlign: 'r',
                     btn: ['继续答题', '确认提交'],
                     btn1: function () {
-                        window.opener.location.href = CFG.ctx + '/front/initPage';
                         layer.closeAll();
                     },
                     btn2: function () {
@@ -701,7 +699,6 @@ $(function () {
                             content: '提交成功',
                             time: 3000,
                             end: function () {
-                                window.opener.location.href = CFG.ctx + '/front/initPage';
                                 window.close();
                             }
                         });

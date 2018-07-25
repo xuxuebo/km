@@ -85,6 +85,7 @@ public class ExcelUtils {
 
 
     public static void exportExcel(HttpServletRequest request, HttpServletResponse response, String filePath, String excelName) throws IOException {
+        filePath = PathManipulationUtils.filterPath(filePath);
         File file = new File(filePath);
         if (!file.exists()) {
             return;
@@ -124,6 +125,7 @@ public class ExcelUtils {
     }
 
     private static OutputStream getOutputStream(String filePath) throws FileNotFoundException {
+        filePath = PathManipulationUtils.filterPath(filePath);
         File errorFile = new File(filePath);
         if (!errorFile.getParentFile().exists()) {
             errorFile.getParentFile().mkdirs();
