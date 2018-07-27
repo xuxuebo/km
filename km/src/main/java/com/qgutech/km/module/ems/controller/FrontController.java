@@ -67,7 +67,20 @@ public class FrontController {
         return "index/dataView";
     }
 
-
+    //首页  数据统计
+    @RequestMapping("dataStatistics")
+    public String dataStatistics(Model model){
+        model.addAttribute("userName", SessionContext.get().getUserName());
+        model.addAttribute("admin", SessionContext.get().isAdmin());
+        return "index/dataStatistics";
+    }
+    //首页  重点项目
+    @RequestMapping("majorProject")
+    public String majorProject(Model model){
+        model.addAttribute("userName", SessionContext.get().getUserName());
+        model.addAttribute("admin", SessionContext.get().isAdmin());
+        return "index/majorProject";
+    }
 
     @RequestMapping("manage/initPage")
     public String initMainPage(Model model) {
