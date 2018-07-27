@@ -132,7 +132,7 @@ public class UserController extends BaseController {
     @ResponseBody
     @RequestMapping("manage/listOrgTreeAndUsers")
     public List<PeTreeNode> listOrgTreeAndUsers() {
-        return organizeService.listTreeNode();
+        return organizeService.listTreeNodeAndUsers();
     }
 
     /**
