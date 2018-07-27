@@ -619,4 +619,17 @@ public class KnowledgeController {
 
         return knowledgeList;
     }
+
+    @RequestMapping("orgShare/search")
+    @ResponseBody
+    public Page<Knowledge> search(Knowledge knowledge, PageParam pageParam) {
+        if (knowledge == null) {
+            knowledge = new Knowledge();
+        }
+        if (pageParam == null) {
+            pageParam = new PageParam();
+        }
+
+        return knowledgeService.searchOrgShare(knowledge, pageParam);
+    }
 }

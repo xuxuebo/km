@@ -1,10 +1,10 @@
 package com.qgutech.km.module.km.model;
 
 import com.qgutech.km.base.model.BaseModel;
-import org.apache.http.annotation.ThreadSafe;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 智慧云文件实体
@@ -100,6 +100,62 @@ public class Knowledge extends BaseModel {
     private Date startDate;
     @Transient
     private Date endDate;
+    @Transient
+    private String projectLibraryId;
+    @Transient
+    private String specialtyLibraryId;
+    @Transient
+    private String referId;
+    @Transient
+    private String referType;
+    @Transient
+    private boolean includeChild;
+    @Transient
+    private List<String> userIds;
+    @Transient
+    private List<String> knowledgeIds;
+    @Transient
+    private List<String> libraryIds;
+
+    public boolean isIncludeChild() {
+        return includeChild;
+    }
+
+    public void setIncludeChild(boolean includeChild) {
+        this.includeChild = includeChild;
+    }
+
+    public String getProjectLibraryId() {
+        return projectLibraryId;
+    }
+
+    public void setProjectLibraryId(String projectLibraryId) {
+        this.projectLibraryId = projectLibraryId;
+    }
+
+    public String getReferId() {
+        return referId;
+    }
+
+    public void setReferId(String referId) {
+        this.referId = referId;
+    }
+
+    public String getReferType() {
+        return referType;
+    }
+
+    public void setReferType(String referType) {
+        this.referType = referType;
+    }
+
+    public String getSpecialtyLibraryId() {
+        return specialtyLibraryId;
+    }
+
+    public void setSpecialtyLibraryId(String specialtyLibraryId) {
+        this.specialtyLibraryId = specialtyLibraryId;
+    }
 
     public String getKnowledgeName() {
         return knowledgeName;
@@ -248,5 +304,29 @@ public class Knowledge extends BaseModel {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public void setUserIds(List<String> userIds) {
+        this.userIds = userIds;
+    }
+
+    public List<String> getUserIds() {
+        return userIds;
+    }
+
+    public void setKnowledgeIds(List<String> knowledgeIds) {
+        this.knowledgeIds = knowledgeIds;
+    }
+
+    public List<String> getKnowledgeIds() {
+        return knowledgeIds;
+    }
+
+    public void setLibraryIds(List<String> libraryIds) {
+        this.libraryIds = libraryIds;
+    }
+
+    public List<String> getLibraryIds() {
+        return libraryIds;
     }
 }

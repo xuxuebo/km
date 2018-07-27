@@ -673,4 +673,44 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
 
         return peTreeNodes;
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<String> getAllParentOrgIds() {
+        User user = userService.load(ExecutionContext.getUserId());
+        Organize organize = load(user.getOrganizeId());
+        String orgId = organize.getId();
+        if (organize.getParentId() == null) {
+            return Collections.singletonList(orgId);
+        }
+
+        String idPath = organize.getIdPath();
+        String[] ids = idPath.split("\\.");
+        List<String> orgIds = new ArrayList<>(ids.length + 1);
+        Collections.addAll(orgIds, ids);
+        orgIds.add(orgId);
+        return orgIds;
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public List<String> findChildOrgIds(String orgId) {
+        if (StringUtils.isEmpty(orgId)) {
+            throw new PeException("orgId must be not empty!");
+        }
+
+        Criterion criterion = Restrictions.and(Restrictions.eq(Organize.CORP_CODE, ExecutionContext.getCorpCode()),
+                Restrictions.ne(Organize._organizeStauts, Organize.OrganizeStatus.DELETE),
+                Restrictions.like(Organize._idPath, "%" + orgId + "%"));
+        List<Organize> organizes = listByCriterion((criterion));
+        boolean empty = CollectionUtils.isEmpty(organizes);
+        List<String> orgIds = new ArrayList<>(empty ? 1 : (organizes.size() + 1));
+        orgIds.add(orgId);
+        if (empty) {
+            return orgIds;
+        }
+
+        orgIds.addAll(organizes.stream().map(Organize::getId).collect(Collectors.toList()));
+        return orgIds;
+    }
 }

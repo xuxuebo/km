@@ -1,6 +1,8 @@
 package com.qgutech.km.module.km.service;
 
 import com.qgutech.km.base.ExecutionContext;
+import com.qgutech.km.base.model.Page;
+import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.module.km.model.Knowledge;
 import com.qgutech.km.module.km.model.KnowledgeRel;
@@ -21,6 +23,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Administrator on 2018/6/22.
@@ -94,5 +97,33 @@ public class KnowledgeRelServiceImpl extends BaseServiceImpl<KnowledgeRel> imple
         }
 
         return listByCriterion(conjunction, new Order[]{Order.desc(Library.CREATE_TIME)});
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public List<String> getKnowledgeIdsByLibraryIdsAndUserIds(List<String> libraryIds, List<String> userIds) {
+        if (CollectionUtils.isEmpty(libraryIds)) {
+            throw new PeException("libraryIds not be empty!");
+        }
+
+        Conjunction conjunction = Restrictions.and(Restrictions.eq(KnowledgeRel.CORP_CODE, ExecutionContext.getCorpCode()));
+        conjunction.add(Restrictions.in(KnowledgeRel.LIBRARY_ID, libraryIds));
+        if (CollectionUtils.isNotEmpty(userIds)) {
+            conjunction.add(Restrictions.in(KnowledgeRel.CREATE_BY, userIds));
+        }
+
+        List<KnowledgeRel> knowledgeRelList = listByCriterion(conjunction);
+        if (CollectionUtils.isEmpty(knowledgeRelList)) {
+            return new ArrayList<>(0);
+        }
+
+        List<String> knowledgeIds = new ArrayList<>(knowledgeRelList.size());
+        knowledgeIds.addAll(knowledgeRelList.stream().map(KnowledgeRel::getKnowledgeId).collect(Collectors.toList()));
+        return knowledgeIds;
+    }
+
+    @Override
+    public Page<KnowledgeRel> searchOrgShare(Knowledge knowledge, PageParam pageParam) {
+        return null;
     }
 }

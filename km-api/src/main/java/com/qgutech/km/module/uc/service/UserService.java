@@ -1,9 +1,9 @@
 package com.qgutech.km.module.uc.service;
 
-import com.qgutech.km.module.uc.model.Organize;
 import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseService;
+import com.qgutech.km.module.uc.model.Organize;
 import com.qgutech.km.module.uc.model.User;
 
 import java.util.List;
@@ -520,4 +520,15 @@ public interface UserService extends BaseService<User> {
      * @return true 正确 false 不正确
      */
     Boolean checkUserPassWord(String passWord);
+
+    /**
+     * 根据部门Id获取其所有的人员Id集合
+     *
+     * @param orgId        部门Id
+     * @param includeChild 是否包含子部门
+     * @return 所有的人员Id集合
+     * @throws RuntimeException 当orgId为空时
+     * @since TangFD@HF 2018-7-27
+     */
+    List<String> getUserIdsByOrgId(String orgId, boolean includeChild);
 }

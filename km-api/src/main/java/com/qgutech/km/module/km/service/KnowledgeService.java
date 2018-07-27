@@ -72,4 +72,23 @@ public interface KnowledgeService extends BaseService<Knowledge> {
      * @since TangFD@HF 2018-7-25
      */
     Page<Knowledge> search(Knowledge knowledge, PageParam pageParam);
+
+    /**
+     * 根据条件，分页查询部门分享类型的库数据
+     *
+     * @param knowledge 条件对象， 不可为空<ul>
+     *                  <li>{@link Knowledge#knowledgeName}:库名模糊匹配</li>
+     *                  <li>{@link Knowledge#referId}:部门/人员 Id，不可为空</li>
+     *                  <li>{@link Knowledge#referType}:部门（TYPE_ORG）/人员(TYPE_USER)，不可为空</li>
+     *                  <li>{@link Knowledge#includeChild}:referType为部门时有效</li>
+     *                  <li>{@link Knowledge#projectLibraryId}:重点项目库Id</li>
+     *                  <li>{@link Knowledge#specialtyLibraryId}:专业分类库Id</li>
+     *                  <li>{@link Knowledge#tag}:标签Id</li>
+     *                  </ul>
+     * @param pageParam 分页对象
+     * @return 包含库数据的分页对象
+     * @throws RuntimeException 当page对象不符合分页数据或者knowledge不符合条件时
+     * @since TangFD@HF 2018-7-27
+     */
+    Page<Knowledge> searchOrgShare(Knowledge knowledge, PageParam pageParam);
 }

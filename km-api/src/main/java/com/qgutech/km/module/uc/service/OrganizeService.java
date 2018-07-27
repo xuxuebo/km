@@ -173,4 +173,22 @@ public interface OrganizeService extends BaseService<Organize> {
      * @since TangFD@HF 2018-7-25
      */
     List<PeTreeNode> listTreeNodeAndUsers();
+
+    /**
+     * 获取当前人所在部门及所有父部门Id集合
+     *
+     * @return 当前人所在部门及所有父部门Id集合
+     * @since TangFD@HF 2018-7-27
+     */
+    List<String> getAllParentOrgIds();
+
+    /**
+     * 根据部门Id查询其所有的子部门Id集合，包括自身
+     *
+     * @param orgId 部门Id
+     * @return 所有的子部门Id集合
+     * @throws RuntimeException 当orgId为空时
+     * @since TangFD@HF 2018-7-27
+     */
+    List<String> findChildOrgIds(String orgId);
 }

@@ -1,22 +1,20 @@
 package com.qgutech.km.module.uc.service;
 
 import com.alibaba.fastjson.JSON;
+import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.model.Category;
+import com.qgutech.km.base.model.CorpInfo;
+import com.qgutech.km.base.model.Page;
+import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.*;
-import com.qgutech.km.constant.KnowledgeConstant;
+import com.qgutech.km.constant.PeConstant;
+import com.qgutech.km.module.im.domain.ImReceiver;
+import com.qgutech.km.module.im.domain.ImTemplate;
 import com.qgutech.km.module.im.service.MsgSendService;
-import com.qgutech.km.module.km.model.Library;
 import com.qgutech.km.module.km.service.LibraryService;
 import com.qgutech.km.module.sfm.service.FileServerService;
 import com.qgutech.km.module.uc.model.*;
 import com.qgutech.km.utils.*;
-import com.qgutech.km.base.ExecutionContext;
-import com.qgutech.km.base.model.CorpInfo;
-import com.qgutech.km.base.model.Page;
-import com.qgutech.km.base.model.PageParam;
-import com.qgutech.km.constant.PeConstant;
-import com.qgutech.km.module.im.domain.ImReceiver;
-import com.qgutech.km.module.im.domain.ImTemplate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.BooleanUtils;
@@ -1777,5 +1775,31 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                 && !dataUser.getId().equals(user.getId()))) {
             throw new PeException(i18nService.getI18nValue("error.loginName.exist"));
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public List<String> getUserIdsByOrgId(String orgId, boolean includeChild) {
+        if (StringUtils.isEmpty(orgId)) {
+            throw new PeException("orgId must be not empty!");
+        }
+
+        List<String> orgIds;
+        if (includeChild) {
+            orgIds = organizeService.findChildOrgIds(orgId);
+        } else {
+            orgIds = Collections.singletonList(orgId);
+        }
+
+        Criterion criterion = Restrictions.and(Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()),
+                Restrictions.in(User._organize, orgIds));
+        List<User> users = listByCriterion(criterion);
+        if (CollectionUtils.isEmpty(users)) {
+            return new ArrayList<>(0);
+        }
+
+        List<String> userIds = new ArrayList<>(users.size());
+        userIds.addAll(users.stream().map(User::getId).collect(Collectors.toList()));
+        return userIds;
     }
 }

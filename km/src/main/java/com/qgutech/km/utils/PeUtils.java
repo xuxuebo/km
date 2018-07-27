@@ -1,6 +1,5 @@
 package com.qgutech.km.utils;
 
-import com.qgutech.km.module.sfm.service.FileServerService;
 import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
@@ -9,7 +8,9 @@ import com.qgutech.km.base.redis.PeRedisClient;
 import com.qgutech.km.constant.PeConstant;
 import com.qgutech.km.constant.RedisKey;
 import com.qgutech.km.module.sfm.model.PeFile;
+import com.qgutech.km.module.sfm.service.FileServerService;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
@@ -25,6 +26,7 @@ import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 博易考 工具类
@@ -469,5 +471,21 @@ public class PeUtils {
         params.put("appKey_", appKey);
         params.put("timestamp_", System.currentTimeMillis() + "");
         return params;
+    }
+
+    public static List<String> intersection(List<String> list1, List<String> list2) {
+        if (CollectionUtils.isEmpty(list1)) {
+            return list2;
+        }
+        if (CollectionUtils.isEmpty(list2)) {
+            return list1;
+        }
+
+        Map<String, Boolean> map = new HashMap<>(list1.size());
+        for (String string : list1) {
+            map.put(string, true);
+        }
+
+        return list2.stream().filter(string -> BooleanUtils.isTrue(map.get(string))).collect(Collectors.toList());
     }
 }

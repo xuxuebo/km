@@ -6,6 +6,8 @@ import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.module.km.model.*;
+import com.qgutech.km.module.uc.service.OrganizeService;
+import com.qgutech.km.module.uc.service.UserService;
 import com.qgutech.km.utils.PeException;
 import com.qgutech.km.utils.PeUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -34,6 +36,12 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
     @Resource
     private StatisticService statisticService;
+    @Resource
+    private OrganizeService organizeService;
+    @Resource
+    private UserService userService;
+    @Resource
+    private LabelRelService labelRelService;
 
     /**
      * 获取个人云库文件列表
@@ -303,4 +311,105 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
         return search(pageParam, conjunction, Order.desc(Knowledge.CREATE_TIME));
     }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public Page<Knowledge> searchOrgShare(Knowledge knowledge, PageParam pageParam) {
+        PeUtils.validPage(pageParam);
+        if (knowledge == null) {
+            throw new PeException("knowledge invalid!");
+        }
+
+        String referType = knowledge.getReferType();
+        List<String> userIds = getUserIds(knowledge, referType);
+        List<String> orgIds = organizeService.getAllParentOrgIds();
+        List<String> knowledgeIds = null;
+        if (hasSearchCondition(knowledge)) {
+            knowledgeIds = getKnowledgeIds(knowledge, userIds, orgIds);//// TODO: 2018/7/27  
+            if (CollectionUtils.isEmpty(knowledgeIds)) {
+                return new Page<>();
+            }
+        }
+
+
+        knowledge.setUserIds(userIds);
+        knowledge.setKnowledgeIds(knowledgeIds);
+        knowledge.setLibraryIds(orgIds);
+        Page<KnowledgeRel> page = knowledgeRelService.searchOrgShare(knowledge, pageParam);
+
+
+        return null;
+    }
+
+    private boolean hasSearchCondition(Knowledge knowledge) {
+        return StringUtils.isNotEmpty(knowledge.getProjectLibraryId())
+                || StringUtils.isNotEmpty(knowledge.getSpecialtyLibraryId())
+                || StringUtils.isNotEmpty(knowledge.getTag())
+                || StringUtils.isNotEmpty(knowledge.getKnowledgeName());
+    }
+
+    private List<String> getKnowledgeIds(Knowledge knowledge, List<String> userIds, List<String> libraryIds) {
+        List<String> knowledgeIdList = null;
+        /*String knowledgeName = knowledge.getKnowledgeName();
+        if (StringUtils.isNotEmpty(knowledgeName)) {
+            List<String> knowledgeIds = getKnowledgeIdsByNameAndLibraryIds(knowledgeName, libraryIds);
+            if (CollectionUtils.isEmpty(knowledgeIds)) {
+                return null;
+            }
+
+            knowledgeIdList = new ArrayList<>(knowledgeIds);
+        }*/
+
+        String tag = knowledge.getTag();
+        if (StringUtils.isNotEmpty(tag)) {
+            List<String> knowledgeIds = labelRelService.getKnowledgeIdsByLabelIdAndUserIds(tag, userIds);
+            if (CollectionUtils.isEmpty(knowledgeIds)) {
+                return null;
+            }
+
+            knowledgeIdList = new ArrayList<>(knowledgeIds);
+        }
+
+        List<String> libraryIdList = getSearchLibraryIds(knowledge);
+        if (CollectionUtils.isNotEmpty(libraryIdList)) {
+            List<String> knowledgeIds = knowledgeRelService.getKnowledgeIdsByLibraryIdsAndUserIds(libraryIdList, userIds);
+            if (CollectionUtils.isEmpty(knowledgeIds)) {
+                return null;
+            }
+
+            if (knowledgeIdList == null) {
+                knowledgeIdList = new ArrayList<>(knowledgeIds);
+            } else {
+                knowledgeIdList = PeUtils.intersection(knowledgeIdList, knowledgeIdList);
+            }
+        }
+        return knowledgeIdList;
+    }
+
+    private List<String> getUserIds(Knowledge knowledge, String referType) {
+        List<String> userIds = null;
+        if (KnowledgeConstant.TYPE_USER.equals(referType)) {
+            userIds = new ArrayList<>(1);
+            userIds.add(knowledge.getReferId());
+        } else if (KnowledgeConstant.TYPE_ORG.equals(referType)) {
+            userIds = userService.getUserIdsByOrgId(knowledge.getReferId(), knowledge.isIncludeChild());
+        }
+        return userIds;
+    }
+
+    private List<String> getSearchLibraryIds(Knowledge knowledge) {
+        String projectLibraryId = knowledge.getProjectLibraryId();
+        String specialtyLibraryId = knowledge.getSpecialtyLibraryId();
+        List<String> libraryIds = new ArrayList<>(2);
+        if (StringUtils.isNotEmpty(projectLibraryId)) {
+            libraryIds.add(projectLibraryId);
+        }
+
+        if (StringUtils.isNotEmpty(specialtyLibraryId)) {
+            libraryIds.add(specialtyLibraryId);
+        }
+
+        return libraryIds;
+    }
+
 }

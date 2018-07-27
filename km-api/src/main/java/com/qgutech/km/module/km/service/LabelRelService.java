@@ -11,4 +11,15 @@ import java.util.List;
 public interface LabelRelService extends BaseService<LabelRel> {
 
     List<LabelRel> getByLabelId(String labelId);
+
+    /**
+     * 根据标签Id，创建人Id集合，获取所有的知识Id集合
+     *
+     * @param labelId 标签Id，不可为空
+     * @param userIds 创建人Ids，为空时查找该标签下的所有数据
+     * @return 知识Id集合
+     * @throws RuntimeException 当labelId为空时
+     * @since TangFD@HF 2018-7-27
+     */
+    List<String> getKnowledgeIdsByLabelIdAndUserIds(String labelId, List<String> userIds);
 }
