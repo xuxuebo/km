@@ -42,14 +42,4 @@ public interface KnowledgeRelService extends BaseService<KnowledgeRel> {
      */
     List<String> getKnowledgeIdsByLibraryIdsAndUserIds(List<String> libraryIds, List<String> userIds);
 
-    /**
-     * 分页查询部门分享的知识关联实体
-     *
-     * @param knowledge 条件对象
-     * @param pageParam 分页对象
-     * @return 知识Id集合
-     * @throws RuntimeException libraryId为空时
-     * @since TangFD@HF 2018-7-27
-     */
-    Page<KnowledgeRel> searchOrgShare(Knowledge knowledge, PageParam pageParam);
 }
