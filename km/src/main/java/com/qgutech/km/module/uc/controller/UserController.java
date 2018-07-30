@@ -218,7 +218,7 @@ public class UserController extends BaseController {
         if (StringUtils.isBlank(password)) {
             throw new IllegalArgumentException("Parameters is not valid!");
         }
-        if (password.equals(userData.getPassword())) {
+        if (password.equalsIgnoreCase(userData.getPassword())) {
             String templateName = ImTemplate.BIND_EMAIL;
             String expiredTime = PropertiesUtils.getConfigProp().getProperty("verifyCode.time.email");
             Map<String, Object> dataMap = new HashMap<>();

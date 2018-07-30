@@ -1070,7 +1070,11 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             throw new IllegalArgumentException("User is not exist!");
         }
         String dbPassWord = user.getPassword();
-        if(passWord.equals(dbPassWord)){
+        if(StringUtils.isBlank(dbPassWord)){
+            return Boolean.FALSE;
+        }
+
+        if(dbPassWord.equalsIgnoreCase(passWord)){
             return Boolean.TRUE;
         }
         return Boolean.FALSE;

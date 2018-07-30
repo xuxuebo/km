@@ -532,6 +532,7 @@ public class LZString {
                 entry = dictionary.get(cc);
             } else {
                 if (cc == dictSize) {
+                    w = w == null ? "" : w;
                     entry = w + w.charAt(0);
                 } else {
                     return null;
