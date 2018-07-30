@@ -677,8 +677,8 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
     @Override
     @Transactional(readOnly = true)
     public List<String> getAllParentOrgIds() {
-        User user = userService.load(ExecutionContext.getUserId());
-        Organize organize = load(user.getOrganizeId());
+        User user = userService.get(ExecutionContext.getUserId());
+        Organize organize = get(user.getOrganize().getId(), Organize._idPath, Organize._parentId);
         String orgId = organize.getId();
         if (organize.getParentId() == null) {
             return Collections.singletonList(orgId);

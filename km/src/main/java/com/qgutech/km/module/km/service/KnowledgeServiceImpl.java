@@ -354,7 +354,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         }
 
         if (pageParam.isAutoPaging()) {
-            sql.append("limit :searchCount offset :start");
+            sql.append(" limit :searchCount offset :start");
             params.put("searchCount", pageParam.getPageSize());
             params.put("start", pageParam.getStart());
         }
@@ -370,7 +370,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
     private StringBuilder getConditionSql(List<String> userIds, List<String> orgIds, List<String> knowledgeIds, Map<String, Object> params) {
         StringBuilder sql = new StringBuilder(" FROM t_km_knowledge k");
-        sql.append(" INNER JOIN t_km_knowledge_rel kr1 ON k.id=kr.knowledge_id AND kr.libraryId IN (:libraryIds)");
+        sql.append(" INNER JOIN t_km_knowledge_rel kr ON k.id=kr.knowledge_id AND kr.library_id IN (:libraryIds)");
         params.put("libraryIds", orgIds);
         sql.append(" WHERE k.corp_code = :corpCode");
         params.put("corpCode", ExecutionContext.getCorpCode());
