@@ -350,7 +350,7 @@
         myPieChart.setOption(pieOption);
 
         //专业排行
-        var array = [0, 6500, 7800, 9000, 2700, 10000];
+        var array = [0, 65, 78, 90, 27, 100];
         var color = ['#588EE9', '#45FBC8', '#F3CE30', '#F03869', '#446EB6', '#725CA4 '];
         var res = '';
         for (var i = 0; i < array.length; i++) {
@@ -358,7 +358,7 @@
             res += '<li>';
             res += '<span class="s-special-info">断电保护</span>';
             res += '<div class="s-progress ' + colorRed + '">';
-            res += '<div class="s-progress-inline s-progress-active" style="width: ' + array[i] / 100 + '%">';
+            res += '<div class="s-progress-inline s-progress-active" style="width: ' + array[i] + '%">';
             res += '<div class="s-progress-value">' + array[i] + '份<span class="s-progress-value-icon"></span></div>';
             res += '</div></div></li>';
         }
@@ -368,7 +368,7 @@
         var progressIcon = document.getElementsByClassName("s-progress-value-icon");
         for (var i = 0; i < progress.length; i++) {
             progress[i].style.backgroundColor = color[i];
-            progressValue[i].style.left = array[i] / 100 + "%";
+            progressValue[i].style.left = array[i] + "%";
             progressValue[i].style.backgroundColor = color[i];
             progressIcon[i].style.borderTopColor = color[i];
         }

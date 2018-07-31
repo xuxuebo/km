@@ -87,43 +87,161 @@
     </aside>
     <section class="y-content">
         <div class="y-major-project">
-            <span class="y-major-project-header">高温变相光热</span>
+            <div class="y-major-project-header">高温变相光热</div>
             <div class="y-major-project-content">
+                <div class="y-project-contribution-list">
+                    <div class="y-contribution-info">贡献榜单</div>
+                    <div class="y-contribution">
+                        <ul>
+                            <li>
+                                <div class="y-contribution-icon_first"></div>
+                                <img class="y-contribution-person-img"
+                                     src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
+                                <div class="y-contribution-name">张恒恒</div>
+                                <div class="y-contribution-position">人力资源部</div>
+                                <div class="y-contribution-person-number">50000份</div>
+                            </li>
+                            <li>
+                                <div class="y-contribution-icon_second"></div>
+                                <img class="y-contribution-person-img"
+                                     src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
+                                <div class="y-contribution-name">张恒恒</div>
+                                <div class="y-contribution-position">人力资源部</div>
+                                <div class="y-contribution-person-number">50000份</div>
+                            </li>
+                            <li>
+                                <div class="y-contribution-icon_third"></div>
+                                <img class="y-contribution-person-img"
+                                     src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
+                                <span class="y-contribution-name">张恒恒</span>
+                                <span class="y-contribution-position">人力资源部</span>
+                                <span class="y-contribution-person-number">50000份</span>
+                            </li>
+                            <li>
+                                <div class="y-contribution-icon_forth"></div>
+                                <img class="y-contribution-person-img"
+                                     src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
+                                <div class="y-contribution-name">张恒恒</div>
+                                <div class="y-contribution-position">人力资源部</div>
+                                <div class="y-contribution-person-number">50000份</div>
+                            </li>
+                            <li>
+                                <div class="y-contribution-icon_fifth"></div>
+                                <img class="y-contribution-person-img"
+                                     src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
+                                <div class="y-contribution-name">张恒恒</div>
+                                <div class="y-contribution-position">人力资源部</div>
+                                <div class="y-contribution-person-number">50000份</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
                 <div class="y-project-content-up">
                     <div class="y-project-desc">
                         <div class="y-project-info">项目介绍</div>
                         <div class="y-project-introduction">
-                            <div class="y-project-img">
-                                <img class="s-person-img"
-                                     src="${resourcePath!}/web-static/proExam/index/img/ico_rar.png" alt="">
-                            </div>
+                            <img class="y-project-img"
+                                 src="${resourcePath!}/web-static/proExam/index/img/ico_rar.png" alt="">
                             <div class="y-project-introduction-content">
-                                <div>高温变相光热</div>
-                                <div>项目负责人：宁远 张国元 丁敏</div>
-                                <div>查看全文</div>
+                                <div class="y-project-content-title">高温变相光热</div>
+                                <div class="y-project-content-author">项目负责人：宁远 张国元 丁敏</div>
+                                <div class="y-introduction-content">保持公认的可爱、智慧、有气质的特征，修炼出做事脚踏实地、耐受力强、处处小心谨慎的优点，保持公认的可爱、智慧、有气质的特征，修炼出做事脚踏实地、耐受力强、处处小心谨慎的优点,保持公认的可爱、智慧、有气质的特征，修炼出做事脚踏实地、耐受力强、处处小心谨慎的优点保持公认的可爱、智慧、有气质的特征，修炼出做事脚踏实地、耐受力强、处处小心谨慎的优点暂时先用这三个优点来守护自己的有很高的智慧、酷爱和平、喜爱自由、丰富的幽默感、</div>
+                                <div class="y-project-select-all">查看全文</div>
                             </div>
                         </div>
                     </div>
-                    <div class="y-project-contribution-list">
-                        <div class="y-contribution-info">贡献榜单</div>
-                        <div class="y-contribution"></div>
-                    </div>
+
                 </div>
                 <div class="y-project-content-down">
-                    <div class="y-project-file">
-                        <div class="y-project-file-inline">
-                            <div class="y-project-file-info">项目文件</div>
-                            <div class="y-project-file-more">查看更多</div>
-                        </div>
-                        <div class="y-project-file-list"></div>
-                    </div>
                     <div class="y-project-activity">
                         <div class="y-project-file-inline">
                             <div class="y-project-activity-info">云库动态</div>
                             <div class="y-project-activity-more">查看更多</div>
                         </div>
-                        <div class="y-project-activity-list"></div>
+                        <div class="y-project-activity-list">
+                            <ul>
+                                <li>
+                                    <div class="y-project-activity-time">2018/08/12</div>
+                                    <div class="y-project-activity-name">刘丹上传了《人力资源管理办法条理人力资源管理办法条理人力资源管理办法条理人力资源管理办法条理》</div>
+                                </li>
+                                <li>
+                                    <div class="y-project-activity-time">2018/08/12</div>
+                                    <div class="y-project-activity-name">刘丹上传了《人力资源管理办法条理人力资源管理办法条理人力资源管理办法条理人力资源管理办法条理》</div>
+                                </li>
+                                <li>
+                                    <div class="y-project-activity-time">2018/08/12</div>
+                                    <div class="y-project-activity-name">刘丹上传了《人力资源管理办法条理人力资源管理办法条理人力资源管理办法条理人力资源管理办法条理》</div>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
+                    <div class="y-project-file">
+                        <div class="y-project-file-inline">
+                            <div class="y-project-file-info">项目文件</div>
+                            <div class="y-project-file-more">查看更多</div>
+                        </div>
+                        <div class="y-project-file-list">
+                            <ul>
+                                <li>
+                                    <img
+                                         src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
+                                    <span class="y-project-file-name">高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望</span>
+                                    <span class="y-project-file-author-name">高晓松</span>
+                                    <span class="y-project-file-time">2018/5/5</span>
+                                </li>
+                                <li>
+                                    <img
+                                            src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
+                                    <span class="y-project-file-name">高温变相储热铝合金的研究现状与展望</span>
+                                    <span class="y-project-file-author-name">高晓松</span>
+                                    <span class="y-project-file-time">2018/5/5</span>
+                                </li>
+                                <li>
+                                    <img
+                                            src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
+                                    <span class="y-project-file-name">高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望</span>
+                                    <span class="y-project-file-author-name">高晓松</span>
+                                    <span class="y-project-file-time">2018/5/5</span>
+                                </li>
+                                <li>
+                                    <img
+                                            src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
+                                    <span class="y-project-file-name">高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望</span>
+                                    <span class="y-project-file-author-name">高晓松</span>
+                                    <span class="y-project-file-time">2018/5/5</span>
+                                </li>
+                                <li>
+                                    <img
+                                            src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
+                                    <span class="y-project-file-name">高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望</span>
+                                    <span class="y-project-file-author-name">高晓松</span>
+                                    <span class="y-project-file-time">2018/5/5</span>
+                                </li>
+                                <li>
+                                    <img
+                                            src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
+                                    <span class="y-project-file-name">高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望</span>
+                                    <span class="y-project-file-author-name">高晓松</span>
+                                    <span class="y-project-file-time">2018/5/5</span>
+                                </li>
+                                <li>
+                                    <img
+                                            src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
+                                    <span class="y-project-file-name">高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望</span>
+                                    <span class="y-project-file-author-name">高晓松</span>
+                                    <span class="y-project-file-time">2018/5/5</span>
+                                </li>
+                                <li>
+                                    <img
+                                            src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
+                                    <span class="y-project-file-name">高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望</span>
+                                    <span class="y-project-file-author-name">高晓松</span>
+                                    <span class="y-project-file-time">2018/5/5</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
