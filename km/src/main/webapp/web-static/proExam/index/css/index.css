@@ -1083,13 +1083,17 @@ body, html {
     font-size: 16px;
     color: #66698D;
     padding-left: 30px;
+    width: 150px;
+    display: inline-block;
 }
 
 .s-person-number {
     vertical-align: middle;
     font-size: 18px;
     color: #66698D;
-    padding-left: 150px;
+    display: inline-block;
+    width: 125px;
+    text-align: right;
 }
 
 .s-person-icon_first {
@@ -1134,7 +1138,12 @@ body, html {
     color: #D9D9D9;
     letter-spacing: 0;
     text-align: right;
-    margin-right: 20px;
+    width: 86px;
+    text-align: left;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .s-echarts-special {
@@ -1156,6 +1165,7 @@ body, html {
     background: #252840;
     position: relative;
     display: inline-block;
+    vertical-align: super;
 }
 
 .s-progress-inline {
@@ -1237,7 +1247,6 @@ body, html {
 
 /*重点项目*/
 .y-major-project{
-    margin-top: 20px;
     position: absolute;
     bottom: 0;
     top: 0;
@@ -1247,15 +1256,18 @@ body, html {
 .y-major-project-header{
     font-size: 24px;
     color: #2F2D3B;
-    padding-left:  23px;
+    padding:  20px 0 0 23px;
 }
 .y-major-project-content{
-    padding: 36px 14px 0 14px;
+    padding: 36px 60px 0 14px;
+    overflow: hidden;
+}
+.y-project-content-up{
+    overflow: hidden;
+    margin-right: 444px;
 }
 .y-project-desc{
-    float: left;
-    width: 49.4%;
-    height: 382px;
+    height: auto;
 }
 .y-project-info{
     font-size: 16px;
@@ -1282,15 +1294,33 @@ body, html {
     padding: 27px 0 0 20px;
 }
 .y-project-introduction-content{
-    float: left;
-    padding-left: 14px;
+    padding-left: 124px;
 }
-
+.y-project-content-title{
+    font-size: 17px;
+    color: #333333;
+}
+.y-project-content-author{
+    font-size: 14px;
+    color: #626262;
+    padding-top: 12px;
+}
+.y-introduction-content{
+    font-size: 14px;
+    color: #626262;
+    padding-top: 10px;
+    line-height: 20px;
+}
+.y-project-select-all{
+    padding: 14px 0 42px 0;
+    font-size: 14px;
+    color: #0098FF;
+}
 .y-project-contribution-list{
-    width: 29.9%;
-    height: 382px;
+    width: 430px;
+    height: auto;
     padding-left: 14px;
-    float: left;
+    float: right;
 }
 .y-contribution-info{
     font-size: 16px;
@@ -1308,14 +1338,102 @@ body, html {
     left: 0;
     background: #EBF0F4;
 }
+
+.y-contribution ul {
+    padding: 22px 0 0 20.4px;
+}
+
+.y-contribution ul li {
+    padding-bottom: 20px;
+    position: relative;
+}
+.y-contribution-icon_first{
+    width: 20px;
+    height: 30px;
+    vertical-align: middle;
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-image: url(../img/ico_1.png);
+    background-image: image-set(url('../img/ico_1.png') 1x, url('../img/ico_1@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_1.png') 1x, url('../img/ico_1@2x.png') 2x)
+}
+.y-contribution-icon_second{
+    width: 20px;
+    height: 30px;
+    vertical-align: middle;
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-image: url(../img/ico_2.png);
+    background-image: image-set(url('../img/ico_2.png') 1x, url('../img/ico_2@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_2.png') 1x, url('../img/ico_2@2x.png') 2x)
+}
+.y-contribution-icon_third{
+    width: 20px;
+    height: 30px;
+    vertical-align: middle;
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-image: url(../img/ico_3.png);
+    background-image: image-set(url('../img/ico_3.png') 1x, url('../img/ico_3@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_3.png') 1x, url('../img/ico_3@2x.png') 2x)
+}
+.y-contribution-icon_forth{
+    width: 20px;
+    height: 15px;
+    vertical-align: middle;
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-image: url(../img/ico_4.png);
+    background-image: image-set(url('../img/ico_4.png') 1x, url('../img/ico_4@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_4.png') 1x, url('../img/ico_4@2x.png') 2x);
+    background-position-x: center;
+}
+.y-contribution-icon_fifth{
+    width: 20px;
+    height: 15px;
+    vertical-align: middle;
+    display: inline-block;
+    text-align: center;
+    background-repeat: no-repeat;
+    background-image: url(../img/ico_5.png);
+    background-image: image-set(url('../img/ico_5.png') 1x, url('../img/ico_5@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_5.png') 1x, url('../img/ico_5@2x.png') 2x);
+    background-position-x: center;
+}
+.y-contribution-person-img{
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
+    padding-left: 48.6px;
+}
+.y-contribution-name{
+    font-size: 14px;
+    color: #2F2D3B;
+    vertical-align: middle;
+    width: 95px;
+    display: inline-block;
+}
+.y-contribution-position{
+    font-size: 14px;
+    color: #2F2D3B;
+    line-height: 40px;
+    width: 125px;
+    display: inline-block;
+}
+.y-contribution-person-number{
+    font-size: 14px;
+    color: #2F2D3B;
+    line-height: 40px;
+    display: inline-block;
+}
 .y-project-content-down{
     padding-top: 28px;
+    overflow: hidden;
+    clear: both;
 }
 .y-project-file{
-    float: left;
-    width: 49.4%;
-    height: 382px;
-    position: relative;
+    height: auto;
+    margin-right: 444px;
 }
 .y-project-file-inline{
     position: relative;
@@ -1330,6 +1448,7 @@ body, html {
     left: 0;
     background: #EBF0F4;
 }
+
 .y-project-file-info{
     display: inline-block;
     padding: 14px 0 0 20px;
@@ -1344,10 +1463,48 @@ body, html {
     color: #5C5C5C;
     padding-top: 14px;
 }
+.y-project-file-list ul{
+    padding: 31px 0 0 21px;
+}
+.y-project-file-list ul li{
+    position: relative;
+    padding-bottom: 18px;
+}
+.y-project-file-list ul li img{
+    width: 20px;
+    height: 23px;
+    vertical-align: middle;
+}
+.y-project-file-name{
+    font-size: 14px;
+    color: #626262;
+    padding: 0 230px 0 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: absolute;
+    width: 100%;
+    box-sizing: border-box;
+    line-height: 23px;
+}
+.y-project-file-author-name{
+    font-size: 14px;
+    color: #626262;
+    right: 153px;
+    position: absolute;
+    line-height: 23px;
+}
+.y-project-file-time{
+    font-size: 14px;
+    color: #626262;
+    position: absolute;
+    right: 20px;
+    line-height: 23px;
+}
 .y-project-activity{
-    float: left;
-    width: 29.9%;
-    height: 382px;
+    float: right;
+    width: 430px;
+    height: auto;
     padding-left: 14px;
 }
 .y-project-activity-info{
@@ -1363,4 +1520,25 @@ body, html {
     font-size: 14px;
     color: #5C5C5C;
     padding-top: 14px;
+}
+.y-project-activity-list ul{
+    padding: 31px 0 0 21px;
+}
+.y-project-activity-list ul li{
+    position: relative;
+    padding-bottom: 14px;
+}
+.y-project-activity-name{
+    font-size: 14px;
+    color: #5C5C5C;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 150px;
+    box-sizing: border-box;
+}
+.y-project-activity-time{
+    font-size: 14px;
+    color: #5C5C5C;
+    float: right;
 }

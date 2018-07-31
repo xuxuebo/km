@@ -125,36 +125,36 @@
                             <div class="s-person-icon_first"></div>
                             <img class="s-person-img"
                                  src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-                            <span class="s-person-name">张恒恒</span>
-                            <span class="s-person-number">50000份</span>
+                            <div class="s-person-name">张恒恒</div>
+                            <div class="s-person-number">50000份</div>
                         </li>
                         <li>
                             <div class="s-person-icon_second"></div>
                             <img class="s-person-img"
                                  src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-                            <span class="s-person-name">张恒恒</span>
-                            <span class="s-person-number">50000份</span>
+                            <div class="s-person-name">张恒恒</div>
+                            <div class="s-person-number">50000份</div>
                         </li>
                         <li>
                             <div class="s-person-icon_third"></div>
                             <img class="s-person-img"
                                  src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-                            <span class="s-person-name">张恒恒</span>
-                            <span class="s-person-number">50000份</span>
+                            <div class="s-person-name">张恒恒</div>
+                            <div class="s-person-number">50000份</div>
                         </li>
                         <li>
                             <span class="s-person-order-number">4</span>
                             <img class="s-person-img"
                                  src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-                            <span class="s-person-name">张恒恒</span>
-                            <span class="s-person-number">50000份</span>
+                            <div class="s-person-name">张恒恒</div>
+                            <div class="s-person-number">50000份</div>
                         </li>
                         <li>
                             <span class="s-person-order-number">5</span>
                             <img class="s-person-img"
                                  src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-                            <span class="s-person-name">张恒恒</span>
-                            <span class="s-person-number">50000份</span>
+                            <div class="s-person-name">张恒恒</div>
+                            <div class="s-person-number">50000份</div>
                         </li>
                     </ul>
                 </div>
