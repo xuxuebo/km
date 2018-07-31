@@ -2,10 +2,8 @@ package com.qgutech.km.module.km.model;
 
 import com.qgutech.km.base.model.BaseModel;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * 分享记录实体
@@ -26,7 +24,8 @@ public class Share extends BaseModel {
     /**
      * 分享至共享库主键
      */
-    @Column(nullable = false, length = 50)
+//    @Column(nullable = false, length = 50)
+    @Transient
     private String shareLibraryId;
 
     /**
@@ -46,6 +45,28 @@ public class Share extends BaseModel {
      */
     @Column(nullable = false, length = 20)
     private String expireTime;
+
+    @Transient
+    private List<String> knowledgeIds;
+
+    @Transient
+    private List<String> libraryIds;
+
+    public List<String> getKnowledgeIds() {
+        return knowledgeIds;
+    }
+
+    public void setKnowledgeIds(List<String> knowledgeIds) {
+        this.knowledgeIds = knowledgeIds;
+    }
+
+    public List<String> getLibraryIds() {
+        return libraryIds;
+    }
+
+    public void setLibraryIds(List<String> libraryIds) {
+        this.libraryIds = libraryIds;
+    }
 
     public String getShareType() {
         return shareType;

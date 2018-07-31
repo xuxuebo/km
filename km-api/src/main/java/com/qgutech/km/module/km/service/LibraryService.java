@@ -75,4 +75,13 @@ public interface LibraryService extends BaseService<Library> {
      * @since TangFD@HF 2018-7-24
      */
     Page<Library> searchLibrary(PageParam page, Library library);
+
+    /**
+     * 部门分享，根据部门数据初始化库数据，将每个部门新建为一个库
+     *
+     * @param orgIds 部门Id集合，不可为空
+     * @throws RuntimeException 当orgIds为空时
+     * @since TangFD@HF 2018-7-31
+     */
+    void initLibraryByOrgId(List<String> orgIds);
 }

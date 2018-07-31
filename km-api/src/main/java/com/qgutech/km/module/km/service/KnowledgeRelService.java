@@ -1,12 +1,11 @@
 package com.qgutech.km.module.km.service;
 
-import com.qgutech.km.base.model.Page;
-import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseService;
 import com.qgutech.km.module.km.model.Knowledge;
 import com.qgutech.km.module.km.model.KnowledgeRel;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2018/6/22.
@@ -42,4 +41,14 @@ public interface KnowledgeRelService extends BaseService<KnowledgeRel> {
      */
     List<String> getKnowledgeIdsByLibraryIdsAndUserIds(List<String> libraryIds, List<String> userIds);
 
+    /**
+     * 根据库Id集合，知识Id集合，获取每个库已经存在的知识映射
+     *
+     * @param libraryIds   库Id集合， 不可为空
+     * @param knowledgeIds 知识Id集合， 不可为空
+     * @return 每个库已经存在的知识映射，key：libraryId+&+knowledgeId，value：true
+     * @throws RuntimeException libraryIds,knowledgeIds为空时
+     * @since TangFD@HF 2018-7-27
+     */
+    Map<String, Boolean> getLibraryIdKnowledgeIdMap(List<String> libraryIds, List<String> knowledgeIds);
 }

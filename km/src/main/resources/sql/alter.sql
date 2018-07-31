@@ -1,0 +1,1 @@
+ALTER TABLE t_km_share DROP  share_library_id

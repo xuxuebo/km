@@ -13,6 +13,7 @@ import com.qgutech.km.utils.PeException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -162,5 +163,26 @@ public class ShareServiceImpl extends BaseServiceImpl<Share> implements ShareSer
 
     public ShareServiceImpl() {
         super();
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public Map<String, String> getSharedKnowledgeIdAndShareIdMap(List<String> knowledgeIds) {
+        Conjunction conjunction = Restrictions.and(Restrictions.eq(Share.CORP_CODE, ExecutionContext.getCorpCode()));
+        if (CollectionUtils.isNotEmpty(knowledgeIds)) {
+            conjunction.add(Restrictions.in(Share.KNOWLEDGE_ID, knowledgeIds));
+        }
+
+        List<Share> shareList = listByCriterion(conjunction, Share.KNOWLEDGE_ID, Share.ID);
+        if (CollectionUtils.isEmpty(shareList)) {
+            return new HashMap<>(0);
+        }
+
+        Map<String, String> knowledgeIdAndShareIdMap = new HashMap<>(shareList.size());
+        for (Share share : shareList) {
+            knowledgeIdAndShareIdMap.put(share.getKnowledgeId(), share.getId());
+        }
+
+        return knowledgeIdAndShareIdMap;
     }
 }

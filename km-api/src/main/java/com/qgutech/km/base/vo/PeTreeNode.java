@@ -28,6 +28,7 @@ public class PeTreeNode {
      * 是否可以编辑
      */
     private boolean canEdit = true;
+    private String type = "ORG";
 
     /**
      * 是否在其他批次已经选中了
@@ -160,5 +161,13 @@ public class PeTreeNode {
             users = new ArrayList<OrgUser>();
         }
         users.add(new OrgUser(id, userName));
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
     }
 }

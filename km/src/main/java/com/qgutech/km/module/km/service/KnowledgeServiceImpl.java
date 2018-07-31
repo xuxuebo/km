@@ -6,16 +6,19 @@ import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.module.km.model.*;
+import com.qgutech.km.module.uc.model.User;
 import com.qgutech.km.module.uc.service.OrganizeService;
 import com.qgutech.km.module.uc.service.UserService;
 import com.qgutech.km.utils.PeException;
 import com.qgutech.km.utils.PeUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -359,13 +362,27 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             params.put("start", pageParam.getStart());
         }
 
-        List<Knowledge> knowledgeList = jdbcTemplate.queryForList("SELECT k.*" + sql, params, Knowledge.class);
-        if (CollectionUtils.isEmpty(knowledgeIds)) {
+        List<Knowledge> knowledgeList = jdbcTemplate.query("SELECT k.*" + sql, params, new BeanPropertyRowMapper(Knowledge.class));
+        if (CollectionUtils.isEmpty(knowledgeList)) {
             return page;
         }
 
+        setCreateName(knowledgeList);
         page.setRows(knowledgeList);
         return page;
+    }
+
+    private void setCreateName(List<Knowledge> knowledgeList) {
+        Set<String> userIdSet = knowledgeList.stream().map(Knowledge::getCreateBy).collect(Collectors.toSet());
+        List<User> userList = userService.list(null, new ArrayList<>(userIdSet));
+        Map<String, String> userIdAndNameMap = new HashMap<>(userList.size());
+        for (User user : userList) {
+            userIdAndNameMap.put(user.getId(), user.getUserName());
+        }
+
+        for (Knowledge k : knowledgeList) {
+            k.setUserName(userIdAndNameMap.get(k.getCreateBy()));
+        }
     }
 
     private StringBuilder getConditionSql(List<String> userIds, List<String> orgIds, List<String> knowledgeIds, Map<String, Object> params) {
@@ -452,19 +469,70 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         return userIds;
     }
 
-    private List<String> getSearchLibraryIds(Knowledge knowledge) {
-        String projectLibraryId = knowledge.getProjectLibraryId();
-        String specialtyLibraryId = knowledge.getSpecialtyLibraryId();
-        List<String> libraryIds = new ArrayList<>(2);
-        if (StringUtils.isNotEmpty(projectLibraryId)) {
-            libraryIds.add(projectLibraryId);
+    @Override
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public void shareToOrg(Share share) {
+        if (null == share
+                || CollectionUtils.isEmpty(share.getLibraryIds())
+                || CollectionUtils.isEmpty(share.getKnowledgeIds())) {
+            throw new PeException("share param is invalid!");
         }
 
-        if (StringUtils.isNotEmpty(specialtyLibraryId)) {
-            libraryIds.add(specialtyLibraryId);
+        List<String> knowledgeIds = share.getKnowledgeIds();
+        Map<String, String> knowledgeIdAndShareIdMap = shareService.getSharedKnowledgeIdAndShareIdMap(knowledgeIds);
+        List<String> libraryIds = share.getLibraryIds();
+        libraryService.initLibraryByOrgId(libraryIds);
+        Map<String, Boolean> existMap = knowledgeRelService.getLibraryIdKnowledgeIdMap(libraryIds, knowledgeIds);
+        int size = knowledgeIds.size();
+        String corpCode = ExecutionContext.getCorpCode();
+        List<Share> shareList = new ArrayList<>(size);
+        List<KnowledgeRel> knowledgeRelList = new ArrayList<>(size * libraryIds.size() - existMap.size());
+        for (String libraryId : libraryIds) {
+            for (String knowledgeId : knowledgeIds) {
+                String key = libraryId + "&" + knowledgeId;
+                if (BooleanUtils.isTrue(existMap.get(key))) {
+                    continue;
+                }
+
+                String shareId = knowledgeIdAndShareIdMap.get(knowledgeId);
+                if (StringUtils.isEmpty(shareId)) {
+                    Share shareKnowledge = new Share();
+                    shareKnowledge.setShareType(KnowledgeConstant.SHARE_NO_PASSWORD);
+                    shareKnowledge.setExpireTime(KnowledgeConstant.SHARE_PERMANENT_VALIDITY);
+                    shareKnowledge.setKnowledgeId(knowledgeId);
+                    shareKnowledge.setPassword("");
+                    shareKnowledge.setCorpCode(corpCode);
+                    knowledgeIdAndShareIdMap.put(knowledgeId, "NEW_ADD");
+                    shareList.add(shareKnowledge);
+                }
+
+                KnowledgeRel knowledgeRel = new KnowledgeRel();
+                knowledgeRel.setKnowledgeId(knowledgeId);
+                knowledgeRel.setLibraryId(libraryId);
+                knowledgeRel.setShareId(shareId);
+                knowledgeRel.setCorpCode(corpCode);
+                knowledgeRelList.add(knowledgeRel);
+            }
         }
 
-        return libraryIds;
+        if(shareList.size()>0){
+            shareService.batchSave(shareList);
+            List<Statistic> statistics = new ArrayList<>(size);
+            for (Share saveShared : shareList) {
+                String sharedId = saveShared.getId();
+                knowledgeIdAndShareIdMap.put(saveShared.getKnowledgeId(), sharedId);
+                statistics.add(new Statistic(sharedId, 0, 0, 0));
+            }
+
+            //保存共享统计记录
+            statisticService.batchSave(statistics);
+            for (KnowledgeRel knowledgeRel : knowledgeRelList) {
+                String shareId = knowledgeIdAndShareIdMap.get(knowledgeRel.getKnowledgeId());
+                knowledgeRel.setShareId(shareId);
+            }
+        }
+
+        knowledgeRelService.batchSave(knowledgeRelList);
     }
 
 }

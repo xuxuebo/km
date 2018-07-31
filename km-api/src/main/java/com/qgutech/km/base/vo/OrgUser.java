@@ -3,6 +3,7 @@ package com.qgutech.km.base.vo;
 public class OrgUser {
     private String id;
     private String name;
+    private String type = "USER";
 
     public OrgUser(String id, String name) {
         this.id = id;

@@ -241,7 +241,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.in(User.ID, userIds));
         if (user == null) {
-            return listByCriterion(conjunction, User.ID);
+            return listByCriterion(conjunction, User.ID, User._userName);
         }
 
         if (StringUtils.isNotBlank(user.getKeyword())) {

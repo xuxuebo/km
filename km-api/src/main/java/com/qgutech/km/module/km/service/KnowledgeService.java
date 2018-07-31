@@ -91,4 +91,16 @@ public interface KnowledgeService extends BaseService<Knowledge> {
      * @since TangFD@HF 2018-7-27
      */
     Page<Knowledge> searchOrgShare(Knowledge knowledge, PageParam pageParam);
+
+    /**
+     * 将我的知识分享到我的及上级部门（自动将部门建成库，库的主键即为部门Id）
+     *
+     * @param share 条件对象 <ul>
+     *              <li>{@link Share#libraryIds}:需要分享到的部门Id集合， 不可为空</li>
+     *              <li>{@link Share#knowledgeIds}:需要分享的知识Id集合， 不可为空</li>
+     *              </ul>
+     * @throws RuntimeException 当Share为null，或者libraryIds为空，或者knowledgeIds为空时
+     * @since TangFD@HF 2018-7-30
+     */
+    void shareToOrg(Share share);
 }

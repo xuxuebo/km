@@ -1,8 +1,6 @@
 package com.qgutech.km.module.km.service;
 
 import com.qgutech.km.base.ExecutionContext;
-import com.qgutech.km.base.model.Page;
-import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.module.km.model.Knowledge;
 import com.qgutech.km.module.km.model.KnowledgeRel;
@@ -10,7 +8,6 @@ import com.qgutech.km.module.km.model.Library;
 import com.qgutech.km.module.uc.service.UserService;
 import com.qgutech.km.utils.PeDateUtils;
 import com.qgutech.km.utils.PeException;
-import com.qgutech.km.utils.PeUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.Conjunction;
@@ -121,4 +118,26 @@ public class KnowledgeRelServiceImpl extends BaseServiceImpl<KnowledgeRel> imple
         return knowledgeIds;
     }
 
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public Map<String, Boolean> getLibraryIdKnowledgeIdMap(List<String> libraryIds, List<String> knowledgeIds) {
+        if (CollectionUtils.isEmpty(libraryIds) || CollectionUtils.isEmpty(knowledgeIds)) {
+            throw new PeException("libraryIds and knowledgeIds not be empty!");
+        }
+
+        Conjunction conjunction = Restrictions.and(Restrictions.eq(KnowledgeRel.CORP_CODE, ExecutionContext.getCorpCode()),
+                Restrictions.in(KnowledgeRel.LIBRARY_ID, libraryIds),
+                Restrictions.in(KnowledgeRel.KNOWLEDGE_ID, knowledgeIds));
+        List<KnowledgeRel> knowledgeRelList = listByCriterion(conjunction);
+        if (CollectionUtils.isEmpty(knowledgeRelList)) {
+            return new HashMap<>(0);
+        }
+
+        Map<String, Boolean> libraryIdKnowledgeIdMap = new HashMap<>(knowledgeRelList.size());
+        for (KnowledgeRel knowledgeRel : knowledgeRelList) {
+            libraryIdKnowledgeIdMap.put(knowledgeRel.getLibraryId() + "&" + knowledgeRel.getKnowledgeId(), true);
+        }
+
+        return libraryIdKnowledgeIdMap;
+    }
 }

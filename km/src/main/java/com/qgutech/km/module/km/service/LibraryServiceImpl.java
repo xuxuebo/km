@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -261,8 +263,28 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
             throw new PeException("invalid library entity!");
         }
 
-        library.setCorpCode(ExecutionContext.getCorpCode());
-        return baseService.save(library);
+        batchInsert(Collections.singletonList(library));
+        return library.getId();
+    }
+
+    private void batchInsert(List<Library> libraries) {
+        String insertSql = "INSERT INTO t_km_library (id, corp_code, create_by, create_time, update_by, update_time, " +
+                "id_path, parent_id, show_order, library_name, library_type) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
+        baseService.getJdbcTemplate().batchUpdate(insertSql, getParams(libraries));
+    }
+
+    private List<Object[]> getParams(List<Library> libraries) {
+        List<Object[]> params = new ArrayList<>(libraries.size());
+        String corpCode = ExecutionContext.getCorpCode();
+        String userId = ExecutionContext.getUserId();
+        Date date = new Date();
+        for (Library library : libraries) {
+            Object[] param = new Object[]{library.getId(), corpCode, userId, date, userId, date, library.getIdPath()
+                    , library.getParentId(), library.getShowOrder(), library.getLibraryName(), library.getLibraryType()};
+            params.add(param);
+        }
+
+        return params;
     }
 
     @Override
@@ -294,5 +316,44 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
         }
 
         return libraryPage;
+    }
+
+    @Override
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public void initLibraryByOrgId(List<String> orgIds) {
+        if (CollectionUtils.isEmpty(orgIds)) {
+            throw new PeException("orgIds must be not empty!");
+        }
+
+        String corpCode = ExecutionContext.getCorpCode();
+        Conjunction conjunction = Restrictions.and(Restrictions.eq(Library.CORP_CODE, corpCode),
+                Restrictions.eq(Library.LIBRARY_TYPE, KnowledgeConstant.ORG_SHARE_LIBRARY),
+                Restrictions.in(Library.ID, orgIds));
+        List<Library> libraries = listByCriterion(conjunction, Library.ID);
+        if (CollectionUtils.isNotEmpty(libraries)) {
+            int librariesSize = libraries.size();
+            if (librariesSize == orgIds.size()) {
+                return;
+            }
+
+            for (Library library : libraries) {
+                orgIds.remove(library.getId());
+            }
+        }
+
+        List<Library> libraryList = new ArrayList<>(orgIds.size());
+        for (String orgId : orgIds) {
+            Library library = new Library();
+            library.setId(orgId);
+            library.setIdPath(orgId);
+            library.setParentId("0");
+            library.setLibraryType(KnowledgeConstant.ORG_SHARE_LIBRARY);
+            library.setShowOrder(0);
+            library.setLibraryName(orgId);
+            library.setCorpCode(corpCode);
+            libraryList.add(library);
+        }
+
+        batchInsert(libraryList);
     }
 }
