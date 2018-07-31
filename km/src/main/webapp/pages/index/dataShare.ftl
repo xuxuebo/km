@@ -81,14 +81,14 @@
     </aside>
     <section class="y-content">
         <div class="y-major-project">
-            <span class="y-major-project-header">张主任</span>
+            <span class="y-major-project-header show-org-name"></span>
             <div class="y-share-project-content">
                 <div class="y-share-project-type">
                     <dl class="y-share-project-type-list js-major">
                         <dt>专业:</dt>
                         <dd>
-                            <span class="y-share-project-type-item" data-typeid = '0'>全部</span>
-                            <span class="y-share-project-type-item y-active" data-typeid = '1'>继电保护</span>
+                            <span class="y-share-project-type-item y-active" data-typeid = ''>全部</span>
+                            <span class="y-share-project-type-item" data-typeid = '1'>继电保护</span>
                             <span class="y-share-project-type-item" data-typeid = '2'>输电线路</span>
                             <span class="y-share-project-type-item" data-typeid = '3'>配电线路</span>
                             <span class="y-share-project-type-item" data-typeid = '4'>变电运行</span>
@@ -99,8 +99,8 @@
                     <dl class="y-share-project-type-list js-project">
                         <dt>项目:</dt>
                         <dd>
-                            <span class="y-share-project-type-item" data-typeid = '7'>全部</span>
-                            <span class="y-share-project-type-item y-active" data-typeid = '8'>UPFC</span>
+                            <span class="y-share-project-type-item y-active" data-typeid = ''>全部</span>
+                            <span class="y-share-project-type-item" data-typeid = '8'>UPFC</span>
                             <span class="y-share-project-type-item" data-typeid = '9'>微网路由</span>
                             <span class="y-share-project-type-item" data-typeid = '10'>高温相变光热</span>
                         </dd>
@@ -108,8 +108,8 @@
                     <dl class="y-share-project-type-list js-label">
                         <dt>标签:</dt>
                         <dd>
-                            <span class="y-share-project-type-item" data-typeid = '11'>全部</span>
-                            <span class="y-share-project-type-item y-active" data-typeid = '12'>图片</span>
+                            <span class="y-share-project-type-item y-active" data-typeid = ''>全部</span>
+                            <span class="y-share-project-type-item" data-typeid = '12'>图片</span>
                             <span class="y-share-project-type-item" data-typeid = '13'>视频</span>
                             <span class="y-share-project-type-item" data-typeid = '14'>其他</span>
                         </dd>
@@ -174,15 +174,13 @@
             <td class="y-table__td name">
                 <div class="y-table__opt__bar">
                     <button type="button" title="点击下载" data-id="<%=item.id%>" class="yfont-icon opt-item js-opt-download">&#xe64f;</button>
-                    <button type="button" title="分享" data-id="<%=item.id%>" class="yfont-icon opt-item js-opt-share">&#xe652;</button>
-                    <button type="button" title="删除" data-id="<%=item.id%>" class="yfont-icon opt-item js-opt-delete">&#xe65c;</button>
                 </div>
                 <div class="y-table__filed_name type-<%=item.knowledgeType%>">
                     <%=item.knowledgeName%>
                 </div>
             </td>
             <td class="y-table__td user-name">
-                <%=item.knowledgeUserName%>
+                <%=item.userName%>
             </td>
             <td class="y-table__td size">
                 <%=item.knowledgeSize%>

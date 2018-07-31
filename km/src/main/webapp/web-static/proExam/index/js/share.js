@@ -36,15 +36,17 @@ $(function () {
         // listOrgTreeAndUsers.clickNode();
         typeIds = getTypeIds();
         var param = {
-            'orgTreeId':orgTreeId,
-            'orgType':orgType,
-            'typeIds':typeIds
+            'referId':orgTreeId,
+            'referType':orgType,
+            'tag':typeIds.labelIds,
+            'projectLibraryId':typeIds.projectIds,
+            'specialtyLibraryId':typeIds.majorIds,
+            'knowledgeName':''
         };
         initShareTab(param);
     });
     //初始化表格
     function initShareTab(param) {
-        console.log(param);
         //table渲染
         var _table = $("#tplShareTable").html();
         var $shareTable = $('#shareTable');
@@ -52,11 +54,11 @@ $(function () {
         $.ajax({
             async: false,//此值要设置为FALSE  默认为TRUE 异步调用
             type: "POST",
-            url: pageContext.resourcePath + '/knowledge/search',
+            url: pageContext.resourcePath + '/knowledge/orgShare/search?pageSize=100&page=1',
             dataType: 'json',
-               data: {"param": param},
+               data: param,
             success: function (result) {
-                data = result;
+                data = result.rows;
             }
         });
         for (var i = 0; i < data.length; i++) {
@@ -349,10 +351,14 @@ $(function () {
             orgType = treeNode.type;
             typeIds = getTypeIds();
             var param = {
-                'orgTreeId':orgTreeId,
-                'orgType':orgType,
-                'typeIds':typeIds
+                'referId':orgTreeId,
+                'referType':orgType,
+                'tag':typeIds.labelIds,
+                'projectLibraryId':typeIds.projectIds,
+                'specialtyLibraryId':typeIds.majorIds,
+                'knowledgeName':''
             };
+            $('.show-org-name').text(treeNode.name);
             initShareTab(param);
         },
         treePosition: 'inputDropDown'
@@ -363,10 +369,7 @@ $(function () {
 });
 $("#searchBtn").on('click', function () {
     var $searchKeyword = $("#searchKeyword");
-    console.log($searchKeyword);
-
     var _keyword = $searchKeyword.val();
-    console.log(_keyword);
     $.ajax({
         async: false,//此值要设置为FALSE  默认为TRUE 异步调用
         type: "POST",
@@ -501,8 +504,6 @@ $('.y-share-table-main-panel').delegate('.js-opt-share', 'click', function () {
                 isOpen: true,
                 dataUrl: pageContext.rootPath + '/km/library/listTree',
                 clickNode: function (treeNode) {
-                    debugger;
-                    console.log(treeNode);
                     $('input[name="shareLibraryId"]').val(treeNode.id);
                     //$('.show-org-name').val(treeNode.name);
                 },

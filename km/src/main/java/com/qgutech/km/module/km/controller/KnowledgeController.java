@@ -606,18 +606,8 @@ public class KnowledgeController {
 
     @ResponseBody
     @RequestMapping("searchKnowledge")
-    public List<Knowledge> searchKnowledge(Knowledge knowledge, PageParam pageParam) {
-        Page<Knowledge> page = knowledgeService.search(knowledge, pageParam);
-        List<Knowledge> knowledgeList = page.getRows();
-        if (CollectionUtils.isEmpty(knowledgeList)) {
-            return new ArrayList<>(0);
-        }
-
-        for (Knowledge know : knowledgeList) {
-            knowledge.setCreateTimeStr(PeDateUtils.format(know.getCreateTime(), PeDateUtils.FORMAT_YYYY_MM_DD_HH_MM));
-        }
-
-        return knowledgeList;
+    public Page<Knowledge> searchKnowledge(Knowledge knowledge, PageParam pageParam) {
+        return knowledgeService.search(knowledge, pageParam);
     }
 
     @RequestMapping("orgShare/search")

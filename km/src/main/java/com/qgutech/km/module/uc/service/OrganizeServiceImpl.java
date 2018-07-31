@@ -4,6 +4,7 @@ import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.base.service.I18nService;
 import com.qgutech.km.base.vo.PeTreeNode;
+import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.constant.PeConstant;
 import com.qgutech.km.module.uc.model.Organize;
 import com.qgutech.km.module.uc.model.User;
@@ -656,14 +657,20 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
             peTreeNode.setpId(organize.getParentId());
             peTreeNode.setId(organize.getId());
             peTreeNode.setParent(true);
+            peTreeNodes.add(peTreeNode);
             List<User> users = organize.getUsers();
             if (CollectionUtils.isNotEmpty(users)) {
                 for (User user : users) {
-                    peTreeNode.add(user.getId(), user.getUserName());
+                    PeTreeNode userNode = new PeTreeNode();
+                    userNode.setName(user.getUserName());
+                    userNode.setpId(organize.getId());
+                    userNode.setId(user.getId());
+                    userNode.setParent(false);
+                    userNode.setCanEdit(false);
+                    userNode.setType(KnowledgeConstant.TYPE_USER);
+                    peTreeNodes.add(userNode);
                 }
             }
-
-            peTreeNodes.add(peTreeNode);
             if (!organize.isDefault()) {
                 continue;
             }

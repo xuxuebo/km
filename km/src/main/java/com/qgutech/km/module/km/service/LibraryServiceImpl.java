@@ -5,10 +5,13 @@ import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.base.vo.PeTreeNode;
+import com.qgutech.km.base.vo.Rank;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.module.km.model.Knowledge;
 import com.qgutech.km.module.km.model.KnowledgeRel;
 import com.qgutech.km.module.km.model.Library;
+import com.qgutech.km.module.uc.model.User;
+import com.qgutech.km.module.uc.service.UserService;
 import com.qgutech.km.utils.PeException;
 import com.qgutech.km.utils.PeUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -21,10 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Administrator on 2018/6/22.
@@ -36,6 +36,8 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
     private KnowledgeService knowledgeService;
     @Resource
     private KnowledgeRelService knowledgeRelService;
+    @Resource
+    private UserService userService;
 
     @Override
     @Transactional(readOnly = false)
@@ -355,5 +357,55 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
         }
 
         batchInsert(libraryList);
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public List<Rank> rank(String libraryId) {
+        if (StringUtils.isEmpty(libraryId)) {
+            throw new PeException("libraryId must be not empty!");
+        }
+
+        String sql = "SELECT create_by,count(id) total FROM t_km_knowledge_rel WHERE corp_code=:corpCode " +
+                "AND library_id=:libraryId GROUP BY create_by ORDER BY total DESC,create_by LIMIT 5";
+        Map<String, Object> params = new HashMap<>(2);
+        params.put("corpCode", ExecutionContext.getCorpCode());
+        params.put("libraryId", libraryId);
+        List<String> userIds = new ArrayList<>();
+        List<Rank> rankList = getJdbcTemplate().query(sql, params, (resultSet, i) -> {
+            String userId = resultSet.getString("create_by");
+            userIds.add(userId);
+            return new Rank(userId, (int) resultSet.getLong("total"));
+        });
+
+        if (CollectionUtils.isEmpty(rankList)) {
+            return new ArrayList<>(0);
+        }
+
+        List<User> users = userService.list(userIds);
+        Map<String, User> userMap = new HashMap<>(userIds.size());
+        for (User user : users) {
+            userMap.put(user.getId(), user);
+        }
+
+        int rankIndex = 1, count = 0;
+        for (Rank rank : rankList) {
+            String userId = rank.getUserId();
+            User user = userMap.get(userId);
+            rank.setOrgName(user.getOrganizeName());
+            rank.setUserName(user.getUserName());
+            rank.setFacePath(user.getFacePath());
+            int rankCount = rank.getCount();
+            if (rankCount < count) {
+                rankIndex++;
+                count = rankCount;
+            } else if (count == 0) {
+                count = rankCount;
+            }
+
+            rank.setRank(rankIndex);
+        }
+
+        return rankList;
     }
 }

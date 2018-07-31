@@ -2,10 +2,7 @@ package com.qgutech.km.module.km.model;
 
 import com.qgutech.km.base.model.BaseModel;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 智慧云库实体
@@ -22,7 +19,12 @@ public class Library extends BaseModel {
     public static String PARENT_ID = "parentId";
     public static String SHOW_ORDER = "showOrder";
     public static String ID_PATH = "idPath";
-    public static String LIBRARY_NAME= "libraryName";
+    public static String LIBRARY_NAME = "libraryName";
+    public static String LIBRARY_DETAIL = "libraryDetail";
+    public static String CHARGE_IDS = "libraryDetail.chargeIds";
+    public static String FACE_ID = "libraryDetail.faceId";
+    public static String FACE_NAME = "libraryDetail.faceName";
+    public static String SUMMARY = "libraryDetail.summary";
 
     /**
      * 库名称
@@ -39,19 +41,23 @@ public class Library extends BaseModel {
     /**
      * 父库ID
      */
-    @Column(nullable = false,  length = 32)
+    @Column(nullable = false, length = 32)
     private String parentId;
 
     /**
      * 主键路径
      */
-    @Column(nullable = false,  length = 32)
+    @Column(nullable = false, length = 32)
     private String idPath;
     /**
      * 排序
      */
     @Column
     private float showOrder;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "detail_id", nullable = false)
+    private LibraryDetail libraryDetail;
 
     public String getLibraryName() {
         return libraryName;
@@ -91,5 +97,13 @@ public class Library extends BaseModel {
 
     public void setShowOrder(float showOrder) {
         this.showOrder = showOrder;
+    }
+
+    public LibraryDetail getLibraryDetail() {
+        return libraryDetail;
+    }
+
+    public void setLibraryDetail(LibraryDetail libraryDetail) {
+        this.libraryDetail = libraryDetail;
     }
 }

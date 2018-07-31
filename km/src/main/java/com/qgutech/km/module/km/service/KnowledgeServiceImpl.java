@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -46,6 +48,8 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
     private UserService userService;
     @Resource
     private LabelRelService labelRelService;
+
+    private static final DateFormat TIME_FORMAT= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
      * 获取个人云库文件列表
@@ -313,7 +317,14 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             conjunction.add(Restrictions.ilike(Knowledge.KNOWLEDGE_NAME, ExecutionContext.getUserId()));
         }
 
-        return search(pageParam, conjunction, Order.desc(Knowledge.CREATE_TIME));
+
+        Page<Knowledge> page = search(pageParam, conjunction, Order.desc(Knowledge.CREATE_TIME));
+        List<Knowledge> rows = page.getRows();
+        if (CollectionUtils.isNotEmpty(rows)) {
+            setCreateNameAndDate(rows);
+        }
+
+        return page;
     }
 
     @Override
@@ -367,21 +378,17 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             return page;
         }
 
-        setCreateName(knowledgeList);
+        setCreateNameAndDate(knowledgeList);
         page.setRows(knowledgeList);
         return page;
     }
 
-    private void setCreateName(List<Knowledge> knowledgeList) {
+    private void setCreateNameAndDate(List<Knowledge> knowledgeList) {
         Set<String> userIdSet = knowledgeList.stream().map(Knowledge::getCreateBy).collect(Collectors.toSet());
-        List<User> userList = userService.list(null, new ArrayList<>(userIdSet));
-        Map<String, String> userIdAndNameMap = new HashMap<>(userList.size());
-        for (User user : userList) {
-            userIdAndNameMap.put(user.getId(), user.getUserName());
-        }
-
+        Map<String, String> userIdAndNameMap = userService.getUserIdAndNameMap(userIdSet);
         for (Knowledge k : knowledgeList) {
             k.setUserName(userIdAndNameMap.get(k.getCreateBy()));
+            k.setCreateTimeStr(TIME_FORMAT.format(k.getCreateTime()));
         }
     }
 
@@ -412,7 +419,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
     private List<String> getKnowledgeIds(Knowledge knowledge, List<String> userIds) {
         Map<String, Object> params = new HashMap<>(8);
-        StringBuilder sql = new StringBuilder("SELECT k.knowledge_id FROM t_km_knowledge k");
+        StringBuilder sql = new StringBuilder("SELECT k.id FROM t_km_knowledge k");
         String tag = knowledge.getTag();
         if (StringUtils.isNotEmpty(tag)) {
             sql.append(" INNER JOIN t_km_label_rel lr ON k.id=lr.knowledge_id AND lr.label_id= :labelId");
@@ -425,7 +432,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
         String projectLibraryId = knowledge.getProjectLibraryId();
         if (StringUtils.isNotEmpty(projectLibraryId)) {
-            sql.append(" INNER JOIN t_km_knowledge_rel kr1 ON k.id=kr1.knowledge_id AND kr1.libraryId=:projectLibraryId");
+            sql.append(" INNER JOIN t_km_knowledge_rel kr1 ON k.id=kr1.knowledge_id AND kr1.library_id=:projectLibraryId");
             params.put("projectLibraryId", projectLibraryId);
             if (CollectionUtils.isNotEmpty(userIds)) {
                 sql.append(" AND kr1.create_by in (:projectBy)");
@@ -435,7 +442,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
         String specialtyLibraryId = knowledge.getSpecialtyLibraryId();
         if (StringUtils.isNotEmpty(specialtyLibraryId)) {
-            sql.append(" INNER JOIN t_km_knowledge_rel kr2 ON k.id=kr2.knowledge_id AND kr2.libraryId=:specialtyLibraryId");
+            sql.append(" INNER JOIN t_km_knowledge_rel kr2 ON k.id=kr2.knowledge_id AND kr2.library_id=:specialtyLibraryId");
             params.put("specialtyLibraryId", specialtyLibraryId);
             if (CollectionUtils.isNotEmpty(userIds)) {
                 sql.append(" AND kr2.create_by in (:specialtyBy)");
@@ -452,10 +459,6 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         }
 
         return getJdbcTemplate().queryForList(sql.toString(), params, String.class);
-    }
-
-    private NamedParameterJdbcTemplate getJdbcTemplate() {
-        return new NamedParameterJdbcTemplate(baseService.getJdbcTemplate());
     }
 
     private List<String> getUserIds(Knowledge knowledge, String referType) {
