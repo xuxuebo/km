@@ -16,6 +16,7 @@ import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -320,25 +321,69 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             throw new PeException("knowledge invalid!");
         }
 
+        Page<Knowledge> page = new Page<>();
         String referType = knowledge.getReferType();
         List<String> userIds = getUserIds(knowledge, referType);
+        if (userIds != null && userIds.size() == 0) {
+            return page;
+        }
+
         List<String> orgIds = organizeService.getAllParentOrgIds();
+        if (CollectionUtils.isEmpty(orgIds)) {
+            return page;
+        }
+
         List<String> knowledgeIds = null;
         if (hasSearchCondition(knowledge)) {
-            knowledgeIds = getKnowledgeIds(knowledge, userIds, orgIds);//// TODO: 2018/7/27  
+            knowledgeIds = getKnowledgeIds(knowledge, userIds);
             if (CollectionUtils.isEmpty(knowledgeIds)) {
-                return new Page<>();
+                return page;
             }
         }
 
+        Map<String, Object> params = new HashMap<>(6);
+        StringBuilder sql = getConditionSql(userIds, orgIds, knowledgeIds, params);
+        NamedParameterJdbcTemplate jdbcTemplate = getJdbcTemplate();
+        if (pageParam.isAutoCount()) {
+            Long total = jdbcTemplate.queryForObject("SELECT count(*)" + sql, params, Long.class);
+            if (total == null || total == 0) {
+                return page;
+            }
 
-        knowledge.setUserIds(userIds);
-        knowledge.setKnowledgeIds(knowledgeIds);
-        knowledge.setLibraryIds(orgIds);
-        Page<KnowledgeRel> page = knowledgeRelService.searchOrgShare(knowledge, pageParam);
+            page.setTotal(total);
+        }
 
+        if (pageParam.isAutoPaging()) {
+            sql.append(" limit :searchCount offset :start");
+            params.put("searchCount", pageParam.getPageSize());
+            params.put("start", pageParam.getStart());
+        }
 
-        return null;
+        List<Knowledge> knowledgeList = jdbcTemplate.queryForList("SELECT k.*" + sql, params, Knowledge.class);
+        if (CollectionUtils.isEmpty(knowledgeIds)) {
+            return page;
+        }
+
+        page.setRows(knowledgeList);
+        return page;
+    }
+
+    private StringBuilder getConditionSql(List<String> userIds, List<String> orgIds, List<String> knowledgeIds, Map<String, Object> params) {
+        StringBuilder sql = new StringBuilder(" FROM t_km_knowledge k");
+        sql.append(" INNER JOIN t_km_knowledge_rel kr ON k.id=kr.knowledge_id AND kr.library_id IN (:libraryIds)");
+        params.put("libraryIds", orgIds);
+        sql.append(" WHERE k.corp_code = :corpCode");
+        params.put("corpCode", ExecutionContext.getCorpCode());
+        if (CollectionUtils.isNotEmpty(userIds)) {
+            sql.append(" AND kr.create_by in (:createBy)");
+            params.put("createBy", userIds);
+        }
+
+        if (CollectionUtils.isNotEmpty(knowledgeIds)) {
+            sql.append(" AND kr.knowledge_id in (:knowledgeIds)");
+            params.put("knowledgeIds", knowledgeIds);
+        }
+        return sql;
     }
 
     private boolean hasSearchCondition(Knowledge knowledge) {
@@ -348,42 +393,52 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
                 || StringUtils.isNotEmpty(knowledge.getKnowledgeName());
     }
 
-    private List<String> getKnowledgeIds(Knowledge knowledge, List<String> userIds, List<String> libraryIds) {
-        List<String> knowledgeIdList = null;
-        /*String knowledgeName = knowledge.getKnowledgeName();
-        if (StringUtils.isNotEmpty(knowledgeName)) {
-            List<String> knowledgeIds = getKnowledgeIdsByNameAndLibraryIds(knowledgeName, libraryIds);
-            if (CollectionUtils.isEmpty(knowledgeIds)) {
-                return null;
-            }
-
-            knowledgeIdList = new ArrayList<>(knowledgeIds);
-        }*/
-
+    private List<String> getKnowledgeIds(Knowledge knowledge, List<String> userIds) {
+        Map<String, Object> params = new HashMap<>(8);
+        StringBuilder sql = new StringBuilder("SELECT k.knowledge_id FROM t_km_knowledge k");
         String tag = knowledge.getTag();
         if (StringUtils.isNotEmpty(tag)) {
-            List<String> knowledgeIds = labelRelService.getKnowledgeIdsByLabelIdAndUserIds(tag, userIds);
-            if (CollectionUtils.isEmpty(knowledgeIds)) {
-                return null;
-            }
-
-            knowledgeIdList = new ArrayList<>(knowledgeIds);
-        }
-
-        List<String> libraryIdList = getSearchLibraryIds(knowledge);
-        if (CollectionUtils.isNotEmpty(libraryIdList)) {
-            List<String> knowledgeIds = knowledgeRelService.getKnowledgeIdsByLibraryIdsAndUserIds(libraryIdList, userIds);
-            if (CollectionUtils.isEmpty(knowledgeIds)) {
-                return null;
-            }
-
-            if (knowledgeIdList == null) {
-                knowledgeIdList = new ArrayList<>(knowledgeIds);
-            } else {
-                knowledgeIdList = PeUtils.intersection(knowledgeIdList, knowledgeIdList);
+            sql.append(" INNER JOIN t_km_label_rel lr ON k.id=lr.knowledge_id AND lr.label_id= :labelId");
+            params.put("labelId", tag);
+            if (CollectionUtils.isNotEmpty(userIds)) {
+                sql.append(" AND lr.create_by in (:labelBy)");
+                params.put("labelBy", userIds);
             }
         }
-        return knowledgeIdList;
+
+        String projectLibraryId = knowledge.getProjectLibraryId();
+        if (StringUtils.isNotEmpty(projectLibraryId)) {
+            sql.append(" INNER JOIN t_km_knowledge_rel kr1 ON k.id=kr1.knowledge_id AND kr1.libraryId=:projectLibraryId");
+            params.put("projectLibraryId", projectLibraryId);
+            if (CollectionUtils.isNotEmpty(userIds)) {
+                sql.append(" AND kr1.create_by in (:projectBy)");
+                params.put("projectBy", userIds);
+            }
+        }
+
+        String specialtyLibraryId = knowledge.getSpecialtyLibraryId();
+        if (StringUtils.isNotEmpty(specialtyLibraryId)) {
+            sql.append(" INNER JOIN t_km_knowledge_rel kr2 ON k.id=kr2.knowledge_id AND kr2.libraryId=:specialtyLibraryId");
+            params.put("specialtyLibraryId", specialtyLibraryId);
+            if (CollectionUtils.isNotEmpty(userIds)) {
+                sql.append(" AND kr2.create_by in (:specialtyBy)");
+                params.put("specialtyBy", userIds);
+            }
+        }
+
+        sql.append(" where k.corp_code = :corpCode");
+        params.put("corpCode", ExecutionContext.getCorpCode());
+        String knowledgeName = knowledge.getKnowledgeName();
+        if (StringUtils.isNotEmpty(knowledgeName)) {
+            sql.append(" AND k.knowledge_name ilike :name");
+            params.put("name", "%" + knowledgeName + "%");
+        }
+
+        return getJdbcTemplate().queryForList(sql.toString(), params, String.class);
+    }
+
+    private NamedParameterJdbcTemplate getJdbcTemplate() {
+        return new NamedParameterJdbcTemplate(baseService.getJdbcTemplate());
     }
 
     private List<String> getUserIds(Knowledge knowledge, String referType) {
