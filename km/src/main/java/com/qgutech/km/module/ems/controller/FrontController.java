@@ -82,6 +82,14 @@ public class FrontController {
         return "index/majorProject";
     }
 
+    //首页  分享
+    @RequestMapping("dataShare")
+    public String dataShare(Model model){
+        model.addAttribute("userName", SessionContext.get().getUserName());
+        model.addAttribute("admin", SessionContext.get().isAdmin());
+        return "index/dataShare";
+    }
+
     @RequestMapping("manage/initPage")
     public String initMainPage(Model model) {
         model.addAttribute(User._userName, SessionContext.get().getUserName());

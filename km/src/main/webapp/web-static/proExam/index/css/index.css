@@ -1542,3 +1542,102 @@ body, html {
     color: #5C5C5C;
     float: right;
 }
+/*分享样式*/
+.y-share-project-content{
+    width: 100%;
+}
+.y-share-project-type{
+    background-color: #fff;
+    margin: 0 14px 18px;
+    padding: 20px 14px 0 14px;
+}
+.y-share-project-type-list{
+    font-size: 14px;
+    color: #2F2D3B;
+    margin-right: 44px;
+    padding-bottom: 20px;
+}
+.y-share-project-type-item{
+    display: inline-block;
+    float: left;
+    height: 26px;
+    line-height: 26px;
+    padding: 0 12px;
+    margin-left: 36px;
+    cursor: pointer;
+}
+.y-active{
+    color: #FFFFFF;
+    background: #0098FF;
+    border-radius: 100px;
+}
+.y-share-project-type-list dt,.y-share-project-type-list dd{
+    display: inline-block;
+    height: 26px;
+    line-height: 26px;
+    vertical-align: top;
+}
+.y-share-bar{
+    display: inline-block;
+}
+.y-share-bar:hover .js-share-list{
+    display: inline-block;
+}
+.js-share-list li{
+    font-size: 14px;
+    color: #2F2D3B;
+    height: 40px;
+    line-height: 40px;
+    cursor: pointer;
+}
+.js-share-list{
+    display: none;
+    background: #FFFFFF;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.27);
+    border-radius: 2px;
+    padding: 0 6px;
+    position: absolute;
+    z-index: 2;
+}
+.js-share-local{
+    border-bottom: 1px solid #EBF0F4;
+    background-repeat: no-repeat;
+    background-position: 12px center;
+    padding: 0 12px 0 40px;
+    background-image: url(../img/ico_share.png);
+    background-image: image-set(url('../img/ico_share.png') 1x, url('../img/ico_share@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_share.png') 1x, url('../img/ico_share@2x.png') 2x);
+}
+.js-share-y{
+    background-repeat: no-repeat;
+    background-position: 12px center;
+    padding: 0 12px 0 40px;
+    background-image: url(../img/ico_cloudshare.png);
+    background-image: image-set(url('../img/ico_cloudshare.png') 1x, url('../img/ico_cloudshare@2x.png') 2x);
+    background-image: -webkit-image-set(url('../img/ico_cloudshare.png') 1x, url('../img/ico_cloudshare@2x.png') 2x);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
