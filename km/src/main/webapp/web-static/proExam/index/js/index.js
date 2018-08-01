@@ -28,16 +28,6 @@ $(function () {
                 "templateId": '#tplShare',
                 nav: 'share-yun',
                 cb: "shareCb"
-            },
-             "selectFileMore": {
-                "templateId": '#fileAllList',
-                    nav: 'share-yun',
-                    cb: "fileCb"
-            },
-            "selectActivityMore": {
-                "templateId": '#yunActivityAllList',
-                nav: 'share-yun',
-                cb: "yunActivityCb"
             }
         },
         YunCb: function (container, routeInfo, cb, id) {
@@ -54,14 +44,6 @@ $(function () {
         shareCb: function (container, routeInfo, cb) {
             breadCrumbsList.length =1;
             initSharePage(container, routeInfo);
-        },
-        fileCb: function (container, routeInfo, cb) {
-            breadCrumbsList.length =1;
-            initFilePage(container, routeInfo);
-        },
-        yunActivityCb:function (container, routeInfo, cb) {
-            breadCrumbsList.length =1;
-            initActivityPage(container, routeInfo);
         }
     };
 
@@ -914,64 +896,6 @@ $(function () {
                 }
             });
         });
-    }
-
-    // 文件查看更多
-    function  initFilePage(container, routeInfo) {
-        var _tpl = $(routeInfo.templateId).html();
-        container.html(_.template(_tpl)({title: '项目文件'}));
-        //table渲染
-        var _table = $("#tplFileTable").html();
-        var $yunTable = $('#fileTable');
-        var data = [];
-        $.ajax({
-            async: false,//此值要设置为FALSE  默认为TRUE 异步调用
-            type: "POST",
-            url: pageContext.resourcePath + '/knowledge/searchKnowledge?libraryId=1&page=1&pageSize=100',
-            dataType: 'json',
-            success: function (result) {
-                data = result;
-            }
-        });
-        var table, initSort = {
-            name: "desc",
-            size: "desc",
-            uploadTime: "desc"
-        };
-        renderTable();
-        function renderTable() {
-            $yunTable.html(_.template(_table)({list: data, sort: initSort}));
-            table = initTable($yunTable);
-        }
-    }
-
-    // 云库查看更多
-    function initActivityPage(container, routeInfo) {
-        var _tpl = $(routeInfo.templateId).html();
-        container.html(_.template(_tpl)({title: '云库动态'}));
-        //table渲染
-        var _table = $("#tplActivityTable").html();
-        var $yunTable = $('#yunActivityTable');
-        var data = [];
-        $.ajax({
-            async: false,//此值要设置为FALSE  默认为TRUE 异步调用
-            type: "POST",
-            url: pageContext.resourcePath + '/knowledge/searchKnowledge?libraryId=1&page=1&pageSize=100',
-            dataType: 'json',
-            success: function (result) {
-                data = result;
-            }
-        });
-        var table, initSort = {
-            name: "desc",
-            size: "desc",
-            uploadTime: "desc"
-        };
-        renderTable();
-        function renderTable() {
-            $yunTable.html(_.template(_table)({list: data, sort: initSort}));
-            table = initTable($yunTable);
-        }
     }
 
     //初始化table事件
