@@ -1085,6 +1085,9 @@ body, html {
     padding-left: 30px;
     width: 150px;
     display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .s-person-number {
@@ -1094,6 +1097,9 @@ body, html {
     display: inline-block;
     width: 125px;
     text-align: right;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .s-person-icon_first {
@@ -1259,31 +1265,25 @@ body, html {
     padding:  20px 0 0 23px;
 }
 .y-major-project-content{
-    padding: 36px 60px 0 14px;
+    padding: 36px 14px 0 14px;
     overflow: hidden;
 }
 .y-project-content-up{
     overflow: hidden;
-    margin-right: 444px;
 }
 .y-project-desc{
-    height: auto;
+    height: 382px;
+    background: #FFFFFF;
 }
 .y-project-info{
     font-size: 16px;
     color: #2F2D3B;
     position: relative;
-    padding: 14px 0 0 20px;
-}
-.y-project-info::after{
-    content: '';
-    position: absolute;
-    display: inline-block;
+    padding-left: 20px;
     width: 100%;
-    height: 1px;
-    bottom: -14px;
-    left: 0;
-    background: #EBF0F4;
+    height: 50px;
+    border-bottom: 1px solid #EBF0F4;
+    line-height: 50px;
 }
 .y-project-img{
     float: left;
@@ -1291,7 +1291,7 @@ body, html {
     height: 150px;
 }
 .y-project-introduction{
-    padding: 27px 0 0 20px;
+    padding: 22px 0 0 20px;
 }
 .y-project-introduction-content{
     padding-left: 124px;
@@ -1308,8 +1308,9 @@ body, html {
 .y-introduction-content{
     font-size: 14px;
     color: #626262;
-    padding-top: 10px;
+    padding: 10px 14px 0 0;
     line-height: 20px;
+    height: 170px;
 }
 .y-project-select-all{
     padding: 14px 0 42px 0;
@@ -1317,68 +1318,69 @@ body, html {
     color: #0098FF;
 }
 .y-project-contribution-list{
-    width: 430px;
-    height: auto;
-    padding-left: 14px;
+    width: 39%;
+    height: 382px;
+    margin-left: 14px;
     float: right;
+    background: #FFFFFF;
 }
 .y-contribution-info{
     font-size: 16px;
     color: #2F2D3B;
     position: relative;
-    padding: 14px 0 0 20px;
-}
-.y-contribution-info::after{
-    content: '';
-    position: absolute;
-    display: inline-block;
+    padding-left: 20px;
     width: 100%;
-    height: 1px;
-    bottom: -14px;
-    left: 0;
-    background: #EBF0F4;
+    height: 50px;
+    line-height: 50px;
+    border-bottom: 1px solid #EBF0F4;
 }
-
+.y-contribution{
+    width: 100%;
+}
 .y-contribution ul {
-    padding: 22px 0 0 20.4px;
+    padding: 22px 0 0 0;
 }
 
 .y-contribution ul li {
     padding-bottom: 20px;
     position: relative;
+    white-space: nowrap;
 }
 .y-contribution-icon_first{
-    width: 20px;
+    width: 15%;
     height: 30px;
     vertical-align: middle;
     display: inline-block;
     background-repeat: no-repeat;
     background-image: url(../img/ico_1.png);
     background-image: image-set(url('../img/ico_1.png') 1x, url('../img/ico_1@2x.png') 2x);
-    background-image: -webkit-image-set(url('../img/ico_1.png') 1x, url('../img/ico_1@2x.png') 2x)
+    background-image: -webkit-image-set(url('../img/ico_1.png') 1x, url('../img/ico_1@2x.png') 2x);
+    background-position-x: center;
 }
 .y-contribution-icon_second{
-    width: 20px;
+    width: 15%;
     height: 30px;
     vertical-align: middle;
     display: inline-block;
     background-repeat: no-repeat;
     background-image: url(../img/ico_2.png);
     background-image: image-set(url('../img/ico_2.png') 1x, url('../img/ico_2@2x.png') 2x);
-    background-image: -webkit-image-set(url('../img/ico_2.png') 1x, url('../img/ico_2@2x.png') 2x)
+    background-image: -webkit-image-set(url('../img/ico_2.png') 1x, url('../img/ico_2@2x.png') 2x);
+    background-position-x: center;
 }
 .y-contribution-icon_third{
-    width: 20px;
+    width: 15%;
     height: 30px;
     vertical-align: middle;
     display: inline-block;
     background-repeat: no-repeat;
     background-image: url(../img/ico_3.png);
     background-image: image-set(url('../img/ico_3.png') 1x, url('../img/ico_3@2x.png') 2x);
-    background-image: -webkit-image-set(url('../img/ico_3.png') 1x, url('../img/ico_3@2x.png') 2x)
+    background-image: -webkit-image-set(url('../img/ico_3.png') 1x, url('../img/ico_3@2x.png') 2x);
+    background-position-x: center;
 }
 .y-contribution-icon_forth{
-    width: 20px;
+    width: 15%;
     height: 15px;
     vertical-align: middle;
     display: inline-block;
@@ -1389,71 +1391,81 @@ body, html {
     background-position-x: center;
 }
 .y-contribution-icon_fifth{
-    width: 20px;
+    width: 15%;
     height: 15px;
     vertical-align: middle;
     display: inline-block;
-    text-align: center;
     background-repeat: no-repeat;
     background-image: url(../img/ico_5.png);
     background-image: image-set(url('../img/ico_5.png') 1x, url('../img/ico_5@2x.png') 2x);
     background-image: -webkit-image-set(url('../img/ico_5.png') 1x, url('../img/ico_5@2x.png') 2x);
     background-position-x: center;
 }
+.y-contribution-img{
+    width: 10%;
+    display: inline-block;
+}
 .y-contribution-person-img{
     width: 40px;
     height: 40px;
     vertical-align: middle;
-    padding-left: 48.6px;
 }
 .y-contribution-name{
     font-size: 14px;
     color: #2F2D3B;
     vertical-align: middle;
-    width: 95px;
+    width: 20%;
     display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .y-contribution-position{
     font-size: 14px;
     color: #2F2D3B;
     line-height: 40px;
-    width: 125px;
     display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    width: 25%;
 }
 .y-contribution-person-number{
     font-size: 14px;
     color: #2F2D3B;
     line-height: 40px;
     display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    width: 25%;
+    text-align: right;
 }
 .y-project-content-down{
-    padding-top: 28px;
+    padding-top: 14px;
     overflow: hidden;
     clear: both;
 }
 .y-project-file{
-    height: auto;
-    margin-right: 444px;
+    height: 382px;
+    background: #FFFFFF;
+    overflow: hidden;
 }
 .y-project-file-inline{
     position: relative;
-}
-.y-project-file-inline::after{
-    content: '';
-    position: absolute;
-    display: inline-block;
     width: 100%;
-    height: 1px;
-    bottom: -14px;
-    left: 0;
-    background: #EBF0F4;
+    height: 50px;
+    border-bottom: 1px solid #EBF0F4;
 }
 
 .y-project-file-info{
     display: inline-block;
-    padding: 14px 0 0 20px;
+    padding-left: 20px;
     font-size: 16px;
     color: #2F2D3B;
+    line-height: 50px;
 }
 .y-project-file-more{
     display: inline-block;
@@ -1461,10 +1473,10 @@ body, html {
     position: absolute;
     font-size: 14px;
     color: #5C5C5C;
-    padding-top: 14px;
+    line-height: 50px;
 }
 .y-project-file-list ul{
-    padding: 31px 0 0 21px;
+    padding: 14px 0 0 21px;
 }
 .y-project-file-list ul li{
     position: relative;
@@ -1503,15 +1515,17 @@ body, html {
 }
 .y-project-activity{
     float: right;
-    width: 430px;
-    height: auto;
-    padding-left: 14px;
+    width: 39%;
+    height: 382px;
+    margin-left: 14px;
+    background: #FFFFFF;
 }
 .y-project-activity-info{
     font-size: 16px;
     color: #2F2D3B;
     display: inline-block;
-    padding: 14px 0 0 20px;
+    padding-left: 20px;
+    line-height: 50px;
 }
 .y-project-activity-more{
     display: inline-block;
@@ -1519,10 +1533,10 @@ body, html {
     position: absolute;
     font-size: 14px;
     color: #5C5C5C;
-    padding-top: 14px;
+    line-height: 50px;
 }
 .y-project-activity-list ul{
-    padding: 31px 0 0 21px;
+    padding: 14px 0 0 21px;
 }
 .y-project-activity-list ul li{
     position: relative;
@@ -1541,4 +1555,5 @@ body, html {
     font-size: 14px;
     color: #5C5C5C;
     float: right;
+    padding-right: 14px;
 }
