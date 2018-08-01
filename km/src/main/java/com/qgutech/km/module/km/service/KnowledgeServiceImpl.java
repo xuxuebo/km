@@ -6,7 +6,6 @@ import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.module.km.model.*;
-import com.qgutech.km.module.uc.model.User;
 import com.qgutech.km.module.uc.service.OrganizeService;
 import com.qgutech.km.module.uc.service.UserService;
 import com.qgutech.km.utils.PeException;
@@ -24,8 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,9 +44,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
     @Resource
     private UserService userService;
     @Resource
-    private LabelRelService labelRelService;
-
-    private static final DateFormat TIME_FORMAT= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private KnowledgeLogService knowledgeLogService;
 
     /**
      * 获取个人云库文件列表
@@ -99,7 +94,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
     public int shareToPublic(Share share) {
         if(null==share || StringUtils.isEmpty(share.getKnowledgeId())||StringUtils.isEmpty(share.getShareLibraryId())){
             return 0;
@@ -107,6 +102,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         String knowledgeIds = share.getKnowledgeId();
         List<String> knowledgeIdList= Arrays.asList(knowledgeIds.split(",")) ;
         List<KnowledgeRel> knowledgeRelList = new ArrayList<>(knowledgeIdList.size());
+        List<KnowledgeLog> knowledgeLogList = new ArrayList<>(knowledgeIdList.size());
         List<Share> shareList = new ArrayList<>(knowledgeIdList.size());
         List<Statistic> statisticList = new ArrayList<>(knowledgeIdList.size());
         KnowledgeRel knowledgeRel;
@@ -114,10 +110,11 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         for(String knowledgeId : knowledgeIdList){
             //保存公共库
             knowledgeRel = new KnowledgeRel();
-            knowledgeRel.setKnowledgeId(share.getKnowledgeId());
+            knowledgeRel.setKnowledgeId(knowledgeId);
             knowledgeRel.setLibraryId(share.getShareLibraryId());
             knowledgeRel.setShareId("");
             knowledgeRelList.add(knowledgeRel);
+            knowledgeLogList.add(new KnowledgeLog(knowledgeId, share.getShareLibraryId(), KnowledgeConstant.LOG_SHARE));
 
             //保存分享记录
             share.setShareType(KnowledgeConstant.SHARE_NO_PASSWORD);
@@ -128,6 +125,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         }
 
         knowledgeRelService.batchSave(knowledgeRelList);
+        knowledgeLogService.batchSave(knowledgeLogList);
         List<String> shareIds = shareService.batchSave(shareList);
         Map<String,String> shareIdAndKnowledgeIdMap = new HashMap<>();
         for(Share s : shareList){
@@ -245,26 +243,32 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
     /**
      * 复制到我的个人云库
+     *
      * @param knowledgeIds
      */
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
     public void copyToMyLibrary(String knowledgeIds) {
-        if(StringUtils.isEmpty(knowledgeIds)){
-            throw  new PeException("knowledgeIds is null ");
+        if (StringUtils.isEmpty(knowledgeIds)) {
+            throw new PeException("knowledgeIds is null ");
         }
+
         Library myLibrary = libraryService.getUserLibraryByLibraryType(KnowledgeConstant.MY_LIBRARY);
         List<String> knowledgeIdList = Arrays.asList(knowledgeIds.split(","));
         List<KnowledgeRel> knowledgeRelList = new ArrayList<>(knowledgeIdList.size());
-        KnowledgeRel knowledgeRel;
-        for(String knId : knowledgeIdList){
-            knowledgeRel = new KnowledgeRel();
+        List<KnowledgeLog> knowledgeLogs = new ArrayList<>(knowledgeIdList.size());
+        String libraryId = myLibrary.getId();
+        for (String knId : knowledgeIdList) {
+            KnowledgeRel knowledgeRel = new KnowledgeRel();
             knowledgeRel.setKnowledgeId(knId);
             knowledgeRel.setShareId("");
-            knowledgeRel.setLibraryId(myLibrary.getId());
+            knowledgeRel.setLibraryId(libraryId);
             knowledgeRelList.add(knowledgeRel);
+            knowledgeLogs.add(new KnowledgeLog(knId, libraryId, KnowledgeConstant.LOG_COPY));
         }
+
         knowledgeRelService.batchSave(knowledgeRelList);
+        knowledgeLogService.batchSave(knowledgeLogs);
     }
 
     /**
@@ -388,7 +392,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         Map<String, String> userIdAndNameMap = userService.getUserIdAndNameMap(userIdSet);
         for (Knowledge k : knowledgeList) {
             k.setUserName(userIdAndNameMap.get(k.getCreateBy()));
-            k.setCreateTimeStr(TIME_FORMAT.format(k.getCreateTime()));
+            k.setCreateTimeStr(KnowledgeConstant.TIME_FORMAT.format(k.getCreateTime()));
         }
     }
 
@@ -489,7 +493,9 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         int size = knowledgeIds.size();
         String corpCode = ExecutionContext.getCorpCode();
         List<Share> shareList = new ArrayList<>(size);
-        List<KnowledgeRel> knowledgeRelList = new ArrayList<>(size * libraryIds.size() - existMap.size());
+        int capacity = size * libraryIds.size() - existMap.size();
+        List<KnowledgeRel> knowledgeRelList = new ArrayList<>(capacity);
+        List<KnowledgeLog> knowledgeLogList = new ArrayList<>(capacity);
         for (String libraryId : libraryIds) {
             for (String knowledgeId : knowledgeIds) {
                 String key = libraryId + "&" + knowledgeId;
@@ -515,6 +521,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
                 knowledgeRel.setShareId(shareId);
                 knowledgeRel.setCorpCode(corpCode);
                 knowledgeRelList.add(knowledgeRel);
+                knowledgeLogList.add(new KnowledgeLog(knowledgeId, libraryId, KnowledgeConstant.LOG_SHARE));
             }
         }
 
@@ -536,6 +543,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         }
 
         knowledgeRelService.batchSave(knowledgeRelList);
+        knowledgeLogService.batchSave(knowledgeLogList);
     }
 
 }
