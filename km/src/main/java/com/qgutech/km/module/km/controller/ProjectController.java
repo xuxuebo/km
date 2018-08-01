@@ -64,7 +64,7 @@ public class ProjectController {
         String id = UUIDGenerator.uuid();
         library.setId(id);
         library.setIdPath(id);
-        library.setLibraryType(KnowledgeConstant.SPECIALTY_LIBRARY);
+        library.setLibraryType(KnowledgeConstant.PROJECT_LIBRARY);
         library.setShowOrder(0);
         library.setParentId("0");
     }

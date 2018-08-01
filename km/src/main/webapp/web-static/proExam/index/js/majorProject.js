@@ -240,7 +240,7 @@ $(function () {
         $.ajax({
             async: false,//此值要设置为FALSE  默认为TRUE 异步调用
             type: "POST",
-            url: pageContext.resourcePath + '/km/knowledge/searchKnowledge?libraryId=1&page=1&pageSize=100',
+            url: pageContext.resourcePath + '/knowledge/searchKnowledge?libraryId=1&page=1&pageSize=100',
             dataType: 'json',
             data: param,
             success: function (result) {
