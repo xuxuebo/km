@@ -4,6 +4,7 @@ import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseService;
 import com.qgutech.km.base.vo.PeTreeNode;
+import com.qgutech.km.base.vo.Rank;
 import com.qgutech.km.module.km.model.Library;
 
 import java.util.List;
@@ -75,4 +76,28 @@ public interface LibraryService extends BaseService<Library> {
      * @since TangFD@HF 2018-7-24
      */
     Page<Library> searchLibrary(PageParam page, Library library);
+
+    /**
+     * 部门分享，根据部门数据初始化库数据，将每个部门新建为一个库
+     *
+     * @param orgIds 部门Id集合，不可为空
+     * @throws RuntimeException 当orgIds为空时
+     * @since TangFD@HF 2018-7-31
+     */
+    void initLibraryByOrgId(List<String> orgIds);
+
+    /**
+     * 重点项目，专业分类 排行接口
+     *
+     * @param libraryId 知识库Id，不可为空
+     * @return 排行数据集合 <ul>
+     * <li>{@link Rank#userName}:姓名</li>
+     * <li>{@link Rank#orgName}:部门名称</li>
+     * <li>{@link Rank#count}:上传文件数</li>
+     * <li>{@link Rank#rank}:排名</li>
+     * </ul>
+     * @throws RuntimeException 当libraryId为空时
+     * @since TangFD@HF 2018-7-31
+     */
+    List<Rank> rank(String libraryId);
 }

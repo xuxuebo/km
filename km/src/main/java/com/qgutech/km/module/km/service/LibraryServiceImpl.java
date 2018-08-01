@@ -5,10 +5,13 @@ import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.base.vo.PeTreeNode;
+import com.qgutech.km.base.vo.Rank;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.module.km.model.Knowledge;
 import com.qgutech.km.module.km.model.KnowledgeRel;
 import com.qgutech.km.module.km.model.Library;
+import com.qgutech.km.module.uc.model.User;
+import com.qgutech.km.module.uc.service.UserService;
 import com.qgutech.km.utils.PeException;
 import com.qgutech.km.utils.PeUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -21,8 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Administrator on 2018/6/22.
@@ -34,6 +36,8 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
     private KnowledgeService knowledgeService;
     @Resource
     private KnowledgeRelService knowledgeRelService;
+    @Resource
+    private UserService userService;
 
     @Override
     @Transactional(readOnly = false)
@@ -261,8 +265,28 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
             throw new PeException("invalid library entity!");
         }
 
-        library.setCorpCode(ExecutionContext.getCorpCode());
-        return baseService.save(library);
+        batchInsert(Collections.singletonList(library));
+        return library.getId();
+    }
+
+    private void batchInsert(List<Library> libraries) {
+        String insertSql = "INSERT INTO t_km_library (id, corp_code, create_by, create_time, update_by, update_time, " +
+                "id_path, parent_id, show_order, library_name, library_type) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
+        baseService.getJdbcTemplate().batchUpdate(insertSql, getParams(libraries));
+    }
+
+    private List<Object[]> getParams(List<Library> libraries) {
+        List<Object[]> params = new ArrayList<>(libraries.size());
+        String corpCode = ExecutionContext.getCorpCode();
+        String userId = ExecutionContext.getUserId();
+        Date date = new Date();
+        for (Library library : libraries) {
+            Object[] param = new Object[]{library.getId(), corpCode, userId, date, userId, date, library.getIdPath()
+                    , library.getParentId(), library.getShowOrder(), library.getLibraryName(), library.getLibraryType()};
+            params.add(param);
+        }
+
+        return params;
     }
 
     @Override
@@ -294,5 +318,94 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
         }
 
         return libraryPage;
+    }
+
+    @Override
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public void initLibraryByOrgId(List<String> orgIds) {
+        if (CollectionUtils.isEmpty(orgIds)) {
+            throw new PeException("orgIds must be not empty!");
+        }
+
+        String corpCode = ExecutionContext.getCorpCode();
+        Conjunction conjunction = Restrictions.and(Restrictions.eq(Library.CORP_CODE, corpCode),
+                Restrictions.eq(Library.LIBRARY_TYPE, KnowledgeConstant.ORG_SHARE_LIBRARY),
+                Restrictions.in(Library.ID, orgIds));
+        List<Library> libraries = listByCriterion(conjunction, Library.ID);
+        if (CollectionUtils.isNotEmpty(libraries)) {
+            int librariesSize = libraries.size();
+            if (librariesSize == orgIds.size()) {
+                return;
+            }
+
+            for (Library library : libraries) {
+                orgIds.remove(library.getId());
+            }
+        }
+
+        List<Library> libraryList = new ArrayList<>(orgIds.size());
+        for (String orgId : orgIds) {
+            Library library = new Library();
+            library.setId(orgId);
+            library.setIdPath(orgId);
+            library.setParentId("0");
+            library.setLibraryType(KnowledgeConstant.ORG_SHARE_LIBRARY);
+            library.setShowOrder(0);
+            library.setLibraryName(orgId);
+            library.setCorpCode(corpCode);
+            libraryList.add(library);
+        }
+
+        batchInsert(libraryList);
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public List<Rank> rank(String libraryId) {
+        if (StringUtils.isEmpty(libraryId)) {
+            throw new PeException("libraryId must be not empty!");
+        }
+
+        String sql = "SELECT create_by,count(id) total FROM t_km_knowledge_rel WHERE corp_code=:corpCode " +
+                "AND library_id=:libraryId GROUP BY create_by ORDER BY total DESC,create_by LIMIT 5";
+        Map<String, Object> params = new HashMap<>(2);
+        params.put("corpCode", ExecutionContext.getCorpCode());
+        params.put("libraryId", libraryId);
+        List<String> userIds = new ArrayList<>();
+        List<Rank> rankList = getJdbcTemplate().query(sql, params, (resultSet, i) -> {
+            String userId = resultSet.getString("create_by");
+            userIds.add(userId);
+            return new Rank(userId, (int) resultSet.getLong("total"));
+        });
+
+        if (CollectionUtils.isEmpty(rankList)) {
+            return new ArrayList<>(0);
+        }
+
+        List<User> users = userService.list(userIds);
+        Map<String, User> userMap = new HashMap<>(userIds.size());
+        for (User user : users) {
+            userMap.put(user.getId(), user);
+        }
+
+        int rankIndex = 1, count = 0;
+        for (Rank rank : rankList) {
+            String userId = rank.getUserId();
+            User user = userMap.get(userId);
+            rank.setOrgName(user.getOrganizeName());
+            rank.setUserName(user.getUserName());
+            rank.setFacePath(user.getFacePath());
+            int rankCount = rank.getCount();
+            if (rankCount < count) {
+                rankIndex++;
+                count = rankCount;
+            } else if (count == 0) {
+                count = rankCount;
+            }
+
+            rank.setRank(rankIndex);
+        }
+
+        return rankList;
     }
 }

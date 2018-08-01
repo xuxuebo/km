@@ -241,7 +241,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.in(User.ID, userIds));
         if (user == null) {
-            return listByCriterion(conjunction, User.ID);
+            return listByCriterion(conjunction, User.ID, User._userName);
         }
 
         if (StringUtils.isNotBlank(user.getKeyword())) {
@@ -286,15 +286,17 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         if (CollectionUtils.isEmpty(users)) {
             return new ArrayList<>(0);
         }
+
         Map<String, Organize> organizeMap = organizeService.findAll();
-        if (MapUtils.isNotEmpty(organizeMap)) {
-            for (User user : users) {
-                if (user.getOrganize() != null) {
-                    Organize organize = organizeMap.get(user.getOrganize().getId());
-                    user.setOrganizeName(organize.getOrganizeName());
-                }
-            }
+        if (MapUtils.isEmpty(organizeMap)) {
+            return users;
         }
+
+        users.stream().filter(user -> user.getOrganize() != null).forEach(user -> {
+            Organize organize = organizeMap.get(user.getOrganize().getId());
+            user.setOrganizeName(organize.getOrganizeName());
+            user.setFacePath(getFacePath(user.getFaceFileId(), user.getFaceFileName()));
+        });
 
         return users;
     }
@@ -1801,5 +1803,27 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         List<String> userIds = new ArrayList<>(users.size());
         userIds.addAll(users.stream().map(User::getId).collect(Collectors.toList()));
         return userIds;
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public Map<String, String> getUserIdAndNameMap(Collection<String> userIds) {
+        if (CollectionUtils.isEmpty(userIds)) {
+            throw new PeException("userIds must be not empty!");
+        }
+
+        Criterion criterion = Restrictions.and(Restrictions.eq(User.CORP_CODE, ExecutionContext.getCorpCode()),
+                Restrictions.in(User.ID, userIds));
+        List<User> users = listByCriterion(criterion);
+        if (CollectionUtils.isEmpty(users)) {
+            return new HashMap<>(0);
+        }
+
+        Map<String, String> userIdAndNameMap = new HashMap<>(users.size());
+        for (User user : users) {
+            userIdAndNameMap.put(user.getId(), user.getUserName());
+        }
+
+        return userIdAndNameMap;
     }
 }

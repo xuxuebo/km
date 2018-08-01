@@ -6,21 +6,26 @@ import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.module.km.model.*;
+import com.qgutech.km.module.uc.model.User;
 import com.qgutech.km.module.uc.service.OrganizeService;
 import com.qgutech.km.module.uc.service.UserService;
 import com.qgutech.km.utils.PeException;
 import com.qgutech.km.utils.PeUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,6 +48,8 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
     private UserService userService;
     @Resource
     private LabelRelService labelRelService;
+
+    private static final DateFormat TIME_FORMAT= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
      * 获取个人云库文件列表
@@ -310,7 +317,14 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             conjunction.add(Restrictions.ilike(Knowledge.KNOWLEDGE_NAME, ExecutionContext.getUserId()));
         }
 
-        return search(pageParam, conjunction, Order.desc(Knowledge.CREATE_TIME));
+
+        Page<Knowledge> page = search(pageParam, conjunction, Order.desc(Knowledge.CREATE_TIME));
+        List<Knowledge> rows = page.getRows();
+        if (CollectionUtils.isNotEmpty(rows)) {
+            setCreateNameAndDate(rows);
+        }
+
+        return page;
     }
 
     @Override
@@ -359,13 +373,23 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             params.put("start", pageParam.getStart());
         }
 
-        List<Knowledge> knowledgeList = jdbcTemplate.queryForList("SELECT k.*" + sql, params, Knowledge.class);
-        if (CollectionUtils.isEmpty(knowledgeIds)) {
+        List<Knowledge> knowledgeList = jdbcTemplate.query("SELECT k.*" + sql, params, new BeanPropertyRowMapper(Knowledge.class));
+        if (CollectionUtils.isEmpty(knowledgeList)) {
             return page;
         }
 
+        setCreateNameAndDate(knowledgeList);
         page.setRows(knowledgeList);
         return page;
+    }
+
+    private void setCreateNameAndDate(List<Knowledge> knowledgeList) {
+        Set<String> userIdSet = knowledgeList.stream().map(Knowledge::getCreateBy).collect(Collectors.toSet());
+        Map<String, String> userIdAndNameMap = userService.getUserIdAndNameMap(userIdSet);
+        for (Knowledge k : knowledgeList) {
+            k.setUserName(userIdAndNameMap.get(k.getCreateBy()));
+            k.setCreateTimeStr(TIME_FORMAT.format(k.getCreateTime()));
+        }
     }
 
     private StringBuilder getConditionSql(List<String> userIds, List<String> orgIds, List<String> knowledgeIds, Map<String, Object> params) {
@@ -395,7 +419,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
     private List<String> getKnowledgeIds(Knowledge knowledge, List<String> userIds) {
         Map<String, Object> params = new HashMap<>(8);
-        StringBuilder sql = new StringBuilder("SELECT k.knowledge_id FROM t_km_knowledge k");
+        StringBuilder sql = new StringBuilder("SELECT k.id FROM t_km_knowledge k");
         String tag = knowledge.getTag();
         if (StringUtils.isNotEmpty(tag)) {
             sql.append(" INNER JOIN t_km_label_rel lr ON k.id=lr.knowledge_id AND lr.label_id= :labelId");
@@ -408,7 +432,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
         String projectLibraryId = knowledge.getProjectLibraryId();
         if (StringUtils.isNotEmpty(projectLibraryId)) {
-            sql.append(" INNER JOIN t_km_knowledge_rel kr1 ON k.id=kr1.knowledge_id AND kr1.libraryId=:projectLibraryId");
+            sql.append(" INNER JOIN t_km_knowledge_rel kr1 ON k.id=kr1.knowledge_id AND kr1.library_id=:projectLibraryId");
             params.put("projectLibraryId", projectLibraryId);
             if (CollectionUtils.isNotEmpty(userIds)) {
                 sql.append(" AND kr1.create_by in (:projectBy)");
@@ -418,7 +442,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
         String specialtyLibraryId = knowledge.getSpecialtyLibraryId();
         if (StringUtils.isNotEmpty(specialtyLibraryId)) {
-            sql.append(" INNER JOIN t_km_knowledge_rel kr2 ON k.id=kr2.knowledge_id AND kr2.libraryId=:specialtyLibraryId");
+            sql.append(" INNER JOIN t_km_knowledge_rel kr2 ON k.id=kr2.knowledge_id AND kr2.library_id=:specialtyLibraryId");
             params.put("specialtyLibraryId", specialtyLibraryId);
             if (CollectionUtils.isNotEmpty(userIds)) {
                 sql.append(" AND kr2.create_by in (:specialtyBy)");
@@ -437,10 +461,6 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         return getJdbcTemplate().queryForList(sql.toString(), params, String.class);
     }
 
-    private NamedParameterJdbcTemplate getJdbcTemplate() {
-        return new NamedParameterJdbcTemplate(baseService.getJdbcTemplate());
-    }
-
     private List<String> getUserIds(Knowledge knowledge, String referType) {
         List<String> userIds = null;
         if (KnowledgeConstant.TYPE_USER.equals(referType)) {
@@ -452,19 +472,70 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         return userIds;
     }
 
-    private List<String> getSearchLibraryIds(Knowledge knowledge) {
-        String projectLibraryId = knowledge.getProjectLibraryId();
-        String specialtyLibraryId = knowledge.getSpecialtyLibraryId();
-        List<String> libraryIds = new ArrayList<>(2);
-        if (StringUtils.isNotEmpty(projectLibraryId)) {
-            libraryIds.add(projectLibraryId);
+    @Override
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public void shareToOrg(Share share) {
+        if (null == share
+                || CollectionUtils.isEmpty(share.getLibraryIds())
+                || CollectionUtils.isEmpty(share.getKnowledgeIds())) {
+            throw new PeException("share param is invalid!");
         }
 
-        if (StringUtils.isNotEmpty(specialtyLibraryId)) {
-            libraryIds.add(specialtyLibraryId);
+        List<String> knowledgeIds = share.getKnowledgeIds();
+        Map<String, String> knowledgeIdAndShareIdMap = shareService.getSharedKnowledgeIdAndShareIdMap(knowledgeIds);
+        List<String> libraryIds = share.getLibraryIds();
+        libraryService.initLibraryByOrgId(libraryIds);
+        Map<String, Boolean> existMap = knowledgeRelService.getLibraryIdKnowledgeIdMap(libraryIds, knowledgeIds);
+        int size = knowledgeIds.size();
+        String corpCode = ExecutionContext.getCorpCode();
+        List<Share> shareList = new ArrayList<>(size);
+        List<KnowledgeRel> knowledgeRelList = new ArrayList<>(size * libraryIds.size() - existMap.size());
+        for (String libraryId : libraryIds) {
+            for (String knowledgeId : knowledgeIds) {
+                String key = libraryId + "&" + knowledgeId;
+                if (BooleanUtils.isTrue(existMap.get(key))) {
+                    continue;
+                }
+
+                String shareId = knowledgeIdAndShareIdMap.get(knowledgeId);
+                if (StringUtils.isEmpty(shareId)) {
+                    Share shareKnowledge = new Share();
+                    shareKnowledge.setShareType(KnowledgeConstant.SHARE_NO_PASSWORD);
+                    shareKnowledge.setExpireTime(KnowledgeConstant.SHARE_PERMANENT_VALIDITY);
+                    shareKnowledge.setKnowledgeId(knowledgeId);
+                    shareKnowledge.setPassword("");
+                    shareKnowledge.setCorpCode(corpCode);
+                    knowledgeIdAndShareIdMap.put(knowledgeId, "NEW_ADD");
+                    shareList.add(shareKnowledge);
+                }
+
+                KnowledgeRel knowledgeRel = new KnowledgeRel();
+                knowledgeRel.setKnowledgeId(knowledgeId);
+                knowledgeRel.setLibraryId(libraryId);
+                knowledgeRel.setShareId(shareId);
+                knowledgeRel.setCorpCode(corpCode);
+                knowledgeRelList.add(knowledgeRel);
+            }
         }
 
-        return libraryIds;
+        if(shareList.size()>0){
+            shareService.batchSave(shareList);
+            List<Statistic> statistics = new ArrayList<>(size);
+            for (Share saveShared : shareList) {
+                String sharedId = saveShared.getId();
+                knowledgeIdAndShareIdMap.put(saveShared.getKnowledgeId(), sharedId);
+                statistics.add(new Statistic(sharedId, 0, 0, 0));
+            }
+
+            //保存共享统计记录
+            statisticService.batchSave(statistics);
+            for (KnowledgeRel knowledgeRel : knowledgeRelList) {
+                String shareId = knowledgeIdAndShareIdMap.get(knowledgeRel.getKnowledgeId());
+                knowledgeRel.setShareId(shareId);
+            }
+        }
+
+        knowledgeRelService.batchSave(knowledgeRelList);
     }
 
 }

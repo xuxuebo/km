@@ -6,6 +6,7 @@ import com.qgutech.km.base.service.BaseService;
 import com.qgutech.km.module.uc.model.Organize;
 import com.qgutech.km.module.uc.model.User;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -531,4 +532,14 @@ public interface UserService extends BaseService<User> {
      * @since TangFD@HF 2018-7-27
      */
     List<String> getUserIdsByOrgId(String orgId, boolean includeChild);
+
+    /**
+     * 根据userId获取人员名称
+     *
+     * @param userIds 人员Id集合，不可为空
+     * @return 人员Id与姓名的映射，key：userId，value：userName
+     * @throws RuntimeException 当userIds为空时
+     * @since TangFD@HF 2018-7-31
+     */
+    Map<String, String> getUserIdAndNameMap(Collection<String> userIds);
 }

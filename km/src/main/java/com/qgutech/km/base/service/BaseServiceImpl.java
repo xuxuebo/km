@@ -17,6 +17,7 @@ import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.engine.spi.TypedValue;
 import org.hibernate.internal.CriteriaImpl;
 import org.hibernate.loader.criteria.CriteriaQueryTranslator;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -1352,5 +1353,9 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T>, PeC
         List<T> rows = listByCriteriaAndFieldNames(criteria, fields);
         page.setRows(rows);
         return page;
+    }
+
+    public NamedParameterJdbcTemplate getJdbcTemplate() {
+        return new NamedParameterJdbcTemplate(baseService.getJdbcTemplate());
     }
 }

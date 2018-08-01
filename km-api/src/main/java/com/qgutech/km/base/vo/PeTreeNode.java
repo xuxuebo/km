@@ -28,6 +28,7 @@ public class PeTreeNode {
      * 是否可以编辑
      */
     private boolean canEdit = true;
+    private String type = "ORG";
 
     /**
      * 是否在其他批次已经选中了
@@ -69,19 +70,6 @@ public class PeTreeNode {
      * 节点数据
      */
     private List<PeTreeNode> nodeData;
-
-    /**
-     * 部门下的人
-     */
-    private List<OrgUser> users;
-
-    public List<OrgUser> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<OrgUser> users) {
-        this.users = users;
-    }
 
     public Boolean getOpen() {
         return open;
@@ -155,10 +143,11 @@ public class PeTreeNode {
         this.canEdit = canEdit;
     }
 
-    public void add(String id, String userName) {
-        if (users == null) {
-            users = new ArrayList<OrgUser>();
-        }
-        users.add(new OrgUser(id, userName));
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
     }
 }

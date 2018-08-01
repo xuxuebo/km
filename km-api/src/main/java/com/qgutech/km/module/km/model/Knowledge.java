@@ -116,6 +116,8 @@ public class Knowledge extends BaseModel {
     private List<String> knowledgeIds;
     @Transient
     private List<String> libraryIds;
+    @Transient
+    private String userName;
 
     public boolean isIncludeChild() {
         return includeChild;
@@ -328,5 +330,13 @@ public class Knowledge extends BaseModel {
 
     public List<String> getLibraryIds() {
         return libraryIds;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 }
