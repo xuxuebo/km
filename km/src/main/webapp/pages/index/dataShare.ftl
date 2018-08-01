@@ -87,7 +87,7 @@
                     <dl class="y-share-project-type-list js-major">
                         <dt>专业:</dt>
                         <dd>
-                            <span class="y-share-project-type-item y-active" data-typeid = ''>全部</span>
+                            <span class="y-share-project-type-item-first y-active" data-typeid = ''>全部</span>
                             <span class="y-share-project-type-item" data-typeid = '1'>继电保护</span>
                             <span class="y-share-project-type-item" data-typeid = '2'>输电线路</span>
                             <span class="y-share-project-type-item" data-typeid = '3'>配电线路</span>
@@ -99,7 +99,7 @@
                     <dl class="y-share-project-type-list js-project">
                         <dt>项目:</dt>
                         <dd>
-                            <span class="y-share-project-type-item y-active" data-typeid = ''>全部</span>
+                            <span class="y-share-project-type-item-first  y-active" data-typeid = ''>全部</span>
                             <span class="y-share-project-type-item" data-typeid = '8'>UPFC</span>
                             <span class="y-share-project-type-item" data-typeid = '9'>微网路由</span>
                             <span class="y-share-project-type-item" data-typeid = '10'>高温相变光热</span>
@@ -108,7 +108,7 @@
                     <dl class="y-share-project-type-list js-label">
                         <dt>标签:</dt>
                         <dd>
-                            <span class="y-share-project-type-item y-active" data-typeid = ''>全部</span>
+                            <span class="y-share-project-type-item-first y-active" data-typeid = ''>全部</span>
                             <span class="y-share-project-type-item" data-typeid = '12'>图片</span>
                             <span class="y-share-project-type-item" data-typeid = '13'>视频</span>
                             <span class="y-share-project-type-item" data-typeid = '14'>其他</span>

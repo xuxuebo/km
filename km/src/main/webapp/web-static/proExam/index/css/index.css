@@ -1572,7 +1572,7 @@ body, html {
     margin-right: 44px;
     padding-bottom: 20px;
 }
-.y-share-project-type-item{
+.y-share-project-type-item,.y-share-project-type-item-first{
     display: inline-block;
     float: left;
     height: 26px;

@@ -29,11 +29,24 @@ $(function () {
             "labelIds":labelIds
         };
     };
+    $('.y-share-project-type-item-first').click(function(){
+        var $this = $(this);
+        if($this.hasClass('y-active')){
+            return;
+        }
+        $this.addClass('y-active');
+        $this.parent().find('.y-share-project-type-item').removeClass('y-active');
+    });
     $('.y-share-project-type-item').click(function(){
-        $(this).toggleClass('y-active');
-        // orgTreeId = treeNode.id;
+        var $this = $(this);
+        $this.toggleClass('y-active');
+        if($this.parent().find('.y-active').length>0){
+            $this.parent().find('.y-share-project-type-item-first').removeClass('y-active');
+        }else{
+            $this.parent().find('.y-share-project-type-item-first').addClass('y-active');
+        }
+
         var orgTxt = $('#orgTreeAndUsers .curSelectedNode').attr('title');
-        // listOrgTreeAndUsers.clickNode();
         typeIds = getTypeIds();
         var param = {
             'referId':orgTreeId,
@@ -167,6 +180,7 @@ $(function () {
                     }
                 }
             });
+            return false;
         });
         //下载
         $('.js-download').on('click', function () {
