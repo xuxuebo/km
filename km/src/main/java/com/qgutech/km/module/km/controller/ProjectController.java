@@ -13,20 +13,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 
 /**
- * 专业分类管理
+ * 重点项目管理
  *
- * @author TangFD@HF 2018-7-24
+ * @author TangFD@HF 2018-8-1
  */
 @Controller
-@RequestMapping("specialty")
-public class SpecialtyController {
+@RequestMapping("project")
+public class ProjectController {
 
     @Resource
     private LibraryService libraryService;
 
     @RequestMapping("manage/initPage")
     public String initPage() {
-        return "km/specialty/specialtyManage";
+        return "km/project/projectManage";
     }
 
     /**

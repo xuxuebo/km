@@ -250,7 +250,7 @@
 <script type="text/template" id="tplProject">
     <h4 class="y-content__title"><%=title%></h4>
     <div class="y-content__opt__bar">
-        <button class="y-btn y-btn__blue js-addProject" type="button">新增公共库</button>
+        <button class="y-btn y-btn__blue js-addProject" type="button">新增重点项目</button>
     </div>
     <div class="y-content__table" id="projectTable"></div>
 </script>
@@ -258,7 +258,7 @@
 <script type="text/template" id="tplSpecialty">
     <h4 class="y-content__title"><%=title%></h4>
     <div class="y-content__opt__bar">
-        <button class="y-btn y-btn__blue js-addSpecialty" type="button">新增公共库</button>
+        <button class="y-btn y-btn__blue js-addSpecialty" type="button">新增专业分类</button>
     </div>
     <div class="y-content__table" id="specialtyTable"></div>
 </script>
