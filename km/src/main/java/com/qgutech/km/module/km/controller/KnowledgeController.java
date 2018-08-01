@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * 文件服务器 控制层
@@ -60,6 +61,8 @@ public class KnowledgeController {
     private ShareService shareService;
     @Resource
     private KmFullTextSearchService kmFullTextSearchService;
+    @Resource
+    private KnowledgeLogService knowledgeLogService;
 
     @ResponseBody
     @RequestMapping("uploadFile")
@@ -104,6 +107,7 @@ public class KnowledgeController {
                 knowledgeRel.setLibraryId(libraryId);
                 knowledgeRel.setShareId("");
                 knowledgeRelService.save(knowledgeRel);
+                knowledgeLogService.save(new KnowledgeLog(knowledgeId, libraryId, KnowledgeConstant.LOG_UPLOAD));
 
                 IndexKnowledge indexKnowledge = convert(knowledge);
                 kmFullTextSearchService.add(indexKnowledge);
@@ -526,7 +530,8 @@ public class KnowledgeController {
      */
     @ResponseBody
     @RequestMapping("downloadKnowledge2")
-    public JsonResult downloadKnowledge(HttpServletRequest request, HttpServletResponse response,String knowledgeIds) {
+    public JsonResult downloadKnowledge(HttpServletRequest request, HttpServletResponse response,String knowledgeIds,
+                                        @RequestParam(required = false) String libraryId) {
         JsonResult jsonResult = new JsonResult();
         if(StringUtils.isEmpty(knowledgeIds)){
             jsonResult.setSuccess(false);
@@ -550,6 +555,13 @@ public class KnowledgeController {
         for(Knowledge s : knowledgeList){
             fileIds.add(s.getFileId());
         }
+
+        if (StringUtils.isNotEmpty(libraryId)) {
+            List<KnowledgeLog> knowledgeLogs = new ArrayList<>(knowledgeList.size());
+            knowledgeLogs.addAll(knowledgeList.stream().map(s -> new KnowledgeLog(s.getId(), libraryId, KnowledgeConstant.LOG_DOWNLOAD)).collect(Collectors.toList()));
+            knowledgeLogService.batchSave(knowledgeLogs);
+        }
+
         //批量文件的路径
         List<String> fileUrls = new ArrayList<>(fileIds.size());
         StringBuffer sb = new StringBuffer();

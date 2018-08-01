@@ -6,8 +6,10 @@ import com.qgutech.km.base.vo.JsonResult;
 import com.qgutech.km.base.vo.PeTreeNode;
 import com.qgutech.km.base.vo.Rank;
 import com.qgutech.km.constant.KnowledgeConstant;
+import com.qgutech.km.module.km.model.KnowledgeLog;
 import com.qgutech.km.module.km.model.Library;
 import com.qgutech.km.module.km.model.LibraryDetail;
+import com.qgutech.km.module.km.service.KnowledgeLogService;
 import com.qgutech.km.module.km.service.LibraryService;
 import com.qgutech.km.module.uc.service.UserService;
 import org.apache.commons.collections.CollectionUtils;
@@ -34,6 +36,8 @@ public class LibraryController {
     private LibraryService libraryService;
     @Resource
     private UserService userService;
+    @Resource
+    private KnowledgeLogService knowledgeLogService;
 
     /**
      * 一级公共库
@@ -222,5 +226,11 @@ public class LibraryController {
     @RequestMapping("rank")
     public List<Rank> rank(@RequestParam String libraryId){
         return libraryService.rank(libraryId);
+    }
+
+    @ResponseBody
+    @RequestMapping("dynamic")
+    public Page<KnowledgeLog> dynamic(KnowledgeLog knowledgeLog, PageParam pageParam) {
+        return knowledgeLogService.search(knowledgeLog, pageParam);
     }
 }
