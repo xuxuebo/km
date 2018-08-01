@@ -125,7 +125,7 @@
                         btn1: function () {
                             var libraryName = $('input[name="libraryName"]').val();
                             PEBASE.ajaxRequest({
-                                url: pageContext.rootPath + '/specialty/addSpecialty',
+                                url: pageContext.rootPath + '/project/addSpecialty',
                                 data: {
                                     'libraryName': libraryName
                                 },
@@ -181,7 +181,7 @@
                             var libraryName = $('input[name="libraryName"]').val();
                             PEBASE.ajaxRequest({
                                 //此处要返回给我新的修改过的节点的id，好和旧的的id进行比较从而是否刷新树节点
-                                url: pageContext.rootPath + '/specialty/updateSpecialty',
+                                url: pageContext.rootPath + '/project/updateSpecialty',
                                 data: {
                                     'id': id,
                                     'libraryName': libraryName
