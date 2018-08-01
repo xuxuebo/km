@@ -75,6 +75,7 @@
     <nav class="y-nav">
         <ul class="y-nav__link">
             <li><a href="${ctx!}/km/front/index" class="y-nav__link__item "><span class="txt">云库</span></a></li>
+            <li><a href="${ctx!}/km/front/professionalClassification" class="y-nav__link__item"><span class="txt">专业分类</span></a></li>
         <#--<li><a href="${ctx!}/km/front/dataView" class="y-nav__link__item"><span class="txt">数据</span></a></li>-->
             <li><a href="${ctx!}/km/front/dataStatistics" class="y-nav__link__item active"><span class="txt">数据统计</span></a>
             </li>

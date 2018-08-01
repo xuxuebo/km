@@ -50,6 +50,13 @@ public class FrontController {
         model.addAttribute("myLibrary",libraryService.getUserLibraryByLibraryType(KnowledgeConstant.MY_LIBRARY).getId());
         return "index/index";
     }
+    //首页  专业分类
+    @RequestMapping("professionalClassification")
+    public String professionalClassification(Model model){
+        model.addAttribute("userName", SessionContext.get().getUserName());
+        model.addAttribute("admin", SessionContext.get().isAdmin());
+        return "index/professionalClassification";
+    }
 
     //首页  设置
     @RequestMapping("adminSetting")
