@@ -1,5 +1,8 @@
 package com.qgutech.km.constant;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 /**
  * Created by Administrator on 2018/6/22.
  */
@@ -51,4 +54,12 @@ public class KnowledgeConstant {
     //无密码
     public static String SHARE_NO_PASSWORD = "no_password";
 
+    public static String LOG_COPY = "COPY";
+    public static String LOG_DELETE = "DELETE";
+    public static String LOG_UPLOAD = "UPLOAD";
+    public static String LOG_DOWNLOAD = "DOWNLOAD";
+    public static String LOG_SHARE = "SHARE";
+
+    public static final DateFormat TIME_FORMAT= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static final DateFormat DATE_FORMAT= new SimpleDateFormat("yyyy-MM-dd");
 }
