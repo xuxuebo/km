@@ -44,7 +44,7 @@
 </div>
 <script type="text/template" id="tplYunManageList">
     <% for(var i=0;i< data.length;i++) {%>
-        <div class="y-menu-item-title">
+        <div class="y-menu-item-title" onclick="loadManage(' <%= data[i].id %>')">
             <%= data[i].name %>
         </div>
     <% }%>
@@ -155,6 +155,9 @@
         $(".y-menu-item-title").eq(0).addClass("y-menu-item-title-active");
         $(".y-user-tree").delegate(".y-menu-item-title","click",function(){
             $(this).addClass("y-menu-item-title-active").siblings().removeClass("y-menu-item-title-active");
-        })
+        });
+        // function loadManage(manegeId){
+        //     $("").load()
+        // }
     })
 </script>
