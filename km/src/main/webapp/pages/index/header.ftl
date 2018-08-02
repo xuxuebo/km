@@ -17,7 +17,6 @@
           type="text/css">
 
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/index/css/index.css">
-    <link rel="stylesheet" href="//at.alicdn.com/t/font_700396_uq1wm6ipnd8.css">
     <script>
         var pageContext = {
             resourcePath: '${resourcePath!}',
@@ -59,7 +58,9 @@
             </button>
         </form>
         <div class="y-header-user">
-            <i class="iconfont icon-tuichu" onclick="YUN.loginOut();"></i>
+            <i class="icon-tuichu">
+                <img class="icon-tuichu-pic" src="${(resourcePath+logoUrl)!'${resourcePath!}/web-static/proExam/index/img/icon-exist.png'}" onclick="YUN.loginOut();"/>
+            </i>
             <span class="y-header-user-name">按时间快点哈就</span>
         </div>
         <#--<div class="y-head__msg">-->
