@@ -274,12 +274,12 @@ body, html {
     margin-right: 14px;
     background: #111E40;
     border-radius: 50%;
-    opacity: 0.4;
 }
 .icon-tuichu-pic{
     width: 20px;
     height: 20px;
-    margin-bottom:9px;
+    margin:0 0 10px 2px;
+    opacity: 0.4;
 }
 .y-header-user-name{
     display: inline-block;color:#fff;width: 70px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;
