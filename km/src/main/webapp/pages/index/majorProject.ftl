@@ -33,7 +33,7 @@
         .y-content__opt__bar .webuploader-container .webuploader-pick{background-color: transparent}
     </style>
 </head>
-<body class="y-body">
+<body class="y-body" style="position: relative">
 <header class="y-head">
     <div class="y-logo__wrap">
         <a href="${ctx!}/km/front/index" class="y-logo"></a>
@@ -78,7 +78,7 @@
         <div class="y-aside__title">
             <span class="yfont-icon">&#xe650;</span><span class="txt">菜单</span>
         </div>
-        <ul id="orgTreeAndUsers" class="ztree pe-tree-container"></ul>
+        <ul id="majorProjectTree" class="y-major-project-menu"></ul>
     </aside>
     <section class="y-content">
         <div class="y-major-project" id="yunLContentBody">
@@ -144,7 +144,7 @@
                 <div class="y-project-content-up">
                     <div class="y-project-desc">
                         <div class="y-project-info">项目介绍</div>
-                        <div class="y-project-introduction">
+                        <div class="y-project-introduction" id="projectDeatil">
                             <img class="y-project-img"
                                  src="${resourcePath!}/web-static/proExam/index/img/ico_rar.png" alt="">
                             <div class="y-project-introduction-content">
@@ -196,60 +196,30 @@
                         <div class="y-project-file-list">
                             <ul id="fileList">
                                 <li>
-                                    <img
-                                            src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
-                                    <span class="y-project-file-name">高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望</span>
-                                    <span class="y-project-file-author-name">高晓松</span>
-                                    <span class="y-project-file-time">2018/5/5</span>
+                                    <div class="y-file-desc">
+                                        <span class="y-project-file-author-name">高晓松</span>
+                                        <span class="y-project-file-time">2018/5/5</span>
+                                    </div>
+                                    <div class="y-file-info">
+                                        <img
+                                                src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
+                                        <span class="y-project-file-name">
+                                            高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望
+                                        </span>
+                                    </div>
                                 </li>
                                 <li>
-                                    <img
-                                            src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
-                                    <span class="y-project-file-name">高温变相储热铝合金的研究现状与展望</span>
-                                    <span class="y-project-file-author-name">高晓松</span>
-                                    <span class="y-project-file-time">2018/5/5</span>
-                                </li>
-                                <li>
-                                    <img
-                                            src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
-                                    <span class="y-project-file-name">高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望</span>
-                                    <span class="y-project-file-author-name">高晓松</span>
-                                    <span class="y-project-file-time">2018/5/5</span>
-                                </li>
-                                <li>
-                                    <img
-                                            src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
-                                    <span class="y-project-file-name">高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望</span>
-                                    <span class="y-project-file-author-name">高晓松</span>
-                                    <span class="y-project-file-time">2018/5/5</span>
-                                </li>
-                                <li>
-                                    <img
-                                            src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
-                                    <span class="y-project-file-name">高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望</span>
-                                    <span class="y-project-file-author-name">高晓松</span>
-                                    <span class="y-project-file-time">2018/5/5</span>
-                                </li>
-                                <li>
-                                    <img
-                                            src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
-                                    <span class="y-project-file-name">高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望</span>
-                                    <span class="y-project-file-author-name">高晓松</span>
-                                    <span class="y-project-file-time">2018/5/5</span>
-                                </li>
-                                <li>
-                                    <img
-                                            src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
-                                    <span class="y-project-file-name">高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望</span>
-                                    <span class="y-project-file-author-name">高晓松</span>
-                                    <span class="y-project-file-time">2018/5/5</span>
-                                </li>
-                                <li>
-                                    <img
-                                            src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
-                                    <span class="y-project-file-name">高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望</span>
-                                    <span class="y-project-file-author-name">高晓松</span>
-                                    <span class="y-project-file-time">2018/5/5</span>
+                                    <div class="y-file-desc">
+                                        <span class="y-project-file-author-name">高晓松</span>
+                                        <span class="y-project-file-time">2018/5/5</span>
+                                    </div>
+                                    <div class="y-file-info">
+                                        <img
+                                                src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
+                                        <span class="y-project-file-name">
+                                            高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望
+                                        </span>
+                                    </div>
                                 </li>
                             </ul>
                         </div>
@@ -279,7 +249,20 @@
     <div class="table__none">--暂无数据--</div>
     <%}%>
 </script>
-<#--项目文件-->
+
+<#--项目详情初始化-->
+<script type="text/template" id="projectDetailDetail">
+    <img class="y-project-img"
+         src="${resourcePath!}/web-static/proExam/index/img/ico_rar.png" alt="">
+    <div class="y-project-introduction-content">
+        <div class="y-project-content-title"><%= data.libraryName %></div>
+        <div class="y-project-content-author">项目负责人：<%=data.libraryDetail.chargeName%></div>
+        <div class="y-introduction-content"><%=data.libraryDetail.summary%></div>
+        <div class="y-project-select-all">查看全文</div>
+    </div>
+</script>
+
+<#--项目文件初始化-->
 <script type="text/template" id="tplsFileTable">
     <%if(list.length !== 0){%>
     <%_.each(list,function(item,i){%>
@@ -295,8 +278,23 @@
     <div class="table__none">--暂无数据--</div>
     <%}%>
 </script>
+
+<#--云库动态初始化-->
+<script type="text/template" id="tplsActivityTable">
+    <%if(list.length !== 0){%>
+    <%_.each(list,function(item,i){%>
+    <li>
+        <div class="y-project-activity-time"><%=item.userName%><%=item.knowledgeName%></div>
+        <div class="y-project-activity-name"><%=item.createTimeStr%></div>
+    </li>
+    <%})}%>
+    <%if(list.length === 0){%>
+    <div class="table__none">--暂无数据--</div>
+    <%}%>
+</script>
+
 <#--文件查看更多-->
-<script type="text/template" id="tplFileTable">
+<script type="text/template" id="allFileTable">
     <table class="y-table">
         <thead class="y-table__header">
         <tr>
@@ -348,14 +346,14 @@
     <div class="table__none">--暂无数据--</div>
     <%}%>
 </script>
-<#--文件查看更多-->
 <script type="text/template" id="fileAllList">
     <h4 class="y-content__title"><%=title%></h4>
     <div class="y-content__table" id="fileTable">
     </div>
 </script>
+
 <#--云库查看更多-->
-<script type="text/template" id="tplActivityTable">
+<script type="text/template" id="allActivityTable">
     <table class="y-table">
         <thead class="y-table__header">
         <tr>
@@ -407,26 +405,12 @@
     <div class="table__none">--暂无数据--</div>
     <%}%>
 </script>
-
-<script type="text/template" id="yunActivityAllList">
+<script type="text/template" id="activityAllList">
     <h4 class="y-content__title"><%=title%></h4>
     <div class="y-content__table" id="yunActivityTable">
     </div>
 </script>
 
-<#--分享至公共库-->
-<script type="text/template" id="shareToPublic">
-    <input name="shareLibraryId" type="hidden">
-    <div class="pe-select-tree-wrap pe-input-tree-wrap-drop">
-        <ul id="editOrgTree" class="ztree pe-tree-container"></ul>
-    </div>
-</script>
-<script>
-    // 初始化页面
-    $(function() {
-
-    })
-</script>
 <script src="${resourcePath!}/web-static/proExam/index/js/majorProject.js"></script>
 </body>
 </html>

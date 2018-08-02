@@ -1,7 +1,8 @@
 $(function () {
     var $yunContentBody = $('#yunLContentBody');
     var $yAside = $('#YAside');
-    initMajorProject();
+    // 初始化树
+    initTree();
     //路由
     var publicId = "";
     var publicName = "";
@@ -16,7 +17,7 @@ $(function () {
                 cb: "fileCb"
             },
             "selectActivityMore": {
-                "templateId": '#yunActivityAllList',
+                "templateId": '#activityAllList',
                 nav: 'share-yun',
                 cb: "yunActivityCb"
             }
@@ -92,7 +93,7 @@ $(function () {
         var _tpl = $(routeInfo.templateId).html();
         container.html(_.template(_tpl)({title: '项目文件'}));
         //table渲染
-        var _table = $("#tplFileTable").html();
+        var _table = $("#allFileTable").html();
         var $yunTable = $('#fileTable');
         var data = [];
         $.ajax({
@@ -124,7 +125,7 @@ $(function () {
         var _tpl = $(routeInfo.templateId).html();
         container.html(_.template(_tpl)({title: '云库动态'}));
         //table渲染
-        var _table = $("#tplActivityTable").html();
+        var _table = $("#allActivityTable").html();
         var $yunTable = $('#yunActivityTable');
         var data = [];
         $.ajax({
@@ -231,18 +232,76 @@ $(function () {
         };
     }
 
-    //初始化页面
-    function initMajorProject(param){
-        // table渲染
+    //初始化菜单
+    function initTree(){
+        var settingInputTree = {
+            isOpen: true,
+            dataUrl: pageContext.rootPath + '/km/library/listLibrary?type=PROJECT_LIBRARY',
+            clickNode: function (treeNode) {
+                orgTreeId = treeNode.id;
+                // 项目介绍
+                initProjectDesc(orgTreeId);
+                //项目文件
+                initMajorProject(orgTreeId);
+                // 贡献榜单
+                //initContribution(orgTreeId);
+                //云库动态
+                initActivity(orgTreeId);
+            },
+            treePosition: 'inputDropDown'
+        };
+        PEMO.ZTREE.initTree('majorProjectTree', settingInputTree);
+        setTimeout(function() {
+            var zTree= $.fn.zTree.getZTreeObj("majorProjectTree");
+            var nodes = zTree.getNodes();
+            zTree.checkNode(nodes[0], true, true);
+            // 项目介绍
+            initProjectDesc(nodes[0].id);
+            //项目文件
+            initMajorProject(nodes[0].id);
+            // 贡献榜单
+            //initContribution(nodes[0].id);
+            //云库动态
+            initActivity(nodes[0].id)
+        }, 3000);
+
+    }
+    // 项目介绍
+    function initProjectDesc(orgTreeId){
+        var projectDetailDetail = $('#projectDetailDetail').html();
+        var $projectDeatil = $("#projectDeatil");
+        var data= null;
+        $.ajax({
+            async: false,//此值要设置为FALSE  默认为TRUE 异步调用
+            type: "POST",
+            url: pageContext.resourcePath + '/library/load?libraryId='+orgTreeId,
+            dataType: 'json',
+            success: function (result) {
+                data = JSON.parse(result);
+            }
+        });
+        var table, initSort = {
+            name: "desc",
+            size: "desc",
+            uploadTime: "desc"
+        };
+        if(data){
+            renderTable();
+            function renderTable() {
+                $projectDeatil.html(_.template(projectDetailDetail)({data: data, sort: initSort}));
+            }
+        }
+    }
+    // 初始化项目
+    function initMajorProject(orgTreeId) {
         var tplsFileTable = $('#tplsFileTable').html();
         var $fileList = $("#fileList");
         var data = [];
         $.ajax({
             async: false,//此值要设置为FALSE  默认为TRUE 异步调用
             type: "POST",
-            url: pageContext.resourcePath + '/knowledge/searchKnowledge?libraryId=1&page=1&pageSize=100',
+            url: pageContext.resourcePath + '/knowledge/searchKnowledge?page=1&pageSize=100&libraryId='+orgTreeId,
             dataType: 'json',
-            data: param,
             success: function (result) {
                 data = result.rows;
             }
@@ -258,29 +317,36 @@ $(function () {
         renderTable();
         function renderTable() {
             $fileList.html(_.template(tplsFileTable)({list: data, sort: initSort}));
-            // table = initTable($fileList);
-            // $fileList.find('.sort').click(function () {
-            //     $fileList.html(_.template(tplsFileTable)({
-            //         list: data, sort: $.extend({}, initSort, {name: 'asc'})
-            //     }));
-            // });
         }
-
-        //初始化树
-        var settingInputTree = {
-            isOpen: true,
-            dataUrl: pageContext.rootPath + '/km/library/listLibrary?type=PROJECT_LIBRARY',
-            clickNode: function (treeNode) {
-                $('input[name="shareLibraryId"]').val(treeNode.id);
-                //$('.show-org-name').val(treeNode.name);
-            },
-            treePosition: 'inputDropDown',
-        };
-        PEMO.ZTREE.initTree('editOrgTree', settingInputTree);
-        var treeObj = $.fn.zTree.getZTreeObj("editOrgTree");
-        treeObj.expandAll(true);
     }
-
+    // 贡献榜单
+    // 云库动态
+    function initActivity(orgTreeId) {
+        var tplsActivityTable = $('#tplsActivityTable').html();
+        var $activityList = $("#activityList");
+        var data = [];
+        $.ajax({
+            async: false,//此值要设置为FALSE  默认为TRUE 异步调用
+            type: "POST",
+            url: pageContext.resourcePath + '/library/dynamic?page=1&pageSize=10 &libraryId='+orgTreeId,
+            dataType: 'json',
+            success: function (result) {
+                data = result.rows;
+            }
+        });
+        for (var i = 0; i < data.length; i++) {
+            data[i].knowledgeSize = conver(data[i].knowledgeSize);
+        }
+        var table, initSort = {
+            name: "desc",
+            size: "desc",
+            uploadTime: "desc"
+        };
+        renderTable();
+        function renderTable() {
+            $activityList.html(_.template(tplsActivityTable)({list: data, sort: initSort}));
+        }
+    }
     window.refreshPage = function () {
         var id = $('#myLibrary').val();
         route['YunCb']($yunContentBody, route.routes.yun, null, id);
