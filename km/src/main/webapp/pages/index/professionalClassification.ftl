@@ -3,8 +3,8 @@
         <span class="yfont-icon">&#xe650;</span><span class="txt">菜单</span>
     </div>
     <ul class="y-aside__menu">
-        <li class="y-menu__item y-user">
-            <a href="#user" class="y-menu__item__title y-aside__menu__item__title">
+        <li class="y-menu__item y-user" style="position: relative;min-height:240px ;border-left: 2px dashed #fff;padding: 0;margin:15px;margin-left: 29px;margin-top: 35px;">
+            <a href="#user" class="y-menu__item__title y-aside__menu__item__title" style="position: absolute;padding:0;top: -28px;left: -12px;">
                 <span class="yfont-icon">&#xe643;</span><span class="txt">用户管理</span>
             </a>
         </li>
@@ -54,12 +54,16 @@
         国家电网江苏省电力公司 ©苏ICP备15007035号-1
     </footer>
 </div>
+
 <script type="text/template" id="tplYunFileList">
     <% for(var i=0;i< 8;i++) {%>
         <li class="y-content-professional-file-list-item">
+            <div class="y-content-professional-file-list-item-title-info">
+                <div class="y-content-professional-file-list-item-name">高晓松阿萨德阿萨德</div>
+                <div class="y-content-professional-file-list-item-time">2015/05/02</div>
+                <div style="clear: both"></div>
+            </div>
             <div class="y-content-professional-file-list-item-title"><i class="y-content-professional-file-list-item-icon"></i>高温相变储热铝合金材料的研究现状及展望.docx</div>
-            <div class="y-content-professional-file-list-item-name">高晓松阿萨德阿萨德</div>
-            <div class="y-content-professional-file-list-item-time">2015/05/02</div>
         </li>
     <% }%>
 </script>
@@ -70,14 +74,10 @@
             <div class="y-content-professional-rank-list-item-name"><i class="y-content-professional-rank-list-item-name-avatar"></i>夏雨</div>
             <div class="y-content-professional-rank-list-item-department">人力资源部</div>
             <div class="y-content-professional-rank-list-item-grade">500,00份</div>
-
         </li>
     <% }%>
 </script>
 <script type="text/template" id="tplYunDynamicList">
-
-</script>
-
 <script type="application/javascript">
     $(function () {
         $(".y-content-professional-file-list").html(_.template($("#tplYunFileList").html()))
