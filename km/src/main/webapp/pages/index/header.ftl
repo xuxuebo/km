@@ -17,6 +17,7 @@
           type="text/css">
 
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/index/css/index.css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_700396_uq1wm6ipnd8.css">
     <script>
         var pageContext = {
             resourcePath: '${resourcePath!}',
@@ -57,21 +58,25 @@
             <button type="submit" class="y-nav__search__btn" id="searchBtn"><span class="yfont-icon">&#xe658;</span>
             </button>
         </form>
-        <div class="y-head__msg">
-            <span class="yfont-icon">&#xe654;</span>
-            <i class="has-msg"></i>
+        <div class="y-header-user">
+            <i class="iconfont icon-tuichu" onclick="YUN.loginOut();"></i>
+            <span class="y-header-user-name">按时间快点哈就</span>
         </div>
-        <div class="y-head__help">
-            <span class="yfont-icon">&#xe64d;</span>
-        </div>
-        <div class="y-head__user" title="点击退出" onclick="YUN.loginOut();">
-            <div class="y-head__avatar">
-                <img src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-            </div>
-            <div class="y-head__username">
-            ${userName!}
-            </div>
-        </div>
+        <#--<div class="y-head__msg">-->
+            <#--<span class="yfont-icon">&#xe654;</span>-->
+            <#--<i class="has-msg"></i>-->
+        <#--</div>-->
+        <#--<div class="y-head__help">-->
+            <#--<span class="yfont-icon">&#xe64d;</span>-->
+        <#--</div>-->
+        <#--<div title="点击退出" onclick="YUN.loginOut();">-->
+            <#--<div class="y-head__avatar">-->
+                <#--<img src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">-->
+            <#--</div>-->
+            <#--<div class="y-head__username">-->
+                <#--阿达阿萨德-->
+            <#--</div>-->
+        <#--</div>-->
     </div>
     <nav class="y-nav">
         <ul class="y-nav__link">
