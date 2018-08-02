@@ -79,9 +79,15 @@
 <script type="text/template" id="confirmDialogTemp">
     <div class="clearF">
         <label class="floatL">
-            <span class="pe-label-name floatL"><%=data.firstName%>:</span>
-            <input class="pe-stand-filter-form-input" maxlength="50" type="text" placeholder="请输入<%=data.firstName%>"
-                   name="<%=data.firstInputName%>">
+            <form id="library_detail_form">
+                <#-- 必要字段 测试数据 -->
+                <input type="hidden" name="libraryDetail.chargeIds" value="TangFD"/>
+                <input type="hidden" name="libraryDetail.summary" value="数据数据数据数据数据数据数据数据数据数据数据"/>
+                <span class="pe-label-name floatL"><%=data.firstName%>:</span>
+                <input class="pe-stand-filter-form-input" maxlength="50" type="text"
+                       placeholder="请输入<%=data.firstName%>"
+                       name="<%=data.firstInputName%>">
+            </form>
         </label>
         <div class="pe-main-km-text-wrap">
             <div class="pe-km-search-key pe-input-tree-wrap pe-stand-filter-form-input" style="display: none">
@@ -126,9 +132,7 @@
                             var libraryName = $('input[name="libraryName"]').val();
                             PEBASE.ajaxRequest({
                                 url: pageContext.rootPath + '/project/addSpecialty',
-                                data: {
-                                    'libraryName': libraryName
-                                },
+                                data: $("#library_detail_form").serialize(),
                                 success: function (data) {
                                     var message;
                                     if (data.success) {

@@ -1,14 +1,16 @@
 package com.qgutech.km.module.km.service;
 
 import com.qgutech.km.base.ExecutionContext;
+import com.qgutech.km.base.model.Page;
+import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.base.vo.PeTreeNode;
 import com.qgutech.km.module.km.model.Label;
 import com.qgutech.km.module.km.model.LabelRel;
 import com.qgutech.km.utils.PeException;
+import com.qgutech.km.utils.PeUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
@@ -46,9 +48,9 @@ public class LabelServiceImpl extends BaseServiceImpl<Label> implements LabelSer
             throw  new IllegalArgumentException("label is null ");
         }else if(StringUtils.isEmpty(label.getLabelName())||label.getLabelName().length()>50){
             throw  new IllegalArgumentException("lable is illegal");
-        }else if(StringUtils.isEmpty(label.getParentId())){
+        }/*else if(StringUtils.isEmpty(label.getParentId())){
             throw  new IllegalArgumentException("label not has parent label  ");
-        }
+        }*/
     }
 
 
@@ -136,11 +138,12 @@ public class LabelServiceImpl extends BaseServiceImpl<Label> implements LabelSer
 
     @Override
     @Transactional(readOnly = true)
-    public List<PeTreeNode> listTree() {
+    public Page<Label> listTree(PageParam pageParam) {
+        PeUtils.validPage(pageParam);
         Criterion criterion = Restrictions.and(Restrictions.eq(Label.CORP_CODE,ExecutionContext.getCorpCode()));
-        List<Label> allLabel = listByCriterion(criterion,new Order[]{Order.asc(Label.SHOW_ORDER),Order.desc(Label.CREATE_TIME)});
-        if(CollectionUtils.isEmpty(allLabel)){
-            return new ArrayList<>();
+        return search(pageParam, criterion, new Order[]{Order.asc(Label.SHOW_ORDER), Order.desc(Label.CREATE_TIME)});
+        /*if(CollectionUtils.isEmpty(allLabel)){
+            return new Page<>();
         }
         List<PeTreeNode> nodeList = new ArrayList<>(allLabel.size());
         PeTreeNode peTreeNode;
@@ -152,7 +155,7 @@ public class LabelServiceImpl extends BaseServiceImpl<Label> implements LabelSer
             peTreeNode.setParent(true);
             nodeList.add(peTreeNode);
         }
-        return nodeList;
+        return nodeList;*/
     }
 
     @Override

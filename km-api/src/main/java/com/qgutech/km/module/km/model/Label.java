@@ -27,7 +27,7 @@ public class Label extends BaseModel {
     /**
      * 父类主键
      */
-    @Column(nullable = false, length = 32)
+    @Column(length = 32)
     private String parentId;
 
     /**

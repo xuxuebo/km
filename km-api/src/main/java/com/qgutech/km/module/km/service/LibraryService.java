@@ -100,4 +100,14 @@ public interface LibraryService extends BaseService<Library> {
      * @since TangFD@HF 2018-7-31
      */
     List<Rank> rank(String libraryId);
+
+    /**
+     * 保存知识库和详情信息
+     *
+     * @param library 知识库信息实体
+     * @return 知识库主键Id
+     * @throws RuntimeException 当library为空， 或者detail为空时
+     * @since TangFD@HF 2018-8-2
+     */
+    String saveLibraryAndDetail(Library library);
 }

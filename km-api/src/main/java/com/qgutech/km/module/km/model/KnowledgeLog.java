@@ -52,6 +52,8 @@ public class KnowledgeLog extends BaseModel {
     @Transient
     private String createTimeStr;
     @Transient
+    private String typeStr;
+    @Transient
     private Date startTime;
     @Transient
     private Date endTime;
@@ -94,6 +96,7 @@ public class KnowledgeLog extends BaseModel {
 
     public void setType(String type) {
         this.type = type;
+        setTypeStr(type);
     }
 
     public String getKnowledgeId() {
@@ -126,5 +129,23 @@ public class KnowledgeLog extends BaseModel {
 
     public void setCreateTimeStr(String createTimeStr) {
         this.createTimeStr = createTimeStr;
+    }
+
+    public String getTypeStr() {
+        return this.typeStr;
+    }
+
+    public void setTypeStr(String typeStr) {
+        if ("COPY".equalsIgnoreCase(this.type)) {
+            this.typeStr = "复制了";
+        } else if ("DELETE".equalsIgnoreCase(this.type)) {
+            this.typeStr = "删除了";
+        } else if ("UPLOAD".equalsIgnoreCase(this.type)) {
+            this.typeStr = "上传了";
+        } else if ("DOWNLOAD".equalsIgnoreCase(this.type)) {
+            this.typeStr = "下载了";
+        } else if ("SHARE".equalsIgnoreCase(this.type)) {
+            this.typeStr = "分享了";
+        }
     }
 }

@@ -1,6 +1,4 @@
 ALTER TABLE t_km_share DROP  share_library_id;
-ALTER TABLE t_km_library ADD COLUMN detail_id VARCHAR(32);
-COMMENT ON COLUMN t_km_library."detail_id" IS '详情Id';
 
 CREATE TABLE t_km_library_detail (
   id             VARCHAR(32) PRIMARY KEY,

@@ -10,6 +10,7 @@ import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.module.km.model.Knowledge;
 import com.qgutech.km.module.km.model.KnowledgeRel;
 import com.qgutech.km.module.km.model.Library;
+import com.qgutech.km.module.km.model.LibraryDetail;
 import com.qgutech.km.module.uc.model.User;
 import com.qgutech.km.module.uc.service.UserService;
 import com.qgutech.km.utils.PeException;
@@ -407,5 +408,23 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
         }
 
         return rankList;
+    }
+
+    @Override
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public String saveLibraryAndDetail(Library library) {
+        if (library == null || library.getLibraryDetail() == null) {
+            throw new PeException("library entity invalid!");
+        }
+
+        String libraryId = insert(library);
+        LibraryDetail libraryDetail = library.getLibraryDetail();
+        if (libraryDetail != null) {
+            libraryDetail.setLibraryId(libraryId);
+            libraryDetail.setCorpCode(ExecutionContext.getCorpCode());
+            baseService.save(libraryDetail);
+        }
+
+        return libraryId;
     }
 }
