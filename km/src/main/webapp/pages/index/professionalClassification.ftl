@@ -1,3 +1,4 @@
+<#include "yunRank.ftl"/>
 <aside class="y-aside y-aside-professional" id="YAside">
     <div class="y-aside__title">
         <span class="yfont-icon">&#xe650;</span><span class="txt">菜单</span>
@@ -58,16 +59,6 @@
                 <div style="clear: both"></div>
             </div>
             <div class="y-content-professional-file-list-item-title"><i class="y-content-professional-file-list-item-icon"></i>高温相变储热铝合金材料的研究现状及展望.docx</div>
-        </li>
-    <% }%>
-</script>
-<script type="text/template" id="tplYunRankList">
-    <% for(var i=0;i< 5;i++) {%>
-        <li class="y-content-professional-rank-list-item">
-            <div class="y-content-professional-rank-list-item-rank"><i class="y-content-professional-rank-list-item-rank-pic"></i></div>
-            <div class="y-content-professional-rank-list-item-name"><i class="y-content-professional-rank-list-item-name-avatar"></i>夏雨</div>
-            <div class="y-content-professional-rank-list-item-department">人力资源部</div>
-            <div class="y-content-professional-rank-list-item-grade">500,00份</div>
         </li>
     <% }%>
 </script>
@@ -156,6 +147,17 @@
         $(".y-user-tree").delegate(".y-menu-item-title","click",function(){
             $(this).addClass("y-menu-item-title-active").siblings().removeClass("y-menu-item-title-active");
         });
+        function fileList(){
+            $.ajax({
+                type: "POST",
+                url: pageContext.resourcePath + '/library/dynamic?page=1&pageSize=100&libraryId=1',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data)
+                }
+            });
+        }
+        fileList();
         // function loadManage(manegeId){
         //     $("").load()
         // }

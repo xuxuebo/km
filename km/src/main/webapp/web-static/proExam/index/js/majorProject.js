@@ -431,4 +431,4 @@ function loginOut() {
         }
     });
 }
-
+$("#contributionList").html(_.template($("#tplYunRankList").html()));
