@@ -11,10 +11,14 @@
         }else if (type === "dataStatistics") {
             $yContainer.load('${ctx!}/km/front/dataStatistics');
         }else if (type === "adminSetting") {
-            $yContainer.load('${ctx!}/km/front/adminSetting');
+            $yContainer.load('${ctx!}/km/front/adminSetting',function () {
+                location.hash = 'user';
+            });
         } else {
             // 首页
-            $yContainer.load('${ctx!}/km/front/loadIndex');
+            $yContainer.load('${ctx!}/km/front/loadIndex',function () {
+                location.hash = 'yun';
+            });
         }
     }
 
