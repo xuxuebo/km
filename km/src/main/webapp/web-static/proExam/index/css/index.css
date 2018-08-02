@@ -889,7 +889,6 @@ body, html {
 .s-data-statistics {
     box-sizing: border-box;
     position: absolute;
-    top: 70px;
     height: auto;
     right: 0;
     left: 0;
