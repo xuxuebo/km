@@ -1,3 +1,4 @@
+<#include "yunRank.ftl"/>
 <aside class="y-aside y-aside-professional" id="YAside">
     <div class="y-aside__title">
         <span class="yfont-icon">&#xe650;</span><span class="txt">菜单</span>
@@ -43,9 +44,9 @@
     </footer>
 </div>
 <script type="text/template" id="tplYunManageList">
-    <% for(var i=0;i< 8;i++) {%>
-        <div class="y-menu-item-title">
-            继电保护
+    <% for(var i=0;i< data.length;i++) {%>
+        <div class="y-menu-item-title" onclick="loadManage(' <%= data[i].id %>')">
+            <%= data[i].name %>
         </div>
     <% }%>
 </script>
@@ -61,16 +62,6 @@
         </li>
     <% }%>
 </script>
-<script type="text/template" id="tplYunRankList">
-    <% for(var i=0;i< 5;i++) {%>
-        <li class="y-content-professional-rank-list-item">
-            <div class="y-content-professional-rank-list-item-rank"><i class="y-content-professional-rank-list-item-rank-pic"></i></div>
-            <div class="y-content-professional-rank-list-item-name"><i class="y-content-professional-rank-list-item-name-avatar"></i>夏雨</div>
-            <div class="y-content-professional-rank-list-item-department">人力资源部</div>
-            <div class="y-content-professional-rank-list-item-grade">500,00份</div>
-        </li>
-    <% }%>
-</script>
 <script type="text/template" id="tplYunDynamicList">
     <% for(var i=0;i< 9;i++) {%>
     <li class="y-content-professional-dynamic-list-item">
@@ -81,7 +72,72 @@
 </script>
 <script>
     $(function () {
-        $(".y-user-tree").append(_.template($("#tplYunManageList").html()))
+        var data=[{
+            "id": "4028810a64eb83bb0164ee09b9f20030",
+            "pId": "4028810a64eb83bb0164ee0939bf002d",
+            "name": "员工一",
+            "canEdit": true,
+            "type": "ORG",
+            "ishasSelected": false,
+            "isParent": true
+        }, {
+            "id": "4028810a64eb83bb0164ee0939bf002d",
+            "pId": "4028810a64eb83bb0164ee08eb0a002c",
+            "name": "人才输入中心",
+            "canEdit": true,
+            "type": "ORG",
+            "ishasSelected": false,
+            "isParent": true
+        }, {
+            "id": "4028810a64eb83bb0164ee08eb0a002c",
+            "pId": "0164efd8541247bfbc00920123456789",
+            "name": "人力资源部",
+            "canEdit": true,
+            "type": "ORG",
+            "ishasSelected": false,
+            "isParent": true
+        }, {
+            "id": "0164efd8541247bfbc00920123456789",
+            "name": "测试公司",
+            "canEdit": false,
+            "type": "ORG",
+            "ishasSelected": false,
+            "isParent": true
+        }, {
+            "id": "4028810a64eb83bb0164ee09e0060031",
+            "pId": "4028810a64eb83bb0164ee0939bf002d",
+            "name": "员工二",
+            "canEdit": true,
+            "type": "ORG",
+            "ishasSelected": false,
+            "isParent": true
+        }, {
+            "id": "4028810a64eb83bb0164ee096d2b002e",
+            "pId": "4028810a64eb83bb0164ee08eb0a002c",
+            "name": "张主任",
+            "canEdit": true,
+            "type": "ORG",
+            "ishasSelected": false,
+            "isParent": true
+        }, {
+            "id": "4028810a64eb83bb0164ee0a06470032",
+            "pId": "4028810a64eb83bb0164ee0939bf002d",
+            "name": "员工三",
+            "canEdit": true,
+            "type": "ORG",
+            "ishasSelected": false,
+            "isParent": true
+        }, {
+            "id": "4028810a64eb83bb0164ee098c51002f",
+            "pId": "4028810a64eb83bb0164ee08eb0a002c",
+            "name": "李主任",
+            "canEdit": true,
+            "type": "ORG",
+            "ishasSelected": false,
+            "isParent": true
+        }];
+        var data = data;
+        $('.y-user-tree').append(_.template($("#tplYunManageList").html())({data: data}));
         var h=$(".y-user").height()+23;
         $(".y-user").height(h);
         $(".y-content-professional-file-list").html(_.template($("#tplYunFileList").html()));
@@ -90,6 +146,20 @@
         $(".y-menu-item-title").eq(0).addClass("y-menu-item-title-active");
         $(".y-user-tree").delegate(".y-menu-item-title","click",function(){
             $(this).addClass("y-menu-item-title-active").siblings().removeClass("y-menu-item-title-active");
-        })
+        });
+        function fileList(){
+            $.ajax({
+                type: "POST",
+                url: pageContext.resourcePath + '/library/dynamic?page=1&pageSize=100&libraryId=1',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data)
+                }
+            });
+        }
+        fileList();
+        // function loadManage(manegeId){
+        //     $("").load()
+        // }
     })
 </script>
