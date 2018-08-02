@@ -14,9 +14,11 @@
             $yContainer.load('${ctx!}/km/front/adminSetting',function () {
                 location.hash = 'user';
             });
-        } else {
-            // 首页
-            $yContainer.load('${ctx!}/km/front/loadIndex',function () {
+        } else if(type === "publicLibrary"){
+            $yContainer.load('${ctx!}/km/front/publicLibrary');
+        } else{
+                // 首页
+                $yContainer.load('${ctx!}/km/front/loadIndex',function () {
                 location.hash = 'yun';
             });
         }

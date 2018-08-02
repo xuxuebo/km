@@ -93,6 +93,38 @@ public class FrontController {
         model.addAttribute("admin", SessionContext.get().isAdmin());
         return "index/majorProject";
     }
+    //首页  重点项目 查看更多
+    @RequestMapping("fileList")
+    public String fileList(Model model,String libraryId,String type){
+        model.addAttribute("userName", SessionContext.get().getUserName());
+        model.addAttribute("admin", SessionContext.get().isAdmin());
+        model.addAttribute("libraryId", libraryId);
+        model.addAttribute("type", type);
+        return "index/fileList";
+    }
+    //首页  重点项目 项目详情
+    @RequestMapping("projectDetail")
+    public String projectDetail(Model model,String libraryId){
+        model.addAttribute("userName", SessionContext.get().getUserName());
+        model.addAttribute("admin", SessionContext.get().isAdmin());
+        model.addAttribute("libraryId", libraryId);
+        return "index/projectDetail";
+    }
+    // 首页 重点项目 查看全文
+    @RequestMapping("projectIntroduction")
+    public String projectIntroduction(Model model,String libraryId){
+        model.addAttribute("userName", SessionContext.get().getUserName());
+        model.addAttribute("admin", SessionContext.get().isAdmin());
+        model.addAttribute("libraryId", libraryId);
+        return "index/projectIntroduction";
+    }
+    //首页  我的云库
+    @RequestMapping("publicLibrary")
+    public String publicLibrary(Model model){
+        model.addAttribute("userName", SessionContext.get().getUserName());
+        model.addAttribute("admin", SessionContext.get().isAdmin());
+        return "index/publicLibrary";
+    }
 
     //首页  分享
     @RequestMapping("dataShare")
