@@ -162,7 +162,8 @@ $(function () {
             });
         });
         //从本地分享
-        $('.js-share-local').on('click',function () {
+        $('.js-share-local').on('click',function (e) {
+            e.preventDefault();
             PEMO.DIALOG.selectorDialog({
                 content: pageContext.rootPath + '/km/knowledge/openUpload',
                 area: ['600px', '400px'],
@@ -180,7 +181,6 @@ $(function () {
                     }
                 }
             });
-            return false;
         });
         //下载
         $('.js-download').on('click', function () {

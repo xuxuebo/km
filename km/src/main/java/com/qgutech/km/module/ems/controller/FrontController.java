@@ -40,15 +40,20 @@ public class FrontController {
 
 
     //首页  我的云库
-    @RequestMapping("index")
-    public String index(Model model){
+    @RequestMapping("/index")
+    public String index() {
+        return "index/index";
+    }
+
+    @RequestMapping("loadIndex")
+    public String loadIndex(Model model){
         model.addAttribute("userName", SessionContext.get().getUserName());
         model.addAttribute("admin", SessionContext.get().isAdmin());
         model.addAttribute("firstLevelLibrary",libraryService.getFirstLevelLibrary());
         model.addAttribute("downloadServerUrl", PropertiesUtils.getConfigProp().getProperty("download.server.url"));
         model.addAttribute("fsServerHost", PropertiesUtils.getConfigProp().getProperty("fs.server.host"));
         model.addAttribute("myLibrary",libraryService.getUserLibraryByLibraryType(KnowledgeConstant.MY_LIBRARY).getId());
-        return "index/index";
+        return "index/loadIndex";
     }
     //首页  专业分类
     @RequestMapping("professionalClassification")
