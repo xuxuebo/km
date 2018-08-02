@@ -3,10 +3,34 @@
         <span class="yfont-icon">&#xe650;</span><span class="txt">菜单</span>
     </div>
     <ul class="y-aside__menu">
-        <li class="y-menu__item y-user" style="position: relative;min-height:240px ;border-left: 2px dashed #fff;padding: 0;margin:15px;margin-left: 29px;margin-top: 35px;">
+        <li class="y-menu__item y-user y-user-tree">
             <a href="#user" class="y-menu__item__title y-aside__menu__item__title" style="position: absolute;padding:0;top: -28px;left: -12px;">
                 <span class="yfont-icon">&#xe643;</span><span class="txt">用户管理</span>
             </a>
+            <div class="y-menu-item-title">
+                继电保护
+            </div>
+            <div class="y-menu-item-title">
+                继电保护
+            </div>
+            <div class="y-menu-item-title">
+                继电保护
+            </div>
+            <div class="y-menu-item-title">
+                继电保护
+            </div>
+            <div class="y-menu-item-title">
+                继电保护
+            </div>
+            <div class="y-menu-item-title">
+                继电保护
+            </div>
+            <div class="y-menu-item-title">
+                继电保护
+            </div>
+            <div class="y-menu-item-title">
+                继电保护
+            </div>
         </li>
     </ul>
 </aside>
@@ -26,14 +50,7 @@
                     <div class="y-content-professional-wrap">
                         <span class="y-content-professional-title">贡献榜单</span>
                     </div>
-                    <ul class="y-content-professional-rank-list">
-                        <li class="y-content-professional-rank-list-item">
-                            <div class="y-content-professional-rank-list-item-rank"><i class="y-content-professional-rank-list-item-rank-pic"></i></div>
-                            <div class="y-content-professional-rank-list-item-name"><i class="y-content-professional-rank-list-item-name-avatar"></i>夏雨</div>
-                            <div class="y-content-professional-rank-list-item-department">人力资源部</div>
-                            <div class="y-content-professional-rank-list-item-grade">500,00份</div>
-                        </li>
-                    </ul>
+                    <ul class="y-content-professional-rank-list"></ul>
                 </div>
             </div>
             <div class="y-content-professional-dynamic">
@@ -41,12 +58,7 @@
                     <span class="y-content-professional-title">动态</span>
                     <span class="y-content-professional-more">查看更多</span>
                 </div>
-                <ul class="y-content-professional-dynamic-list">
-                    <li class="y-content-professional-dynamic-list-item">
-                        <div class="y-content-professional-dynamic-list-item-doc">刘云上传了《中国人力资源产业园区发展现状及投资策略建议报告》</div>
-                        <div class="y-content-professional-dynamic-list-item-time">2018/05/04</div>
-                    </li>
-                </ul>
+                <ul class="y-content-professional-dynamic-list"></ul>
             </div>
         </div>
     </div>
@@ -78,9 +90,19 @@
     <% }%>
 </script>
 <script type="text/template" id="tplYunDynamicList">
-<script type="application/javascript">
+    <% for(var i=0;i< 9;i++) {%>
+    <li class="y-content-professional-dynamic-list-item">
+        <div class="y-content-professional-dynamic-list-item-doc">刘云上传了《中国人力资源产业园区发展现状及投资策略建议报告》</div>
+        <div class="y-content-professional-dynamic-list-item-time">2018/05/04</div>
+    </li>
+    <% }%>
+</script>
+<script>
     $(function () {
-        $(".y-content-professional-file-list").html(_.template($("#tplYunFileList").html()))
-        $(".y-content-professional-rank-list").html(_.template($("#tplYunRankList").html()))
+        var h=$(".y-user").height()+23;
+        $(".y-user").height(h);
+        $(".y-content-professional-file-list").html(_.template($("#tplYunFileList").html()));
+        $(".y-content-professional-rank-list").html(_.template($("#tplYunRankList").html()));
+        $(".y-content-professional-dynamic-list").html(_.template($("#tplYunDynamicList").html()));
     })
 </script>
