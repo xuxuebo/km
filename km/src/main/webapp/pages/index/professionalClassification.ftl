@@ -7,30 +7,6 @@
             <a href="#user" class="y-menu__item__title y-aside__menu__item__title" style="position: absolute;padding:0;top: -28px;left: -12px;">
                 <span class="yfont-icon">&#xe643;</span><span class="txt">用户管理</span>
             </a>
-            <div class="y-menu-item-title">
-                继电保护
-            </div>
-            <div class="y-menu-item-title">
-                继电保护
-            </div>
-            <div class="y-menu-item-title">
-                继电保护
-            </div>
-            <div class="y-menu-item-title">
-                继电保护
-            </div>
-            <div class="y-menu-item-title">
-                继电保护
-            </div>
-            <div class="y-menu-item-title">
-                继电保护
-            </div>
-            <div class="y-menu-item-title">
-                继电保护
-            </div>
-            <div class="y-menu-item-title">
-                继电保护
-            </div>
         </li>
     </ul>
 </aside>
@@ -66,7 +42,13 @@
         国家电网江苏省电力公司 ©苏ICP备15007035号-1
     </footer>
 </div>
-
+<script type="text/template" id="tplYunManageList">
+    <% for(var i=0;i< 8;i++) {%>
+        <div class="y-menu-item-title">
+            继电保护
+        </div>
+    <% }%>
+</script>
 <script type="text/template" id="tplYunFileList">
     <% for(var i=0;i< 8;i++) {%>
         <li class="y-content-professional-file-list-item">
@@ -99,10 +81,15 @@
 </script>
 <script>
     $(function () {
+        $(".y-user-tree").append(_.template($("#tplYunManageList").html()))
         var h=$(".y-user").height()+23;
         $(".y-user").height(h);
         $(".y-content-professional-file-list").html(_.template($("#tplYunFileList").html()));
         $(".y-content-professional-rank-list").html(_.template($("#tplYunRankList").html()));
         $(".y-content-professional-dynamic-list").html(_.template($("#tplYunDynamicList").html()));
+        $(".y-menu-item-title").eq(0).addClass("y-menu-item-title-active");
+        $(".y-user-tree").delegate(".y-menu-item-title","click",function(){
+            $(this).addClass("y-menu-item-title-active").siblings().removeClass("y-menu-item-title-active");
+        })
     })
 </script>

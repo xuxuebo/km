@@ -1914,6 +1914,7 @@ body, html {
     padding: 15px 0 15px 26px;
     color:#fff;
     font-size: 14px;
+    cursor: pointer;
 }
 .y-menu-item-title::before{
     content: "";
@@ -1934,4 +1935,7 @@ body, html {
     height: 0;
     display: block;
     clear: both;
+}
+.y-menu-item-title-active{
+    color: #338BF8;
 }
