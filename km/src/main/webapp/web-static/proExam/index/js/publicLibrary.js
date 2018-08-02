@@ -114,7 +114,6 @@ $(function () {
     }
     //回收站
     function initRecycle(container, routeInfo) {
-        debugger;
         var _tpl = $(routeInfo.templateId).html();
         container.html(_.template(_tpl)({title: '我的回收站'}));
         //table渲染
