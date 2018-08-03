@@ -1674,8 +1674,9 @@ body, html {
 .y-share-bar:hover .y-content__share__list{
     display: inline-block;
     position: absolute;
-    top: 50px;
+    top: 36px;
     z-index: 2;
+    padding-top: 14px;
 }
 .y-share-bar .arrow-top{
     display: inline-block;
@@ -1685,7 +1686,7 @@ body, html {
     background-image: url(../img/ico_arrow_top.png);
     background-image: image-set(url('../img/ico_arrow_top.png') 1x, url('../img/ico_arrow_top@2x.png') 2x);
     background-image: -webkit-image-set(url('../img/ico_arrow_top.png') 1x, url('../img/ico_arrow_top@2x.png') 2x);
-    top: -11px;
+    top: 3px;
     left: 50%;
     margin-left: -14px;
 }
