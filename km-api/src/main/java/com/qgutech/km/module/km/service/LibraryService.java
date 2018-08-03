@@ -110,4 +110,14 @@ public interface LibraryService extends BaseService<Library> {
      * @since TangFD@HF 2018-8-2
      */
     String saveLibraryAndDetail(Library library);
+
+    /**
+     * 根据知识库Id获取知识库信息及详细信息
+     *
+     * @param libraryId 知识库Id，不可为空
+     * @return 知识库信息
+     * @throws RuntimeException 当libraryId为空时
+     * @since TangFD@HF 2018-8-3
+     */
+    Library getLibraryAndDetail(String libraryId);
 }

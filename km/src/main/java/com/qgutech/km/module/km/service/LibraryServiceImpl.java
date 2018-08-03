@@ -39,6 +39,8 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
     private KnowledgeRelService knowledgeRelService;
     @Resource
     private UserService userService;
+    @Resource
+    private LibraryDetailService libraryDetailService;
 
     @Override
     @Transactional(readOnly = false)
@@ -426,5 +428,43 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
         }
 
         return libraryId;
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public Library getLibraryAndDetail(String libraryId) {
+        if (StringUtils.isEmpty(libraryId)) {
+            throw new PeException("libraryId must be not empty!");
+        }
+
+        Library library = get(libraryId, Library.ID, Library.LIBRARY_NAME, Library.LIBRARY_TYPE);
+        if (library == null) {
+            return null;
+        }
+
+        LibraryDetail libraryDetail = libraryDetailService.getByLibraryId(libraryId);
+        library.setLibraryDetail(libraryDetail);
+        String chargeIds = libraryDetail.getChargeIds();
+        if (StringUtils.isNotEmpty(chargeIds)) {
+            String[] userIds = chargeIds.split(",");
+            Map<String, String> userIdAndNameMap = userService.getUserIdAndNameMap(Arrays.asList(userIds));
+            StringBuilder name = new StringBuilder();
+            for (String userName : userIdAndNameMap.values()) {
+                name.append(userName).append(",");
+            }
+
+            String userName = name.toString();
+            if (StringUtils.isNotEmpty(userName)) {
+                libraryDetail.setChargeName(userName.substring(0, userName.length() - 1));
+            }
+        }
+
+        String faceId = libraryDetail.getFaceId();
+        if (StringUtils.isNotEmpty(faceId)) {
+            String facePath = userService.getFacePath(faceId, libraryDetail.getFaceName());
+            libraryDetail.setFacePath(facePath);
+        }
+
+        return library;
     }
 }

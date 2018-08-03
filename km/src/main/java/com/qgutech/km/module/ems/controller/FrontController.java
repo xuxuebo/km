@@ -116,6 +116,7 @@ public class FrontController {
         model.addAttribute("userName", SessionContext.get().getUserName());
         model.addAttribute("admin", SessionContext.get().isAdmin());
         model.addAttribute("libraryId", libraryId);
+        model.addAttribute("library", libraryService.getLibraryAndDetail(libraryId));
         return "index/projectIntroduction";
     }
     //首页  我的云库

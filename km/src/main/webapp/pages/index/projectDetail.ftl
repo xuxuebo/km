@@ -161,17 +161,26 @@
     <%if(list.length !== 0){%>
     <%_.each(list,function(item,i){%>
     <li>
+        <%if(item.rank == 1){%>
         <div class="y-contribution-icon_first"></div>
+        <%}else if(item.rank == 2){%>
+        <div class="y-contribution-icon_second"></div>
+        <%}else if(item.rank == 3){%>
+        <div class="y-contribution-icon_third"></div>
+        <%}else if(item.rank == 4){%>
+        <div class="y-contribution-icon_forth"></div>
+        <%}else if(item.rank == 5){%>
+        <div class="y-contribution-icon_fifth"></div>
+        <%}%>
         <div class="y-contribution-img">
-            <img class="y-contribution-person-img"
-                 src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
+            <img class="y-contribution-person-img" src="<%=item.facePath%>"
+                 onerror="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
         </div>
-        <div class="y-contribution-name"></div>
-        <div class="y-contribution-position">人力资源部</div>
-        <div class="y-contribution-person-number">50000份</div>
+        <div class="y-contribution-name"><%=item.userName%></div>
+        <div class="y-contribution-position"><%=item.orgName%></div>
+        <div class="y-contribution-person-number"><%=item.count%>份</div>
     </li>
-    <%})}%>
-    <%if(list.length === 0){%>
+    <%})}else{%>
     <div class="table__none">--暂无数据--</div>
     <%}%>
 </script>
@@ -237,4 +246,6 @@
         var $yContainer = $('.y-content');
         $yContainer.load('${ctx!}/km/front/projectIntroduction?libraryId='+libraryId);
     }
+    var libraryId= '${libraryId!}';
 </script>
+<script src="${resourcePath!}/web-static/proExam/index/js/projectDetail.js"></script>
