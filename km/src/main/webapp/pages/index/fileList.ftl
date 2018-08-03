@@ -1,7 +1,7 @@
 <section>
     <div class="y-content-body">
         <h4 class="y-content__title">
-            <#if flag?? && flag>
+            <#if type?? && type == 'project'>
                 项目列表
                 <#else>
                  动态云库
@@ -10,6 +10,7 @@
         <div class="y-content__opt__bar">
             <button class="y-btn y-btn__blue js-copy" type="button">复制到我的云库</button>
             <button class="y-btn y-btn__green js-download" type="button">下载</button>
+            <button class="y-btn y-btn__blue js-upload" id="filePicker" type="button">上传</button>
             <div id="theList"></div>
         </div>
         <ul class="y-bread-crumbs" id="breadCrumbs">

@@ -83,10 +83,30 @@
                 <#-- 必要字段 测试数据 -->
                 <input type="hidden" name="libraryDetail.chargeIds" value="TangFD"/>
                 <input type="hidden" name="libraryDetail.summary" value="数据数据数据数据数据数据数据数据数据数据数据"/>
-                <span class="pe-label-name floatL"><%=data.firstName%>:</span>
-                <input class="pe-stand-filter-form-input" maxlength="50" type="text"
-                       placeholder="请输入<%=data.firstName%>"
-                       name="<%=data.firstInputName%>">
+                <div class="pe-add-question-text">
+                    <span class="pe-label-name floatL introduction-info" ><%=data.firstName%>:</span>
+                    <input class="pe-stand-filter-form-input" maxlength="50" type="text"
+                           placeholder="请输入<%=data.firstName%>"
+                           name="<%=data.firstInputName%>">
+                </div>
+                <div class="pe-add-question-text">
+                    <span class="pe-label-name floatL introduction-info" >负责人:</span>
+                    <input class="pe-stand-filter-form-input" maxlength="50" type="text"
+                           placeholder="请输入负责人名称"
+                           name="<%=data.firstInputName%>">
+                </div>
+                <div class="pe-add-question-text">
+                    <span class="pe-label-name floatL introduction-info">上传图片:</span>
+                    <a  href="#" class="img-upload" onclick="projectImgUpload()">上传图片</a>
+                    <#--<div class="pe-add-question-text-img">-->
+                        <#---->
+                    <#--</div>-->
+                </div>
+                <div class="pe-add-question-text">
+                    <span class="pe-label-name floatL introduction-info" >项目描述:</span>
+                    <textarea class="pe-add-question-text-desc"  placeholder="请输入项目描述"></textarea>
+                </div>
+
             </form>
         </label>
         <div class="pe-main-km-text-wrap">
@@ -229,4 +249,21 @@
         };
         exerciseManage.init();
     })
+
+     function projectImgUpload() {
+        PEMO.DIALOG.selectorDialog({
+            content: pageContext.rootPath + '/knowledge/openUpload',
+            area: ['600px', '400px'],
+            title: '上传图片',
+            btn1: function () {
+            },
+            btn2: function () {
+                layer.closeAll();
+            },
+            success: function (d, index) {
+
+            }
+        });
+    }
 </script>
+<link rel="stylesheet" href="${resourcePath!}/web-static/proExam/index/css/index.css">

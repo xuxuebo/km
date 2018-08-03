@@ -118,6 +118,11 @@
                             查看更多
                         </a>
                     </div>
+                    <div class="y-project-file-add">
+                        <a href="#" onclick="fileAdd()">
+                            上传文件
+                        </a>
+                    </div>
                 </div>
                 <div class="y-project-file-list">
                     <ul id="fileList">
