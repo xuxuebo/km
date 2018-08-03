@@ -6,6 +6,35 @@ $(function () {
     var orgTreeData;
     initShareTab();
 
+    //获取筛选列表
+    getScreeningList();
+    function  getScreeningList(param) {
+        PEBASE.ajaxRequest({
+            url: pageContext.rootPath + '/km/library/listLibrary?type=PROJECT_LIBRARY',
+            data: param,
+            success: function (data) {
+                var _tpl = $('#tplScreeningList').html();
+                $('.js-major .y-share-project-type-item').html(_.template(_tpl)({list: data}));
+            }
+        });
+        PEBASE.ajaxRequest({
+            url: pageContext.rootPath + '/km/library/listLibrary?type=SPECIALTY_LIBRARY',
+            data: {},
+            success: function (data) {
+                var _tpl = $('#tplScreeningList').html();
+                $('.js-project .y-share-project-type-item').html(_.template(_tpl)({list: data}));
+            }
+        });
+        PEBASE.ajaxRequest({
+            url: pageContext.rootPath + '/km/km/label/list',
+            data: {},
+            success: function (data) {
+                var _tpl = $('#tplScreeningList').html();
+                $('.js-label .y-share-project-type-item').html(_.template(_tpl)({list: data}));
+            }
+        });
+    }
+
     //获取筛选类型
     var getTypeIds = function(){
         var majorIds = '';
@@ -29,7 +58,7 @@ $(function () {
             "labelIds":labelIds
         };
     };
-    $('.y-share-project-type-item-first').click(function(){
+    $(".y-share-project-type" ).delegate( ".y-share-project-type-item-first", "click", function(){
         var $this = $(this);
         if($this.hasClass('y-active')){
             return;
@@ -47,7 +76,7 @@ $(function () {
         };
         initShareTab(param);
     });
-    $('.y-share-project-type-item').click(function(){
+    $(".y-share-project-type" ).delegate( ".y-share-project-type-item", "click", function(){
         var $this = $(this);
         //只能选择一个
         $this.parent().find('.y-share-project-type-item').removeClass('y-active');
@@ -69,7 +98,7 @@ $(function () {
             'knowledgeName':''
         };
         initShareTab(param);
-    });
+    } );
     //初始化表格
     function initShareTab(param) {
         //table渲染
@@ -510,6 +539,7 @@ $(function () {
                 'knowledgeName':''
             };
             $('.show-org-name').text(treeNode.name);
+            getScreeningList(param);
             initShareTab(param);
         },
         treePosition: 'inputDropDown'
