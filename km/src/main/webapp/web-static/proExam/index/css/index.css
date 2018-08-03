@@ -630,6 +630,9 @@ body, html {
 .y-table .y-table__td.size {
     width: 160px
 }
+.y-table .y-table__td.userName {
+    width: 160px
+}
 
 .y-table .y-table__td.upload-time {
     width: 160px
@@ -1556,7 +1559,8 @@ body, html {
     white-space: nowrap;
     box-sizing: border-box;
     line-height: 23px;
-    width: 100%;
+    width: 70%;
+    float: left;
 }
 .y-project-file-author-name{
     font-size: 14px;
@@ -1568,16 +1572,37 @@ body, html {
     text-overflow: ellipsis;
     float: left;
 }
-.y-project-file-time{
+.y-dynamic-file-author-name{
     font-size: 14px;
     color: #626262;
     line-height: 23px;
-    width: 80px;
-    padding-right: 14px;
+    width: 230px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     float: left;
+}
+.y-project-file-time{
+    font-size: 14px;
+    color: #626262;
+    line-height: 23px;
+    width: 150px;
+    padding-right: 14px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    float: right;
+}
+.y-dynamic-file-time{
+    font-size: 14px;
+    color: #626262;
+    line-height: 23px;
+    width: 150px;
+    padding-right: 14px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    float: right;
 }
 .y-project-activity{
     float: right;

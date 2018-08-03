@@ -33,7 +33,10 @@
                 </label>
             </th>
             <th class="y-table__td name">
-                <span class="">名称</span>
+                <span class="">文件名称</span>
+            </th>
+            <th class="y-table__td name">
+                <span class="">上传人</span>
             </th>
             <th class="y-table__td size">
                 <span class="">大小</span>
@@ -44,6 +47,8 @@
         </tr>
         </thead>
         <tbody>
+        <%if(list.length !== 0){%>
+        <%_.each(list,function(item,i){%>
         <tr class="y-table__tr js-opt-dbclick">
             <td class="y-table__td checkbox">
                 <label class="y-checkbox">
@@ -64,20 +69,25 @@
                     </button>
                 </div>
                 <div class="y-table__filed_name">
-                    人才管理
+                    <%=item.knowledgeName%>
                 </div>
             </td>
+            <td class="y-table__td userName">
+                <%=item.userName%>
+            </td>
             <td class="y-table__td size">
-                3kb
+                <%=item.knowledgeSize%>
             </td>
             <td class="y-table__td upload-time">
-                2018-08-02
+                <%=item.createTimeStr%>
             </td>
         </tr>
+        <%})}%>
         </tbody>
     </table>
-
-    <#--<div class="table__none">--暂无数据--</div>-->
+    <%if(list.length === 0){%>
+    <div class="table__none">--暂无数据--</div>
+    <%}%>
 
 </script>
 <script>

@@ -115,8 +115,8 @@
     <%if(list.length !== 0){%>
     <%_.each(list,function(item,i){%>
     <li>
-        <div class="y-project-activity-time"><%=item.userName%><%=item.typeStr%><%=item.knowledgeName%></div>
-        <div class="y-project-activity-name"><%=item.createTimeStr%></div>
+        <span class="y-dynamic-file-author-name"><%=item.userName%><%=item.typeStr%><%=item.knowledgeName%></span>
+        <span class="y-dynamic-file-time"><%=item.createTimeStr%></span>
     </li>
     <%})}%>
     <%if(list.length === 0){%>
