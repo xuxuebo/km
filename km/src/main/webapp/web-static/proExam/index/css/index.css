@@ -1385,14 +1385,13 @@ body, html {
     width: 100%;
 }
 .y-contribution ul {
-    padding-top:10px;
+    padding: 10px 20px;
 }
 
 .y-contribution ul li {
     position: relative;
     white-space: nowrap;
     font-size: 0;
-    padding-bottom: 20px;
 }
 .y-contribution-icon_first{
     width: 20px;

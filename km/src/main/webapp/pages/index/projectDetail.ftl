@@ -1,3 +1,4 @@
+<#include "yunRank.ftl"/>
 <div class="y-major-project" id="yunLContentBody">
     <div class="y-major-project-header">高温变相光热</div>
     <div class="y-major-project-content">
@@ -5,56 +6,56 @@
             <div class="y-contribution-info">贡献榜单</div>
             <div class="y-contribution">
                 <ul id="contributionList">
-                    <li>
-                        <div class="y-contribution-icon_first"></div>
-                        <div class="y-contribution-img">
-                            <img class="y-contribution-person-img"
-                                 src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-                        </div>
-                        <div class="y-contribution-name">张恒恒</div>
-                        <div class="y-contribution-position">人力资源部</div>
-                        <div class="y-contribution-person-number">50000份</div>
-                    </li>
-                    <li>
-                        <div class="y-contribution-icon_second"></div>
-                        <div class="y-contribution-img">
-                            <img class="y-contribution-person-img"
-                                 src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-                        </div>
-                        <div class="y-contribution-name">张恒恒</div>
-                        <div class="y-contribution-position">人力资源部</div>
-                        <div class="y-contribution-person-number">50000份</div>
-                    </li>
-                    <li>
-                        <div class="y-contribution-icon_third"></div>
-                        <div class="y-contribution-img">
-                            <img class="y-contribution-person-img"
-                                 src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-                        </div>
-                        <span class="y-contribution-name">张恒恒</span>
-                        <span class="y-contribution-position">人力资源部</span>
-                        <span class="y-contribution-person-number">50000份</span>
-                    </li>
-                    <li>
-                        <div class="y-contribution-icon_forth"></div>
-                        <div class="y-contribution-img">
-                            <img class="y-contribution-person-img"
-                                 src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-                        </div>
-                        <div class="y-contribution-name">张恒恒</div>
-                        <div class="y-contribution-position">人力资源部</div>
-                        <div class="y-contribution-person-number">50000份</div>
-                    </li>
-                    <li>
-                        <div class="y-contribution-icon_fifth"></div>
-                        <div class="y-contribution-img">
-                            <img class="y-contribution-person-img"
-                                 src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-                        </div>
-                        <div class="y-contribution-name">张恒恒</div>
-                        <div class="y-contribution-position">人力资源部</div>
-                        <div class="y-contribution-person-number">50000份</div>
-                    </li>
+                    <#--<li>-->
+                        <#--<div class="y-contribution-icon_first"></div>-->
+                        <#--<div class="y-contribution-img">-->
+                            <#--<img class="y-contribution-person-img"-->
+                                 <#--src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">-->
+                        <#--</div>-->
+                        <#--<div class="y-contribution-name">张恒恒</div>-->
+                        <#--<div class="y-contribution-position">人力资源部</div>-->
+                        <#--<div class="y-contribution-person-number">50000份</div>-->
+                    <#--</li>-->
+                    <#--<li>-->
+                        <#--<div class="y-contribution-icon_second"></div>-->
+                        <#--<div class="y-contribution-img">-->
+                            <#--<img class="y-contribution-person-img"-->
+                                 <#--src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">-->
+                        <#--</div>-->
+                        <#--<div class="y-contribution-name">张恒恒</div>-->
+                        <#--<div class="y-contribution-position">人力资源部</div>-->
+                        <#--<div class="y-contribution-person-number">50000份</div>-->
+                    <#--</li>-->
+                    <#--<li>-->
+                        <#--<div class="y-contribution-icon_third"></div>-->
+                        <#--<div class="y-contribution-img">-->
+                            <#--<img class="y-contribution-person-img"-->
+                                 <#--src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">-->
+                        <#--</div>-->
+                        <#--<span class="y-contribution-name">张恒恒</span>-->
+                        <#--<span class="y-contribution-position">人力资源部</span>-->
+                        <#--<span class="y-contribution-person-number">50000份</span>-->
+                    <#--</li>-->
+                    <#--<li>-->
+                        <#--<div class="y-contribution-icon_forth"></div>-->
+                        <#--<div class="y-contribution-img">-->
+                            <#--<img class="y-contribution-person-img"-->
+                                 <#--src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">-->
+                        <#--</div>-->
+                        <#--<div class="y-contribution-name">张恒恒</div>-->
+                        <#--<div class="y-contribution-position">人力资源部</div>-->
+                        <#--<div class="y-contribution-person-number">50000份</div>-->
+                    <#--</li>-->
+                    <#--<li>-->
+                        <#--<div class="y-contribution-icon_fifth"></div>-->
+                        <#--<div class="y-contribution-img">-->
+                            <#--<img class="y-contribution-person-img"-->
+                                 <#--src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">-->
+                        <#--</div>-->
+                        <#--<div class="y-contribution-name">张恒恒</div>-->
+                        <#--<div class="y-contribution-position">人力资源部</div>-->
+                        <#--<div class="y-contribution-person-number">50000份</div>-->
+                    <#--</li>-->
                 </ul>
             </div>
         </div>
@@ -157,24 +158,24 @@
 
 
 <#--排行榜-->
-<script type="text/template" id="tplsContributionTable">
-    <%if(list.length !== 0){%>
-    <%_.each(list,function(item,i){%>
-    <li>
-        <div class="y-contribution-icon_first"></div>
-        <div class="y-contribution-img">
-            <img class="y-contribution-person-img"
-                 src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-        </div>
-        <div class="y-contribution-name"></div>
-        <div class="y-contribution-position">人力资源部</div>
-        <div class="y-contribution-person-number">50000份</div>
-    </li>
-    <%})}%>
-    <%if(list.length === 0){%>
-    <div class="table__none">--暂无数据--</div>
-    <%}%>
-</script>
+<#--<script type="text/template" id="tplsContributionTable">-->
+    <#--<%if(list.length !== 0){%>-->
+    <#--<%_.each(list,function(item,i){%>-->
+    <#--<li>-->
+        <#--<div class="y-contribution-icon_first"></div>-->
+        <#--<div class="y-contribution-img">-->
+            <#--<img class="y-contribution-person-img"-->
+                 <#--src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">-->
+        <#--</div>-->
+        <#--<div class="y-contribution-name"></div>-->
+        <#--<div class="y-contribution-position">人力资源部</div>-->
+        <#--<div class="y-contribution-person-number">50000份</div>-->
+    <#--</li>-->
+    <#--<%})}%>-->
+    <#--<%if(list.length === 0){%>-->
+    <#--<div class="table__none">--暂无数据--</div>-->
+    <#--<%}%>-->
+<#--</script>-->
 
 <#--项目详情初始化-->
 <script type="text/template" id="projectDetailDetail">
@@ -225,6 +226,10 @@
 
 
 <script>
+    $(function () {
+        // 贡献榜单
+        $("#contributionList").html(_.template($("#tplYunRankList").html()));
+    })
     //查看更多
     function fileSelectMore(type) {
         var libraryId = '${libraryId!}';
