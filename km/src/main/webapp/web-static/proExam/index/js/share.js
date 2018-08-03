@@ -36,9 +36,21 @@ $(function () {
         }
         $this.addClass('y-active');
         $this.parent().find('.y-share-project-type-item').removeClass('y-active');
+        typeIds = getTypeIds();
+        var param = {
+            'referId':orgTreeId,
+            'referType':orgType,
+            'tag':typeIds.labelIds,
+            'projectLibraryId':typeIds.projectIds,
+            'specialtyLibraryId':typeIds.majorIds,
+            'knowledgeName':''
+        };
+        initShareTab(param);
     });
     $('.y-share-project-type-item').click(function(){
         var $this = $(this);
+        //只能选择一个
+        $this.parent().find('.y-share-project-type-item').removeClass('y-active');
         $this.toggleClass('y-active');
         if($this.parent().find('.y-active').length>0){
             $this.parent().find('.y-share-project-type-item-first').removeClass('y-active');
@@ -112,7 +124,6 @@ $(function () {
                 resize: false,
                 btn1: function () {
                     //id
-                    debugger;
                     var selectList = table.getSelect();
                     if (selectList.length === 0) {
                         layer.msg("请先选择操作项");
@@ -172,11 +183,10 @@ $(function () {
                     btn1: function () {
                         if(deptId){
                             PEBASE.ajaxRequest({
-                                //TODO
-                                url: 'urllllllllllllll',
+                                url: '/km/share/shareToOrg',
                                 data: {
-                                    knowledgeIds:knowledgeIds,
-                                    deptId:deptId
+                                    "knowledgeIds":knowledgeIds,
+                                    "libraryIds":deptId
                                 },
                                 success: function (data) {
                                     if (data.success) {
@@ -213,7 +223,6 @@ $(function () {
                             isOpen: true,
                             dataUrl: pageContext.rootPath + '/km/uc/user/manage/listOrgTreeAndUsers',
                             clickNode: function (treeNode) {
-                                debugger;
                                 deptId = treeNode.id;
                             },
                             treePosition: 'inputDropDown'
@@ -231,7 +240,7 @@ $(function () {
         //从本地分享
         $('.js-share-local').on('click',function (e) {
             e.preventDefault();
-            var deptId;
+            var deptId, fileIds = "";
             PEMO.DIALOG.selectorDialog({
                 content: pageContext.rootPath + '/km/knowledge/openUpload',
                 area: ['600px', '400px'],
@@ -240,35 +249,47 @@ $(function () {
                 btn: ['下一步','取消'],
                 btn1: function () {
                     var fileList = window.frames[0] &&  window.frames[0].document.getElementById('theList');
-                    if(window.frames[0] && $(fileList).find('li').length==0){
+                    var length = $(fileList).find('li').length;
+                    if(window.frames[0] && length==0){
                         PEMO.DIALOG.tips({
                             content: '您还未上传文件!',
                             time:2000
                         });
                         return;
                     }
-                    //部门树
-                    $('.js-file-upload .layui-layer-content iframe').remove();
-                    $('.js-file-upload .layui-layer-content').html('<div id="deptTree"></div>');
-                    var deptOrgTree = {
-                        isOpen: true,
-                        dataUrl: pageContext.rootPath + '/km/uc/user/manage/listOrgTreeAndUsers',
-                        clickNode: function (treeNode) {
-                            debugger;
-                            deptId = treeNode.id;
-                        },
-                        treePosition: 'inputDropDown'
-                    };
-                    PEMO.ZTREE.initTree('deptTree', deptOrgTree);
-                    var treeObj = $.fn.zTree.getZTreeObj("deptTree");
-                    treeObj.expandAll(true);
-                    $('.js-file-upload .layui-layer-btn0').html('确定');
-                    $('.js-file-upload .layui-layer-btn0').addClass('layui-layer-save');
+
+                    if (length > 0) {
+                        for (var i = 0; i < length; i++) {
+                            fileIds += $($(fileList).find('li')[i]).attr("data-id");
+                            if (i < length - 1) {
+                                fileIds += ",";
+                            }
+                        }
+
+                        //部门树
+                        $('.js-file-upload .layui-layer-content iframe').remove();
+                        $('.js-file-upload .layui-layer-content').html('<div id="deptTree"></div>');
+                        var deptOrgTree = {
+                            isOpen: true,
+                            dataUrl: pageContext.rootPath + '/km/uc/user/manage/listOrgTreeAndUsers',
+                            clickNode: function (treeNode) {
+                                deptId = treeNode.id;
+                            },
+                            treePosition: 'inputDropDown'
+                        };
+                        PEMO.ZTREE.initTree('deptTree', deptOrgTree);
+                        var treeObj = $.fn.zTree.getZTreeObj("deptTree");
+                        treeObj.expandAll(true);
+                        $('.js-file-upload .layui-layer-btn0').html('确定');
+                        $('.js-file-upload .layui-layer-btn0').addClass('layui-layer-save');
+                    }
                     if($('.layui-layer-save').length>0 && deptId){
                         PEBASE.ajaxRequest({
-                                //TODO
-                                url: 'urllllllllllllll',
-                                data: deptId,
+                                url: '/km/share/shareToOrg',
+                                data: {
+                                    "fileIds":fileIds,
+                                    "libraryIds":deptId
+                                },
                                 success: function (data) {
                                     if (data.success) {
                                         layer.closeAll();

@@ -443,6 +443,10 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
         }
 
         LibraryDetail libraryDetail = libraryDetailService.getByLibraryId(libraryId);
+        if (libraryDetail == null) {
+            return library;
+        }
+
         library.setLibraryDetail(libraryDetail);
         String chargeIds = libraryDetail.getChargeIds();
         if (StringUtils.isNotEmpty(chargeIds)) {

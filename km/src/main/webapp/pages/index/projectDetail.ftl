@@ -1,82 +1,16 @@
 <div class="y-major-project" id="yunLContentBody">
-    <div class="y-major-project-header">高温变相光热</div>
+    <div class="y-major-project-header"></div>
     <div class="y-major-project-content">
         <div class="y-project-contribution-list">
             <div class="y-contribution-info">贡献榜单</div>
             <div class="y-contribution">
-                <ul id="contributionList">
-                    <li>
-                        <div class="y-contribution-icon_first"></div>
-                        <div class="y-contribution-img">
-                            <img class="y-contribution-person-img"
-                                 src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-                        </div>
-                        <div class="y-contribution-name">张恒恒</div>
-                        <div class="y-contribution-position">人力资源部</div>
-                        <div class="y-contribution-person-number">50000份</div>
-                    </li>
-                    <li>
-                        <div class="y-contribution-icon_second"></div>
-                        <div class="y-contribution-img">
-                            <img class="y-contribution-person-img"
-                                 src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-                        </div>
-                        <div class="y-contribution-name">张恒恒</div>
-                        <div class="y-contribution-position">人力资源部</div>
-                        <div class="y-contribution-person-number">50000份</div>
-                    </li>
-                    <li>
-                        <div class="y-contribution-icon_third"></div>
-                        <div class="y-contribution-img">
-                            <img class="y-contribution-person-img"
-                                 src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-                        </div>
-                        <span class="y-contribution-name">张恒恒</span>
-                        <span class="y-contribution-position">人力资源部</span>
-                        <span class="y-contribution-person-number">50000份</span>
-                    </li>
-                    <li>
-                        <div class="y-contribution-icon_forth"></div>
-                        <div class="y-contribution-img">
-                            <img class="y-contribution-person-img"
-                                 src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-                        </div>
-                        <div class="y-contribution-name">张恒恒</div>
-                        <div class="y-contribution-position">人力资源部</div>
-                        <div class="y-contribution-person-number">50000份</div>
-                    </li>
-                    <li>
-                        <div class="y-contribution-icon_fifth"></div>
-                        <div class="y-contribution-img">
-                            <img class="y-contribution-person-img"
-                                 src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-                        </div>
-                        <div class="y-contribution-name">张恒恒</div>
-                        <div class="y-contribution-position">人力资源部</div>
-                        <div class="y-contribution-person-number">50000份</div>
-                    </li>
-                </ul>
+                <ul id="contributionList"></ul>
             </div>
         </div>
         <div class="y-project-content-up">
             <div class="y-project-desc">
                 <div class="y-project-info">项目介绍</div>
-                <div class="y-project-introduction" id="projectDeatil">
-                    <img class="y-project-img"
-                         src="${resourcePath!}/web-static/proExam/index/img/ico_rar.png" alt="">
-                    <div class="y-project-introduction-content">
-                        <div class="y-project-content-title">高温变相光热</div>
-                        <div class="y-project-content-author">项目负责人：宁远 张国元 丁敏</div>
-                        <div class="y-introduction-content">
-                            保持公认的可爱、智慧、有气质的特征，修炼出做事脚踏实地、耐受力强、处处小心谨慎的优点，保持公认的可爱、智慧、有气质的特征，修炼出做事脚踏实地、耐受力强、处处小心谨慎的优点,保持公认的可爱、智慧、有气质的特征，修炼出做事脚踏实地、耐受力强、处处小心谨慎的优点保持公认的可爱、智慧、有气质的特征，修炼出做事脚踏实地、耐受力强、处处小心谨慎的优点暂时先用这三个优点来守护自己的有很高的智慧、酷爱和平、喜爱自由、丰富的幽默感、
-                        </div>
-                        <div class="y-project-select-all">
-                            <a href="#" onclick="selectProjectIntroduction()">
-                                查看全文
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                <div class="y-project-introduction" id="projectDeatil"></div>
             </div>
 
         </div>
@@ -93,20 +27,7 @@
                     </div>
                 </div>
                 <div class="y-project-activity-list">
-                    <ul id="activityList">
-                        <li>
-                            <div class="y-project-activity-time">2018/08/12</div>
-                            <div class="y-project-activity-name">刘丹上传了《人力资源管理办法条理人力资源管理办法条理人力资源管理办法条理人力资源管理办法条理》</div>
-                        </li>
-                        <li>
-                            <div class="y-project-activity-time">2018/08/12</div>
-                            <div class="y-project-activity-name">刘丹上传了《人力资源管理办法条理人力资源管理办法条理人力资源管理办法条理人力资源管理办法条理》</div>
-                        </li>
-                        <li>
-                            <div class="y-project-activity-time">2018/08/12</div>
-                            <div class="y-project-activity-name">刘丹上传了《人力资源管理办法条理人力资源管理办法条理人力资源管理办法条理人力资源管理办法条理》</div>
-                        </li>
-                    </ul>
+                    <ul id="activityList"></ul>
                 </div>
             </div>
             <div class="y-project-file">
@@ -119,34 +40,7 @@
                     </div>
                 </div>
                 <div class="y-project-file-list">
-                    <ul id="fileList">
-                        <li>
-                            <div class="y-file-desc">
-                                <span class="y-project-file-author-name">高晓松</span>
-                                <span class="y-project-file-time">2018/5/5</span>
-                            </div>
-                            <div class="y-file-info">
-                                <img
-                                        src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
-                                <span class="y-project-file-name">
-                                        高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望
-                                    </span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="y-file-desc">
-                                <span class="y-project-file-author-name">高晓松</span>
-                                <span class="y-project-file-time">2018/5/5</span>
-                            </div>
-                            <div class="y-file-info">
-                                <img
-                                        src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
-                                <span class="y-project-file-name">
-                                        高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望高温变相储热铝合金的研究现状与展望
-                                    </span>
-                            </div>
-                        </li>
-                    </ul>
+                    <ul id="fileList"></ul>
                 </div>
             </div>
         </div>

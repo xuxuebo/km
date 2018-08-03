@@ -59,7 +59,18 @@ public class ShareController {
             return jsonResult;
         }
 
+        List<String> fileIds = share.getFileIds();
         List<String> knowledgeIds = share.getKnowledgeIds();
+        if (CollectionUtils.isNotEmpty(fileIds)) {
+            List<String> knowledgeIdList = knowledgeService.getIdsByFileIds(fileIds);
+            if (knowledgeIds == null) {
+                knowledgeIds = knowledgeIdList;
+                share.setKnowledgeIds(knowledgeIds);
+            } else {
+                knowledgeIds.addAll(knowledgeIdList);
+            }
+        }
+
         if (CollectionUtils.isEmpty(knowledgeIds)) {
             jsonResult.setSuccess(false);
             jsonResult.setMessage("分享失败");

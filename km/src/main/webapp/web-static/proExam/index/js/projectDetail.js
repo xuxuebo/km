@@ -13,7 +13,9 @@ $(function () {
                     size: "desc",
                     uploadTime: "desc"
                 };
+                $(".y-major-project-header").html('');
                 if(result){
+                    $(".y-major-project-header").html(result.libraryName);
                     $projectDeatil.html(_.template(projectDetailDetail)({data: result, sort: initSort}));
                 }
             }
