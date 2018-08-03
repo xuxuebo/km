@@ -130,7 +130,7 @@ public class UserController extends BaseController {
      * 部门类别树包含人员信息
      */
     @ResponseBody
-    @RequestMapping("manage/listOrgTreeAndUsers")
+    @RequestMapping("/listOrgTreeAndUsers")
     public List<PeTreeNode> listOrgTreeAndUsers() {
         return organizeService.listTreeNodeAndUsers();
     }

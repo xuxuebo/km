@@ -2,9 +2,8 @@ package com.qgutech.km.module.km.service;
 
 import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.service.BaseServiceImpl;
-import com.qgutech.km.module.km.model.Knowledge;
-import com.qgutech.km.module.km.model.KnowledgeRel;
-import com.qgutech.km.module.km.model.Library;
+import com.qgutech.km.constant.KnowledgeConstant;
+import com.qgutech.km.module.km.model.*;
 import com.qgutech.km.module.uc.service.UserService;
 import com.qgutech.km.utils.PeDateUtils;
 import com.qgutech.km.utils.PeException;
@@ -28,6 +27,14 @@ import java.util.stream.Collectors;
 public class KnowledgeRelServiceImpl extends BaseServiceImpl<KnowledgeRel> implements KnowledgeRelService {
     @Resource
     private UserService userService;
+    @Resource
+    private ShareService shareService;
+    @Resource
+    private KnowledgeRelService knowledgeRelService;
+    @Resource
+    private StatisticService statisticService;
+    @Resource
+    private KnowledgeLogService knowledgeLogService;
 
     @Override
     @Transactional(readOnly = true)
@@ -139,5 +146,68 @@ public class KnowledgeRelServiceImpl extends BaseServiceImpl<KnowledgeRel> imple
         }
 
         return libraryIdKnowledgeIdMap;
+    }
+
+    @Override
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public void addToLibrary(Share share) {
+        if (null == share
+                || CollectionUtils.isEmpty(share.getLibraryIds())
+                || CollectionUtils.isEmpty(share.getKnowledgeIds())) {
+            throw new PeException("share param is invalid!");
+        }
+
+        List<String> knowledgeIds = share.getKnowledgeIds();
+        Map<String, String> knowledgeIdAndShareIdMap = new HashMap<>();
+        List<String> libraryIds = share.getLibraryIds();
+        int size = knowledgeIds.size();
+        String corpCode = ExecutionContext.getCorpCode();
+        List<Share> shareList = new ArrayList<>(size);
+        int capacity = size * libraryIds.size();
+        List<KnowledgeRel> knowledgeRelList = new ArrayList<>(capacity);
+        List<KnowledgeLog> knowledgeLogList = new ArrayList<>(capacity);
+        for (String libraryId : libraryIds) {
+            for (String knowledgeId : knowledgeIds) {
+                String shareId = knowledgeIdAndShareIdMap.get(knowledgeId);
+                if (StringUtils.isEmpty(shareId)) {
+                    Share shareKnowledge = new Share();
+                    shareKnowledge.setShareType(KnowledgeConstant.SHARE_NO_PASSWORD);
+                    shareKnowledge.setExpireTime(KnowledgeConstant.SHARE_PERMANENT_VALIDITY);
+                    shareKnowledge.setKnowledgeId(knowledgeId);
+                    shareKnowledge.setPassword("");
+                    shareKnowledge.setCorpCode(corpCode);
+                    knowledgeIdAndShareIdMap.put(knowledgeId, "NEW_ADD");
+                    shareList.add(shareKnowledge);
+                }
+
+                KnowledgeRel knowledgeRel = new KnowledgeRel();
+                knowledgeRel.setKnowledgeId(knowledgeId);
+                knowledgeRel.setLibraryId(libraryId);
+                knowledgeRel.setShareId(shareId);
+                knowledgeRel.setCorpCode(corpCode);
+                knowledgeRelList.add(knowledgeRel);
+                knowledgeLogList.add(new KnowledgeLog(knowledgeId, libraryId, KnowledgeConstant.LOG_UPLOAD));
+            }
+        }
+
+        if (shareList.size() > 0) {
+            shareService.batchSave(shareList);
+            List<Statistic> statistics = new ArrayList<>(size);
+            for (Share saveShared : shareList) {
+                String sharedId = saveShared.getId();
+                knowledgeIdAndShareIdMap.put(saveShared.getKnowledgeId(), sharedId);
+                statistics.add(new Statistic(sharedId, 0, 0, 0));
+            }
+
+            //保存共享统计记录
+            statisticService.batchSave(statistics);
+            for (KnowledgeRel knowledgeRel : knowledgeRelList) {
+                String shareId = knowledgeIdAndShareIdMap.get(knowledgeRel.getKnowledgeId());
+                knowledgeRel.setShareId(shareId);
+            }
+        }
+
+        knowledgeRelService.batchSave(knowledgeRelList);
+        knowledgeLogService.batchSave(knowledgeLogList);
     }
 }

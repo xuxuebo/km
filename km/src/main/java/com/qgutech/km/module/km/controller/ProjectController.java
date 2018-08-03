@@ -32,11 +32,11 @@ public class ProjectController {
     }
 
     /**
-     * 新增专业分类
+     * 新增重点项目
      */
-    @RequestMapping("addSpecialty")
+    @RequestMapping("addProject")
     @ResponseBody
-    public JsonResult addSpecialty(Library library) {
+    public JsonResult addProject(Library library) {
         JsonResult jsonResult = new JsonResult();
         if (library == null || StringUtils.isEmpty(library.getLibraryName())) {
             jsonResult.setSuccess(false);
@@ -44,7 +44,7 @@ public class ProjectController {
             return jsonResult;
         }
 
-        boolean checkName = libraryService.checkName(null, library.getLibraryName(), KnowledgeConstant.SPECIALTY_LIBRARY);
+        boolean checkName = libraryService.checkName(null, library.getLibraryName(), KnowledgeConstant.PROJECT_LIBRARY);
         if (checkName) {
             jsonResult.setSuccess(false);
             jsonResult.setMessage("NAME_REPEAT");
@@ -71,9 +71,9 @@ public class ProjectController {
         library.setParentId("0");
     }
 
-    @RequestMapping("updateSpecialty")
+    @RequestMapping("updateProject")
     @ResponseBody
-    public JsonResult updateSpecialty(Library library) {
+    public JsonResult updateProject(Library library) {
         JsonResult jsonResult = new JsonResult();
         if (library == null || StringUtils.isEmpty(library.getLibraryName()) || StringUtils.isEmpty(library.getId())) {
             jsonResult.setSuccess(false);
@@ -83,7 +83,7 @@ public class ProjectController {
 
         String id = library.getId();
         String libraryName = library.getLibraryName();
-        boolean checkName = libraryService.checkName(id, libraryName, KnowledgeConstant.SPECIALTY_LIBRARY);
+        boolean checkName = libraryService.checkName(id, libraryName, KnowledgeConstant.PROJECT_LIBRARY);
         if (checkName) {
             jsonResult.setSuccess(false);
             jsonResult.setMessage("NAME_REPEAT");

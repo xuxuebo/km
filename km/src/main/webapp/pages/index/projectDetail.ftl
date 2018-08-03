@@ -19,10 +19,8 @@
                 <div class="y-project-file-inline">
                     <div class="y-project-activity-info">云库动态</div>
                     <div class="y-project-activity-more">
-                        <a href="#selectActivityMore">
-                            <a href="#" onclick="fileSelectMore('activity')">
-                                查看更多
-                            </a>
+                        <a href="#" onclick="fileSelectMore('activity')">
+                            查看更多
                         </a>
                     </div>
                 </div>
@@ -34,7 +32,9 @@
                 <div class="y-project-file-inline">
                     <div class="y-project-file-info">项目文件</div>
                     <div class="y-project-file-more">
-                        <a href="#" onclick="fileSelectMore('project')">
+                        <a href="javascript:void(0);" class="project-upload">
+                            上传文件
+                        </a> <a href="#" onclick="fileSelectMore('project')">
                             查看更多
                         </a>
                     </div>
@@ -100,8 +100,6 @@
     <%if(list.length !== 0){%>
     <%_.each(list,function(item,i){%>
     <li>
-        <img
-                src="${resourcePath!}/web-static/proExam/index/img/ico_xlsx.png" alt="">
         <span class="y-project-file-name"> <%=item.knowledgeName%></span>
         <span class="y-project-file-author-name"><%=item.userName%></span>
         <span class="y-project-file-time"><%=item.createTimeStr%></span>
@@ -117,7 +115,7 @@
     <%if(list.length !== 0){%>
     <%_.each(list,function(item,i){%>
     <li>
-        <div class="y-project-activity-time"><%=item.userName%><%=item.knowledgeName%></div>
+        <div class="y-project-activity-time"><%=item.userName%><%=item.typeStr%><%=item.knowledgeName%></div>
         <div class="y-project-activity-name"><%=item.createTimeStr%></div>
     </li>
     <%})}%>
