@@ -53,7 +53,7 @@ $(function () {
             $fileList.html(_.template(tplsFileTable)({list: data, sort: initSort}));
         }
     }
-    // 贡献榜单
+
     // 云库动态
     function initActivity() {
         var tplsActivityTable = $('#tplsActivityTable').html();
