@@ -1,8 +1,10 @@
 package com.qgutech.km.module.km.controller;
 
+import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.vo.JsonResult;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.module.km.model.Library;
+import com.qgutech.km.module.km.model.LibraryDetail;
 import com.qgutech.km.module.km.service.LibraryService;
 import com.qgutech.km.utils.UUIDGenerator;
 import org.apache.commons.lang.StringUtils;
@@ -51,7 +53,7 @@ public class ProjectController {
 
         try {
             setLibraryContent(library);
-            libraryService.insert(library);
+            libraryService.saveLibraryAndDetail(library);
         } catch (Exception e) {
             e.printStackTrace();
             jsonResult.setSuccess(false);

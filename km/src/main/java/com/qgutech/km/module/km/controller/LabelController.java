@@ -1,9 +1,9 @@
 package com.qgutech.km.module.km.controller;
 
+import com.qgutech.km.base.model.Page;
+import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.vo.JsonResult;
-import com.qgutech.km.base.vo.PeTreeNode;
 import com.qgutech.km.module.km.model.Label;
-import com.qgutech.km.module.km.service.LabelRelService;
 import com.qgutech.km.module.km.service.LabelService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -96,8 +96,17 @@ public class LabelController {
      */
     @ResponseBody
     @RequestMapping("listTree")
-    public List<PeTreeNode> listTree(){
-        return labelService.listTree();
+    public Page<Label> listTree(){
+        PageParam pageParam = new PageParam();
+        pageParam.setAutoCount(false);
+        pageParam.setAutoPaging(false);
+        return labelService.listTree(pageParam);
+    }
+
+    @ResponseBody
+    @RequestMapping("list")
+    public List<Label> list() {
+        return listTree().getRows();
     }
 
     /**

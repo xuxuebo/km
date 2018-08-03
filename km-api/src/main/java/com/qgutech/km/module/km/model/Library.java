@@ -55,8 +55,7 @@ public class Library extends BaseModel {
     @Column
     private float showOrder;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "detail_id", nullable = false)
+    @Transient
     private LibraryDetail libraryDetail;
 
     public String getLibraryName() {

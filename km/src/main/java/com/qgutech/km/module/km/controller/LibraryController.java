@@ -10,6 +10,7 @@ import com.qgutech.km.module.km.model.KnowledgeLog;
 import com.qgutech.km.module.km.model.Library;
 import com.qgutech.km.module.km.model.LibraryDetail;
 import com.qgutech.km.module.km.service.KnowledgeLogService;
+import com.qgutech.km.module.km.service.LibraryDetailService;
 import com.qgutech.km.module.km.service.LibraryService;
 import com.qgutech.km.module.uc.service.UserService;
 import org.apache.commons.collections.CollectionUtils;
@@ -38,6 +39,8 @@ public class LibraryController {
     private UserService userService;
     @Resource
     private KnowledgeLogService knowledgeLogService;
+    @Resource
+    private LibraryDetailService libraryDetailService;
 
     /**
      * 一级公共库
@@ -191,13 +194,13 @@ public class LibraryController {
     @ResponseBody
     @RequestMapping("load")
     public Library load(@RequestParam String libraryId) {
-        Library library = libraryService.get(libraryId, Library.ID, Library.LIBRARY_NAME, Library.LIBRARY_TYPE,
-                Library.CHARGE_IDS, Library.FACE_ID, Library.FACE_NAME, Library.SUMMARY);
+        Library library = libraryService.get(libraryId, Library.ID, Library.LIBRARY_NAME, Library.LIBRARY_TYPE);
         if (library == null) {
             return null;
         }
 
-        LibraryDetail libraryDetail = library.getLibraryDetail();
+        LibraryDetail libraryDetail = libraryDetailService.getByLibraryId(libraryId);
+        library.setLibraryDetail(libraryDetail);
         String chargeIds = libraryDetail.getChargeIds();
         if (StringUtils.isNotEmpty(chargeIds)) {
             String[] userIds = chargeIds.split(",");

@@ -18,6 +18,7 @@ public class LibraryDetail extends BaseModel {
     public static String FACE_ID = "faceId";
     public static String FACE_NAME = "faceName";
     public static String SUMMARY = "summary";
+    public static String LIBRARY_ID = "libraryId";
 
     /**
      * 负责人Ids，逗号分隔
@@ -42,6 +43,9 @@ public class LibraryDetail extends BaseModel {
      */
     @Column
     private String summary;
+
+    @Column
+    private String libraryId;
 
     @Transient
     private String chargeName;
@@ -94,5 +98,13 @@ public class LibraryDetail extends BaseModel {
 
     public String getFacePath() {
         return facePath;
+    }
+
+    public String getLibraryId() {
+        return libraryId;
+    }
+
+    public void setLibraryId(String libraryId) {
+        this.libraryId = libraryId;
     }
 }

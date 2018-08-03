@@ -2057,3 +2057,11 @@ body, html {
     clear: both;
     text-indent:2em;
 }
+/*分享中的部门树样式*/
+#deptTree{
+    width: 600px;
+    position: relative;
+    overflow: hidden;
+    overflow-y: visible;
+    height: 300px;
+}

@@ -127,4 +127,54 @@
         <ul id="editOrgTree" class="ztree pe-tree-container"></ul>
     </div>
 </script>
+<script type="text/template" id="tplYunTable">
+    <table class="y-table">
+        <thead class="y-table__header">
+        <tr>
+            <th class="y-table__td checkbox">
+                <label class="y-checkbox">
+                    <input type="checkbox">
+                    <span class="y-checkbox__span"></span>
+                </label>
+            </th>
+            <th class="y-table__td name">
+                <span class="">文件名</span>
+            </th>
+            <th class="y-table__td size">
+                <span class="">大小</span>
+            </th>
+            <th class="y-table__td create-time">
+                <span class="">上传时间</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <%if(list.length !== 0){%>
+        <%_.each(list,function(item,i){%>
+        <tr class="y-table__tr js-opt-dbclick" data-fileid = "<%=item.fileId%>" data-folder = "<%=item.folder%>" data-id="<%=item.id%>">
+            <td class="y-table__td checkbox">
+                <label class="y-checkbox">
+                    <input type="checkbox">
+                    <span class="y-checkbox__span"></span>
+                </label>
+            </td>
+            <td class="y-table__td name">
+                <div class="y-table__filed_name type-<%=item.knowledgeType%>">
+                    <%=item.knowledgeName%>
+                </div>
+            </td>
+            <td class="y-table__td size">
+                <%=item.knowledgeSize%>
+            </td>
+            <td class="y-table__td upload-time">
+                <%=item.createTimeStr%>
+            </td>
+        </tr>
+        <%})}%>
+        </tbody>
+    </table>
+    <%if(list.length === 0){%>
+    <div class="table__none">--暂无数据--</div>
+    <%}%>
+</script>
 <script src="${resourcePath!}/web-static/proExam/index/js/share.js"></script>

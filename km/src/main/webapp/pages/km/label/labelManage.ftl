@@ -1,223 +1,225 @@
+<#assign ctx=request.contextPath/>
+<div class="pe-break-nav-tip-container">
 
-<div class="pe-test-question-manage pe-organize-manage-all-wrap">
-<#--树状布局开始,可复用,记得调用下面的初始化函数;-->
-    <form name="peFormSub" id="peFormSub">
-        <div class="organize-manage-search-wrap">
-        <#--复用时，保留下面的input单独classname 'pe-tree-form-text'-->
-            <input class="pe-tree-form-text" type="text" placeholder="输入标签名称筛选">
-        <#--<span class="pe-placeholder">请输入题库名称</span>备用,误删-->
-            <span class="iconfont pe-tree-search-btn input-icon icon-search-magnifier"></span>
-        </div>
-        <div class="pe-classify-wrap">
-            <div class="pe-classify-tree-wrap">
-                <div class="pe-tree-content-wrap">
-                    <div class="pe-tree-main-wrap">
-                        <div class="node-search-empty">暂无</div>
-                    <#--pe-no-manage-tree为非管理树类添加的样式，是管理类的树，无需此class-->
-                        <ul id="peZtreeMain" class="ztree pe-tree-container pe-no-manage-tree"
-                            style="background-color:#fff;height:602px;"></ul>
+</div>
+<section class="exam-manage-all-wrap">
+    <form id="labelManageForm">
+        <div class="pe-manage-content-right">
+            <div class="pe-manage-panel pe-manage-default">
+                <div class="pe-stand-table-panel">
+                    <div class="pe-stand-table-top-panel">
+                        <button type="button" class="pe-btn pe-btn-green create-exercise-btn">新增标签</button>
                     </div>
-                </div>
-            <#--部门管理根据需要是否显示-->
-                <div>
-                <#--<div class="pe-control-tree-btn iconfont icon-complete-management" style="display: none"></div>-->
+                <#--表格包裹的div-->
+                    <div class="pe-stand-table-main-panel">
+                        <div class="pe-stand-table-wrap"></div>
+                        <div class="pe-stand-table-pagination"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    <#--节点id取值-->
-        <input type="hidden" name="label.id" value="${(label.id)!}"/>
-        <input type="hidden" name="label.labelName" value="${(label.labelName)!}"/>
-        <input type="hidden" name="label.parentId" value="${(label.parentId)!}"/>
     </form>
-</div>
-<#--编辑，新增对话框内容模板-->
+</section>
+<script type="text/template" id="peExerManaTemp">
+    <table class="pe-stand-table pe-stand-table-default">
+        <thead>
+        <tr>
+            <%for(var i =0,lenI = peData.tableTitles.length;i<lenI;i++){%>
+                <th style="width:<%=peData.tableTitles[i].width?peData.tableTitles[i].width+'%':'auto'%>">
+                    <%if(peData.tableTitles[i].order){%>
+                    <div class="pe-th-wrap">
+                        <%=peData.tableTitles[i].title%>
+                        <span class="pageSize-arrow level-order-up iconfont icon-pageUp"
+                              style="position:absolute;"></span>
+                        <span class="pageSize-arrow level-order-down iconfont icon-pageDown"
+                              style="position:absolute;"></span>
+                    </div>
+                    <%}else{%>
+                    <%=peData.tableTitles[i].title%>
+                    <%}%>
+                </th>
+                <%}%>
+        </tr>
+        </thead>
+        <tbody>
+        <%if(peData.rows.length !== 0){%>
+        <%for(var j =0,lenJ = peData.rows.length;j<lenJ ;j++){%>
+            <tr data-id="<%=peData.rows[j].id%>">
+                <td>
+                    <div class="pe-ellipsis" title="<%=peData.rows[j].labelName%>"><%=peData.rows[j].labelName%>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="pe-stand-table-btn-group">
+                        <button type="button" class="edit-btn pe-icon-btn iconfont icon-edit" title="编辑"
+                                data-id="<%=peData.rows[j].id%>"
+                                data-name="<%=peData.rows[j].labelName%>"></button>
+                    </div>
+                </td>
+            </tr>
+            <%}%>
+            <%}else{%>
+            <tr>
+                <td class="pe-td pe-stand-table-empty" colspan="<%=peData.tableTitles.length%>">
+                    <div class="pe-result-no-date"></div>
+                    <p class="pe-result-date-warn">暂无数据</p>
+                </td>
+            </tr>
+            <%}%>
+        </tbody>
+    </table>
+</script>
 <script type="text/template" id="confirmDialogTemp">
     <div class="clearF">
         <label class="floatL">
-            <span class="pe-label-name floatL"><%=data.firstName%>:</span>
-            <input class="pe-stand-filter-form-input" maxlength="50" type="text" placeholder="请输入<%=data.firstName%>"
-                   name="<%=data.firstInputName%>">
+            <form id="label_detail_form">
+                <input type="hidden" name="parentId" value="*">
+                <span class="pe-label-name floatL"><%=data.firstName%>:</span>
+                <input class="pe-stand-filter-form-input" maxlength="50" type="text"
+                       placeholder="请输入<%=data.firstName%>"
+                       name="<%=data.firstInputName%>">
+            </form>
         </label>
         <div class="pe-main-km-text-wrap">
-            <span class="pe-label-name floatL"><%=data.treeName%>:</span>
-            <div class="pe-km-search-key pe-input-tree-wrap pe-stand-filter-form-input">
-                <input class="pe-tree-show-name" value="" name="<%=data.treeInputName%>" readonly="true">
-                <input class="pe-tree-show-id" type="hidden" value="" name="<%=data.treeInputId%>">
-                <span class="pe-input-tree-search-btn input-icon iconfont icon-class-tree"></span>
-                <div class="pe-select-tree-wrap pe-input-tree-wrap-drop" style="display:none;">
-                    <ul id="peSelelctInputTree" class="ztree pe-tree-container"></ul>
-                </div>
+            <div class="pe-km-search-key pe-input-tree-wrap pe-stand-filter-form-input" style="display: none">
+
             </div>
         </div>
     </div>
 </script>
 <script>
     $(function () {
-        //ie9不支持Placeholder问题
-        PEBASE.isPlaceholder();
-        var settingUrl = {
-            dataUrl: pageContext.rootPath + '/km/label/listTree',
-            optUrl: {
-                deleUrl: pageContext.rootPath + '/km/label/deleteLabel',
-                deleContent: '<div><h3 class="pe-dialog-content-head">确定要删除这个标签？</h3>' +
-                '<p class="pe-dialog-content-tip">删除后将不能恢复，请谨慎操作！</p></div>',
-                moveUrl: pageContext.rootPath + '/km/label/moveShowOrder',
-                isNewNode: false
-            },
-            clickNode:function(){},
-            zTreeIsEditState: true,
-            treeRenderType:'label',
-            type:'label',
-            alwaysEdit:true,
-            //新增部门
-            addNodeFunc: function (zTree, treeNode) {
-                PEMO.DIALOG.confirmL({
-                    content: _.template($('#confirmDialogTemp').html())({
-                        data: {
-                            'firstName': '标签名称',
-                            'firstInputName': 'labelName',
-                            'treeName': '上级标签',
-                            'treeInputName': 'parentName',
-                            'treeInputId': 'parentId'
-                        }
-                    }),
-                    area: '468px',
-                    btn: ['确定','取消'],
-                    btnAlign:'l',
-                    title: '新增部门',
-                    btn1: function () {
-                        var parentId = $('input[name="parentId"]').val();
-                        var labelName = $('input[name="labelName"]').val();
-                        PEBASE.ajaxRequest({
-                            url: pageContext.rootPath + '/km/label/addLabel',
-                            data: {
-                                'labelName': labelName,
-                                'parentId': parentId
-                            },
-                            success: function (data) {
-                                if (data.success) {
-                                    PEMO.DIALOG.tips({
-                                        content: '新增成功',
-                                        time: 1000,
-                                        end: function () {
-                                            layer.closeAll('page');
-                                            $('#peZtreeMain').mCustomScrollbar('destroy');
-                                            PEMO.ZTREE.initTree('peZtreeMain', settingUrl);
-                                        }
-                                    });
-                                    return false;
-                                }
-
-                                PEMO.DIALOG.alert({
-                                    content: data.message,
-                                    btn: ['我知道了'],
-                                    yes: function (index) {
-                                        layer.close(index);
-                                    }
-                                });
-                            }
-                        });
-                    },
-                    success: function () {
-                        //初始化弹框里面的input类型的树状功能：
-                        var settingInputTree = {
-                            dataUrl: pageContext.rootPath + '/km/label/listTree',
-                            clickNode: function (treeNode) {
-                                $('.pe-input-tree-wrap').find('.pe-tree-show-name').val(treeNode.name);
-                                $('.pe-input-tree-wrap').find('.pe-tree-show-id').val(treeNode.id);
-                            }
-                        };
-                        //题库类型输入框类型树状弹框 dom为需要下拉框的那一行div元素 pe-km-input-tree
-                        PEBASE.inputTree({
-                            dom: '.pe-input-tree-wrap',
-                            treeId: 'peSelelctInputTree',
-                            treeParam: settingInputTree
-                        });
-                    }
+        var peTableTitle = [
+            {'title': '标签名称', 'width': 300},
+            {'title': '操作', 'width': 100}
+        ];
+        var exerciseManage = {
+            init: function () {
+                $('.pe-stand-table-wrap').peGrid({
+                    url: pageContext.rootPath + '/km/label/listTree',
+//                    formParam: $('#labelManageForm').serializeArray(),
+                    tempId: 'peExerManaTemp',
+                    showTotalDomId: 'showTotal',
+                    title: peTableTitle
                 });
-                $('input[name="parentName"]').val(treeNode.name);
-                $('input[name="parentId"]').val(treeNode.id);
+                var _this = this;
+                _this.bind();
             },
 
-            //编辑部门
-            editNodeFunc: function (zTree, treeNode) {
-                var id = treeNode.id;
-                var parentNode = treeNode.getParentNode();
-                PEMO.DIALOG.confirmL({
-                    content: _.template($('#confirmDialogTemp').html())({
-                        data: {
-                            'firstName': '标签名称',
-                            'firstInputName': 'labelName',
-                            'treeName': '上级标签',
-                            'treeInputName': 'parentName',
-                            'treeInputId': 'parentId'
-                        }
-                    }),
-                    area: '468px',
-                    title: '编辑部门',
-                    btn: ['保存','取消'],
-                    btnAlign:'l',
-                    btn1: function () {
-                        var labelName = $('input[name="labelName"]').val();
-                        var parentId = $('input[name="parentId"]').val();
-                        PEBASE.ajaxRequest({
-                            //此处要返回给我新的修改过的节点的id，好和旧的的id进行比较从而是否刷新树节点
-                            url: pageContext.rootPath + '/km/label/updateLabel',
+            bind: function () {
+                $('.create-exercise-btn').on('click', function () {
+                    PEMO.DIALOG.confirmL({
+                        content: _.template($('#confirmDialogTemp').html())({
                             data: {
-                                'id': id,
-                                'labelName': labelName,
-                                'parentId': parentId
-                            },
-                            success: function (data) {
-                                if (data.success) {
-                                    PEMO.DIALOG.tips({
-                                        content: '编辑成功',
-                                        time: 1000,
-                                        end:function(){
-                                            layer.closeAll('page');
-                                            $('#peZtreeMain').mCustomScrollbar('destroy');
-                                            PEMO.ZTREE.initTree('peZtreeMain', settingUrl);
+                                'firstName': '标签名称',
+                                'firstInputName': 'labelName'
+                            }
+                        }),
+                        area: '468px',
+                        btn: ['确定', '取消'],
+                        btnAlign: 'l',
+                        title: '新增标签',
+                        btn1: function () {
+                            var labelName = $('input[name="labelName"]').val();
+                            PEBASE.ajaxRequest({
+                                url: pageContext.rootPath + '/km/label/addLabel',
+                                data: $("#label_detail_form").serialize(),
+                                success: function (data) {
+                                    var message;
+                                    if (data.success) {
+                                        PEMO.DIALOG.tips({
+                                            content: '新增成功',
+                                            time: 1000,
+                                            end: function () {
+                                                layer.closeAll('page');
+                                            }
+                                        });
+                                        $('.pe-stand-table-wrap').peGrid('load', $('#labelManageForm').serializeArray());
+                                        return false;
+                                    } else if (data.message == "NAME_EMPTY") {
+                                        message = '标签名称不可为空！';
+                                    } else if (data.message == "NAME_REPEAT") {
+                                        message = '标签名称已存在！';
+                                    } else {
+                                        message = '新增失败！';
+                                    }
+
+                                    PEMO.DIALOG.alert({
+                                        content: message,
+                                        btn: ['我知道了'],
+                                        yes: function (index) {
+                                            layer.close(index);
                                         }
                                     });
-
-                                    return false;
                                 }
-
-                                PEMO.DIALOG.alert({
-                                    content: data.message,
-                                    btn:['我知道了'],
-                                    yes:function(index){
-                                        layer.close(index);
-                                        success();
-                                    }
-                                });
-                            }
-                        });
-                    },
-                    success: function () {
-                        //初始化弹框里面的input类型的树状功能：
-                        var settingInputTree = {
-                            dataUrl: pageContext.rootPath + '/km/label/listTree',
-                            clickNode: function (treeNode) {
-                                $('.pe-input-tree-wrap').find('.pe-tree-show-name').val(treeNode.name);
-                                $('.pe-input-tree-wrap').find('.pe-tree-show-id').val(treeNode.id);
-                            }
-                        };
-                        //题库类型输入框类型树状弹框 dom为需要下拉框的那一行div元素 pe-km-input-tree
-                        PEBASE.inputTree({
-                            dom: '.pe-input-tree-wrap',
-                            treeId: 'peSelelctInputTree',
-                            treeParam: settingInputTree
-                        });
-                    }
+                            });
+                        }
+                    });
                 });
-                $('input[name="labelName"]').val(treeNode.name);
-                $('input[name="parentId"]').val(treeNode.pId);
-                $('input[name="parentName"]').val(parentNode.name);
+
+                $('.pe-stand-table-main-panel').delegate('.edit-btn', 'click', function () {
+                    var id = $(this).data("id");
+                    var name = $(this).data("name");
+                    console.log(name);
+                    PEMO.DIALOG.confirmL({
+                        content: _.template($('#confirmDialogTemp').html())({
+                            data: {
+                                'firstName': '标签名称',
+                                'firstInputName': 'labelName'
+                            }
+                        }),
+                        area: '468px',
+                        title: '编辑标签',
+                        btn: ['保存', '取消'],
+                        btnAlign: 'l',
+                        btn1: function () {
+                            var labelName = $('input[name="labelName"]').val();
+                            PEBASE.ajaxRequest({
+                                //此处要返回给我新的修改过的节点的id，好和旧的的id进行比较从而是否刷新树节点
+                                url: pageContext.rootPath + '/km/label/updateLabel',
+                                data: {
+                                    'id': id,
+                                    'labelName': labelName,
+                                    'parentId': '*'
+                                },
+                                success: function (data) {
+                                    var message;
+                                    if (data.success) {
+                                        PEMO.DIALOG.tips({
+                                            content: '编辑成功',
+                                            time: 1000,
+                                            end: function () {
+                                                layer.closeAll('page');
+                                            }
+                                        });
+                                        $('.pe-stand-table-wrap').peGrid('load', $('#labelManageForm').serializeArray());
+                                        return false;
+                                    } else if (data.message == "NAME_EMPTY") {
+                                        message = '标签名称不可为空！';
+                                    } else if (data.message == "NAME_REPEAT") {
+                                        message = '标签名称已存在！';
+                                    } else {
+                                        message = '编辑失败！';
+                                    }
+
+                                    PEMO.DIALOG.alert({
+                                        content: message,
+                                        btn: ['我知道了'],
+                                        yes: function (index) {
+                                            layer.close(index);
+                                            success();
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                    $('input[name="labelName"]').val(name);
+                })
 
             }
         };
-        //初始化左侧树状功能；peZtreeMain为主要树的id
-        PEMO.ZTREE.initTree('peZtreeMain', settingUrl);
-    });
+        exerciseManage.init();
+    })
 </script>
