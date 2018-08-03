@@ -95,92 +95,213 @@ $(function () {
 
         //从云库分享
         $('.js-share-y').on('click', function () {
-            //id
-            var selectList = table.getSelect();
-            if (selectList.length === 0) {
-                layer.msg("请先选择操作项");
-                return;
-            }
-            var knowledgeIds = "";
-            for (var i = 0; i < selectList.length; i++) {
-                knowledgeIds += selectList[i] + ",";
-            }
-            knowledgeIds = knowledgeIds.substring(0, knowledgeIds.length - 1);
-            //分享弹框
+            //我的云库弹框
+            var knowledgeIds;
+            var deptId;
+            var table, initSort = {
+                name: "desc",
+                size: "desc",
+                uploadTime: "desc"
+            };
             PEMO.DIALOG.confirmL({
-                content: _.template($('#shareToPublic').html())({}),
-                area: ['468px', '520px'],
-                title: '选择公共库',
-                btn: ['确定', '取消'],
-                skin: 'pe-layer-confirm pe-layer-has-tree organize-change-layer',
+                content: '<div class="y-content__table" id="yunTable"><div class="pe-stand-table-pagination"></div></div>',
+                area: ['750px', '520px'],
+                title: '我的云库',
+                btn: ['下一步', '取消'],
+                skin: 'y-change-layer',
                 resize: false,
-                btnAlign: 'c',
                 btn1: function () {
-                    var libraryId = $('input[name="shareLibraryId"]').val();
-                    PEBASE.ajaxRequest({
-                        url: pageContext.rootPath + '/km/knowledge/shareToPublic',
-                        data: {'knowledgeId': knowledgeIds, 'shareLibraryId': libraryId},
-                        success: function (data) {
-                            if (data.success) {
-                                layer.closeAll();
-                                PEMO.DIALOG.tips({
-                                    content: '操作成功',
-                                    time: 1000,
-                                });
-
-                                return false;
-                            }
-                            PEMO.DIALOG.alert({
-                                content: data.message,
-                                btn: ['我知道了'],
-                                yes: function () {
-                                    layer.closeAll();
-                                }
-                            });
-                        }
-                    });
+                    //id
+                    debugger;
+                    var selectList = table.getSelect();
+                    if (selectList.length === 0) {
+                        layer.msg("请先选择操作项");
+                        return;
+                    }
+                    knowledgeIds = "";
+                    for (var i = 0; i < selectList.length; i++) {
+                        knowledgeIds += selectList[i] + ",";
+                    }
+                    knowledgeIds = knowledgeIds.substring(0, knowledgeIds.length - 1);
+                    console.log(knowledgeIds);
+                    layer.closeAll();
+                    getDept();
                 },
                 btn2: function () {//取消按钮
                     layer.closeAll();
                 },
 
                 success: function () {
-                    //初始化树
-                    var settingInputTree = {
-                        isOpen: true,
-                        dataUrl: pageContext.rootPath + '/km/library/listTree',
-                        clickNode: function (treeNode) {
-                            $('input[name="shareLibraryId"]').val(treeNode.id);
-                            //$('.show-org-name').val(treeNode.name);
-                        },
-                        treePosition: 'inputDropDown'
-                    };
-                    PEMO.ZTREE.initTree('editOrgTree', settingInputTree);
-                    var treeObj = $.fn.zTree.getZTreeObj("editOrgTree");
-                    treeObj.expandAll(true);
+                    //table渲染
+                    var _table = $("#tplYunTable").html();
+                    var $yunTable = $('#yunTable');
+                    var data = [];
+                    $.ajax({
+                        async: false,//此值要设置为FALSE  默认为TRUE 异步调用
+                        type: "POST",
+                        url: pageContext.resourcePath + '/knowledge/search',
+                        data: {},
+                        dataType: 'json',
+                        success: function (result) {
+                            data = result;
+                        }
+                    });
+                    for (var i = 0; i < data.length; i++) {
+                        data[i].knowledgeSize = YUN.conver(data[i].knowledgeSize);
+                    }
+                    renderTable();
+                    function renderTable() {
+                        $yunTable.html(_.template(_table)({list: data, sort: initSort}));
+                        table = initTable($yunTable);
+                        $yunTable.find('.sort').click(function () {
+                            $yunTable.html(_.template(_table)({
+                                list: data, sort: $.extend({}, initSort, {name: 'asc'})
+                            }));
+                        });
+                    }
                 }
             });
+            function getDept(){
+                PEMO.DIALOG.confirmL({
+                    content: '<div class="y-content__table" id="ySharedeptTree"><div class="pe-stand-table-pagination"></div></div>',
+                    area: ['750px', '520px'],
+                    title: '部门',
+                    btn: ['保存', '取消'],
+                    skin: 'y-share-tree-layer',
+                    resize: false,
+                    btn1: function () {
+                        if(deptId){
+                            PEBASE.ajaxRequest({
+                                //TODO
+                                url: 'urllllllllllllll',
+                                data: {
+                                    knowledgeIds:knowledgeIds,
+                                    deptId:deptId
+                                },
+                                success: function (data) {
+                                    if (data.success) {
+                                        layer.closeAll();
+                                        PEMO.DIALOG.tips({
+                                            content: '操作成功',
+                                            time: 1000,
+                                        });
+                                        return false;
+                                    }
+                                    PEMO.DIALOG.alert({
+                                        content: data.message,
+                                        btn: ['我知道了'],
+                                        yes: function () {
+                                            layer.closeAll();
+                                        }
+                                    });
+                                }
+                            });
+                        }else{
+                            PEMO.DIALOG.tips({
+                                content: '您还未选择部门!',
+                                time:2000
+                            });
+                            return;
+                        }
+                    },
+                    btn2: function () {//取消按钮
+                        layer.closeAll();
+                    },
+                    success: function () {
+                        //部门树
+                        var yDeptOrgTree = {
+                            isOpen: true,
+                            dataUrl: pageContext.rootPath + '/km/uc/user/manage/listOrgTreeAndUsers',
+                            clickNode: function (treeNode) {
+                                debugger;
+                                deptId = treeNode.id;
+                            },
+                            treePosition: 'inputDropDown'
+                        };
+                        PEMO.ZTREE.initTree('ySharedeptTree', yDeptOrgTree);
+                        var treeObj = $.fn.zTree.getZTreeObj("ySharedeptTree");
+                        treeObj.expandAll(true);
+
+                    }
+                });
+            }
+
+
         });
         //从本地分享
+        var deptId;
         $('.js-share-local').on('click',function (e) {
             e.preventDefault();
             PEMO.DIALOG.selectorDialog({
                 content: pageContext.rootPath + '/km/knowledge/openUpload',
                 area: ['600px', '400px'],
                 title: '上传文件',
+                skin:'js-file-upload',
+                btn: ['下一步','取消'],
                 btn1: function () {
+                    debugger;
+                    var iframeBody = layer.getChildFrame('body', 0);
+
+                        $(iframeBody).find('.type-png').prop("src", hasPicSrc);
+
+
+                        $(".type-png", document.iframes('iframe').document);
+
+                    //部门树
+                    $('.js-file-upload .layui-layer-content iframe').remove();
+                    $('.js-file-upload .layui-layer-content').html('<div id="deptTree"></div>');
+                    var deptOrgTree = {
+                        isOpen: true,
+                        dataUrl: pageContext.rootPath + '/km/uc/user/manage/listOrgTreeAndUsers',
+                        clickNode: function (treeNode) {
+                            debugger;
+                            deptId = treeNode.id;
+                        },
+                        treePosition: 'inputDropDown'
+                    };
+                    PEMO.ZTREE.initTree('deptTree', deptOrgTree);
+                    var treeObj = $.fn.zTree.getZTreeObj("deptTree");
+                    treeObj.expandAll(true);
+                    $('.js-file-upload .layui-layer-btn0').html('确定');
+                    if(deptId){
+                        PEBASE.ajaxRequest({
+                            //TODO
+                            url: 'urllllllllllllll',
+                            data: deptId,
+                            success: function (data) {
+                                if (data.success) {
+                                    layer.closeAll();
+                                    PEMO.DIALOG.tips({
+                                        content: '操作成功',
+                                        time: 1000,
+                                    });
+                                    return false;
+                                }
+                                PEMO.DIALOG.alert({
+                                    content: data.message,
+                                    btn: ['我知道了'],
+                                    yes: function () {
+                                        layer.closeAll();
+                                    }
+                                });
+                            }
+                        });
+                    }else{
+                        PEMO.DIALOG.tips({
+                            content: '您还未选择部门!',
+                            time:2000
+                        });
+                        return;
+                    }
                 },
                 btn2: function () {
                     layer.closeAll();
                 },
                 success: function (d, index) {
-                    var iframeBody = layer.getChildFrame('body', index);
-                    var hasPicSrc = $('.pe-user-head-edit-btn').find('img').attr('src');
-                    if (hasPicSrc) {
-                        $(iframeBody).find('.jcrop-preview').prop("src", hasPicSrc);
-                    }
+
+
                 }
-            });
+                });
         });
         //下载
         $('.js-download').on('click', function () {
