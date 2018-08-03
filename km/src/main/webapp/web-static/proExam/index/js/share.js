@@ -229,9 +229,9 @@ $(function () {
 
         });
         //从本地分享
-        var deptId;
         $('.js-share-local').on('click',function (e) {
             e.preventDefault();
+            var deptId;
             PEMO.DIALOG.selectorDialog({
                 content: pageContext.rootPath + '/km/knowledge/openUpload',
                 area: ['600px', '400px'],
@@ -239,14 +239,14 @@ $(function () {
                 skin:'js-file-upload',
                 btn: ['下一步','取消'],
                 btn1: function () {
-                    debugger;
-                    var iframeBody = layer.getChildFrame('body', 0);
-
-                        $(iframeBody).find('.type-png').prop("src", hasPicSrc);
-
-
-                        $(".type-png", document.iframes('iframe').document);
-
+                    var fileList = window.frames[0] &&  window.frames[0].document.getElementById('theList');
+                    if(window.frames[0] && $(fileList).find('li').length==0){
+                        PEMO.DIALOG.tips({
+                            content: '您还未上传文件!',
+                            time:2000
+                        });
+                        return;
+                    }
                     //部门树
                     $('.js-file-upload .layui-layer-content iframe').remove();
                     $('.js-file-upload .layui-layer-content').html('<div id="deptTree"></div>');
@@ -263,35 +263,30 @@ $(function () {
                     var treeObj = $.fn.zTree.getZTreeObj("deptTree");
                     treeObj.expandAll(true);
                     $('.js-file-upload .layui-layer-btn0').html('确定');
-                    if(deptId){
+                    $('.js-file-upload .layui-layer-btn0').addClass('layui-layer-save');
+                    if($('.layui-layer-save').length>0 && deptId){
                         PEBASE.ajaxRequest({
-                            //TODO
-                            url: 'urllllllllllllll',
-                            data: deptId,
-                            success: function (data) {
-                                if (data.success) {
-                                    layer.closeAll();
-                                    PEMO.DIALOG.tips({
-                                        content: '操作成功',
-                                        time: 1000,
-                                    });
-                                    return false;
-                                }
-                                PEMO.DIALOG.alert({
-                                    content: data.message,
-                                    btn: ['我知道了'],
-                                    yes: function () {
+                                //TODO
+                                url: 'urllllllllllllll',
+                                data: deptId,
+                                success: function (data) {
+                                    if (data.success) {
                                         layer.closeAll();
+                                        PEMO.DIALOG.tips({
+                                            content: '操作成功',
+                                            time: 1000,
+                                        });
+                                        return false;
                                     }
-                                });
-                            }
-                        });
-                    }else{
-                        PEMO.DIALOG.tips({
-                            content: '您还未选择部门!',
-                            time:2000
-                        });
-                        return;
+                                    PEMO.DIALOG.alert({
+                                        content: data.message,
+                                        btn: ['我知道了'],
+                                        yes: function () {
+                                            layer.closeAll();
+                                        }
+                                    });
+                                }
+                            });
                     }
                 },
                 btn2: function () {
