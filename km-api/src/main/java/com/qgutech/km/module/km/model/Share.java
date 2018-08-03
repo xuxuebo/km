@@ -13,13 +13,13 @@ import java.util.List;
 @Table(name = "t_km_share", indexes = {@Index(name = "t_km_share", columnList = "corpCode")})
 public class Share extends BaseModel {
 
-    public static final String KNOWLEDGE_ID="knowledgeId";
+    public static final String KNOWLEDGE_ID = "knowledgeId";
 
     /**
      * 共享类型
      */
     @Column(nullable = false, length = 50)
-    private  String shareType;
+    private String shareType;
 
     /**
      * 分享至共享库主键
@@ -51,6 +51,16 @@ public class Share extends BaseModel {
 
     @Transient
     private List<String> libraryIds;
+    @Transient
+    private List<String> fileIds;
+
+    public List<String> getFileIds() {
+        return fileIds;
+    }
+
+    public void setFileIds(List<String> fileIds) {
+        this.fileIds = fileIds;
+    }
 
     public List<String> getKnowledgeIds() {
         return knowledgeIds;

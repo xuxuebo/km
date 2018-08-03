@@ -224,7 +224,7 @@
 
     uploader.on("fileQueued", function (file) {
         $("#picker").hide()
-        $("#theList").append('<li id="' + file.id + '" class="y-table__filed_name type-' + file.ext + '">' +
+        $("#theList").append('<li id="' + file.id + '" data-id="" class="y-table__filed_name type-' + file.ext + '">' +
                 '<span class="file-name" title="' + file.name + '">' + file.name + '</span><span class="file-size">' + bytesToSize(file.size) + '</span>' +
                 '<span class="itemDel">删除</span><span class="finished-icon" style="display: none"></span>' +
                 '<div class="percentage"></div>' +
@@ -258,6 +258,7 @@
         var $file = $("#" + file.id);
         $file.find('.percentage').css({width: "100%"});
         var data = file.data
+        $("#"+file.id).attr("data-id", data.id);
         //TODO 上传成功后 请求km保存
         var url = pageContext.rootPath + '/knowledge/saveKnowledge';
         $.ajax({
@@ -277,7 +278,11 @@
                 $file.find('.finished-icon').show();
 
                 if(FLAG_FINISHED){
-                    window.parent.layer.closeAll()
+                    var upload = window.parent.document.getElementsByClassName("js-file-upload");
+                    if (!upload || upload.length == 0) {
+                        window.parent.layer.closeAll();
+                    }
+
                     if (parent && parent.refreshPage && typeof parent.refreshPage == "function") {
                         parent.refreshPage();
                     }

@@ -23,7 +23,7 @@
 </section>
 <script type="text/template" id="tplYunManageList">
     <% for(var i=0;i< data.length;i++) {%>
-    <div class="y-menu-item-title" onclick="selectProjectDetail()">
+    <div class="y-menu-item-title" onclick="selectProjectDetail('<%=data[i].id%>')">
         <%= data[i].name %>
     </div>
     <% }%>

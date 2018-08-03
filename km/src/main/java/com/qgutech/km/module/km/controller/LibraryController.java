@@ -8,9 +8,7 @@ import com.qgutech.km.base.vo.Rank;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.module.km.model.KnowledgeLog;
 import com.qgutech.km.module.km.model.Library;
-import com.qgutech.km.module.km.model.LibraryDetail;
 import com.qgutech.km.module.km.service.KnowledgeLogService;
-import com.qgutech.km.module.km.service.LibraryDetailService;
 import com.qgutech.km.module.km.service.LibraryService;
 import com.qgutech.km.module.uc.service.UserService;
 import org.apache.commons.collections.CollectionUtils;
@@ -22,9 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Administrator on 2018/6/23.
@@ -39,8 +35,6 @@ public class LibraryController {
     private UserService userService;
     @Resource
     private KnowledgeLogService knowledgeLogService;
-    @Resource
-    private LibraryDetailService libraryDetailService;
 
     /**
      * 一级公共库
@@ -194,35 +188,7 @@ public class LibraryController {
     @ResponseBody
     @RequestMapping("load")
     public Library load(@RequestParam String libraryId) {
-        Library library = libraryService.get(libraryId, Library.ID, Library.LIBRARY_NAME, Library.LIBRARY_TYPE);
-        if (library == null) {
-            return null;
-        }
-
-        LibraryDetail libraryDetail = libraryDetailService.getByLibraryId(libraryId);
-        library.setLibraryDetail(libraryDetail);
-        String chargeIds = libraryDetail.getChargeIds();
-        if (StringUtils.isNotEmpty(chargeIds)) {
-            String[] userIds = chargeIds.split(",");
-            Map<String, String> userIdAndNameMap = userService.getUserIdAndNameMap(Arrays.asList(userIds));
-            StringBuilder name = new StringBuilder();
-            for (String userName : userIdAndNameMap.values()) {
-                name.append(userName).append(",");
-            }
-
-            String userName = name.toString();
-            if (StringUtils.isNotEmpty(userName)) {
-                libraryDetail.setChargeName(userName.substring(0, userName.length() - 1));
-            }
-        }
-
-        String faceId = libraryDetail.getFaceId();
-        if (StringUtils.isNotEmpty(faceId)) {
-            String facePath = userService.getFacePath(faceId, libraryDetail.getFaceName());
-            libraryDetail.setFacePath(facePath);
-        }
-
-        return library;
+        return libraryService.getLibraryAndDetail(libraryId);
     }
 
     @ResponseBody

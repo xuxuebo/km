@@ -5,48 +5,42 @@
     <ul id="orgTreeAndUsers" class="ztree pe-tree-container"></ul>
 </aside>
 <section class="y-content">
-    <div class="y-major-project">
-        <span class="y-major-project-header show-org-name"></span>
+    <div class="y-share-project">
+        <h4 class="y-content__title y-share-project-header show-org-name">分享</h4>
         <div class="y-share-project-content">
             <div class="y-share-project-type">
                 <dl class="y-share-project-type-list js-major">
                     <dt>专业:</dt>
                     <dd>
                         <span class="y-share-project-type-item-first y-active" data-typeid = ''>全部</span>
-                        <span class="y-share-project-type-item" data-typeid = '1'>继电保护</span>
-                        <span class="y-share-project-type-item" data-typeid = '2'>输电线路</span>
-                        <span class="y-share-project-type-item" data-typeid = '3'>配电线路</span>
-                        <span class="y-share-project-type-item" data-typeid = '4'>变电运行</span>
-                        <span class="y-share-project-type-item" data-typeid = '5'>变电检修</span>
-                        <span class="y-share-project-type-item" data-typeid = '6'>营销专业</span>
+                        <div class="y-share-project-type-item"></div>
                     </dd>
                 </dl>
                 <dl class="y-share-project-type-list js-project">
                     <dt>项目:</dt>
                     <dd>
                         <span class="y-share-project-type-item-first  y-active" data-typeid = ''>全部</span>
-                        <span class="y-share-project-type-item" data-typeid = '8'>UPFC</span>
-                        <span class="y-share-project-type-item" data-typeid = '9'>微网路由</span>
-                        <span class="y-share-project-type-item" data-typeid = '10'>高温相变光热</span>
+                        <div class="y-share-project-type-item"></div>
                     </dd>
                 </dl>
                 <dl class="y-share-project-type-list js-label">
                     <dt>标签:</dt>
                     <dd>
                         <span class="y-share-project-type-item-first y-active" data-typeid = ''>全部</span>
-                        <span class="y-share-project-type-item" data-typeid = '12'>图片</span>
-                        <span class="y-share-project-type-item" data-typeid = '13'>视频</span>
-                        <span class="y-share-project-type-item" data-typeid = '14'>其他</span>
+                        <div class="y-share-project-type-item"></div>
                     </dd>
                 </dl>
             </div>
             <div class="y-content__opt__bar">
                 <div class="y-share-bar">
                     <button class="y-btn y-btn__blue" id="filePicker" type="button">分享</button>
-                    <ul class="js-share-list">
-                        <li class="js-share-local">从本地分享</li>
-                        <li class="js-share-y">从云库分享</li>
-                    </ul>
+                    <div class="y-content__share__list">
+                        <span class="arrow-top"></span>
+                        <ul class="js-share-list">
+                            <li class="js-share-local">从本地分享</li>
+                            <li class="js-share-y">从云库分享</li>
+                        </ul>
+                    </div>
                 </div>
                 <button class="y-btn y-btn__green js-download" type="button">下载</button>
                 <button class="y-btn y-btn__orange js-copy" type="button">复制</button>
@@ -60,6 +54,14 @@
         </div>
     </div>
 </section>
+
+<#--筛选模板-->
+<script type="text/template" id="tplScreeningList">
+    <%if(list.length !== 0){%>
+    <%_.each(list,function(item,i){%>
+        <span class="y-share-project-type-item" data-typeid = '<%=item.id%>'><%=item.name%></span>
+    <%})}%>
+</script>
 <#--表格模板-->
 <script type="text/template" id="tplShareTable">
     <table class="y-table">

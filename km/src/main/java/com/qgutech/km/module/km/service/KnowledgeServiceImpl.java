@@ -546,4 +546,23 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         knowledgeLogService.batchSave(knowledgeLogList);
     }
 
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public List<String> getIdsByFileIds(List<String> fileIds) {
+        if (CollectionUtils.isEmpty(fileIds)) {
+            throw new PeException("fileIds must be not empty!");
+        }
+
+        Conjunction conjunction = getConjunction();
+        conjunction.add(Restrictions.in(Knowledge.FILE_ID, fileIds));
+        List<Knowledge> knowledgeList = listByCriterion(conjunction);
+        if (CollectionUtils.isEmpty(knowledgeList)) {
+            return new ArrayList<>(0);
+        }
+
+        List<String> knowledgeIds = new ArrayList<>(knowledgeList.size());
+        knowledgeIds.addAll(knowledgeList.stream().map(Knowledge::getId).collect(Collectors.toList()));
+
+        return knowledgeIds;
+    }
 }

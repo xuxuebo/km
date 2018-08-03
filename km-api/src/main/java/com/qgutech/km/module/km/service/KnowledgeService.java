@@ -103,4 +103,14 @@ public interface KnowledgeService extends BaseService<Knowledge> {
      * @since TangFD@HF 2018-7-30
      */
     void shareToOrg(Share share);
+
+    /**
+     * 根据上传文件Id集合获取知识Id集合
+     *
+     * @param fileIds 文件Id集合，不可为空
+     * @return 知识Id集合
+     * @throws RuntimeException 当fileIds为空时
+     * @since TangFD@HF 2018-8-3
+     */
+    List<String> getIdsByFileIds(List<String> fileIds);
 }
