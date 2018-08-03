@@ -16,79 +16,531 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-jiantou-copy-copy-copy:before { content: "\e603"; }
+.icon-loading:before { content: "\e64a"; }
 
-.icon-ico_:before { content: "\e707"; }
+.icon-bread-arrow:before { content: "\e618"; }
 
-.icon-ico_2:before { content: "\e70a"; }
+.icon-set:before { content: "\e61c"; }
 
-.icon-ico_arrow_left:before { content: "\e70b"; }
+.icon-mute-audio:before { content: "\e62e"; }
 
-.icon-cloud:before { content: "\e643"; }
+.icon-ditudizhi:before { content: "\e64b"; }
 
-.icon-reward:before { content: "\e644"; }
+.icon-book:before { content: "\e61a"; }
 
-.icon-ico_shipinbiaotishang1:before { content: "\e645"; }
+.icon-start-fullscreen:before { content: "\e648"; }
 
-.icon-upload:before { content: "\e646"; }
+.icon-big-dot:before { content: "\e61b"; }
 
-.icon-scale:before { content: "\e647"; }
+.icon-tree-close:before { content: "\e619"; }
 
-.icon-list:before { content: "\e648"; }
+.icon-right01:before { content: "\e600"; }
 
-.icon-collection_pre:before { content: "\e649"; }
+.icon-btn-arrow-down:before { content: "\e601"; }
 
-.icon-colleagues:before { content: "\e64a"; }
+.icon-screen-icon:before { content: "\e602"; }
 
-.icon-arrow:before { content: "\e64b"; }
+.icon-edited:before { content: "\e603"; }
 
-.icon-arraw_down:before { content: "\e64c"; }
+.icon-back-to-back:before { content: "\e604"; }
 
-.icon-help:before { content: "\e64d"; }
+.icon-back-home:before { content: "\e605"; }
 
-.icon-download:before { content: "\e64f"; }
+.icon-role-user:before { content: "\e606"; }
 
-.icon-menu:before { content: "\e650"; }
+.icon-starting:before { content: "\e607"; }
 
-.icon-company:before { content: "\e651"; }
+.icon-deleted:before { content: "\e608"; }
 
-.icon-more:before { content: "\e652"; }
+.icon-on-the-icon:before { content: "\e609"; }
 
-.icon-collection:before { content: "\e653"; }
+.icon-page-pre:before { content: "\e60a"; }
 
-.icon-msg:before { content: "\e654"; }
+.icon-page:before { content: "\e60b"; }
 
-.icon-refresh:before { content: "\e655"; }
+.icon-search-magnifier:before { content: "\e60c"; }
 
-.icon-public:before { content: "\e656"; }
+.icon-stoping:before { content: "\e60d"; }
 
-.icon-pause:before { content: "\e657"; }
+.icon-exit:before { content: "\e60e"; }
 
-.icon-search:before { content: "\e658"; }
+.icon-page-next:before { content: "\e60f"; }
 
-.icon-voice-download:before { content: "\e659"; }
+.icon-hide-category:before { content: "\e610"; }
 
-.icon-personal:before { content: "\e65a"; }
+.icon-checkbox01:before { content: "\e611"; }
 
-.icon-voice:before { content: "\e65b"; }
+.icon-edit:before { content: "\e612"; }
 
-.icon-del:before { content: "\e65c"; }
+.icon-start:before { content: "\e613"; }
 
-.icon-setting:before { content: "\e65d"; }
+.icon-delete:before { content: "\e614"; }
 
-.icon-ico_1:before { content: "\e714"; }
+.icon-stop:before { content: "\e615"; }
 
-.icon-ico_3:before { content: "\e715"; }
+.icon-morenpaixu01:before { content: "\e616"; }
 
-.icon-jian:before { content: "\e72a"; }
+.icon-checkboxweixuanshi:before { content: "\e617"; }
 
-.icon-tuichu:before { content: "\e72b"; }
+.icon-fill:before { content: "\e621"; }
 
-.icon-yemian:before { content: "\e72c"; }
+.icon-class-tree:before { content: "\e622"; }
 
-.icon-zhuanye:before { content: "\e72d"; }
+.icon-date:before { content: "\e623"; }
 
-.icon-xiangmu:before { content: "\e72e"; }
+.icon-pack:before { content: "\e624"; }
 
-.icon-cloud-copy:before { content: "\e72f"; }
+.icon-start-difficulty:before { content: "\e625"; }
+
+.icon-show:before { content: "\e626"; }
+
+.icon-hows-small-icon:before { content: "\e627"; }
+
+.icon-pe-accredit:before { content: "\e628"; }
+
+.icon-exclusive-category-icon:before { content: "\e629"; }
+
+.icon-clear-contents:before { content: "\e62b"; }
+
+.icon-up:before { content: "\e62c"; }
+
+.icon-down:before { content: "\e62d"; }
+
+.icon-new-add:before { content: "\e61d"; }
+
+.icon-complete-management:before { content: "\e62f"; }
+
+.icon-pageUp:before { content: "\e61e"; }
+
+.icon-pageDown:before { content: "\e61f"; }
+
+.icon-security:before { content: "\e620"; }
+
+.icon-step-circle:before { content: "\e62a"; }
+
+.icon-top-secret-paper:before { content: "\e630"; }
+
+.icon-normal-paper:before { content: "\e631"; }
+
+.icon-a-page:before { content: "\e632"; }
+
+.icon-next-page:before { content: "\e633"; }
+
+.icon-solid-circle-chekced:before { content: "\e634"; }
+
+.icon-preview:before { content: "\e635"; }
+
+.icon-an-arrow-indicator:before { content: "\e636"; }
+
+.icon-indicative-arrow-two:before { content: "\e637"; }
+
+.icon-indicative-arrow-third:before { content: "\e638"; }
+
+.icon-indicative-arrow:before { content: "\e639"; }
+
+.icon-inputDele:before { content: "\e63a"; }
+
+.icon-pe-video:before { content: "\e63b"; }
+
+.icon-flag:before { content: "\e63c"; }
+
+.icon-pe-audio:before { content: "\e63d"; }
+
+.icon-show-analysis:before { content: "\e63e"; }
+
+.icon-hide-analysis:before { content: "\e63f"; }
+
+.icon-caution-tip:before { content: "\e640"; }
+
+.icon-unchecked-radio:before { content: "\e641"; }
+
+.icon-checked-radio:before { content: "\e642"; }
+
+.icon-dialog-close-btn:before { content: "\e643"; }
+
+.icon-unchecked-checkbox:before { content: "\e644"; }
+
+.icon-checked-checkbox:before { content: "\e645"; }
+
+.icon-insert-blank:before { content: "\e646"; }
+
+.icon-download:before { content: "\e647"; }
+
+.icon-iphone:before { content: "\e6f2"; }
+
+.icon-tip:before { content: "\e6f4"; }
+
+.icon-screen-drop:before { content: "\e725"; }
+
+.icon-member:before { content: "\e727"; }
+
+.icon-freeze:before { content: "\e728"; }
+
+.icon-activate:before { content: "\e729"; }
+
+.icon-upload-picture:before { content: "\e72a"; }
+
+.icon-authority:before { content: "\e72b"; }
+
+.icon-removed:before { content: "\e72d"; }
+
+.icon-show-category:before { content: "\e72c"; }
+
+.icon-btn-arrow-up:before { content: "\e72e"; }
+
+.icon-go-top:before { content: "\e72f"; }
+
+.icon-camera:before { content: "\e730"; }
+
+.icon-test-mark:before { content: "\e731"; }
+
+.icon-identity-card:before { content: "\e732"; }
+
+.icon-personal-center:before { content: "\e733"; }
+
+.icon-my-exam:before { content: "\e734"; }
+
+.icon-real-name:before { content: "\e735"; }
+
+.icon-eye-open:before { content: "\e736"; }
+
+.icon-eye-close:before { content: "\e737"; }
+
+.icon-recent-dynamics:before { content: "\e738"; }
+
+.icon-message-center:before { content: "\e739"; }
+
+.icon-my-examination:before { content: "\e73a"; }
+
+.icon-change-the-password:before { content: "\e73b"; }
+
+.icon-test-analysis:before { content: "\e73c"; }
+
+.icon-refresh:before { content: "\e73d"; }
+
+.icon-chakan:before { content: "\e742"; }
+
+.icon-add-by-user:before { content: "\e743"; }
+
+.icon-import-batch:before { content: "\e744"; }
+
+.icon-set-more-batch:before { content: "\e745"; }
+
+.icon-exam-organize:before { content: "\e746"; }
+
+.icon-monitor:before { content: "\e747"; }
+
+.icon-void:before { content: "\e748"; }
+
+.icon-copy:before { content: "\e749"; }
+
+.icon-kemu:before { content: "\e74a"; }
+
+.icon-batch:before { content: "\e74b"; }
+
+.icon-xiazai:before { content: "\e74c"; }
+
+.icon-jiancekaoshihuanjing:before { content: "\e74d"; }
+
+.icon-shitiweibiaoji:before { content: "\e74e"; }
+
+.icon-kaoshihuanjingzhengchang:before { content: "\e74f"; }
+
+.icon-jiancejieguo_wangluohuanjing:before { content: "\e750"; }
+
+.icon-zhuguantipingfen:before { content: "\e751"; }
+
+.icon-jiancejieguo_yangshengqi:before { content: "\e752"; }
+
+.icon-jiancejieguo_liulanqi:before { content: "\e753"; }
+
+.icon-shenfenyanzhengtongguo:before { content: "\e754"; }
+
+.icon-xueyuanduankaoshishijian:before { content: "\e740"; }
+
+.icon-on-line:before { content: "\e741"; }
+
+.icon-online:before { content: "\e755"; }
+
+.icon-general:before { content: "\e756"; }
+
+.icon-pass-label:before { content: "\e757"; }
+
+.icon-not-pass:before { content: "\e758"; }
+
+.icon-mark-read:before { content: "\e759"; }
+
+.icon-thin-arrow-down:before { content: "\e75a"; }
+
+.icon-thin-arrow-up:before { content: "\e75b"; }
+
+.icon-top-secret-back:before { content: "\e75c"; }
+
+.icon-secret-label:before { content: "\e75d"; }
+
+.icon-quesheng:before { content: "\e75e"; }
+
+.icon-datiduiti:before { content: "\e75f"; }
+
+.icon-daticuoti1:before { content: "\e761"; }
+
+.icon-dengluyonghu:before { content: "\e760"; }
+
+.icon-denglumima:before { content: "\e762"; }
+
+.icon-chakanxiangqing:before { content: "\e763"; }
+
+.icon-jinrupingjuan:before { content: "\e764"; }
+
+.icon-answer-cell-phone:before { content: "\e765"; }
+
+.icon-more-dynamic:before { content: "\e766"; }
+
+.icon-exam-today:before { content: "\e767"; }
+
+.icon-cancel-fullscreen:before { content: "\e649"; }
+
+.icon-un-mark-star:before { content: "\e768"; }
+
+.icon-has-mark-star:before { content: "\e769"; }
+
+.icon-more:before { content: "\e76a"; }
+
+.icon-re:before { content: "\e76b"; }
+
+.icon-change-scores:before { content: "\e76c"; }
+
+.icon-score-distribution-statistics:before { content: "\e76d"; }
+
+.icon-message:before { content: "\e76e"; }
+
+.icon-discipline-mark:before { content: "\e76f"; }
+
+.icon-much-inf:before { content: "\e770"; }
+
+.icon-set-list-display:before { content: "\e771"; }
+
+.icon-remove:before { content: "\e772"; }
+
+.icon-view-detail:before { content: "\e773"; }
+
+.icon-handling-discipline:before { content: "\e774"; }
+
+.icon-renovate:before { content: "\e775"; }
+
+.icon-forced-assignment:before { content: "\e776"; }
+
+.icon-radar-display:before { content: "\e777"; }
+
+.icon-picture-icon:before { content: "\e778"; }
+
+.icon-makeup:before { content: "\e779"; }
+
+.icon-according-to-the-role-of-view:before { content: "\e77a"; }
+
+.icon-according-to-the-researchers-to-see:before { content: "\e77b"; }
+
+.icon-tree-dot:before { content: "\e77c"; }
+
+.icon-import-the-results:before { content: "\e77d"; }
+
+.icon-medal:before { content: "\e77e"; }
+
+.icon-linkage:before { content: "\e77f"; }
+
+.icon-indicate-hand:before { content: "\e780"; }
+
+.icon-bek-logo:before { content: "\e781"; }
+
+.icon-number-four:before { content: "\e782"; }
+
+.icon-number-three:before { content: "\e783"; }
+
+.icon-number-one:before { content: "\e784"; }
+
+.icon-filled-circle:before { content: "\e785"; }
+
+.icon-number-two:before { content: "\e786"; }
+
+.icon-question-mark:before { content: "\e78b"; }
+
+.icon-double-sided-arrow:before { content: "\e78d"; }
+
+.icon-circle:before { content: "\e78e"; }
+
+.icon-fireworks:before { content: "\e78f"; }
+
+.icon-concentric-circles:before { content: "\e791"; }
+
+.icon-governmental-agencies:before { content: "\e793"; }
+
+.icon-educational-training:before { content: "\e794"; }
+
+.icon-balloon:before { content: "\e795"; }
+
+.icon-campus-recruitment:before { content: "\e797"; }
+
+.icon-star:before { content: "\e798"; }
+
+.icon-inner-enterprise:before { content: "\e799"; }
+
+.icon-system_messages:before { content: "\e79a"; }
+
+.icon-schedule:before { content: "\e79b"; }
+
+.icon-slide-to-unlock:before { content: "\e79c"; }
+
+.icon-lock:before { content: "\e79d"; }
+
+.icon-sliding-around:before { content: "\e79e"; }
+
+.icon-my-exam-default:before { content: "\e79f"; }
+
+.icon-score-inquiry-select:before { content: "\e7a0"; }
+
+.icon-personal-center-default:before { content: "\e7a1"; }
+
+.icon-personal-center-select:before { content: "\e7a2"; }
+
+.icon-my-exam-select:before { content: "\e7a3"; }
+
+.icon-score-inquiry-default:before { content: "\e7a4"; }
+
+.icon-search-phone:before { content: "\e7a5"; }
+
+.icon-ranking:before { content: "\e7a6"; }
+
+.icon-answer-sheet:before { content: "\e7a7"; }
+
+.icon-answer-card:before { content: "\e7a8"; }
+
+.icon-right:before { content: "\e7a9"; }
+
+.icon-wrong:before { content: "\e7aa"; }
+
+.icon-my-exercise:before { content: "\e7ab"; }
+
+.icon-mock-examination:before { content: "\e7ac"; }
+
+.icon-ranking-list:before { content: "\e7ad"; }
+
+.icon-entry-page-pc:before { content: "\e7ae"; }
+
+.icon-entry-page-qr-code:before { content: "\e7af"; }
+
+.icon-scan-a-qr-code:before { content: "\e7b0"; }
+
+.icon-decrease:before { content: "\e7b1"; }
+
+.icon-newly-increased:before { content: "\e7b2"; }
+
+.icon-dianhua:before { content: "\e6cc"; }
+
+.icon-master-control:before { content: "\e7b3"; }
+
+.icon-id-card:before { content: "\e7b4"; }
+
+.icon-practice-test:before { content: "\e7b5"; }
+
+.icon-certificate-search:before { content: "\e7b6"; }
+
+.icon-score-search:before { content: "\e7b7"; }
+
+.icon-order-apply:before { content: "\e7b8"; }
+
+.icon-take-an-exam:before { content: "\e7b9"; }
+
+.icon-exam-registration-numbers:before { content: "\e7ba"; }
+
+.icon-lajitong:before { content: "\e64c"; }
+
+.icon-countdown-counter:before { content: "\e7bb"; }
+
+.icon-cancel:before { content: "\e7bc"; }
+
+.icon-certificate-preview:before { content: "\e7bd"; }
+
+.icon-recover:before { content: "\e7be"; }
+
+.icon-rotate:before { content: "\e7bf"; }
+
+.icon-setting:before { content: "\e7c0"; }
+
+.icon-aligning:before { content: "\e7c1"; }
+
+.icon-tailor:before { content: "\e7c2"; }
+
+.icon-flowlayout-center:before { content: "\e7c3"; }
+
+.icon-justified-both-margin:before { content: "\e7c4"; }
+
+.icon-bold-type:before { content: "\e7c5"; }
+
+.icon-add:before { content: "\e7c6"; }
+
+.icon-underline:before { content: "\e7c7"; }
+
+.icon-italic:before { content: "\e7c8"; }
+
+.icon-add-image:before { content: "\e7c9"; }
+
+.icon-flowlayout-right:before { content: "\e7ca"; }
+
+.icon-add-text-boxes:before { content: "\e7cb"; }
+
+.icon-font-color:before { content: "\e7cc"; }
+
+.icon-flowlayout-left:before { content: "\e7cd"; }
+
+.icon-font-size:before { content: "\e7ce"; }
+
+.icon-line-spacing:before { content: "\e7cf"; }
+
+.icon-resize:before { content: "\e7d0"; }
+
+.icon-view-screenshots:before { content: "\e7d1"; }
+
+.icon-monitoring-data:before { content: "\e7d2"; }
+
+.icon-full-screen:before { content: "\e7d3"; }
+
+.icon-small-dot:before { content: "\e7d4"; }
+
+.icon-warning-sign:before { content: "\e7d5"; }
+
+.icon-screenshot:before { content: "\e7d6"; }
+
+.icon-did-not-open-the-camera:before { content: "\e7d7"; }
+
+.icon-certificate-renewal:before { content: "\e7d8"; }
+
+.icon-certificate-download:before { content: "\e7d9"; }
+
+.icon-certificate-record:before { content: "\e7da"; }
+
+.icon-certificate-delete:before { content: "\e7db"; }
+
+.icon-certificate-preview1:before { content: "\e7dc"; }
+
+.icon-my-certificates:before { content: "\e7dd"; }
+
+.icon-view-and-download-certificates:before { content: "\e7de"; }
+
+.icon-thanks-icon:before { content: "\e7df"; }
+
+.icon-achievement-analysis1:before { content: "\e7e0"; }
+
+.icon-real-time-monitor1:before { content: "\e7e1"; }
+
+.icon-data-encryption1:before { content: "\e7e2"; }
+
+.icon-in-batches-exam1:before { content: "\e7e3"; }
+
+.icon-intelligent-test-paper-composition1:before { content: "\e7e4"; }
+
+.icon-comprehensive-exam1:before { content: "\e7e5"; }
+
+.icon-Reconnect-on-loss1:before { content: "\e7e6"; }
+
+.icon-ten-thousand-people-exam1:before { content: "\e7e7"; }
 
