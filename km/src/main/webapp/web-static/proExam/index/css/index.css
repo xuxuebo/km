@@ -1367,6 +1367,9 @@ body, html {
     font-size: 14px;
     color: #0098FF;
 }
+.y-project-select-all a{
+    color: #0098FF;
+}
 .y-project-contribution-list{
     width: 430px;
     height: 382px;
@@ -1529,6 +1532,20 @@ body, html {
     color: #5C5C5C;
     line-height: 50px;
 }
+.y-project-file-more a{
+    color: #5C5C5C;
+}
+.y-project-file-add{
+    display: inline-block;
+    right: 100px;
+    position: absolute;
+    font-size: 14px;
+    color: #5C5C5C;
+    line-height: 50px;
+}
+.y-project-file-add a{
+    color: #5C5C5C;
+}
 .y-project-file-list ul{
     padding: 14px 0 0 21px;
 }
@@ -1625,6 +1642,9 @@ body, html {
     font-size: 14px;
     color: #5C5C5C;
     line-height: 50px;
+}
+.y-project-activity-more a{
+    color: #5C5C5C;
 }
 .y-project-activity-list ul{
     padding: 14px 0 0 21px;
@@ -1753,6 +1773,7 @@ body, html {
     padding: 16px 14px;
     width: 100%;
     box-sizing: border-box;
+    background: #FFFFFF;
 }
 .y-content-professional-file-box{
     width: 100%;
@@ -1764,7 +1785,8 @@ body, html {
 .y-content-professional-file{
     height: 100%;
     box-sizing: border-box;
-    margin-right:444px
+    margin-right:444px;
+    background: #FFFFFF;
 }
 .y-content-professional-file-list{
     padding:0 20px;
@@ -1824,6 +1846,7 @@ body, html {
     box-sizing: border-box;
     top: 0;
     right: 0;
+    background: #FFFFFF;
 }
 .y-content-professional-rank-list{
     padding:10px 20px;
@@ -2265,6 +2288,85 @@ body, html {
 .tree-and-users-dept li .zTree-node.curSelectedNode .node_name {
     color: #338BF8;
 }
+
+.pe-add-question-text-desc{
+    width: 234px;
+    height: 200px;
+    font-size: 14px !important;
+    color: #666 !important;
+    border: 1px solid #e0e0e0;
+}
+.pe-add-question-text-desc:focus {
+    outline: none;
+    border: 1px solid #e0e0e0;
+}
+.pe-add-question-text-desc::-webkit-input-placeholder{
+    color: #e0e0e0;
+    padding: 10px 0 0 5px;
+}
+.pe-add-question-text{
+    padding-bottom: 15px;
+}
+.introduction-info{
+    width: 100px;
+}
+.pe-add-question-text-img{
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    border: 1px solid #e0e0e0;
+    position: relative;
+}
+.img-upload{
+    font-size: 14px !important;
+    color: #199ae2;
+    line-height: 32px;
+}
+.project-introduction-add .pe-layer-confirm.layui-layer .layui-layer-content{
+    width: 600px;
+    padding-top: 20px;
+}
+.project-introduction-add #library_detail_form{
+    padding-top: 20px;
+    width: 100%;
+    padding-left: 60px;
+    box-sizing: border-box;
+}
+.project-introduction-add #webContainer{
+    padding-left: 110px;
+}
+.project-introduction-add  .pe-stand-filter-form-input{
+    width: 500px;
+    background: #fff;
+    display: inline-block;
+    position: relative;
+    height: 22px;
+    line-height: 22px;
+    vertical-align: top;
+    border: 1px solid #ccc;
+    padding: 4px;
+    outline: 0;
+    border-radius: 5px;
+    color: #666;
+}
+.project-introduction-add .pe-add-question-text{
+    position: relative;
+    z-index: 1;
+}
+.project-introduction-add .show-user{
+    position: relative;
+    z-index: 10;
+}
+.project-introduction-add  .searchable-select{
+    width: 510px;
+}
+#webContainer .edui-default .edui-toolbar{
+    height: auto !important;
+}
+.project-introduction-add .layui-layer-btn-l{
+    text-align: center;
+}
+
 .tree-and-users-dept .zTree-node-li.level1:last-child:after {
     border-left: 1px solid #fff;
 }

@@ -79,7 +79,7 @@
             <td class="y-table__td name">
                 <div class="y-table__opt__bar">
                     <button type="button" title="点击下载" data-id="<%=item.id%>" class="yfont-icon opt-item js-opt-download">&#xe64f;</button>
-                    <button type="button" title="分享" data-id="<%=item.id%>" class="yfont-icon opt-item js-opt-share">&#xe652;</button>
+                    <#--<button type="button" title="分享" data-id="<%=item.id%>" class="yfont-icon opt-item js-opt-share">&#xe652;</button>-->
                     <button type="button" title="删除" data-id="<%=item.id%>" class="yfont-icon opt-item js-opt-delete">&#xe65c;</button>
                 </div>
                 <div class="y-table__filed_name type-<%=item.knowledgeType%>">

@@ -28,7 +28,7 @@ $(function () {
         var $fileList = $("#fileList");
         $.ajax({
             type: "POST",
-            url: pageContext.resourcePath + '/knowledge/searchKnowledge?page=1&pageSize=100&libraryId='+libraryId,
+            url: pageContext.resourcePath + '/knowledge/searchKnowledge?page=1&pageSize=10&libraryId='+libraryId,
             dataType: 'json',
             success: function (result) {
                 var data = result.rows;
@@ -47,7 +47,7 @@ $(function () {
         var $activityList = $("#activityList");
         $.ajax({
             type: "POST",
-            url: pageContext.resourcePath + '/library/dynamic?page=1&pageSize=10 &libraryId='+libraryId,
+            url: pageContext.resourcePath + '/library/dynamic?page=1&pageSize=10&libraryId='+libraryId,
             dataType: 'json',
             success: function (result) {
                 var data = result.rows;
