@@ -109,7 +109,7 @@ $(function () {
         }
 
         //从云库分享
-        $('.js-share-y').on('click', function () {
+        $('.js-share-y').off().on('click', function () {
             //我的云库弹框
             var knowledgeIds;
             var deptId;
@@ -241,7 +241,7 @@ $(function () {
 
         });
         //从本地分享
-        $('.js-share-local').on('click',function (e) {
+        $('.js-share-local').off().on('click',function (e) {
             var deptId, fileIds = "";
             PEMO.DIALOG.selectorDialog({
                 content: pageContext.rootPath + '/km/knowledge/openUpload',
