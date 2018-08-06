@@ -493,6 +493,9 @@ $(function () {
         };
     }
     //初始化树
+    function zTreeOnCollapse(event, treeId, treeNode) {
+        alert(treeNode.tId + ", " + treeNode.name);
+    };
     var listOrgTreeAndUsers = {
         isOpen: true,
         dataUrl: pageContext.rootPath + '/km/uc/user/listOrgTreeAndUsers',
@@ -514,6 +517,9 @@ $(function () {
             };
             $('.show-org-name').text(treeNode.name);
             initShareTab(param);
+        },
+        callback: {
+            onCollapse: zTreeOnCollapse
         },
         treePosition: 'inputDropDown'
     };

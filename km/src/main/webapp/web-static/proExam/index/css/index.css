@@ -2219,7 +2219,7 @@ body, html {
 .tree-and-users-dept{
     width: auto !important;
     position: relative;
-    overflow: hidden;
+    overflow: hidden !important;
     height: 285px;
     background-color: #fff;
     overflow-y: auto !important;
@@ -2240,7 +2240,7 @@ body, html {
     border-left: 1px dashed #333;
 }
 .tree-and-users-dept .zTree-node-li.level0 {
-    border-left: none;
+    /*border-left: none;*/
 }
 .tree-and-users-dept .zTree-node-li.level0:before{
     border-left: 1px dashed #333;
@@ -2253,4 +2253,7 @@ body, html {
 }
 .tree-and-users-dept li .zTree-node.curSelectedNode .node_name {
     color: #338BF8;
+}
+.tree-and-users-dept .zTree-node-li.level1:last-child:after {
+    border-left: 1px solid #fff;
 }
