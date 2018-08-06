@@ -77,38 +77,38 @@
     </table>
 </script>
 <script type="text/template" id="confirmDialogTemp">
-    <div class="clearF">
-        <label class="floatL">
-            <form id="library_detail_form">
-                <#-- 必要字段 测试数据 -->
-                <input type="hidden" name="libraryDetail.chargeIds" value="TangFD"/>
-                <input type="hidden" name="libraryDetail.summary" value="数据数据数据数据数据数据数据数据数据数据数据"/>
-                <div class="pe-add-question-text">
-                    <span class="pe-label-name floatL introduction-info" ><%=data.firstName%>:</span>
-                    <input class="pe-stand-filter-form-input" maxlength="50" type="text"
-                           placeholder="请输入<%=data.firstName%>"
-                           name="<%=data.firstInputName%>">
-                </div>
-                <div class="pe-add-question-text">
-                    <span class="pe-label-name floatL introduction-info" >负责人:</span>
-                    <input class="pe-stand-filter-form-input" maxlength="50" type="text"
-                           placeholder="请输入负责人名称"
-                           name="<%=data.firstInputName%>">
-                </div>
-                <div class="pe-add-question-text">
-                    <span class="pe-label-name floatL introduction-info">上传图片:</span>
-                    <a  href="#" class="img-upload" onclick="projectImgUpload()">上传图片</a>
-                    <#--<div class="pe-add-question-text-img">-->
-                        <#---->
-                    <#--</div>-->
-                </div>
-                <div class="pe-add-question-text">
-                    <span class="pe-label-name floatL introduction-info" >项目描述:</span>
-                    <textarea class="pe-add-question-text-desc"  placeholder="请输入项目描述"></textarea>
-                </div>
-
-            </form>
-        </label>
+    <div>
+        <form id="library_detail_form">
+        <#-- 必要字段 测试数据 -->
+            <input type="hidden" name="libraryDetail.chargeIds" value="TangFD"/>
+            <input type="hidden" name="libraryDetail.summary" value="数据数据数据数据数据数据数据数据数据数据数据"/>
+            <div class="pe-add-question-text">
+                <span class="pe-label-name floatL introduction-info"><%=data.firstName%>:</span>
+                <input class="pe-stand-filter-form-input" maxlength="50" type="text"
+                       placeholder="请输入<%=data.firstName%>"
+                       name="<%=data.firstInputName%>">
+            </div>
+            <div class="pe-add-question-text">
+                <span class="pe-label-name floatL introduction-info">负责人:</span>
+                <input class="pe-stand-filter-form-input" maxlength="50" type="text"
+                       placeholder="请输入负责人名称"
+                       name="<%=data.firstInputName%>">
+            </div>
+            <div class="pe-add-question-text">
+                <span class="pe-label-name floatL introduction-info">上传图片:</span>
+                <a href="#" class="img-upload" onclick="projectImgUpload()">上传图片</a>
+            <#--<div class="pe-add-question-text-img">-->
+            <#---->
+            <#--</div>-->
+            </div>
+            <div class="pe-add-question-text">
+                <span class="pe-label-name floatL introduction-info">项目介绍:</span>
+                <!-- 加载编辑器的容器 -->
+                <textarea name="content" id="webContainer" cols="30" rows="10"
+                          style="width:400px;height:400px;"></textarea>
+            <#--<script id="webContainer" name="content" type="text/plain" style="width:400px;height:400px;"/>-->
+            </div>
+        </form>
         <div class="pe-main-km-text-wrap">
             <div class="pe-km-search-key pe-input-tree-wrap pe-stand-filter-form-input" style="display: none">
 
@@ -116,21 +116,30 @@
         </div>
     </div>
 </script>
+
+<script>
+    window.UEDITOR_HOME_URL = "${resourcePath!}/web-static/proExam/js/uEditor/";
+</script>
+<script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/jquery.min.js"></script>
+<script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/uEditor/ueditor.config.js"></script>
+<script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/uEditor/ueditor.all.min.js"></script>
+<script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/uEditor/lang/zh-cn/zh-cn.js"></script>
 <script>
     $(function () {
+        var UEditorS;
         var peTableTitle = [
             {'title': '重点项目名称', 'width': 300},
             {'title': '操作', 'width': 100}
         ];
         var exerciseManage = {
             init: function () {
-                $('.pe-stand-table-wrap').peGrid({
-                    url: pageContext.rootPath + '/library/manage/searchLibrary',
-                    formParam: $('#projectManageForm').serializeArray(),
-                    tempId: 'peExerManaTemp',
-                    showTotalDomId: 'showTotal',
-                    title: peTableTitle
-                });
+                // $('.pe-stand-table-wrap').peGrid({
+                //     url: pageContext.rootPath + '/library/manage/searchLibrary',
+                //     formParam: $('#projectManageForm').serializeArray(),
+                //     tempId: 'peExerManaTemp',
+                //     showTotalDomId: 'showTotal',
+                //     title: peTableTitle
+                // });
                 var _this = this;
                 _this.bind();
             },
@@ -144,10 +153,11 @@
                                 'firstInputName': 'libraryName'
                             }
                         }),
-                        area: '468px',
+                        area: ['800px', '600px'],
                         btn: ['确定', '取消'],
                         btnAlign: 'l',
                         title: '新增重点项目',
+                        skin: 'project-introduction-add',
                         btn1: function () {
                             var libraryName = $('input[name="libraryName"]').val();
                             PEBASE.ajaxRequest({
@@ -182,6 +192,15 @@
                                     });
                                 }
                             });
+                        },
+                        success: function () {
+                            UEditorS = UE.getEditor('webContainer');
+                        },
+                        cancel: function () {
+                            UEditorS.destroy();
+                        },
+                        btn2 :function () {
+                            UEditorS.destroy();
                         }
                     });
                 });
@@ -197,7 +216,7 @@
                                 'firstInputName': 'libraryName'
                             }
                         }),
-                        area: '468px',
+                        area: '800px',
                         title: '编辑重点项目',
                         btn: ['保存', '取消'],
                         btnAlign: 'l',
@@ -250,7 +269,7 @@
         exerciseManage.init();
     })
 
-     function projectImgUpload() {
+    function projectImgUpload() {
         PEMO.DIALOG.selectorDialog({
             content: pageContext.rootPath + '/knowledge/openUpload',
             area: ['600px', '400px'],
