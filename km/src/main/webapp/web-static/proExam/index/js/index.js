@@ -148,7 +148,7 @@ $(function () {
             var id = $this.attr("data-id");
             var index = $this.parent().index();
             if (!id) {
-                return;
+                id = "";
             }
             breadCrumbsList.length = index + 1;
             route['YunCb']($yunContentBody, route.routes.yun, null, id);
@@ -614,21 +614,14 @@ $(function () {
                 return false;
             }
             knowledgeIds = knowledgeIds.substring(0, knowledgeIds.length - 1);
-            var shareIdArr = table.getPubLicShareId();
-            var shareIds = "";
-            for (var i = 0; i < shareIdArr.length; i++) {
-                shareIds += shareIdArr[i] + ",";
-            }
-            shareIds = shareIds.substring(0, shareIds.length - 1);
+
             PEMO.DIALOG.confirmL({
                 content: '<div><h3 class="pe-dialog-content-head">确定复制选中的文件？</h3><p class="pe-dialog-content-tip">确认后,可在我的云库内查看。 </p></div>',
                 btn1: function () {
 
                     PEBASE.ajaxRequest({
                         url: pageContext.rootPath + '/km/knowledge/copyToMyLibrary',
-                        data: {
-                            "knowledgeIds": knowledgeIds, "shareIds": shareIds
-                        },
+                        data: {"knowledgeIds": knowledgeIds},
                         success: function (data) {
                             if (data.success) {
                                 PEMO.DIALOG.tips({

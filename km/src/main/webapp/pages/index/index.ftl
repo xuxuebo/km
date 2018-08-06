@@ -6,8 +6,8 @@
             $yContainer.load('${ctx!}/km/front/dataShare');
         } else if (type === "majorProject") {
             $yContainer.load('${ctx!}/km/front/majorProject');
-        }else if (type === "professionalClassification") {
-            $yContainer.load('${ctx!}/km/front/professionalClassification');
+        }else if (type === "specialty") {
+            $yContainer.load('${ctx!}/km/front/specialty');
         }else if (type === "dataStatistics") {
             $yContainer.load('${ctx!}/km/front/dataStatistics');
         }else if (type === "adminSetting") {

@@ -11,6 +11,7 @@ import com.qgutech.km.module.uc.model.User;
 import com.qgutech.km.utils.PeException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.hibernate.Criteria;
@@ -650,14 +651,19 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
             return new ArrayList<>(0);
         }
 
-        List<PeTreeNode> peTreeNodes = new ArrayList<>(organizes.size());
+        int size = organizes.size();
+        List<PeTreeNode> peTreeNodes = new ArrayList<>(size);
+        Map<String,Boolean> parentIdMap = new HashMap<>(size);
         for (Organize organize : organizes) {
             PeTreeNode peTreeNode = new PeTreeNode();
             peTreeNode.setName(organize.getOrganizeName());
-            peTreeNode.setpId(organize.getParentId());
+            String parentId = organize.getParentId();
+            peTreeNode.setpId(parentId);
             peTreeNode.setId(organize.getId());
-            peTreeNode.setParent(true);
+            peTreeNode.setParent(false);
             peTreeNodes.add(peTreeNode);
+            peTreeNode.setCanEdit(false);
+            parentIdMap.put(parentId, true);
             List<User> users = organize.getUsers();
             if (CollectionUtils.isNotEmpty(users)) {
                 for (User user : users) {
@@ -671,11 +677,10 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
                     peTreeNodes.add(userNode);
                 }
             }
-            if (!organize.isDefault()) {
-                continue;
-            }
+        }
 
-            peTreeNode.setCanEdit(false);
+        for (PeTreeNode peTreeNode : peTreeNodes) {
+            peTreeNode.setParent(BooleanUtils.isTrue(parentIdMap.get(peTreeNode.getId())));
         }
 
         return peTreeNodes;

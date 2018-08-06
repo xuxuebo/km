@@ -46,7 +46,7 @@
         <tbody>
         <%if(list.length !== 0){%>
         <%_.each(list,function(item,i){%>
-        <tr class="y-table__tr js-opt-dbclick">
+        <tr class="y-table__tr js-opt-dbclick" data-id="<%=item.id%>">
             <td class="y-table__td checkbox">
                 <label class="y-checkbox">
                     <input type="checkbox">
@@ -55,7 +55,7 @@
             </td>
             <td class="y-table__td name">
                 <div class="y-table__opt__bar">
-                    <button type="button" title="点击下载"
+                    <button type="button" title="点击下载" onclick="downloadKnowledge('<%=item.id%>')"
                             class="yfont-icon opt-item js-opt-download">&#xe64f;
                     </button>
                     <#--<button type="button" title="分享"  class="yfont-icon opt-item js-opt-share">

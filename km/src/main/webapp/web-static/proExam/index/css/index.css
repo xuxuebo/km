@@ -1753,6 +1753,7 @@ body, html {
     padding: 16px 14px;
     width: 100%;
     box-sizing: border-box;
+    background: #FFFFFF;
 }
 .y-content-professional-file-box{
     width: 100%;
@@ -1764,7 +1765,8 @@ body, html {
 .y-content-professional-file{
     height: 100%;
     box-sizing: border-box;
-    margin-right:444px
+    margin-right:444px;
+    background: #FFFFFF;
 }
 .y-content-professional-file-list{
     padding:0 20px;
@@ -1824,6 +1826,7 @@ body, html {
     box-sizing: border-box;
     top: 0;
     right: 0;
+    background: #FFFFFF;
 }
 .y-content-professional-rank-list{
     padding:10px 20px;

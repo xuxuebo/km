@@ -1,7 +1,7 @@
 <div class="y-major-project" id="yunLContentBody">
     <div class="y-major-project-header"></div>
     <div class="y-major-project-content">
-        <div class="y-project-contribution-list">
+        <div class="y-project-contribution-list y-project-contribution-list">
             <div class="y-contribution-info">贡献榜单</div>
             <div class="y-contribution">
                 <ul id="contributionList"></ul>
@@ -46,9 +46,6 @@
         </div>
     </div>
 </div>
-
-
-
 
 <#--排行榜-->
 <script type="text/template" id="tplsContributionTable">
