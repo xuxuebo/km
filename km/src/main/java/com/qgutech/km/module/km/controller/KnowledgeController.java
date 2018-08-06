@@ -16,6 +16,7 @@ import com.qgutech.km.utils.PeException;
 import com.qgutech.km.utils.PeFileUtils;
 import com.qgutech.km.utils.PropertiesUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,10 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -502,7 +500,7 @@ public class KnowledgeController {
      */
     @RequestMapping("copyToMyLibrary")
     @ResponseBody
-    public JsonResult copyToMyLibrary(String knowledgeIds,String shareIds){
+    public JsonResult copyToMyLibrary(String knowledgeIds){
         JsonResult jsonResult = new JsonResult();
         if(StringUtils.isEmpty(knowledgeIds)){
             jsonResult.setSuccess(false);
@@ -511,7 +509,6 @@ public class KnowledgeController {
         }
         try {
             knowledgeService.copyToMyLibrary(knowledgeIds);
-            shareService.updateCopyCount(shareIds);
         }catch (Exception e){
             jsonResult.setSuccess(false);
             jsonResult.setMessage(e.getMessage());
@@ -560,6 +557,19 @@ public class KnowledgeController {
             List<KnowledgeLog> knowledgeLogs = new ArrayList<>(knowledgeList.size());
             knowledgeLogs.addAll(knowledgeList.stream().map(s -> new KnowledgeLog(s.getId(), libraryId, KnowledgeConstant.LOG_DOWNLOAD)).collect(Collectors.toList()));
             knowledgeLogService.batchSave(knowledgeLogs);
+        }
+
+        Map<String, String> shareIdMap = shareService.getSharedKnowledgeIdAndShareIdMap(ids);
+        if (MapUtils.isNotEmpty(shareIdMap)) {
+            StringBuilder shareIds = new StringBuilder();
+            shareIdMap.values().forEach(shareId -> {
+                shareIds.append(shareId).append(",");
+            });
+            try {
+                shareService.updateDownCount(shareIds.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         //批量文件的路径

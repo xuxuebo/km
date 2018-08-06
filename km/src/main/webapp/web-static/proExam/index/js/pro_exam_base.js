@@ -22,7 +22,7 @@ function getHash(key, url) {
     if (_val == null || _val.length < 1) {
         return null;
     } else {
-            return decodeURIComponent(_val[1]);
+        return decodeURIComponent(_val[1]);
     }
 }
 
@@ -238,31 +238,31 @@ var PEMO = {
 
         var $wrap = $('#uploader'),
 
-        // 状态栏，包括进度和控制按钮
+            // 状态栏，包括进度和控制按钮
             $statusBar = $wrap.find('.pe-uploader-state-wrap'),
 
-        // 文件总体选择信息。
+            // 文件总体选择信息。
             $info = $statusBar.find('.pe-uploader-complete-info'),
 
-        // 上传按钮
+            // 上传按钮
             $uploadBtn = $wrap.find('.pe-begin-uploader-btn'),
 
-        //取消按钮
+            //取消按钮
             $cancelUpBtn = $wrap.find('.pe-uploader-cancel-upload'),
 
-        // 没选择文件之前的内容。
+            // 没选择文件之前的内容。
             $placeHolder = $wrap.find('.placeholder'),
 
-        //进度条数字
+            //进度条数字
             $progressNum = $('.pe-uploader-progress-num'),
 
-        // 进度条区域
+            // 进度条区域
             $progressWrap = $('.pe-uploader-progress-wrap'),
 
-        // 添加的文件数量
+            // 添加的文件数量
             fileCount = 0,
 
-        // 优化retina, 在retina下这个值是2
+            // 优化retina, 在retina下这个值是2
             ratio = window.devicePixelRatio || 1,
 
             // 可能有pedding, ready, uploading, confirm, done,finish.
@@ -279,7 +279,7 @@ var PEMO = {
                 return r;
             })(),
 
-        // WebUploader实例
+            // WebUploader实例
             uploader;
 
         if (!WebUploader.Uploader.support()) {
@@ -546,7 +546,7 @@ var PEMO = {
     //树
     ZTREE: {
         //showUrl,addUrl,editUrl,removeUrl,moveUrl
-        initTree: function (domId, settingUrl) {
+        initTree: function (domId, settingUrl,flag) {
             var tableJson = '';
             var isCheckBoxTree = settingUrl.isCheckbox || false;
             $.ajax({
@@ -562,6 +562,18 @@ var PEMO = {
 
             });
             //双击开启编辑参数
+            var callbackFlag = {
+                beforeRemove: beforeRemove,
+                beforeDrag: function () {
+                    return false;
+                },
+                onCheck:zTreeOnCheck
+            };
+            if(flag !== true){
+                callbackFlag.onClick = onClick;
+            }else{
+                callbackFlag.onClick = onClickNode;
+            }
             var nodesJson = tableJson;
             var settingDbClick = {
                 selfArgu:{
@@ -602,14 +614,7 @@ var PEMO = {
                     editNameSelectAll: true,
                     showRemoveBtn: showRemoveBtn
                 },
-                callback: {
-                    beforeRemove: beforeRemove,
-                    onClick: onClick,
-                    beforeDrag: function () {
-                        return false;
-                    },
-                    onCheck:zTreeOnCheck
-                }
+                callback: callbackFlag
             };
 
             var ztreeArgu = {
@@ -683,7 +688,7 @@ var PEMO = {
                 //树状里面的搜索节点执行的函数
                 $(".pe-tree-form-text").keyup(function (e) {
                     var e = e || window.event;
-                        e.stopPropagation();
+                    e.stopPropagation();
                     var thisSearchVal = $.trim($(this).val());
                     if(e.keyCode === 13 || e.keyCode === 108){
                         searchNode(null,'peZtreeMain');
@@ -700,7 +705,7 @@ var PEMO = {
                         if($.trim(thisSearchVal)){
                             $(this).next('input[type="hidden"]').val('')
                         }
-                            searchNode(settingUrl.treeSearch);
+                        searchNode(settingUrl.treeSearch);
                     });
                     settingUrl.treeSearch.focus(function(){
                         if(!$.trim($(this).val())){
@@ -712,7 +717,7 @@ var PEMO = {
                 //树状里面的搜索框里关闭 及 搜索节点 方法 按钮点击事件
                 $('.pe-tree-search-btn').off('click').click(function (e) {
                     var e = e || window.event;
-                        e.stopPropagation();
+                    e.stopPropagation();
                     if (!$(this).hasClass('icon-search-magnifier')) {
                         $(this).siblings('.pe-tree-form-text').val('');
                     }
@@ -939,7 +944,11 @@ var PEMO = {
                 zTree.clickNode(treeNode);
                 $('#' + domId).mCustomScrollbar("update");
             }
-
+            function  onClickNode(e, treeId, treeNode) {
+                //往后台传输需要展示的数据的参数
+                zTree.clickNode(treeNode);
+                $('#' + domId).mCustomScrollbar("update");
+            }
             //checkbox的点击事件
             function zTreeOnCheck(e,treeId,treeNode){
                 zTree.checkboxFuc(zTree,treeNode);
@@ -1060,9 +1069,9 @@ var PEMO = {
                     if (treeNode.editNameFlag || $("#addBtn_" + treeNode.tId).length > 0) return;
                     var addStr = '';
                     if (nodePath.length === 6) {
-                         addStr = '';
+                        addStr = '';
                     } else {
-                         addStr = addStr + "<span class='button iconfont icon-new-add add' id='addBtn_" + treeNode.tId + "' title='新增'></span>";
+                        addStr = addStr + "<span class='button iconfont icon-new-add add' id='addBtn_" + treeNode.tId + "' title='新增'></span>";
                     }
 
                     var addStr2 = '';
@@ -1170,7 +1179,7 @@ var PEMO = {
             var thisNodeA = $("#" + treeNode.tId +'_a');
             addBtn.off().bind("click", function (e) {
                 var e = e || window.event;
-                    e.stopPropagation();
+                e.stopPropagation();
                 if($('#' + domId).find('input[treenode_input]').get(0)){
                     $('#' + domId).find('input[treenode_input]').blur();
                 }
@@ -1356,10 +1365,10 @@ var PEMO = {
                 }
             }
         }
-         var videoDom =  '<div class="video-mask-panel"></div>'
-                        +'<video id="peVideoPlayer" class="video-js vjs-default-skin pe-video-player-panel" controls preload="auto" width="640" height="480" poster="">'
-                        +'<source src="'+ videoPath+'" type="video/mp4" /></video>'
-                        +'<a class="video-close-btn viewer-button viewer-close iconfont icon-wrong" data-action="mix"><div style="position:relative;"><div class="viewer-ripple"></div></div></a>';
+        var videoDom =  '<div class="video-mask-panel"></div>'
+            +'<video id="peVideoPlayer" class="video-js vjs-default-skin pe-video-player-panel" controls preload="auto" width="640" height="480" poster="">'
+            +'<source src="'+ videoPath+'" type="video/mp4" /></video>'
+            +'<a class="video-close-btn viewer-button viewer-close iconfont icon-wrong" data-action="mix"><div style="position:relative;"><div class="viewer-ripple"></div></div></a>';
         if(!$('#peVideoPlayer').get(0)){
             $('body').append(videoDom);
             videojs(document.getElementById('peVideoPlayer'), {preload:'none'}, function(e){
@@ -1398,107 +1407,107 @@ var PEBASE = {
     },
     peFormEvent: function (type, obj) {
         // $('body').undelegate('.pe-'+ type + ':not(".pe-check-by-list")','click').delegate('.pe-'+ type + ':not(".pe-check-by-list")','click',function(e){
-          $('.pe-' + type).not('.pe-check-by-list').off('click').click(function (e) {
+        $('.pe-' + type).not('.pe-check-by-list').off('click').click(function (e) {
             var e = e || window.event;
             e.stopPropagation();
             e.preventDefault();
-              if($(this).hasClass('noClick')){
-                  return false;
-              }else{
-
-            var clickDom = e.target || e.srcElement;
-            var _thisDom = $(this);
-            var _thisParent = _thisDom.closest('.pe-stand-table-panel');
-            var iconCheck = _thisDom.find('span.iconfont');
-
-            var thisRealCheck = _thisDom.find('input[type="' + type + '"]');
-            if(thisRealCheck.attr('disabled')){
+            if($(this).hasClass('noClick')){
                 return false;
-            }
+            }else{
 
-            if(thisRealCheck.closest('.pe-input-tree-wrap-drop').get(0)){
-                if (obj && obj.func1 && !obj.func1(type, thisRealCheck)) {
+                var clickDom = e.target || e.srcElement;
+                var _thisDom = $(this);
+                var _thisParent = _thisDom.closest('.pe-stand-table-panel');
+                var iconCheck = _thisDom.find('span.iconfont');
+
+                var thisRealCheck = _thisDom.find('input[type="' + type + '"]');
+                if(thisRealCheck.attr('disabled')){
                     return false;
                 }
-            }
 
-
-            if (type === 'checkbox') {
-                if (iconCheck.hasClass('icon-unchecked-checkbox')) {
-                    iconCheck.removeClass('icon-unchecked-checkbox').addClass('icon-checked-checkbox');
-                    if (!iconCheck.closest('pe-paper-all-check').get(0)) {
-                        iconCheck.addClass('peChecked');
+                if(thisRealCheck.closest('.pe-input-tree-wrap-drop').get(0)){
+                    if (obj && obj.func1 && !obj.func1(type, thisRealCheck)) {
+                        return false;
                     }
-                    thisRealCheck.prop('checked', 'checked');//
-                    if (_thisParent.find('.pe-paper-all-check').get(0)) {
+                }
+
+
+                if (type === 'checkbox') {
+                    if (iconCheck.hasClass('icon-unchecked-checkbox')) {
+                        iconCheck.removeClass('icon-unchecked-checkbox').addClass('icon-checked-checkbox');
+                        if (!iconCheck.closest('pe-paper-all-check').get(0)) {
+                            iconCheck.addClass('peChecked');
+                        }
+                        thisRealCheck.prop('checked', 'checked');//
+                        if (_thisParent.find('.pe-paper-all-check').get(0)) {
+                            var thisTableAllchecks = _thisParent.find('.pe-checkbox').not('.pe-paper-all-check');
+                            if (!thisTableAllchecks.find('span.icon-unchecked-checkbox').get(0)) {
+                                _thisParent.find('.pe-paper-all-check')
+                                    .find('span.iconfont')
+                                    .removeClass('icon-unchecked-checkbox')
+                                    .addClass('icon-checked-checkbox peChecked');
+                            }
+                        }
+                        if ($(clickDom).closest('.pe-paper-all-check').get(0)) {
+                            if ($(clickDom).closest('.pe-stand-table-panel').get(0)) {
+                                var theseCheckboxs = $(clickDom).closest('.pe-stand-table-panel').find('.pe-checkbox');
+                                theseCheckboxs.not('.pe-paper-all-check')
+                                    .find('span.iconfont')
+                                    .removeClass('icon-unchecked-checkbox').addClass('icon-checked-checkbox peChecked');
+                                theseCheckboxs.not('.pe-paper-all-check').find('input[type="' + type + '"]').prop('checked', 'checked');
+                            }
+                        }
+                    } else {
+                        iconCheck.removeClass('icon-checked-checkbox').addClass('icon-unchecked-checkbox');
+                        thisRealCheck.removeProp('checked');
+                        thisRealCheck.removeAttr('checked');
+                        if (!iconCheck.parents('pe-paper-all-check').get(0)) {
+                            iconCheck.removeClass('peChecked');
+                        }
                         var thisTableAllchecks = _thisParent.find('.pe-checkbox').not('.pe-paper-all-check');
-                        if (!thisTableAllchecks.find('span.icon-unchecked-checkbox').get(0)) {
+                        if (thisTableAllchecks.find('span.icon-unchecked-checkbox').get(0)) {
                             _thisParent.find('.pe-paper-all-check')
                                 .find('span.iconfont')
-                                .removeClass('icon-unchecked-checkbox')
-                                .addClass('icon-checked-checkbox peChecked');
+                                .removeClass('icon-checked-checkbox peChecked')
+                                .addClass('icon-unchecked-checkbox ');
                         }
-                    }
-                    if ($(clickDom).closest('.pe-paper-all-check').get(0)) {
-                        if ($(clickDom).closest('.pe-stand-table-panel').get(0)) {
-                            var theseCheckboxs = $(clickDom).closest('.pe-stand-table-panel').find('.pe-checkbox');
-                            theseCheckboxs.not('.pe-paper-all-check')
-                                .find('span.iconfont')
-                                .removeClass('icon-unchecked-checkbox').addClass('icon-checked-checkbox peChecked');
-                            theseCheckboxs.not('.pe-paper-all-check').find('input[type="' + type + '"]').prop('checked', 'checked');
+
+                        if ($(clickDom).closest('.pe-paper-all-check').get(0)) {
+                            if ($(clickDom).closest('.pe-stand-table-panel').get(0)) {
+                                var theseCheckboxs = $(clickDom).closest('.pe-stand-table-panel').find('.pe-checkbox');
+                                theseCheckboxs.not('.pe-paper-all-check')
+                                    .find('span.iconfont')
+                                    .addClass('icon-unchecked-checkbox').removeClass('icon-checked-checkbox peChecked');
+                                theseCheckboxs.not('.pe-paper-all-check').find('input[type="' + type + '"]').removeProp('checked');
+                            }
                         }
                     }
                 } else {
-                    iconCheck.removeClass('icon-checked-checkbox').addClass('icon-unchecked-checkbox');
-                    thisRealCheck.removeProp('checked');
-                    thisRealCheck.removeAttr('checked');
-                    if (!iconCheck.parents('pe-paper-all-check').get(0)) {
-                        iconCheck.removeClass('peChecked');
-                    }
-                    var thisTableAllchecks = _thisParent.find('.pe-checkbox').not('.pe-paper-all-check');
-                    if (thisTableAllchecks.find('span.icon-unchecked-checkbox').get(0)) {
-                        _thisParent.find('.pe-paper-all-check')
-                            .find('span.iconfont')
-                            .removeClass('icon-checked-checkbox peChecked')
-                            .addClass('icon-unchecked-checkbox ');
-                    }
-
-                    if ($(clickDom).closest('.pe-paper-all-check').get(0)) {
-                        if ($(clickDom).closest('.pe-stand-table-panel').get(0)) {
-                            var theseCheckboxs = $(clickDom).closest('.pe-stand-table-panel').find('.pe-checkbox');
-                            theseCheckboxs.not('.pe-paper-all-check')
-                                .find('span.iconfont')
-                                .addClass('icon-unchecked-checkbox').removeClass('icon-checked-checkbox peChecked');
-                            theseCheckboxs.not('.pe-paper-all-check').find('input[type="' + type + '"]').removeProp('checked');
+                    var thisRadioName = thisRealCheck.attr('name');
+                    var thisRadiosIcons = $('input[name="' + thisRadioName + '"]');
+                    //待选择好radio的图标即可启用
+                    if (iconCheck.hasClass('icon-unchecked-radio')) {
+                        for (var i = 0; i < thisRadiosIcons.length; i++) {
+                            $(thisRadiosIcons[i]).closest('.pe-radio').find('span.iconfont').removeClass('icon-checked-radio peChecked').addClass('icon-unchecked-radio');
+                            $(thisRadiosIcons[i]).removeAttr('checked');
                         }
+
+                        thisRadiosIcons.removeClass('icon-unchecked-radio');
+                        iconCheck.removeClass('icon-unchecked-radio').addClass('icon-checked-radio ');
+                        if (!iconCheck.closest('pe-paper-all-check').get(0)) {
+                            iconCheck.addClass('peChecked');
+                        }
+                        thisRealCheck.prop('checked', true);
+                    } else {
+
                     }
+
                 }
-            } else {
-                var thisRadioName = thisRealCheck.attr('name');
-                var thisRadiosIcons = $('input[name="' + thisRadioName + '"]');
-                //待选择好radio的图标即可启用
-                if (iconCheck.hasClass('icon-unchecked-radio')) {
-                    for (var i = 0; i < thisRadiosIcons.length; i++) {
-                        $(thisRadiosIcons[i]).closest('.pe-radio').find('span.iconfont').removeClass('icon-checked-radio peChecked').addClass('icon-unchecked-radio');
-                        $(thisRadiosIcons[i]).removeAttr('checked');
-                    }
-
-                    thisRadiosIcons.removeClass('icon-unchecked-radio');
-                    iconCheck.removeClass('icon-unchecked-radio').addClass('icon-checked-radio ');
-                    if (!iconCheck.closest('pe-paper-all-check').get(0)) {
-                        iconCheck.addClass('peChecked');
-                    }
-                    thisRealCheck.prop('checked', true);
-                } else {
-
+                if (obj && obj.func2) {
+                    obj.func2(thisRealCheck);
                 }
 
             }
-            if (obj && obj.func2) {
-                obj.func2(thisRealCheck);
-            }
-
-          }
         })
     },
     peSelect: function (domSelect, cutOff, saveDom, tableDom,selfFunc) {
@@ -1622,8 +1631,8 @@ var PEBASE = {
         if (obj) {
             $(obj.dom + ','+ obj.dom +' .pe-input-tree-search-btn').off().click(function (e) {
                 var e = e || window.event;
-                    e.stopPropagation();
-                    e.preventDefault();
+                e.stopPropagation();
+                e.preventDefault();
                 var thisWrapDom = $(this) || $(this).parent(obj.dom);
                 var thisDropDown = $(this).find('.pe-input-tree-wrap-drop').get(0) || $(this).siblings('.pe-input-tree-wrap-drop').get(0);
                 var visibleDropDown = $(this).find('.pe-input-tree-wrap-drop:visible').get(0) || $(this).siblings('.pe-input-tree-wrap-drop:visible').get(0);
@@ -1645,7 +1654,7 @@ var PEBASE = {
                             }
                         }
                         if($.isFunction(obj.treeParam.isCheckHasChecked)){
-                                obj.treeParam.isCheckHasChecked($.fn.zTree.getZTreeObj(obj.treeId));
+                            obj.treeParam.isCheckHasChecked($.fn.zTree.getZTreeObj(obj.treeId));
                         }
                     }
                 }
@@ -1821,26 +1830,26 @@ var PEBASE = {
                 slidesPerView:'auto',
                 watchActiveIndex:true,
                 onFirstInit:function(thisViewer,t){
-                        $('.itemImageViewWrap').viewer({
-                            url:'data-original',
-                            title:false,
-                            fullscreen:false,
-                            show: function (d,t) {
-                                $('.pe-answer-nav-top').css("zIndex", "-1");
-                                $('.pe-answer-content-right-wrap').css("zIndex", "-1");
-                                $('.pe-public-top-nav-header').css("zIndex", "-1");
-                                var _thisSwiper = $(d.currentTarget).parent('.swiper-container');
-                                $('.swiper-container').not(_thisSwiper).css('z-index','0');
+                    $('.itemImageViewWrap').viewer({
+                        url:'data-original',
+                        title:false,
+                        fullscreen:false,
+                        show: function (d,t) {
+                            $('.pe-answer-nav-top').css("zIndex", "-1");
+                            $('.pe-answer-content-right-wrap').css("zIndex", "-1");
+                            $('.pe-public-top-nav-header').css("zIndex", "-1");
+                            var _thisSwiper = $(d.currentTarget).parent('.swiper-container');
+                            $('.swiper-container').not(_thisSwiper).css('z-index','0');
 
-                            },
-                            hidden: function (d,t) {
-                                $('.pe-answer-nav-top').css("zIndex", "1989");
-                                $('.pe-answer-content-right-wrap').css("zIndex", "1989");
-                                $('.pe-public-top-nav-header').css("zIndex", "1989");
-                                var _thisSwiper = $(d.currentTarget).parent('.swiper-container');
-                                $('.swiper-container').css('z-index','1');
-                            }
-                        });
+                        },
+                        hidden: function (d,t) {
+                            $('.pe-answer-nav-top').css("zIndex", "1989");
+                            $('.pe-answer-content-right-wrap').css("zIndex", "1989");
+                            $('.pe-public-top-nav-header').css("zIndex", "1989");
+                            var _thisSwiper = $(d.currentTarget).parent('.swiper-container');
+                            $('.swiper-container').css('z-index','1');
+                        }
+                    });
 
 
                 }
@@ -1855,26 +1864,26 @@ var PEBASE = {
                 slidesPerView:'auto',
                 watchActiveIndex:true,
                 onFirstInit:function(){
-                        $('.itemImageViewWrap').viewer({
-                            url:'data-original',
-                            title:false,
-                            fullscreen:false,
-                            show: function (d,t) {
-                                $('.pe-answer-nav-top').css("zIndex", "-1");
-                                $('.pe-answer-content-right-wrap').css("zIndex", "-1");
-                                $('.pe-public-top-nav-header').css("zIndex", "-1");
-                                var _thisSwiper = $(d.currentTarget).parent('.swiper-container');
-                                $('.swiper-container').not(_thisSwiper).css('z-index','0');
+                    $('.itemImageViewWrap').viewer({
+                        url:'data-original',
+                        title:false,
+                        fullscreen:false,
+                        show: function (d,t) {
+                            $('.pe-answer-nav-top').css("zIndex", "-1");
+                            $('.pe-answer-content-right-wrap').css("zIndex", "-1");
+                            $('.pe-public-top-nav-header').css("zIndex", "-1");
+                            var _thisSwiper = $(d.currentTarget).parent('.swiper-container');
+                            $('.swiper-container').not(_thisSwiper).css('z-index','0');
 
-                            },
-                            hidden: function (d,t) {
-                                $('.pe-answer-nav-top').css("zIndex", "1989");
-                                $('.pe-answer-content-right-wrap').css("zIndex", "1989");
-                                $('.pe-public-top-nav-header').css("zIndex", "1989");
-                                var _thisSwiper = $(d.currentTarget).parent('.swiper-container');
-                                $('.swiper-container').css('z-index','1');
-                            }
-                        });
+                        },
+                        hidden: function (d,t) {
+                            $('.pe-answer-nav-top').css("zIndex", "1989");
+                            $('.pe-answer-content-right-wrap').css("zIndex", "1989");
+                            $('.pe-public-top-nav-header').css("zIndex", "1989");
+                            var _thisSwiper = $(d.currentTarget).parent('.swiper-container');
+                            $('.swiper-container').css('z-index','1');
+                        }
+                    });
                 }
             });
         }

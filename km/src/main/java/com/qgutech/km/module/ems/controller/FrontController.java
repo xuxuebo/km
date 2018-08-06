@@ -56,11 +56,20 @@ public class FrontController {
         return "index/loadIndex";
     }
     //首页  专业分类
-    @RequestMapping("professionalClassification")
-    public String professionalClassification(Model model){
+    @RequestMapping("specialty")
+    public String specialty(Model model){
         model.addAttribute("userName", SessionContext.get().getUserName());
         model.addAttribute("admin", SessionContext.get().isAdmin());
-        return "index/professionalClassification";
+        return "index/specialty";
+    }
+
+    //首页  专业分类详情
+    @RequestMapping("specialtyDetail")
+    public String specialtyDetail(Model model, String libraryId){
+        model.addAttribute("userName", SessionContext.get().getUserName());
+        model.addAttribute("admin", SessionContext.get().isAdmin());
+        model.addAttribute("libraryId", libraryId);
+        return "index/specialtyDetail";
     }
 
     //首页  设置

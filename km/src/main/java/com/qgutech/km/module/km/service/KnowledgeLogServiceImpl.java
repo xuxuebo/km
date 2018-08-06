@@ -59,7 +59,7 @@ public class KnowledgeLogServiceImpl extends BaseServiceImpl<KnowledgeLog> imple
         List<KnowledgeLog> knowledgeLogs = jdbcTemplate.query(searchSql.toString(), params, (resultSet, i) -> {
             KnowledgeLog log = new KnowledgeLog();
             log.setType(resultSet.getString("type"));
-            log.setCreateTimeStr(KnowledgeConstant.TIME_FORMAT.format(resultSet.getTimestamp("create_time")));
+            log.setCreateTimeStr(KnowledgeConstant.DATE_FORMAT.format(resultSet.getTimestamp("create_time")));
             log.setUserName(resultSet.getString("user_name"));
             log.setKnowledgeName(resultSet.getString("knowledge_name"));
             return log;

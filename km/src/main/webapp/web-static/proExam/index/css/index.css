@@ -1593,7 +1593,7 @@ body, html {
     font-size: 14px;
     color: #626262;
     line-height: 23px;
-    width: 230px;
+    width: 280px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -1773,6 +1773,7 @@ body, html {
     padding: 16px 14px;
     width: 100%;
     box-sizing: border-box;
+    background: #FFFFFF;
 }
 .y-content-professional-file-box{
     width: 100%;
@@ -1784,7 +1785,8 @@ body, html {
 .y-content-professional-file{
     height: 100%;
     box-sizing: border-box;
-    margin-right:444px
+    margin-right:444px;
+    background: #FFFFFF;
 }
 .y-content-professional-file-list{
     padding:0 20px;
@@ -1844,6 +1846,7 @@ body, html {
     box-sizing: border-box;
     top: 0;
     right: 0;
+    background: #FFFFFF;
 }
 .y-content-professional-rank-list{
     padding:10px 20px;
@@ -2136,13 +2139,8 @@ body, html {
 .tree-and-users-default .zTree-input-node-hover-bg,.tree-and-users-default .zTree-node-hover-bg{
     background: none !important;
 }
-.tree-and-users-default .icon-tree-close:before{
-    content: "\e72c";
-    font-size: 16px;
-}
-.tree-and-users-default .icon-screen-icon:before {
-    content: "\e72a";
-    font-size: 16px;
+.tree-and-users-default .icon-tree-close:before,.tree-and-users-default .icon-screen-icon:before{
+    display: none;
 }
 .tree-and-users-default li .zTree-node{
    margin-left: 10px ;
@@ -2181,18 +2179,19 @@ body, html {
 
 .tree-and-users-default .zTree-node-li.level0{
     border-left: none;
+    margin: 0;
 }
 
-.tree-and-users-default .zTree-node-li.level0:before {
-    content: "";
-    display: block;
-    position: absolute;
-    width: 1px;
-    height: 20px;
-    left: 0;
-    top: 24px;
-    border-left: 1px dashed #fff;
-}
+/*.tree-and-users-default .zTree-node-li.level0:before {*/
+    /*content: "";*/
+    /*display: block;*/
+    /*position: absolute;*/
+    /*width: 1px;*/
+    /*height: 20px;*/
+    /*left: 0;*/
+    /*top: 24px;*/
+    /*border-left: 1px dashed #fff;*/
+/*}*/
 
 .tree-and-users-default ul.level1 li:last-child:after {
     content: "";
@@ -2202,7 +2201,7 @@ body, html {
     height: 20px;
     border-left: 1px solid #021034;
     bottom: -5px;
-    left: -31px;
+    left: -1px;
 }
 .tree-and-users-default li .zTree-node:before{
     content: "";
@@ -2225,11 +2224,36 @@ body, html {
     top: 50%;
     margin-top: -1px;
 }
+.tree-and-users-default .zTree-node-li.level1:last-child:after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 1px;
+    height: 20px;
+    border-left: 1px solid #021034;
+    bottom: -5px;
+    left: -1px;
+}
+.tree-and-users-default .zTree-node-li span.button.switch{
+    display: inline-block;
+    background: url(../img/ico_close_white.png) no-repeat;
+    width: 21px;
+    position: relative;
+    top: 6px;
+    left: 22px;
+    z-index: 2;
+}
+.tree-and-users-default .zTree-node-li span.button.switch.noline_open{
+    background: url(../img/ico_open_white.png) no-repeat;
+}
+.tree-and-users-default .zTree-node-li span{
+    padding-left: 5px;
+}
 /*部门树样式覆盖*/
 .tree-and-users-dept{
     width: auto !important;
     position: relative;
-    overflow: hidden;
+    overflow: hidden !important;
     height: 285px;
     background-color: #fff;
     overflow-y: auto !important;
@@ -2250,7 +2274,7 @@ body, html {
     border-left: 1px dashed #333;
 }
 .tree-and-users-dept .zTree-node-li.level0 {
-    border-left: none;
+    /*border-left: none;*/
 }
 .tree-and-users-dept .zTree-node-li.level0:before{
     border-left: 1px dashed #333;
@@ -2341,4 +2365,14 @@ body, html {
 }
 .project-introduction-add .layui-layer-btn-l{
     text-align: center;
+}
+
+.tree-and-users-dept .zTree-node-li.level1:last-child:after {
+    border-left: 1px solid #fff;
+}
+.tree-and-users-dept .zTree-node-li span.button.switch.noline_open {
+    background: url(../img/ico_open_gray.png) no-repeat;
+}
+.tree-and-users-dept .zTree-node-li span.button.switch{
+    background: url(../img/ico_close_gray.png) no-repeat;
 }

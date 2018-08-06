@@ -258,17 +258,56 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         List<KnowledgeRel> knowledgeRelList = new ArrayList<>(knowledgeIdList.size());
         List<KnowledgeLog> knowledgeLogs = new ArrayList<>(knowledgeIdList.size());
         String libraryId = myLibrary.getId();
+        Map<String, String> knowledgeIdAndShareIdMap = shareService.getSharedKnowledgeIdAndShareIdMap(knowledgeIdList);
+        String corpCode = ExecutionContext.getCorpCode();
+        List<Share> shareList = new ArrayList<>();
         for (String knId : knowledgeIdList) {
+            String shareId = knowledgeIdAndShareIdMap.get(knId);
             KnowledgeRel knowledgeRel = new KnowledgeRel();
             knowledgeRel.setKnowledgeId(knId);
-            knowledgeRel.setShareId("");
+            knowledgeRel.setShareId(shareId);
             knowledgeRel.setLibraryId(libraryId);
             knowledgeRelList.add(knowledgeRel);
             knowledgeLogs.add(new KnowledgeLog(knId, libraryId, KnowledgeConstant.LOG_COPY));
+            if(StringUtils.isEmpty(shareId)){
+                shareList.add(getInitShare(knowledgeIdAndShareIdMap, corpCode, knId));
+            }
+        }
+
+        if (shareList.size() > 0) {
+            shareService.batchSave(shareList);
+            List<Statistic> statistics = new ArrayList<>(shareList.size());
+            for (Share saveShared : shareList) {
+                String sharedId = saveShared.getId();
+                knowledgeIdAndShareIdMap.put(saveShared.getKnowledgeId(), sharedId);
+                statistics.add(new Statistic(sharedId, 0, 0, 0));
+            }
+
+            statisticService.batchSave(statistics);
+            for (KnowledgeRel knowledgeRel : knowledgeRelList) {
+                String shareId = knowledgeIdAndShareIdMap.get(knowledgeRel.getKnowledgeId());
+                knowledgeRel.setShareId(shareId);
+            }
         }
 
         knowledgeRelService.batchSave(knowledgeRelList);
         knowledgeLogService.batchSave(knowledgeLogs);
+        StringBuilder shareIds = new StringBuilder();
+        knowledgeIdAndShareIdMap.values().forEach(shareId -> {
+            shareIds.append(shareId).append(",");
+        });
+        shareService.updateCopyCount(shareIds.toString());
+    }
+
+    private Share getInitShare(Map<String, String> knowledgeIdAndShareIdMap, String corpCode, String knId) {
+        Share shareKnowledge = new Share();
+        shareKnowledge.setShareType(KnowledgeConstant.SHARE_NO_PASSWORD);
+        shareKnowledge.setExpireTime(KnowledgeConstant.SHARE_PERMANENT_VALIDITY);
+        shareKnowledge.setKnowledgeId(knId);
+        shareKnowledge.setPassword("");
+        shareKnowledge.setCorpCode(corpCode);
+        knowledgeIdAndShareIdMap.put(knId, "NEW_ADD");
+        return shareKnowledge;
     }
 
     /**
@@ -505,14 +544,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
                 String shareId = knowledgeIdAndShareIdMap.get(knowledgeId);
                 if (StringUtils.isEmpty(shareId)) {
-                    Share shareKnowledge = new Share();
-                    shareKnowledge.setShareType(KnowledgeConstant.SHARE_NO_PASSWORD);
-                    shareKnowledge.setExpireTime(KnowledgeConstant.SHARE_PERMANENT_VALIDITY);
-                    shareKnowledge.setKnowledgeId(knowledgeId);
-                    shareKnowledge.setPassword("");
-                    shareKnowledge.setCorpCode(corpCode);
-                    knowledgeIdAndShareIdMap.put(knowledgeId, "NEW_ADD");
-                    shareList.add(shareKnowledge);
+                    shareList.add(getInitShare(knowledgeIdAndShareIdMap, corpCode, knowledgeId));
                 }
 
                 KnowledgeRel knowledgeRel = new KnowledgeRel();

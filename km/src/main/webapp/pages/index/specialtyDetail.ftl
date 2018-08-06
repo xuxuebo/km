@@ -1,66 +1,44 @@
-<aside class="y-aside y-aside-professional" id="YAside">
-    <div class="y-aside__title">
-        <span class="yfont-icon">&#xe650;</span><span class="txt">菜单</span>
-    </div>
-    <ul class="y-aside__menu">
-        <li class="y-menu__item y-user y-user-tree">
-            <a href="#user" class="y-menu__item__title y-aside__menu__item__title"
-               style="position: absolute;padding:0;top: -28px;left: -12px;">
-                <span class="yfont-icon">&#xe643;</span><span class="txt">用户管理</span>
-            </a>
-        </li>
-    </ul>
-</aside>
-<div class="y-content">
-    <div class="y-content-body" id="yunContentBody">
-        <h4 class="y-content__title">配电线路</h4>
-        <div class="y-content-professional" style="background: none;">
-            <div class="y-content-professional-file-box">
-                <div class="y-project-activity" style="width: 475px;">
-                    <div class="y-project-file-inline">
-                        <div class="y-project-activity-info">贡献榜单</div>
-                    </div>
-                    <div class="y-project-activity-list">
-                        <ul class="y-content-professional-rank-list"></ul>
-                    </div>
+<div class="y-content-body" id="yunContentBody">
+    <h4 class="y-content__title">配电线路</h4>
+    <div class="y-content-professional" style="background: none;">
+        <div class="y-content-professional-file-box">
+            <div class="y-project-activity" style="width: 475px;">
+                <div class="y-project-file-inline">
+                    <div class="y-project-activity-info">贡献榜单</div>
                 </div>
-                <div class="y-project-file">
-                    <div class="y-project-file-inline">
-                        <div class="y-project-file-info">项目文件</div>
-                        <div class="y-project-file-more">
-                            <a href="javascript:void(0);" class="project-upload" style="padding-right: 20px;">
-                                上传文件
-                            </a>
-                            <a href="#" onclick="fileSelectMore('project')">查看更多</a>
-                        </div>
-                    </div>
-                    <div class="y-project-file-list">
-                        <ul class="y-content-professional-file-list"></ul>
-                    </div>
+                <div class="y-project-activity-list">
+                    <ul class="y-content-professional-rank-list"></ul>
                 </div>
             </div>
-            <div class="y-content-professional-dynamic y-project-activity" style="margin-top: 15px;">
-                <div class="y-content-professional-wrap">
-                    <span class="y-content-professional-title">动态</span>
+            <div class="y-project-file">
+                <div class="y-project-file-inline">
+                    <div class="y-project-file-info">项目文件</div>
+                    <div class="y-project-file-more">
+                        <a href="javascript:void(0);" class="project-upload" style="padding-right: 20px;">
+                            上传文件
+                        </a>
+                        <a href="#" onclick="fileSelectMore('project')">查看更多</a>
+                    </div>
+                </div>
+                <div class="y-project-file-list">
+                    <ul class="y-content-professional-file-list"></ul>
+                </div>
+            </div>
+        </div>
+        <div class="y-content-professional-dynamic y-project-activity" style="margin-top: 15px;">
+            <div class="y-content-professional-wrap">
+                <span class="y-content-professional-title">动态</span>
                     <span class="y-content-professional-more">
                         <a href="#" onclick="fileSelectMore('activity')">查看更多</a>
                     </span>
-                </div>
-                <ul class="y-content-professional-dynamic-list"></ul>
             </div>
+            <ul class="y-content-professional-dynamic-list"></ul>
         </div>
     </div>
-    <footer class="y-footer footer-bar">
-        国家电网江苏省电力公司 ©苏ICP备15007035号-1
-    </footer>
 </div>
-<script type="text/template" id="tplYunManageList">
-    <% for(var i=0;i< data.length;i++) {%>
-    <div class="y-menu-item-title" onclick="loadManage('<%= data[i].id %>')">
-        <%= data[i].name %>
-    </div>
-    <% }%>
-</script>
+<footer class="y-footer footer-bar">
+    国家电网江苏省电力公司 ©苏ICP备15007035号-1
+</footer>
 <script type="text/template" id="tplYunFileList">
     <table class="y-table">
         <tbody>
@@ -140,24 +118,8 @@
     <%}%>
 </script>
 <script>
-    var libraryId = '';
+    var libraryId = '${libraryId!}';
     $(function () {
-        $.ajax({
-            type: "POST",
-            url: pageContext.resourcePath + '/library/listLibrary?type=SPECIALTY_LIBRARY',
-            dataType: 'json',
-            success: function (data) {
-                $('.y-user-tree').append(_.template($("#tplYunManageList").html())({data: data}));
-                var h = $(".y-user").height() + 23;
-                $(".y-user").height(h);
-                $(".y-menu-item-title").eq(0).addClass("y-menu-item-title-active");
-                $(".y-menu-item-title").eq(0).trigger('click');
-                $(".y-user-tree").delegate(".y-menu-item-title", "click", function () {
-                    $(this).addClass("y-menu-item-title-active").siblings().removeClass("y-menu-item-title-active");
-                });
-            }
-        });
-
         //上传文件
         $('.project-upload').on('click', function (e) {
             e.preventDefault();
@@ -191,7 +153,7 @@
                             url: '/km/library/addToLibrary',
                             data: {
                                 "fileIds": fileIds,
-                                "libraryIds": libraryId
+                                "libraryIds": "${libraryId!}"
                             },
                             success: function (data) {
                                 if (data.success) {
@@ -215,13 +177,10 @@
                 }
             });
         });
-    })
 
-    function loadManage(id) {
-        libraryId = id;
         $.ajax({
             type: "POST",
-            url: pageContext.resourcePath + '/knowledge/searchKnowledge?page=1&pageSize=100&libraryId=' + id,
+            url: pageContext.resourcePath + '/knowledge/searchKnowledge?page=1&pageSize=100&libraryId=${libraryId!}',
             dataType: 'json',
             success: function (data) {
                 $(".y-content-professional-file-list").html(_.template($("#tplYunFileList").html())({list: data.rows}));
@@ -230,7 +189,7 @@
 
         $.ajax({
             type: "POST",
-            url: pageContext.resourcePath + '/library/dynamic?page=1&pageSize=10 &libraryId=' + id,
+            url: pageContext.resourcePath + '/library/dynamic?page=1&pageSize=10 &libraryId=${libraryId!}',
             dataType: 'json',
             success: function (data) {
                 $(".y-content-professional-dynamic-list").html(_.template($("#tplYunDynamicList").html())({list: data.rows}));
@@ -239,25 +198,26 @@
 
         $.ajax({
             type: "POST",
-            url: pageContext.resourcePath + '/library/rank?libraryId=' + id,
+            url: pageContext.resourcePath + '/library/rank?libraryId=${libraryId!}',
             dataType: 'json',
             success: function (result) {
                 $(".y-content-professional-rank-list").html(_.template($("#tplYunRankList").html())({list: result}));
             }
         });
-    }
+
+    })
 
     //查看更多
     function fileSelectMore(type) {
         var $yContainer = $('.y-content');
-        $yContainer.load('${ctx!}/km/front/fileList?libraryId=' + libraryId + "&type=" + type);
+        $yContainer.load('${ctx!}/km/front/fileList?libraryId=${libraryId!}&type=' + type);
     }
     //下载
     function downloadKnowledge(id) {
         PEBASE.ajaxRequest({
             url: pageContext.rootPath + '/km/knowledge/downloadKnowledge2',
             async: false,
-            data: {'knowledgeIds': id, libraryId: libraryId},
+            data: {'knowledgeIds': id, libraryId: "${libraryId!}"},
             success: function (data) {
                 if (data.success) {
                     downloadFile(data.data.fileUrl, data.data.name);

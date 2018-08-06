@@ -109,7 +109,7 @@ $(function () {
         }
 
         //从云库分享
-        $('.js-share-y').on('click', function () {
+        $('.js-share-y').off().on('click', function () {
             //我的云库弹框
             var knowledgeIds;
             var deptId;
@@ -224,13 +224,13 @@ $(function () {
                         //部门树
                         var yDeptOrgTree = {
                             isOpen: true,
-                            dataUrl: pageContext.rootPath + '/km/uc/user/listOrgTreeAndUsers',
+                            dataUrl: pageContext.rootPath + '/km/uc/organize/listTree',
                             clickNode: function (treeNode) {
                                 deptId = treeNode.id;
                             },
                             treePosition: 'inputDropDown'
                         };
-                        PEMO.ZTREE.initTree('ySharedeptTree', yDeptOrgTree);
+                        PEMO.ZTREE.initTree('ySharedeptTree', yDeptOrgTree,true);
                         var treeObj = $.fn.zTree.getZTreeObj("ySharedeptTree");
                         treeObj.expandAll(true);
 
@@ -241,7 +241,7 @@ $(function () {
 
         });
         //从本地分享
-        $('.js-share-local').on('click',function (e) {
+        $('.js-share-local').off().on('click',function (e) {
             var deptId, fileIds = "";
             PEMO.DIALOG.selectorDialog({
                 content: pageContext.rootPath + '/km/knowledge/openUpload',
@@ -279,7 +279,7 @@ $(function () {
                             },
                             treePosition: 'inputDropDown'
                         };
-                        PEMO.ZTREE.initTree('deptTree', deptOrgTree);
+                        PEMO.ZTREE.initTree('deptTree', deptOrgTree,true);
                         var treeObj = $.fn.zTree.getZTreeObj("deptTree");
                         treeObj.expandAll(true);
                         $('.js-file-upload .layui-layer-btn0').html('确定');
@@ -371,21 +371,14 @@ $(function () {
                 return false;
             }
             knowledgeIds = knowledgeIds.substring(0, knowledgeIds.length - 1);
-            var shareIdArr = table.getPubLicShareId();
-            var shareIds = "";
-            for (var i = 0; i < shareIdArr.length; i++) {
-                shareIds += shareIdArr[i] + ",";
-            }
-            shareIds = shareIds.substring(0, shareIds.length - 1);
+
             PEMO.DIALOG.confirmL({
                 content: '<div><h3 class="pe-dialog-content-head">确定复制选中的文件？</h3><p class="pe-dialog-content-tip">确认后,可在我的云库内查看。 </p></div>',
                 btn1: function () {
 
                     PEBASE.ajaxRequest({
                         url: pageContext.rootPath + '/km/knowledge/copyToMyLibrary',
-                        data: {
-                            "knowledgeIds": knowledgeIds, "shareIds": shareIds
-                        },
+                        data: {"knowledgeIds": knowledgeIds},
                         success: function (data) {
                             if (data.success) {
                                 PEMO.DIALOG.tips({
@@ -517,9 +510,7 @@ $(function () {
         },
         treePosition: 'inputDropDown'
     };
-    PEMO.ZTREE.initTree('orgTreeAndUsers', listOrgTreeAndUsers);
-    var OrgTreeObj = $.fn.zTree.getZTreeObj("orgTreeAndUsers");
-    // OrgTreeObj.expandAll(true);
+    PEMO.ZTREE.initTree('orgTreeAndUsers', listOrgTreeAndUsers,true);
 
     // 专业
     function initSpecialty() {
@@ -718,7 +709,7 @@ $('.y-share-table-main-panel').delegate('.js-opt-share', 'click', function () {
                 },
                 treePosition: 'inputDropDown',
             };
-            PEMO.ZTREE.initTree('editOrgTree', settingInputTree);
+            PEMO.ZTREE.initTree('editOrgTree', settingInputTree,true);
             var treeObj = $.fn.zTree.getZTreeObj("editOrgTree");
             treeObj.expandAll(true);
         }

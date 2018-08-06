@@ -15,7 +15,7 @@
           type="text/css"/>
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/pe-common.css?_v=${(resourceVersion)!}"
           type="text/css">
-    <link rel="stylesheet" href="//at.alicdn.com/t/font_700396_q365abcqxks.css" type="text/css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_700396_ee9lvh7z3mk.css" type="text/css">
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/index/css/index.css">
     <script>
         var pageContext = {
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.excheck.js?_v=0.1"></script>
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.exedit.js?_v=0.1"></script>
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.mCustomScrollbar.concat.min.js?_v=0.1"></script>
-    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/pro_exam_base.js"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/pro_exam_base.js"></script>
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/echarts-4.1.js"></script>
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/require.js"></script>
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/common.js"></script>
@@ -81,12 +81,11 @@
     </div>
     <nav class="y-nav">
         <ul class="y-nav__link">
-            <li data-type="index" class="y-nav__link__item active"><span class="txt">云库</span></li>
+            <li data-type="index" class="y-nav__link__item active"><span class="txt">我的云库</span></li>
             <li data-type="dataShare" class="y-nav__link__item"><span class="txt">分享</span></li>
             <li data-type="majorProject" class="y-nav__link__item"><span class="txt">重点项目</span></li>
-            <li data-type="professionalClassification" class="y-nav__link__item"><span class="txt">专业分类</span></li>
-            <li data-type="dataStatistics" class="y-nav__link__item"><span class="txt">数据统计</span></li>
-            <li data-type="publicLibrary" class="y-nav__link__item"><span class="txt">我的云库</span></li>
+            <li data-type="specialty" class="y-nav__link__item"><span class="txt">专业分类</span></li>
+            <#--<li data-type="dataStatistics" class="y-nav__link__item"><span class="txt">数据统计</span></li>-->
         <#--<#if admin?? && admin>-->
             <li data-type="adminSetting" class="y-nav__link__item"><span class="txt">设置</span></li>
         <#--</#if>-->
