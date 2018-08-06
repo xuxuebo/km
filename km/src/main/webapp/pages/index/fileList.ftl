@@ -8,6 +8,7 @@
             </#if>
         </h4>
         <div class="y-content__opt__bar">
+            <button class="y-btn y-btn__blue js-upload" id="filePicker" type="button">上传</button>
             <button class="y-btn y-btn__blue js-copy" type="button">复制到我的云库</button>
             <button class="y-btn y-btn__green js-download" type="button">下载</button>
             <div id="theList"></div>
@@ -35,7 +36,7 @@
             <th class="y-table__td name">
                 <span class="">文件名称</span>
             </th>
-            <th class="y-table__td name">
+            <th class="y-table__td size">
                 <span class="">上传人</span>
             </th>
             <th class="y-table__td size">
@@ -72,7 +73,7 @@
                     <%=item.knowledgeName%>
                 </div>
             </td>
-            <td class="y-table__td userName">
+            <td class="y-table__td size">
                 <%=item.userName%>
             </td>
             <td class="y-table__td size">
