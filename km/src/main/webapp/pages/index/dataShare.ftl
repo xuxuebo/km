@@ -2,7 +2,7 @@
     <div class="y-aside__title">
         <span class="yfont-icon">&#xe650;</span><span class="txt">菜单</span>
     </div>
-    <ul id="orgTreeAndUsers" class="ztree pe-tree-container"></ul>
+    <ul id="orgTreeAndUsers" class="tree-and-users-default ztree pe-tree-container"></ul>
 </aside>
 <section class="y-content">
     <div class="y-share-project">

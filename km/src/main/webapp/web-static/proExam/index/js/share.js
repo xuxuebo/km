@@ -9,35 +9,6 @@ $(function () {
     initLabel();
     initShareTab();
 
-    //获取筛选列表
-    getScreeningList();
-    function  getScreeningList(param) {
-        PEBASE.ajaxRequest({
-            url: pageContext.rootPath + '/km/library/listLibrary?type=PROJECT_LIBRARY',
-            data: param,
-            success: function (data) {
-                var _tpl = $('#tplScreeningList').html();
-                $('.js-major .y-share-project-type-item').html(_.template(_tpl)({list: data}));
-            }
-        });
-        PEBASE.ajaxRequest({
-            url: pageContext.rootPath + '/km/library/listLibrary?type=SPECIALTY_LIBRARY',
-            data: {},
-            success: function (data) {
-                var _tpl = $('#tplScreeningList').html();
-                $('.js-project .y-share-project-type-item').html(_.template(_tpl)({list: data}));
-            }
-        });
-        PEBASE.ajaxRequest({
-            url: pageContext.rootPath + '/km/km/label/list',
-            data: {},
-            success: function (data) {
-                var _tpl = $('#tplScreeningList').html();
-                $('.js-label .y-share-project-type-item').html(_.template(_tpl)({list: data}));
-            }
-        });
-    }
-
     //获取筛选类型
     var getTypeIds = function(){
         var majorIds = '';
@@ -206,7 +177,7 @@ $(function () {
             });
             function getDept(){
                 PEMO.DIALOG.confirmL({
-                    content: '<div class="y-content__table" id="ySharedeptTree"><div class="pe-stand-table-pagination"></div></div>',
+                    content: '<div class="y-content__table tree-and-users-default tree-and-users-dept ztree pe-tree-container mCustomScrollbar" id="ySharedeptTree"><div class="pe-stand-table-pagination"></div></div>',
                     area: ['750px', '520px'],
                     title: '部门',
                     btn: ['保存', '取消'],
@@ -271,7 +242,6 @@ $(function () {
         });
         //从本地分享
         $('.js-share-local').on('click',function (e) {
-            e.preventDefault();
             var deptId, fileIds = "";
             PEMO.DIALOG.selectorDialog({
                 content: pageContext.rootPath + '/km/knowledge/openUpload',
@@ -300,7 +270,7 @@ $(function () {
 
                         //部门树
                         $('.js-file-upload .layui-layer-content iframe').remove();
-                        $('.js-file-upload .layui-layer-content').html('<div id="deptTree"></div>');
+                        $('.js-file-upload .layui-layer-content').html('<ul id="deptTree" class="tree-and-users-default tree-and-users-dept ztree pe-tree-container mCustomScrollbar"></ul>');
                         var deptOrgTree = {
                             isOpen: true,
                             dataUrl: pageContext.rootPath + '/km/uc/organize/listTree',
@@ -350,6 +320,7 @@ $(function () {
 
                 }
                 });
+            return false;
         });
         //下载
         $('.js-download').on('click', function () {
@@ -542,7 +513,6 @@ $(function () {
                 'knowledgeName':''
             };
             $('.show-org-name').text(treeNode.name);
-            getScreeningList(param);
             initShareTab(param);
         },
         treePosition: 'inputDropDown'
