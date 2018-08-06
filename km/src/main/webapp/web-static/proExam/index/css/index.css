@@ -1708,7 +1708,7 @@ body, html {
     position: absolute;
     width: 28px;
     height: 11px;
-    background-image: url(../img/ico_arrow_top.png);
+    background-image: url('../img/ico_arrow_top.png');
     background-image: image-set(url('../img/ico_arrow_top.png') 1x, url('../img/ico_arrow_top@2x.png') 2x);
     background-image: -webkit-image-set(url('../img/ico_arrow_top.png') 1x, url('../img/ico_arrow_top@2x.png') 2x);
     top: 3px;
@@ -2110,4 +2110,105 @@ body, html {
     overflow: hidden;
     overflow-y: visible;
     height: 300px;
+}
+#orgTreeAndUsers{
+    background: #021034;
+    height: auto;
+    overflow: hidden;
+}
+#orgTreeAndUsers .node_name{
+    color: #fff;
+    font-size: 14px;
+}
+#orgTreeAndUsers .zTree-input-node-hover-bg,#orgTreeAndUsers .zTree-node-hover-bg{
+    background: none !important;
+}
+#orgTreeAndUsers .icon-tree-close:before{
+    content: "\e72c";
+    font-size: 16px;
+}
+#orgTreeAndUsers .icon-screen-icon:before {
+    content: "\e72a";
+    font-size: 16px;
+}
+#orgTreeAndUsers li .zTree-node{
+   margin-left: 10px ;
+}
+#orgTreeAndUsers li .zTree-node:before{
+    content: "";
+    width: 20px;
+    border-bottom: 1px dashed #fff;
+    display: block;
+    height: 0;
+    position: absolute;
+    top: 50%;
+    margin-top: -1px;
+    left: -20px;
+}
+#orgTreeAndUsers .icon-tree-dot:before {
+    content: "";
+    width: 20px;
+    border-bottom: 1px dashed #fff;
+    display: block;
+    height: 0;
+    position: absolute;
+    top: 50%;
+    margin-top: -1px;
+}
+#orgTreeAndUsers li{
+    position: relative;
+    border-left: 1px dashed #fff;
+    padding: 0;
+    margin: 0 0 0 29px;
+}
+#orgTreeAndUsers li .zTree-node{
+    padding-left: 0 !important;
+}
+#orgTreeAndUsers li .zTree-node.curSelectedNode .node_name{
+    color: #338BF8;
+}
+#orgTreeAndUsers li .zTree-node,#orgTreeAndUsers li .zTree-node.curSelectedNode,#orgTreeAndUsers .zTree-input-node-hover-bg, #orgTreeAndUsers .zTree-node-hover-bg{
+    background-color: #021034 !important;
+}
+#orgTreeAndUsers li .zTree-node{
+    left: -20px;
+}
+#orgTreeAndUsers li .zTree-node .icon-tree-dot:before{
+    display: none;
+}
+#orgTreeAndUsers li .zTree-node .icon-tree-dot{
+    display: none;
+}
+#orgTreeAndUsers li #orgTreeAndUsers_1_a:before{
+    border-bottom: none;
+}
+
+#orgTreeAndUsers li{
+    position: relative;
+}
+
+#orgTreeAndUsers .zTree-node-li.level0{
+    border-left: none;
+}
+
+#orgTreeAndUsers .zTree-node-li.level0:before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 1px;
+    height: 20px;
+    left: 0;
+    top: 24px;
+    border-left: 1px dashed #fff;
+}
+
+#orgTreeAndUsers ul.level1 li:last-child:after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 1px;
+    height: 20px;
+    border-left: 1px solid #021034;
+    bottom: -5px;
+    left: -31px;
 }

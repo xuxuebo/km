@@ -15,7 +15,7 @@
           type="text/css"/>
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/pe-common.css?_v=${(resourceVersion)!}"
           type="text/css">
-    <link rel="stylesheet" href="//at.alicdn.com/t/font_700396_49emqhcpus8.css" type="text/css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_700396_q365abcqxks.css" type="text/css">
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/index/css/index.css">
     <script>
         var pageContext = {
