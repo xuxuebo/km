@@ -61,7 +61,7 @@
         //ie9不支持Placeholder问题
         PEBASE.isPlaceholder();
         var settingUrl = {
-            dataUrl: pageContext.rootPath + '/uc/organize/manage/listTree',
+            dataUrl: pageContext.rootPath + '/uc/organize/listTree',
             optUrl: {
                 deleUrl: pageContext.rootPath + '/uc/organize/manage/delete',
                 deleContent: '<div><h3 class="pe-dialog-content-head">确定要删除这个部门？</h3>' +
@@ -127,7 +127,7 @@
                     success: function () {
                         //初始化弹框里面的input类型的树状功能：
                         var settingInputTree = {
-                            dataUrl: pageContext.rootPath + '/uc/organize/manage/listTree',
+                            dataUrl: pageContext.rootPath + '/uc/organize/listTree',
                             clickNode: function (treeNode) {
                                 $('.pe-input-tree-wrap').find('.pe-tree-show-name').val(treeNode.name);
                                 $('.pe-input-tree-wrap').find('.pe-tree-show-id').val(treeNode.id);
@@ -203,7 +203,7 @@
                     success: function () {
                         //初始化弹框里面的input类型的树状功能：
                         var settingInputTree = {
-                            dataUrl: pageContext.rootPath + '/uc/organize/manage/listTree',
+                            dataUrl: pageContext.rootPath + '/uc/organize/listTree',
                             clickNode: function (treeNode) {
                                 $('.pe-input-tree-wrap').find('.pe-tree-show-name').val(treeNode.name);
                                 $('.pe-input-tree-wrap').find('.pe-tree-show-id').val(treeNode.id);

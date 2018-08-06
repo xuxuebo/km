@@ -630,6 +630,9 @@ body, html {
 .y-table .y-table__td.size {
     width: 160px
 }
+.y-table .y-table__td.userName {
+    width: 160px
+}
 
 .y-table .y-table__td.upload-time {
     width: 160px
@@ -1573,7 +1576,8 @@ body, html {
     white-space: nowrap;
     box-sizing: border-box;
     line-height: 23px;
-    width: 100%;
+    width: 70%;
+    float: left;
 }
 .y-project-file-author-name{
     font-size: 14px;
@@ -1585,16 +1589,37 @@ body, html {
     text-overflow: ellipsis;
     float: left;
 }
-.y-project-file-time{
+.y-dynamic-file-author-name{
     font-size: 14px;
     color: #626262;
     line-height: 23px;
-    width: 80px;
-    padding-right: 14px;
+    width: 230px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     float: left;
+}
+.y-project-file-time{
+    font-size: 14px;
+    color: #626262;
+    line-height: 23px;
+    width: 150px;
+    padding-right: 14px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    float: right;
+}
+.y-dynamic-file-time{
+    font-size: 14px;
+    color: #626262;
+    line-height: 23px;
+    width: 150px;
+    padding-right: 14px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    float: right;
 }
 .y-project-activity{
     float: right;
@@ -1694,8 +1719,9 @@ body, html {
 .y-share-bar:hover .y-content__share__list{
     display: inline-block;
     position: absolute;
-    top: 50px;
+    top: 36px;
     z-index: 2;
+    padding-top: 14px;
 }
 .y-share-bar .arrow-top{
     display: inline-block;
@@ -1705,7 +1731,7 @@ body, html {
     background-image: url(../img/ico_arrow_top.png);
     background-image: image-set(url('../img/ico_arrow_top.png') 1x, url('../img/ico_arrow_top@2x.png') 2x);
     background-image: -webkit-image-set(url('../img/ico_arrow_top.png') 1x, url('../img/ico_arrow_top@2x.png') 2x);
-    top: -11px;
+    top: 3px;
     left: 50%;
     margin-left: -14px;
 }

@@ -4,6 +4,9 @@ $(function () {
     var orgTreeId;
     var orgType;
     var orgTreeData;
+    initSpecialty();
+    initProject();
+    initLabel();
     initShareTab();
 
     //获取筛选列表
@@ -250,7 +253,7 @@ $(function () {
                         //部门树
                         var yDeptOrgTree = {
                             isOpen: true,
-                            dataUrl: pageContext.rootPath + '/km/uc/user/manage/listOrgTreeAndUsers',
+                            dataUrl: pageContext.rootPath + '/km/uc/user/listOrgTreeAndUsers',
                             clickNode: function (treeNode) {
                                 deptId = treeNode.id;
                             },
@@ -300,7 +303,7 @@ $(function () {
                         $('.js-file-upload .layui-layer-content').html('<div id="deptTree"></div>');
                         var deptOrgTree = {
                             isOpen: true,
-                            dataUrl: pageContext.rootPath + '/km/uc/user/manage/listOrgTreeAndUsers',
+                            dataUrl: pageContext.rootPath + '/km/uc/organize/listTree',
                             clickNode: function (treeNode) {
                                 deptId = treeNode.id;
                             },
@@ -521,7 +524,7 @@ $(function () {
     //初始化树
     var listOrgTreeAndUsers = {
         isOpen: true,
-        dataUrl: pageContext.rootPath + '/km/uc/user/manage/listOrgTreeAndUsers',
+        dataUrl: pageContext.rootPath + '/km/uc/user/listOrgTreeAndUsers',
         clickNode: function (treeNode) {
             //筛选条件全部恢复到全部
             $('.y-share-project-type-list').each(function(){
@@ -547,6 +550,61 @@ $(function () {
     PEMO.ZTREE.initTree('orgTreeAndUsers', listOrgTreeAndUsers);
     var OrgTreeObj = $.fn.zTree.getZTreeObj("orgTreeAndUsers");
     // OrgTreeObj.expandAll(true);
+
+    // 专业
+    function initSpecialty() {
+        var tplSpecialtyTable = $('#tplSpecialtyTable').html();
+        var $specialtyList = $("#specialty-dd");
+        $.ajax({
+            type: "POST",
+            url: pageContext.resourcePath + '/library/listLibrary?type=SPECIALTY_LIBRARY',
+            dataType: 'json',
+            success: function (result) {
+                var table, initSort = {
+                    name: "desc",
+                    size: "desc",
+                    uploadTime: "desc"
+                };
+                $specialtyList.html(_.template(tplSpecialtyTable)({list: result, sort: initSort}));
+            }
+        });
+    }
+    // 项目
+    function initProject() {
+        var tplProjectTable = $('#tplSpecialtyTable').html();
+        var $projectList = $("#project-dd");
+        $.ajax({
+            type: "POST",
+            url: pageContext.resourcePath + '/library/listLibrary?type=PROJECT_LIBRARY',
+            dataType: 'json',
+            success: function (result) {
+                var table, initSort = {
+                    name: "desc",
+                    size: "desc",
+                    uploadTime: "desc"
+                };
+                $projectList.html(_.template(tplProjectTable)({list: result, sort: initSort}));
+            }
+        });
+    }
+    // 标签
+    function initLabel() {
+        var tplLabelTable = $('#tplLabelTable').html();
+        var $labelList = $("#label-dd");
+        $.ajax({
+            type: "POST",
+            url: pageContext.resourcePath + '/km/label/list',
+            dataType: 'json',
+            success: function (result) {
+                var table, initSort = {
+                    name: "desc",
+                    size: "desc",
+                    uploadTime: "desc"
+                };
+                $labelList.html(_.template(tplLabelTable)({list: result, sort: initSort}));
+            }
+        });
+    }
 });
 $("#searchBtn").on('click', function () {
     var $searchKeyword = $("#searchKeyword");

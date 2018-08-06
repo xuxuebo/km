@@ -8,7 +8,10 @@ import com.qgutech.km.base.vo.Rank;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.module.km.model.KnowledgeLog;
 import com.qgutech.km.module.km.model.Library;
+import com.qgutech.km.module.km.model.Share;
 import com.qgutech.km.module.km.service.KnowledgeLogService;
+import com.qgutech.km.module.km.service.KnowledgeRelService;
+import com.qgutech.km.module.km.service.KnowledgeService;
 import com.qgutech.km.module.km.service.LibraryService;
 import com.qgutech.km.module.uc.service.UserService;
 import org.apache.commons.collections.CollectionUtils;
@@ -35,6 +38,10 @@ public class LibraryController {
     private UserService userService;
     @Resource
     private KnowledgeLogService knowledgeLogService;
+    @Resource
+    private KnowledgeService knowledgeService;
+    @Resource
+    private KnowledgeRelService knowledgeRelService;
 
     /**
      * 一级公共库
@@ -201,5 +208,45 @@ public class LibraryController {
     @RequestMapping("dynamic")
     public Page<KnowledgeLog> dynamic(KnowledgeLog knowledgeLog, PageParam pageParam) {
         return knowledgeLogService.search(knowledgeLog, pageParam);
+    }
+
+    @RequestMapping("addToLibrary")
+    @ResponseBody
+    public JsonResult addToLibrary(Share share) {
+        JsonResult jsonResult = new JsonResult();
+        List<String> libraryIds = share.getLibraryIds();
+        if (CollectionUtils.isEmpty(libraryIds)) {
+            jsonResult.setSuccess(false);
+            jsonResult.setMessage("上传失败！");
+            return jsonResult;
+        }
+
+        List<String> fileIds = share.getFileIds();
+        List<String> knowledgeIds = share.getKnowledgeIds();
+        if (CollectionUtils.isNotEmpty(fileIds)) {
+            List<String> knowledgeIdList = knowledgeService.getIdsByFileIds(fileIds);
+            if (knowledgeIds == null) {
+                knowledgeIds = knowledgeIdList;
+                share.setKnowledgeIds(knowledgeIds);
+            } else {
+                knowledgeIds.addAll(knowledgeIdList);
+            }
+        }
+
+        if (CollectionUtils.isEmpty(knowledgeIds)) {
+            jsonResult.setSuccess(false);
+            jsonResult.setMessage("上传失败！");
+            return jsonResult;
+        }
+
+        try {
+            knowledgeRelService.addToLibrary(share);
+        } catch (Exception e) {
+            e.printStackTrace();
+            jsonResult.setSuccess(false);
+            jsonResult.setMessage("上传失败！");
+        }
+
+        return jsonResult;
     }
 }

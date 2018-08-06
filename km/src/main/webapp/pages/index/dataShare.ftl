@@ -11,23 +11,20 @@
             <div class="y-share-project-type">
                 <dl class="y-share-project-type-list js-major">
                     <dt>专业:</dt>
-                    <dd>
+                    <dd id="specialty-dd">
                         <span class="y-share-project-type-item-first y-active" data-typeid = ''>全部</span>
-                        <div class="y-share-project-type-item"></div>
                     </dd>
                 </dl>
                 <dl class="y-share-project-type-list js-project">
                     <dt>项目:</dt>
-                    <dd>
+                    <dd id="project-dd">
                         <span class="y-share-project-type-item-first  y-active" data-typeid = ''>全部</span>
-                        <div class="y-share-project-type-item"></div>
                     </dd>
                 </dl>
                 <dl class="y-share-project-type-list js-label">
                     <dt>标签:</dt>
-                    <dd>
+                    <dd id="label-dd">
                         <span class="y-share-project-type-item-first y-active" data-typeid = ''>全部</span>
-                        <div class="y-share-project-type-item"></div>
                     </dd>
                 </dl>
             </div>
@@ -54,14 +51,6 @@
         </div>
     </div>
 </section>
-
-<#--筛选模板-->
-<script type="text/template" id="tplScreeningList">
-    <%if(list.length !== 0){%>
-    <%_.each(list,function(item,i){%>
-        <span class="y-share-project-type-item" data-typeid = '<%=item.id%>'><%=item.name%></span>
-    <%})}%>
-</script>
 <#--表格模板-->
 <script type="text/template" id="tplShareTable">
     <table class="y-table">
@@ -121,6 +110,22 @@
     <%if(list.length === 0){%>
     <div class="table__none">--暂无数据--</div>
     <%}%>
+</script>
+<#--专业,项目-->
+<script type="text/template" id="tplSpecialtyTable">
+    <span class="y-share-project-type-item-first y-active" data-typeid = ''>全部</span>
+    <%if(list.length !== 0){%>
+    <%_.each(list,function(item,i){%>
+    <span class="y-share-project-type-item" data-typeid='<%=item.id%>'><%=item.name%></span>
+    <%})}%>
+</script>
+<#--专业-->
+<script type="text/template" id="tplLabelTable">
+    <span class="y-share-project-type-item-first y-active" data-typeid = ''>全部</span>
+    <%if(list.length !== 0){%>
+    <%_.each(list,function(item,i){%>
+    <span class="y-share-project-type-item" data-typeid='<%=item.id%>'><%=item.labelName%></span>
+    <%})}%>
 </script>
 <#--分享至公共库-->
 <script type="text/template" id="shareToPublic">

@@ -15,9 +15,12 @@ $(function () {
         url: url,
         dataType: 'json',
         success: function (result) {
-            data = result;
+            data = result.rows;
         }
     });
+    for (var i = 0; i < data.length; i++) {
+        data[i].knowledgeSize = YUN.conver(data[i].knowledgeSize);
+    }
     var table, initSort = {
         name: "desc",
         size: "desc",

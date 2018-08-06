@@ -42,7 +42,7 @@ public class OrganizeController {
      * @since 2016年11月1日17:40:42 author by WuKang@HF
      */
     @ResponseBody
-    @RequestMapping("/manage/listTree")
+    @RequestMapping("/listTree")
     public List<PeTreeNode> showTree() {
         return organizeService.listTreeNode();
     }
