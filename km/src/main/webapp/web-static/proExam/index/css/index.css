@@ -2160,19 +2160,19 @@ body, html {
 }
 
 .tree-and-users-default .zTree-node-li.level0{
-    border-left: none;
+    /*border-left: none;*/
 }
 
-.tree-and-users-default .zTree-node-li.level0:before {
-    content: "";
-    display: block;
-    position: absolute;
-    width: 1px;
-    height: 20px;
-    left: 0;
-    top: 24px;
-    border-left: 1px dashed #fff;
-}
+/*.tree-and-users-default .zTree-node-li.level0:before {*/
+    /*content: "";*/
+    /*display: block;*/
+    /*position: absolute;*/
+    /*width: 1px;*/
+    /*height: 20px;*/
+    /*left: 0;*/
+    /*top: 24px;*/
+    /*border-left: 1px dashed #fff;*/
+/*}*/
 
 .tree-and-users-default ul.level1 li:last-child:after {
     content: "";
@@ -2204,6 +2204,16 @@ body, html {
     position: absolute;
     top: 50%;
     margin-top: -1px;
+}
+.tree-and-users-default .zTree-node-li.level1:last-child:after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 1px;
+    height: 20px;
+    border-left: 1px solid #021034;
+    bottom: -5px;
+    left: -31px;
 }
 /*部门树样式覆盖*/
 .tree-and-users-dept{

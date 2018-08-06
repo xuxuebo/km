@@ -518,8 +518,6 @@ $(function () {
         treePosition: 'inputDropDown'
     };
     PEMO.ZTREE.initTree('orgTreeAndUsers', listOrgTreeAndUsers);
-    var OrgTreeObj = $.fn.zTree.getZTreeObj("orgTreeAndUsers");
-    // OrgTreeObj.expandAll(true);
 
     // 专业
     function initSpecialty() {
