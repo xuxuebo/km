@@ -177,7 +177,7 @@ $(function () {
             });
             function getDept(){
                 PEMO.DIALOG.confirmL({
-                    content: '<div class="y-content__table" id="ySharedeptTree"><div class="pe-stand-table-pagination"></div></div>',
+                    content: '<div class="y-content__table tree-and-users-default tree-and-users-dept ztree pe-tree-container mCustomScrollbar" id="ySharedeptTree"><div class="pe-stand-table-pagination"></div></div>',
                     area: ['750px', '520px'],
                     title: '部门',
                     btn: ['保存', '取消'],
@@ -270,7 +270,7 @@ $(function () {
 
                         //部门树
                         $('.js-file-upload .layui-layer-content iframe').remove();
-                        $('.js-file-upload .layui-layer-content').html('<div id="deptTree"></div>');
+                        $('.js-file-upload .layui-layer-content').html('<ul id="deptTree" class="tree-and-users-default tree-and-users-dept ztree pe-tree-container mCustomScrollbar"></ul>');
                         var deptOrgTree = {
                             isOpen: true,
                             dataUrl: pageContext.rootPath + '/km/uc/organize/listTree',
