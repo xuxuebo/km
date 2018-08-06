@@ -88,11 +88,17 @@
                        placeholder="请输入<%=data.firstName%>"
                        name="<%=data.firstInputName%>">
             </div>
-            <div class="pe-add-question-text">
+            <div class="pe-add-question-text show-user">
                 <span class="pe-label-name floatL introduction-info">负责人:</span>
-                <input class="pe-stand-filter-form-input" maxlength="50" type="text"
-                       placeholder="请输入负责人名称"
-                       name="<%=data.firstInputName%>">
+                <select class="pe-add-select-user">
+                    <option value="1">请选择</option>
+                    <option value="1">哈哈哈</option>
+                    <option value="2">测试2</option>
+                    <option value="3">测试3</option>
+                    <option value="4">测试4</option>
+                    <option value="5">测试5</option>
+                    <option value="6">测试6</option>
+                </select>
             </div>
             <div class="pe-add-question-text">
                 <span class="pe-label-name floatL introduction-info">上传图片:</span>
@@ -120,10 +126,12 @@
 <script>
     window.UEDITOR_HOME_URL = "${resourcePath!}/web-static/proExam/js/uEditor/";
 </script>
+<link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/jquery.searchableSelect.css">
 <script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/jquery.min.js"></script>
 <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/uEditor/ueditor.config.js"></script>
 <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/uEditor/ueditor.all.min.js"></script>
 <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/uEditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/jquery.searchableSelect.js"></script>
 <script>
     $(function () {
         var UEditorS;
@@ -195,6 +203,7 @@
                         },
                         success: function () {
                             UEditorS = UE.getEditor('webContainer');
+                            $('select').searchableSelect();
                         },
                         cancel: function () {
                             UEditorS.destroy();
