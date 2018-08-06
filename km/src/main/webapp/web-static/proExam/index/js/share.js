@@ -224,7 +224,7 @@ $(function () {
                         //部门树
                         var yDeptOrgTree = {
                             isOpen: true,
-                            dataUrl: pageContext.rootPath + '/km/uc/user/listOrgTreeAndUsers',
+                            dataUrl: pageContext.rootPath + '/km/uc/organize/listTree',
                             clickNode: function (treeNode) {
                                 deptId = treeNode.id;
                             },

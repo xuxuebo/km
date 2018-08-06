@@ -1,6 +1,7 @@
 $(function () {
     // 项目文件列表
     var tplYunTable = $('#tplYunTable').html();
+    var tplActivityTable = $('#tplActivityTable').html();
     var $yunTable = $("#yunTable");
     var data = [];
     // 项目文件列表url
@@ -29,7 +30,11 @@ $(function () {
     renderTable();
 
     function renderTable() {
-        $yunTable.html(_.template(tplYunTable)({list: data, sort: initSort}));
+        if (type == 'activity') {
+            $yunTable.html(_.template(tplActivityTable)({list: data, sort: initSort}));
+        } else {
+            $yunTable.html(_.template(tplYunTable)({list: data, sort: initSort}));
+        }
         table = initTable($yunTable);
     }
     //下载
@@ -119,6 +124,64 @@ $(function () {
             btn2: function () {
                 layer.closeAll();
             },
+        });
+    });
+
+    //上传文件
+    $('.js-upload').on('click',function (e) {
+        e.preventDefault();
+        var deptId, fileIds = "";
+        PEMO.DIALOG.selectorDialog({
+            content: pageContext.rootPath + '/km/knowledge/openUpload',
+            area: ['600px', '400px'],
+            title: '上传文件',
+            skin: 'js-file-upload',
+            btn: ['确定', '取消'],
+            btn1: function () {
+                var fileList = window.frames[0] && window.frames[0].document.getElementById('theList');
+                var length = $(fileList).find('li').length;
+                if (window.frames[0] && length == 0) {
+                    PEMO.DIALOG.tips({
+                        content: '您还未上传文件!',
+                        time: 2000
+                    });
+                    return;
+                }
+
+                for (var i = 0; i < length; i++) {
+                    fileIds += $($(fileList).find('li')[i]).attr("data-id");
+                    if (i < length - 1) {
+                        fileIds += ",";
+                    }
+                }
+
+                if (libraryId) {
+                    PEBASE.ajaxRequest({
+                        url: '/km/library/addToLibrary',
+                        data: {
+                            "fileIds": fileIds,
+                            "libraryIds": libraryId
+                        },
+                        success: function (data) {
+                            if (data.success) {
+                                layer.closeAll();
+                                PEMO.DIALOG.tips({
+                                    content: '操作成功',
+                                    time: 1000,
+                                });
+                                return false;
+                            }
+                            PEMO.DIALOG.alert({
+                                content: data.message,
+                                btn: ['我知道了'],
+                                yes: function () {
+                                    layer.closeAll();
+                                }
+                            });
+                        }
+                    });
+                }
+            }
         });
     });
 })

@@ -9,7 +9,7 @@
                     <span class="yfont-icon">&#xe643;</span><span class="txt">我的云库</span>
                 </a>
             </li>
-            <li class="y-menu__item public-yun">
+            <#--<li class="y-menu__item public-yun">
                 <a href="javascript:void(0);" class="y-menu__item__title y-aside__menu__item__title has-arrow">
                     <span class="yfont-icon">&#xe656;</span><span class="txt">公共库</span>
                 </a>
@@ -28,7 +28,7 @@
                 <a href="#share" class="y-menu__item__title y-aside__menu__item__title">
                     <span class="yfont-icon">&#xe643;</span><span class="txt">我的分享</span>
                 </a>
-            </li>
+            </li>-->
 
             <li class="y-menu__item recycle-yun">
                 <a href="#recycle" class="y-menu__item__title y-aside__menu__item__title">
@@ -286,7 +286,7 @@
     <div class="y-content__opt__bar">
         <button class="y-btn y-btn__blue js-upload" id="filePicker" type="button">上传</button>
         <button class="y-btn y-btn__green js-download" type="button">下载</button>
-        <button class="y-btn y-btn__green js-share" type="button">分享至公共库</button>
+        <#--<button class="y-btn y-btn__green js-share" type="button">分享至公共库</button>-->
         <button class="y-btn y-btn__orange js-newFolder" type="button">新建文件夹</button>
         <div id="theList"></div>
     </div>
