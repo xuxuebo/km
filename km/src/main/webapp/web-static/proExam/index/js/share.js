@@ -1,3 +1,9 @@
+function delayRenderLeaf() {
+    setTimeout(function() {
+        $(".tree-and-users-default li .zTree-node .before-node-icon:not(.icon-tree-dot)").closest('.zTree-node-li').children('span.switch').css('visibility', 'visible');
+    }, 100);
+}
+
 $(function () {
     /*初始化*/
     var typeIds;
@@ -228,9 +234,15 @@ $(function () {
                             clickNode: function (treeNode) {
                                 deptId = treeNode.id;
                             },
-                            treePosition: 'inputDropDown'
+                            treePosition: 'inputDropDown',
+                            callback: {
+                                onExpand: function() {
+                                    delayRenderLeaf();
+                                }
+                            }
                         };
                         PEMO.ZTREE.initTree('ySharedeptTree', yDeptOrgTree,true);
+                        delayRenderLeaf();
                         var treeObj = $.fn.zTree.getZTreeObj("ySharedeptTree");
                         treeObj.expandAll(true);
 
@@ -277,10 +289,16 @@ $(function () {
                             clickNode: function (treeNode) {
                                 deptId = treeNode.id;
                             },
-                            treePosition: 'inputDropDown'
+                            treePosition: 'inputDropDown',
+                            callback: {
+                                onExpand: function() {
+                                    delayRenderLeaf();
+                                }
+                            }
                         };
                         PEMO.ZTREE.initTree('deptTree', deptOrgTree,true);
                         var treeObj = $.fn.zTree.getZTreeObj("deptTree");
+                        delayRenderLeaf();
                         treeObj.expandAll(true);
                         $('.js-file-upload .layui-layer-btn0').html('确定');
                         $('.js-file-upload .layui-layer-btn0').addClass('layui-layer-save');
@@ -515,9 +533,20 @@ $(function () {
             $('.show-org-name').text(treeNode.name);
             initShareTab(param);
         },
+        callback: {
+            onExpand: function() {
+                delayRenderLeaf();
+            }
+        },
         treePosition: 'inputDropDown'
     };
     PEMO.ZTREE.initTree('orgTreeAndUsers', listOrgTreeAndUsers,true);
+
+    delayRenderLeaf();
+
+    $(".ztree").delegate('.before-node-icon', 'click', function() {
+        delayRenderLeaf();
+    });
 
     // 专业
     function initSpecialty() {
@@ -715,8 +744,14 @@ $('.y-share-table-main-panel').delegate('.js-opt-share', 'click', function () {
                     //$('.show-org-name').val(treeNode.name);
                 },
                 treePosition: 'inputDropDown',
+                callback: {
+                    onExpand: function() {
+                        delayRenderLeaf();
+                    }
+                }
             };
             PEMO.ZTREE.initTree('editOrgTree', settingInputTree,true);
+            delayRenderLeaf();
             var treeObj = $.fn.zTree.getZTreeObj("editOrgTree");
             treeObj.expandAll(true);
         }

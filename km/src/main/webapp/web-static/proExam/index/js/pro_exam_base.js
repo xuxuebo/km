@@ -567,7 +567,8 @@ var PEMO = {
                 beforeDrag: function () {
                     return false;
                 },
-                onCheck:zTreeOnCheck
+                onCheck:zTreeOnCheck,
+                onExpand: settingUrl.callback && settingUrl.callback.onExpand ? settingUrl.callback.onExpand : null
             };
             if(flag !== true){
                 callbackFlag.onClick = onClick;
@@ -606,7 +607,7 @@ var PEMO = {
                     removeHoverDom: removeHoverDom,
                     selectedMulti: false,
                     dblClickExpand: false,
-                    showLine: false,
+                    showLine: true,
                     fontCss: getFontCss
                 },
                 edit: {
@@ -630,6 +631,7 @@ var PEMO = {
             var zTree;
             $(function () {
                 //ztree 默认展开级别数
+                console.log(settingDbClick);
                 $.fn.zTree.init($('#' + domId), settingDbClick, nodesJson);
                 ztreeArgu.zTreeObj  = zTree = $.fn.zTree.getZTreeObj(domId);
                 zTree.opt = settingUrl.optUrl;

@@ -1212,7 +1212,8 @@ input:-moz-placeholder, input:-ms-input-placeholder, input::-moz-placeholder, in
 }
 
 .pe-tree-container .zTree-node-li span.button.switch {
-    display: none
+    display: none;
+    visibility: hidden;
 }
 
 #peZtreeMain .zTree-node-li .button.add, #peZtreeMain .zTree-node-li .button.edit, #peZtreeMain .zTree-node-li .button.moveDown, #peZtreeMain .zTree-node-li .button.moveUp, #peZtreeMain .zTree-node-li .button.remove {

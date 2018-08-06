@@ -2106,7 +2106,7 @@ body, html {
 /*树样式*/
 .tree-and-users-default{
     background: #021034;
-    height: auto;
+    height: 80%;
     overflow: hidden;
 }
 .tree-and-users-default .node_name{
@@ -2206,9 +2206,9 @@ body, html {
     display: block;
     position: absolute;
     width: 1px;
-    height: 20px;
+    height: 100%;
     border-left: 1px solid #021034;
-    bottom: -5px;
+    bottom: -14px;
     left: -1px;
 }
 .tree-and-users-default .zTree-node-li span.button.switch{
@@ -2220,7 +2220,7 @@ body, html {
     left: 22px;
     z-index: 2;
 }
-.tree-and-users-default .zTree-node-li span.button.switch.noline_open{
+.tree-and-users-default .zTree-node-li span.button.switch.center_open,.tree-and-users-default .zTree-node-li span.button.switch.bottom_open{
     background: url(../img/ico_open_white.png) no-repeat;
 }
 .tree-and-users-default .zTree-node-li span{
@@ -2268,9 +2268,12 @@ body, html {
 .tree-and-users-dept .zTree-node-li.level1:last-child:after {
     border-left: 1px solid #fff;
 }
-.tree-and-users-dept .zTree-node-li span.button.switch.noline_open {
+.tree-and-users-dept .zTree-node-li span.button.switch.center_open,.tree-and-users-dept .zTree-node-li span.button.switch.bottom_open {
     background: url(../img/ico_open_gray.png) no-repeat;
 }
 .tree-and-users-dept .zTree-node-li span.button.switch{
     background: url(../img/ico_close_gray.png) no-repeat;
+}
+#ySharedeptTree{
+    height: 400px;
 }
