@@ -2116,13 +2116,8 @@ body, html {
 .tree-and-users-default .zTree-input-node-hover-bg,.tree-and-users-default .zTree-node-hover-bg{
     background: none !important;
 }
-.tree-and-users-default .icon-tree-close:before{
-    content: "\e72c";
-    font-size: 16px;
-}
-.tree-and-users-default .icon-screen-icon:before {
-    content: "\e72a";
-    font-size: 16px;
+.tree-and-users-default .icon-tree-close:before,.tree-and-users-default .icon-screen-icon:before{
+    display: none;
 }
 .tree-and-users-default li .zTree-node{
    margin-left: 10px ;
@@ -2160,7 +2155,8 @@ body, html {
 }
 
 .tree-and-users-default .zTree-node-li.level0{
-    /*border-left: none;*/
+    border-left: none;
+    margin: 0;
 }
 
 /*.tree-and-users-default .zTree-node-li.level0:before {*/
@@ -2182,7 +2178,7 @@ body, html {
     height: 20px;
     border-left: 1px solid #021034;
     bottom: -5px;
-    left: -31px;
+    left: -1px;
 }
 .tree-and-users-default li .zTree-node:before{
     content: "";
@@ -2213,7 +2209,22 @@ body, html {
     height: 20px;
     border-left: 1px solid #021034;
     bottom: -5px;
-    left: -31px;
+    left: -1px;
+}
+.tree-and-users-default .zTree-node-li span.button.switch{
+    display: inline-block;
+    background: url(../img/ico_close_white.png) no-repeat;
+    width: 21px;
+    position: relative;
+    top: 6px;
+    left: 22px;
+    z-index: 2;
+}
+.tree-and-users-default .zTree-node-li span.button.switch.noline_open{
+    background: url(../img/ico_open_white.png) no-repeat;
+}
+.tree-and-users-default .zTree-node-li span{
+    padding-left: 5px;
 }
 /*部门树样式覆盖*/
 .tree-and-users-dept{
@@ -2256,4 +2267,10 @@ body, html {
 }
 .tree-and-users-dept .zTree-node-li.level1:last-child:after {
     border-left: 1px solid #fff;
+}
+.tree-and-users-dept .zTree-node-li span.button.switch.noline_open {
+    background: url(../img/ico_open_gray.png) no-repeat;
+}
+.tree-and-users-dept .zTree-node-li span.button.switch{
+    background: url(../img/ico_close_gray.png) no-repeat;
 }

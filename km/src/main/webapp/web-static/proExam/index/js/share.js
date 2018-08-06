@@ -230,7 +230,7 @@ $(function () {
                             },
                             treePosition: 'inputDropDown'
                         };
-                        PEMO.ZTREE.initTree('ySharedeptTree', yDeptOrgTree);
+                        PEMO.ZTREE.initTree('ySharedeptTree', yDeptOrgTree,true);
                         var treeObj = $.fn.zTree.getZTreeObj("ySharedeptTree");
                         treeObj.expandAll(true);
 
@@ -279,7 +279,7 @@ $(function () {
                             },
                             treePosition: 'inputDropDown'
                         };
-                        PEMO.ZTREE.initTree('deptTree', deptOrgTree);
+                        PEMO.ZTREE.initTree('deptTree', deptOrgTree,true);
                         var treeObj = $.fn.zTree.getZTreeObj("deptTree");
                         treeObj.expandAll(true);
                         $('.js-file-upload .layui-layer-btn0').html('确定');
@@ -493,9 +493,6 @@ $(function () {
         };
     }
     //初始化树
-    function zTreeOnCollapse(event, treeId, treeNode) {
-        alert(treeNode.tId + ", " + treeNode.name);
-    };
     var listOrgTreeAndUsers = {
         isOpen: true,
         dataUrl: pageContext.rootPath + '/km/uc/user/listOrgTreeAndUsers',
@@ -518,12 +515,9 @@ $(function () {
             $('.show-org-name').text(treeNode.name);
             initShareTab(param);
         },
-        callback: {
-            onCollapse: zTreeOnCollapse
-        },
         treePosition: 'inputDropDown'
     };
-    PEMO.ZTREE.initTree('orgTreeAndUsers', listOrgTreeAndUsers);
+    PEMO.ZTREE.initTree('orgTreeAndUsers', listOrgTreeAndUsers,true);
 
     // 专业
     function initSpecialty() {
@@ -722,7 +716,7 @@ $('.y-share-table-main-panel').delegate('.js-opt-share', 'click', function () {
                 },
                 treePosition: 'inputDropDown',
             };
-            PEMO.ZTREE.initTree('editOrgTree', settingInputTree);
+            PEMO.ZTREE.initTree('editOrgTree', settingInputTree,true);
             var treeObj = $.fn.zTree.getZTreeObj("editOrgTree");
             treeObj.expandAll(true);
         }

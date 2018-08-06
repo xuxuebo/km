@@ -32,7 +32,7 @@
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.excheck.js?_v=0.1"></script>
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.ztree.exedit.js?_v=0.1"></script>
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery.mCustomScrollbar.concat.min.js?_v=0.1"></script>
-    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/pro_exam_base.js"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/pro_exam_base.js"></script>
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/echarts-4.1.js"></script>
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/require.js"></script>
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/common.js"></script>
