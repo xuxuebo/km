@@ -1,6 +1,7 @@
 $(function () {
     // 项目文件列表
     var tplYunTable = $('#tplYunTable').html();
+    var tplActivityTable = $('#tplActivityTable').html();
     var $yunTable = $("#yunTable");
     var data = [];
     // 项目文件列表url
@@ -29,7 +30,11 @@ $(function () {
     renderTable();
 
     function renderTable() {
-        $yunTable.html(_.template(tplYunTable)({list: data, sort: initSort}));
+        if (type == 'activity') {
+            $yunTable.html(_.template(tplActivityTable)({list: data, sort: initSort}));
+        } else {
+            $yunTable.html(_.template(tplYunTable)({list: data, sort: initSort}));
+        }
         table = initTable($yunTable);
     }
     //下载

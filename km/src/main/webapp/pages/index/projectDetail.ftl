@@ -108,7 +108,7 @@
                             class="yfont-icon opt-item js-opt-download">&#xe64f;
                     </button>
                 </div>
-                <div class="y-table__filed_name" title="<%=item.knowledgeName%>">
+                <div class="y-table__filed_name type-<%=item.knowledgeType%>" title="<%=item.knowledgeName%>">
                     <%=item.knowledgeName%>
                 </div>
             </td>
