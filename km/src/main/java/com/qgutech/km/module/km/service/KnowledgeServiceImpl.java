@@ -18,11 +18,14 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -417,7 +420,20 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             params.put("start", pageParam.getStart());
         }
 
-        List<Knowledge> knowledgeList = jdbcTemplate.query("SELECT k.*" + sql, params, new BeanPropertyRowMapper(Knowledge.class));
+        List<Knowledge> knowledgeList = jdbcTemplate.query("SELECT k.*,kr.id relId" + sql, params, (resultSet, i) -> {
+            Knowledge k = new Knowledge();
+            k.setId(resultSet.getString("id"));
+            k.setKnowledgeName(resultSet.getString("knowledge_name"));
+            k.setCreateTime(resultSet.getDate("create_time"));
+            k.setCreateBy(resultSet.getString("create_by"));
+            k.setKnowledgeSize(resultSet.getLong("knowledge_size"));
+            k.setKnowledgeType(resultSet.getString("knowledge_type"));
+            k.setRelId(resultSet.getString("relId"));
+            k.setFileId(resultSet.getString("file_id"));
+            k.setCorpCode(resultSet.getString("corp_code"));
+            return k;
+        });
+
         if (CollectionUtils.isEmpty(knowledgeList)) {
             return page;
         }
@@ -430,8 +446,11 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
     private void setCreateNameAndDate(List<Knowledge> knowledgeList) {
         Set<String> userIdSet = knowledgeList.stream().map(Knowledge::getCreateBy).collect(Collectors.toSet());
         Map<String, String> userIdAndNameMap = userService.getUserIdAndNameMap(userIdSet);
+        String userId = ExecutionContext.getUserId();
         for (Knowledge k : knowledgeList) {
-            k.setUserName(userIdAndNameMap.get(k.getCreateBy()));
+            String createBy = k.getCreateBy();
+            k.setCanDelete(userId.equalsIgnoreCase(createBy));
+            k.setUserName(userIdAndNameMap.get(createBy));
             k.setCreateTimeStr(KnowledgeConstant.TIME_FORMAT.format(k.getCreateTime()));
         }
     }

@@ -642,18 +642,17 @@ $('.y-share-table-main-panel').delegate('.js-opt-download', 'click', function ()
 
 //删除
 $('.y-share-table-main-panel').delegate('.js-opt-delete', 'click', function () {
-    var knowledgeIds = $(this).data("id");
-    if (knowledgeIds == null || knowledgeIds == undefined || knowledgeIds == '') {
+    var relId = $(this).data("id");
+    if (relId == null || relId == undefined || relId == '') {
         return false;
     }
     PEMO.DIALOG.confirmL({
-        content: '<div><h3 class="pe-dialog-content-head">确定删除？</h3><p class="pe-dialog-content-tip">删除后，可在我的回收站找回。 </p></div>',
+        content: '<div><h3 class="pe-dialog-content-head">确定删除分享的知识吗？</h3><p class="pe-dialog-content-tip">删除后，可在我的云库中查看。 </p></div>',
         btn1: function () {
-
             PEBASE.ajaxRequest({
-                url: pageContext.rootPath + '/km/knowledge/delete',
+                url: pageContext.rootPath + '/km/knowledge/orgShare/deleteShare',
                 data: {
-                    "knowledgeIds": knowledgeIds
+                    "relId": relId
                 },
                 success: function (data) {
                     if (data.success) {

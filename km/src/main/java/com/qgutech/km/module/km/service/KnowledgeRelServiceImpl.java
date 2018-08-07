@@ -210,4 +210,21 @@ public class KnowledgeRelServiceImpl extends BaseServiceImpl<KnowledgeRel> imple
         knowledgeRelService.batchSave(knowledgeRelList);
         knowledgeLogService.batchSave(knowledgeLogList);
     }
+
+    @Override
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public void deleteByKnowledgeIdsAndLibraryId(List<String> knowledgeIds, String libraryId) {
+        if (CollectionUtils.isEmpty(knowledgeIds)
+                || StringUtils.isEmpty(libraryId)) {
+            throw new PeException("libraryId and knowledgeIds must be not empty!");
+        }
+
+        Conjunction conjunction = getConjunction();
+        conjunction.add(Restrictions.in(KnowledgeRel.KNOWLEDGE_ID, knowledgeIds));
+        conjunction.add(Restrictions.eq(KnowledgeRel.LIBRARY_ID, libraryId));
+        delete(conjunction);
+        List<KnowledgeLog> knowledgeLogs = new ArrayList<>(knowledgeIds.size());
+        knowledgeLogs.addAll(knowledgeIds.stream().map(knowledgeId -> new KnowledgeLog(knowledgeId, libraryId, KnowledgeConstant.LOG_DELETE)).collect(Collectors.toList()));
+        knowledgeLogService.batchSave(knowledgeLogs);
+    }
 }

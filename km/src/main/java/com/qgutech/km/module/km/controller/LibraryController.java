@@ -249,4 +249,29 @@ public class LibraryController {
 
         return jsonResult;
     }
+
+
+    @RequestMapping("delete")
+    @ResponseBody
+    public JsonResult delete(Share share) {
+        JsonResult jsonResult = new JsonResult();
+        List<String> knowledgeIds = share.getKnowledgeIds();
+        String libraryId = share.getShareLibraryId();
+        if (CollectionUtils.isEmpty(knowledgeIds) || StringUtils.isEmpty(libraryId)) {
+            jsonResult.setSuccess(false);
+            jsonResult.setMessage("删除失败！");
+            return jsonResult;
+        }
+
+        try {
+            knowledgeRelService.deleteByKnowledgeIdsAndLibraryId(knowledgeIds, libraryId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            jsonResult.setSuccess(false);
+            jsonResult.setMessage("删除失败！");
+        }
+
+        return jsonResult;
+    }
+
 }

@@ -107,6 +107,10 @@
                     <button type="button" title="点击下载" onclick="downloadKnowledge('<%=item.id%>')"
                             class="yfont-icon opt-item js-opt-download">&#xe64f;
                     </button>
+                    <%if(item.canDelete){%>
+                    <button type="button" title="删除" onclick="deleteKnowledge('<%=item.id%>')"
+                            class="yfont-icon opt-item js-opt-delete">&#xe65c;</button>
+                    <%}%>
                 </div>
                 <div class="y-table__filed_name type-<%=item.knowledgeType%>" title="<%=item.knowledgeName%>">
                     <%=item.knowledgeName%>
@@ -151,15 +155,14 @@
 
 
 <script>
+    var libraryId= '${libraryId!}';
     //查看更多
     function fileSelectMore(type) {
-        var libraryId = '${libraryId!}';
         var $yContainer = $('.y-content');
         $yContainer.load('${ctx!}/km/front/fileList?libraryId='+libraryId+"&type="+type);
     }
     //查看全文
     function selectProjectIntroduction() {
-        var libraryId = '${libraryId!}';
         var $yContainer = $('.y-content');
         $yContainer.load('${ctx!}/km/front/projectIntroduction?libraryId='+libraryId);
     }
@@ -168,7 +171,7 @@
         PEBASE.ajaxRequest({
             url: pageContext.rootPath + '/km/knowledge/downloadKnowledge2',
             async: false,
-            data: {'knowledgeIds': id, libraryId: "${libraryId!}"},
+            data: {'knowledgeIds': id, libraryId: libraryId},
             success: function (data) {
                 if (data.success) {
                     downloadFile(data.data.fileUrl, data.data.name);
@@ -186,6 +189,43 @@
         });
 
     }
-    var libraryId= '${libraryId!}';
+    //删除
+    function deleteKnowledge(id) {
+        PEMO.DIALOG.confirmL({
+            content: '<div><h3 class="pe-dialog-content-head">确定删除上传的知识吗？</h3><p class="pe-dialog-content-tip">删除后，可在我的云库中查看。 </p></div>',
+            btn1: function () {
+                PEBASE.ajaxRequest({
+                    url: pageContext.rootPath + '/km/library/delete',
+                    data: {
+                        "knowledgeIds": id,
+                        "shareLibraryId": libraryId
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            PEMO.DIALOG.tips({
+                                content: '操作成功',
+                                time: 1000,
+                            });
+                            layer.closeAll();
+                            //刷新列表
+                            route['YunCb']($yunContentBody, route.routes.yun, null, null);
+                        } else {
+                            PEMO.DIALOG.alert({
+                                content: data.message,
+                                btn: ['我知道了'],
+                                yes: function (index) {
+                                    layer.close(index);
+                                }
+                            });
+                        }
+
+                    }
+                });
+            },
+            btn2: function () {
+                layer.closeAll();
+            }
+        });
+    }
 </script>
 <script src="${resourcePath!}/web-static/proExam/index/js/projectDetail.js"></script>

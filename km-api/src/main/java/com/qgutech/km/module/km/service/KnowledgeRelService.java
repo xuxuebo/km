@@ -64,4 +64,14 @@ public interface KnowledgeRelService extends BaseService<KnowledgeRel> {
      * @since TangFD@HF 2018-8-3
      */
     void addToLibrary(Share share);
+
+    /**
+     * 根据知识Id集合和知识库Id删除关联信息
+     *
+     * @param knowledgeIds 知识Id集合，不可为空
+     * @param libraryId    知识库Id，不可为空
+     * @throws RuntimeException 当knowledgeIds为空，或者libraryId为空时
+     * @since TangFD@HF 2018-8-7
+     */
+    void deleteByKnowledgeIdsAndLibraryId(List<String> knowledgeIds, String libraryId);
 }

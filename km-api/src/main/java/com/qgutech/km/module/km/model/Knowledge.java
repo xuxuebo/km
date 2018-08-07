@@ -118,6 +118,10 @@ public class Knowledge extends BaseModel {
     private List<String> libraryIds;
     @Transient
     private String userName;
+    @Transient
+    private boolean canDelete = false;
+    @Transient
+    private String relId;
 
     public boolean isIncludeChild() {
         return includeChild;
@@ -338,5 +342,21 @@ public class Knowledge extends BaseModel {
 
     public String getUserName() {
         return userName;
+    }
+
+    public void setCanDelete(boolean canDelete) {
+        this.canDelete = canDelete;
+    }
+
+    public boolean isCanDelete() {
+        return canDelete;
+    }
+
+    public void setRelId(String relId) {
+        this.relId = relId;
+    }
+
+    public String getRelId() {
+        return relId;
     }
 }

@@ -644,4 +644,20 @@ public class KnowledgeController {
 
         return knowledgeService.searchOrgShare(knowledge, pageParam);
     }
+
+    @RequestMapping("orgShare/deleteShare")
+    @ResponseBody
+    public JsonResult deleteShare(String relId) {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            knowledgeRelService.delete(relId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            jsonResult.setSuccess(false);
+            jsonResult.setMessage("删除失败！");
+        }
+
+        return jsonResult;
+    }
+
 }
