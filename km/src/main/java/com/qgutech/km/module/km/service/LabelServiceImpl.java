@@ -4,7 +4,6 @@ import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseServiceImpl;
-import com.qgutech.km.base.vo.PeTreeNode;
 import com.qgutech.km.module.km.model.Label;
 import com.qgutech.km.module.km.model.LabelRel;
 import com.qgutech.km.utils.PeException;
@@ -21,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Administrator on 2018/6/25.
@@ -205,5 +205,26 @@ public class LabelServiceImpl extends BaseServiceImpl<Label> implements LabelSer
             label.setId(id);
         }
        return label;
+    }
+
+    @Override
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public List<String> saveLabelRel(LabelRel labelRel) {
+        if (labelRel == null
+                || StringUtils.isEmpty(labelRel.getKnowledgeId())) {
+            throw new PeException("labelRel invalid!");
+        }
+
+        String knowledgeId = labelRel.getKnowledgeId();
+        labelRelService.deleteByKnowledgeId(knowledgeId);
+        List<String> labelIds = labelRel.getLabelIds();
+        if (CollectionUtils.isEmpty(labelIds)) {
+            return new ArrayList<>(0);
+        }
+
+        List<LabelRel> labelRelList = new ArrayList<>(labelIds.size());
+        labelRelList.addAll(labelIds.stream().map(labelId ->
+                new LabelRel(knowledgeId, labelId, ExecutionContext.getCorpCode())).collect(Collectors.toList()));
+        return labelRelService.batchSave(labelRelList);
     }
 }

@@ -22,4 +22,14 @@ public interface LabelRelService extends BaseService<LabelRel> {
      * @since TangFD@HF 2018-7-27
      */
     List<String> getKnowledgeIdsByLabelIdAndUserIds(String labelId, List<String> userIds);
+
+    /**
+     * 根据知识Id删除所有标签关联信息
+     *
+     * @param knowledgeId 知识Id，不可为空
+     * @return 删除的记录数
+     * @throws RuntimeException 当knowledgeId为空时
+     * @since TangFD@HF 2018-8-7
+     */
+    int deleteByKnowledgeId(String knowledgeId);
 }

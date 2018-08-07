@@ -113,7 +113,7 @@ public class KnowledgeController {
                 knowledgeService.update(knowledge);
             }
 
-            return new JsonResult<>(true, JsonResult.SUCCESS);
+            return new JsonResult<>(true, knowledge.getId());
         } catch (PeException e) {
             return new JsonResult<>(false, e.getMessage());
         }

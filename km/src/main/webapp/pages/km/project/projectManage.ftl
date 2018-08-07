@@ -80,8 +80,8 @@
     <div>
         <form id="library_detail_form">
         <#-- 必要字段 测试数据 -->
-            <input type="hidden" name="libraryDetail.chargeIds" value="TangFD"/>
-            <input type="hidden" name="libraryDetail.summary" value="数据数据数据数据数据数据数据数据数据数据数据"/>
+            <#--<input type="hidden" name="libraryDetail.chargeIds" value="TangFD"/>-->
+            <#--<input type="hidden" name="libraryDetail.summary" value="数据数据数据数据数据数据数据数据数据数据数据"/>-->
             <div class="pe-add-question-text">
                 <span class="pe-label-name floatL introduction-info"><%=data.firstName%>:</span>
                 <input class="pe-stand-filter-form-input" maxlength="50" type="text"
@@ -90,7 +90,7 @@
             </div>
             <div class="pe-add-question-text show-user">
                 <span class="pe-label-name floatL introduction-info">负责人:</span>
-                <select class="pe-add-select-user">
+                <select class="pe-add-select-user" name="libraryDetail.chargeIds">
                     <option value="1">请选择</option>
                     <option value="1">哈哈哈</option>
                     <option value="2">测试2</option>
@@ -101,6 +101,8 @@
                 </select>
             </div>
             <div class="pe-add-question-text">
+                <input type="hidden" name="libraryDetail.faceId" value="">
+                <input type="hidden" name="libraryDetail.faceName" value="">
                 <span class="pe-label-name floatL introduction-info">上传图片:</span>
                 <a href="#" class="img-upload" onclick="projectImgUpload()">上传图片</a>
             <#--<div class="pe-add-question-text-img">-->
@@ -110,7 +112,7 @@
             <div class="pe-add-question-text">
                 <span class="pe-label-name floatL introduction-info">项目介绍:</span>
                 <!-- 加载编辑器的容器 -->
-                <textarea name="content" id="webContainer" cols="30" rows="10"
+                <textarea name="libraryDetail.summary" id="webContainer" cols="30" rows="10"
                           style="width:400px;height:400px;"></textarea>
             <#--<script id="webContainer" name="content" type="text/plain" style="width:400px;height:400px;"/>-->
             </div>
@@ -132,6 +134,7 @@
 <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/uEditor/ueditor.all.min.js"></script>
 <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/uEditor/lang/zh-cn/zh-cn.js"></script>
 <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/jquery.searchableSelect.js"></script>
+<script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery-peGrid.js"></script>
 <script>
     $(function () {
         var UEditorS;
@@ -141,13 +144,13 @@
         ];
         var exerciseManage = {
             init: function () {
-                // $('.pe-stand-table-wrap').peGrid({
-                //     url: pageContext.rootPath + '/library/manage/searchLibrary',
-                //     formParam: $('#projectManageForm').serializeArray(),
-                //     tempId: 'peExerManaTemp',
-                //     showTotalDomId: 'showTotal',
-                //     title: peTableTitle
-                // });
+                 $('.pe-stand-table-wrap').peGrid({
+                     url: pageContext.rootPath + '/library/manage/searchLibrary',
+                     formParam: $('#projectManageForm').serializeArray(),
+                     tempId: 'peExerManaTemp',
+                     showTotalDomId: 'showTotal',
+                     title: peTableTitle
+                 });
                 var _this = this;
                 _this.bind();
             },

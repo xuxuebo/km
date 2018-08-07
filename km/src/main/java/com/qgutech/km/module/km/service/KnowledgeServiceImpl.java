@@ -410,6 +410,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             page.setTotal(total);
         }
 
+        sql.append(" order by kr.create_time desc");
         if (pageParam.isAutoPaging()) {
             sql.append(" limit :searchCount offset :start");
             params.put("searchCount", pageParam.getPageSize());

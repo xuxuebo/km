@@ -29,7 +29,7 @@
             <div class="y-content-professional-wrap">
                 <span class="y-content-professional-title">动态</span>
                     <span class="y-content-professional-more">
-                        <a href="#" onclick="fileSelectMore('activity')">查看更多</a>
+                        <a href="#" onclick="fileSelectMore('activity')" style="color: #5c5c5c;">查看更多</a>
                     </span>
             </div>
             <ul class="y-content-professional-dynamic-list"></ul>

@@ -39,7 +39,7 @@
     </script>
 </head>
 
-<body style="background-color: #fff">
+<body class="upload-body" style="background-color: #fff">
 
 <div id="uploader" class="wu-example">
     <ul id="theList" class="file-list"></ul>
@@ -118,10 +118,11 @@
             }).then(function (data, textStatus, jqXHR) {
                 if (data.status == "FAILED") {//FAILED表示参数错误，不需要上传分片，结束文件上传
                     task.reject();
-                    uploader.skipFile(file);
+                   /* uploader.skipFile(file);*/
                     alert(data.processMsg);
                 } else if (data.status == "SUCCESS") {//SUCCESS表示分片已存在，不需要上传分片
                     task.reject();
+                    /* UploadComlate(file);*/
                 } else {//表示分片不存在，需要上传分片
                     task.resolve();
                 }
@@ -133,7 +134,7 @@
         }, afterSendFile: function (file) {
             console.log('afterSendFile', file)
             var chunksTotal = Math.ceil(file.size / chunkSize);
-            if (chunksTotal > 1) {
+            if (chunksTotal >= 1) {
                 //合并请求
                 var task = new $.Deferred();
                 $.ajax({
@@ -165,6 +166,7 @@
 
                 return $.when(task);
             } else {
+                //TODO
                 UploadComlate(file);
             }
         }
@@ -226,7 +228,7 @@
         $("#picker").hide()
         $("#theList").append('<li id="' + file.id + '" data-id="" class="y-table__filed_name type-' + file.ext + '">' +
                 '<span class="file-name" title="' + file.name + '">' + file.name + '</span><span class="file-size">' + bytesToSize(file.size) + '</span>' +
-                '<span class="itemDel">删除</span><span class="finished-icon" style="display: none"></span>' +
+                '<span class="itemDel">删除</span><span class="finished-icon" style="display: none"></span><a href="javascript:void(0);" class="setting-btn" style="display: none">设置标签</a>' +
                 '<div class="percentage"></div>' +
                 '</li>');
     });
@@ -248,13 +250,61 @@
 
         $(this).parent().remove();	//从上传列表dom中删除
     });
+    //设置标签
+    $("#theList").on("click", ".setting-btn", function () {
+        var $this= $(this);
+        var knowledgeId = $(this).closest('li').attr('knowledge-id'), labelHtml = "";
+        $.ajax({
+            async: false,
+            type: "POST",
+            url: pageContext.resourcePath + '/km/label/list',
+            dataType: 'json',
+            success: function (result) {
+                for (var i = 0; i < result.length; i++) {
+                    labelHtml += '<span class="y-tag" data-id="' + result[i].id + '">' + result[i].labelName + '</span>';
+                }
+            }
+        });
+       PEMO.DIALOG.confirmR({
+            title: "",
+            content: '<div id="selectTagsPanel">' + labelHtml + '</div>',
+            success: function () {
+                var tagsPanel =document.getElementById('selectTagsPanel');
+                $(tagsPanel).on('click', '.y-tag', function () {
+                    $(this).toggleClass('selected');
+                });
+            },
+            btn2: function () {
+                var tagsPanel =document.getElementById('selectTagsPanel');
+                var $selected = $(tagsPanel).find(".selected");
+                if ($selected.size() === 0) {
+                    return;
+                }
+                var selectNames = [], selectIds = [];
+                $selected.each(function (item, i) {
+                    selectNames.push($(this).html());
+                    selectIds.push($(this).attr("data-id"));
+                });
+                $this.html(selectNames.join(',')).attr({title: selectNames.join(',')});
+                $.ajax({
+                    async: false,
+                    type: "POST",
+                    url: pageContext.resourcePath + '/km/label/addLabelRel',
+                    data: {"knowledgeId": knowledgeId, "labelIds": selectIds.join(',')},
+                    dataType: 'json',
+                    success: function (result) {
+
+                    }
+                });
+            }
+        })
+    });
 
     uploader.on("uploadProgress", function (file, percentage) {
         $("#" + file.id + " .percentage").css({width: percentage * 100 + "%"});
     });
     var libraryId = parent.document.getElementById("myLibrary").value;
     function UploadComlate(file) {
-        console.log(file);
         var $file = $("#" + file.id);
         $file.find('.percentage').css({width: "100%"});
         var data = file.data
@@ -276,18 +326,18 @@
             success: function (data) {
                 $file.find('.percentage').hide();
                 $file.find('.finished-icon').show();
+                $file.find('.setting-btn').show();
+                $file.attr({'knowledge-id':data.message});
 
-                if(FLAG_FINISHED){
+              /*  if(FLAG_FINISHED){
                     var upload = window.parent.document.getElementsByClassName("js-file-upload");
                     if (!upload || upload.length == 0) {
                         window.parent.layer.closeAll();
                     }
-
-                    if (parent && parent.refreshPage && typeof parent.refreshPage == "function") {
-                        parent.refreshPage();
-                    }
-                }
-
+                }*/
+                /*if (parent && parent.refreshPage && typeof parent.refreshPage == "function") {
+                    parent.refreshPage();
+                }*/
                 //刷新列表
                 //var folderId = $('#floderId').val();
                 //route['YunCb']($parent.document.getElementById("yunLContentBody"), route.routes.yun, null,folderId);

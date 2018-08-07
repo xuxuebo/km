@@ -116,7 +116,7 @@ var PEMO = {
                 checkAjaxRequest:function(){
                     /*检测弹框生成之前有无掉线;*/
                     PEBASE.ajaxRequest({
-                        url:pageContext.rootPath+'/km/uc/user/client/checkLogin',
+                        url:pageContext.rootPath+'/uc/user/client/checkLogin',
                         async:false
                     });
                 }

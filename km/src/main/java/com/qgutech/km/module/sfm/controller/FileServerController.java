@@ -7,6 +7,7 @@ import com.qgutech.km.base.vo.JsonResult;
 import com.qgutech.km.constant.PeConstant;
 import com.qgutech.km.utils.PeException;
 import com.qgutech.km.utils.PeFileUtils;
+import com.qgutech.km.utils.PropertiesUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;

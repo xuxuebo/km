@@ -109,7 +109,7 @@ public class Knowledge extends BaseModel {
     @Transient
     private String referType;
     @Transient
-    private boolean includeChild;
+    private boolean includeChild = true;
     @Transient
     private List<String> userIds;
     @Transient

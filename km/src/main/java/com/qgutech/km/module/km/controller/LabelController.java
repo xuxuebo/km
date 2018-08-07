@@ -4,7 +4,9 @@ import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.vo.JsonResult;
 import com.qgutech.km.module.km.model.Label;
+import com.qgutech.km.module.km.model.LabelRel;
 import com.qgutech.km.module.km.service.LabelService;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -123,5 +125,24 @@ public class LabelController {
         return jsonResult;
     }
 
+    @ResponseBody
+    @RequestMapping("addLabelRel")
+    public JsonResult addLabelRel(LabelRel labelRel) {
+        JsonResult jsonResult = new JsonResult();
+        String knowledgeId = labelRel.getKnowledgeId();
+        if (StringUtils.isEmpty(knowledgeId)) {
+            jsonResult.setSuccess(false);
+            return jsonResult;
+        }
+
+        try {
+            labelService.saveLabelRel(labelRel);
+        } catch (Exception e) {
+            e.printStackTrace();
+            jsonResult.setSuccess(false);
+        }
+
+        return jsonResult;
+    }
 
 }

@@ -52,4 +52,16 @@ public class LabelRelServiceImpl extends BaseServiceImpl<LabelRel> implements La
         knowledgeIds.addAll(labelRelList.stream().map(LabelRel::getKnowledgeId).collect(Collectors.toList()));
         return knowledgeIds;
     }
+
+    @Override
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public int deleteByKnowledgeId(String knowledgeId) {
+        if (StringUtils.isEmpty(knowledgeId)) {
+            throw new PeException("knowledgeId must be not empty!");
+        }
+
+        Conjunction conjunction = getConjunction();
+        conjunction.add(Restrictions.eq(LabelRel.KNOWLEDGE_ID, knowledgeId));
+        return delete(conjunction);
+    }
 }

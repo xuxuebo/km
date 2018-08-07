@@ -4,6 +4,9 @@ import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseService;
 import com.qgutech.km.module.km.model.Label;
+import com.qgutech.km.module.km.model.LabelRel;
+
+import java.util.List;
 
 /**
  * Created by Administrator on 2018/6/25.
@@ -24,4 +27,13 @@ public interface LabelService extends BaseService<Label> {
 
     Label getRoot();
 
+    /**
+     * 保存知识与标签的关联信息
+     *
+     * @param labelRel，不可为空
+     * @return 关联实体主键列表
+     * @throws RuntimeException 当labelRel为空，或者knowledgeId为空时
+     * @since TangFD@HF 2018-8-7
+     */
+    List<String> saveLabelRel(LabelRel labelRel);
 }

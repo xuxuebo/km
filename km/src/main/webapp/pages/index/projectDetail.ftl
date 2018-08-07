@@ -32,14 +32,12 @@
                 <div class="y-project-file-inline">
                     <div class="y-project-file-info">项目文件</div>
                     <div class="y-project-file-more">
-                        <a href="javascript:void(0);" class="project-upload" style="padding-right: 20px;">
-                            上传文件
-                        </a> <a href="#" onclick="fileSelectMore('project')">
+                        <a href="#" onclick="fileSelectMore('project')">
                             查看更多
                         </a>
                     </div>
                     <div class="y-project-file-add">
-                        <a href="#" onclick="fileAdd()">
+                        <a href="javascript:void(0);" class="project-upload">
                             上传文件
                         </a>
                     </div>
