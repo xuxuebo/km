@@ -90,8 +90,7 @@
             </div>
             <div class="pe-add-question-text show-user">
                 <span class="pe-label-name floatL introduction-info">负责人:</span>
-                <select class="pe-add-select-user">
-                    <option value="1">请选择</option>
+                <select  class="pe-select-user" multiple="multiple" >
                     <option value="1">哈哈哈</option>
                     <option value="2">测试2</option>
                     <option value="3">测试3</option>
@@ -103,16 +102,12 @@
             <div class="pe-add-question-text">
                 <span class="pe-label-name floatL introduction-info">上传图片:</span>
                 <a href="#" class="img-upload" onclick="projectImgUpload()">上传图片</a>
-            <#--<div class="pe-add-question-text-img">-->
-            <#---->
-            <#--</div>-->
             </div>
             <div class="pe-add-question-text">
                 <span class="pe-label-name floatL introduction-info">项目介绍:</span>
                 <!-- 加载编辑器的容器 -->
                 <textarea name="content" id="webContainer" cols="30" rows="10"
                           style="width:400px;height:400px;"></textarea>
-            <#--<script id="webContainer" name="content" type="text/plain" style="width:400px;height:400px;"/>-->
             </div>
         </form>
         <div class="pe-main-km-text-wrap">
@@ -126,12 +121,13 @@
 <script>
     window.UEDITOR_HOME_URL = "${resourcePath!}/web-static/proExam/js/uEditor/";
 </script>
-<link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/jquery.searchableSelect.css">
-<script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/jquery.min.js"></script>
+<link rel="stylesheet" href="${resourcePath!}/web-static/proExam/index/css/multiple-select.css">
+<script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/jquery-1.10.2.min.js"></script>
 <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/uEditor/ueditor.config.js"></script>
 <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/uEditor/ueditor.all.min.js"></script>
 <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/uEditor/lang/zh-cn/zh-cn.js"></script>
-<script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/jquery.searchableSelect.js"></script>
+<script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/multiple-select.js"></script>
+
 <script>
     $(function () {
         var UEditorS;
@@ -203,7 +199,15 @@
                         },
                         success: function () {
                             UEditorS = UE.getEditor('webContainer');
-                            $('select').searchableSelect();
+                            // $('.selectpicker').selectpicker({
+                            //     'selectedText': 'cat',
+                            //     'style': 'btn-white'
+                            // });
+                            $("select").multipleSelect({
+                                filter: true,
+                                placeholder: "请选择",
+                                selectAllText: '全选'
+                            });
                         },
                         cancel: function () {
                             UEditorS.destroy();

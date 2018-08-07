@@ -2336,7 +2336,7 @@ body, html {
     padding-left: 110px;
 }
 .project-introduction-add  .pe-stand-filter-form-input{
-    width: 500px;
+    width: 492px;
     background: #fff;
     display: inline-block;
     position: relative;
@@ -2344,7 +2344,7 @@ body, html {
     line-height: 22px;
     vertical-align: top;
     border: 1px solid #ccc;
-    padding: 4px;
+    padding: 4px 8px;
     outline: 0;
     border-radius: 5px;
     color: #666;
@@ -2357,9 +2357,19 @@ body, html {
     position: relative;
     z-index: 10;
 }
-.project-introduction-add  .searchable-select{
+.project-introduction-add .pe-select-user{
     width: 510px;
 }
+.pe-select-user .ms-choice{
+    border: 1px solid #ccc;
+    height: 32px;
+    line-height: 32px;
+}
+.ms-choice > span{
+    color: #666;
+}
+
+
 #webContainer .edui-default .edui-toolbar{
     height: auto !important;
 }
