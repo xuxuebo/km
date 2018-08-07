@@ -120,4 +120,13 @@ public interface LibraryService extends BaseService<Library> {
      * @since TangFD@HF 2018-8-3
      */
     Library getLibraryAndDetail(String libraryId);
+
+    /**
+     * 更新知识库及详情信息
+     *
+     * @param library 知识库及详情信息，不可为空
+     * @throws RuntimeException 当library为空， 或者libraryDetail为空时
+     * @since TangFD@HF 2018-8-7
+     */
+    void updateAndDetail(Library library);
 }

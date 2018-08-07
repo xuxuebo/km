@@ -335,9 +335,9 @@
                         window.parent.layer.closeAll();
                     }
                 }*/
-                /*if (parent && parent.refreshPage && typeof parent.refreshPage == "function") {
+                if (parent && parent.refreshPage && typeof parent.refreshPage == "function") {
                     parent.refreshPage();
-                }*/
+                }
                 //刷新列表
                 //var folderId = $('#floderId').val();
                 //route['YunCb']($parent.document.getElementById("yunLContentBody"), route.routes.yun, null,folderId);

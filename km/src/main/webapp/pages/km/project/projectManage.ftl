@@ -11,8 +11,6 @@
                     <div class="pe-stand-table-top-panel">
                         <button type="button" class="pe-btn pe-btn-green create-exercise-btn">新增重点项目</button>
                     </div>
-                    <input type="hidden" name="library.libraryName" value="${(library.libraryName)!}"/>
-                    <input type="hidden" name="library.id" value="${(library.id)!}"/>
                 <#--表格包裹的div-->
                     <div class="pe-stand-table-main-panel">
                         <div class="pe-stand-table-wrap"></div>
@@ -79,9 +77,6 @@
 <script type="text/template" id="confirmDialogTemp">
     <div>
         <form id="library_detail_form">
-        <#-- 必要字段 测试数据 -->
-            <#--<input type="hidden" name="libraryDetail.chargeIds" value="TangFD"/>-->
-            <#--<input type="hidden" name="libraryDetail.summary" value="数据数据数据数据数据数据数据数据数据数据数据"/>-->
             <div class="pe-add-question-text">
                 <span class="pe-label-name floatL introduction-info"><%=data.firstName%>:</span>
                 <input class="pe-stand-filter-form-input" maxlength="50" type="text"
@@ -90,26 +85,76 @@
             </div>
             <div class="pe-add-question-text show-user">
                 <span class="pe-label-name floatL introduction-info">负责人:</span>
-                <select class="pe-add-select-user" name="libraryDetail.chargeIds" multiple="multiple">
-                    <option value="1">哈哈哈</option>
-                    <option value="2">测试2</option>
-                    <option value="3">测试3</option>
-                    <option value="4">测试4</option>
-                    <option value="5">测试5</option>
-                    <option value="6">测试6</option>
+                <select class="pe-select-user" name="libraryDetail.chargeIds" multiple="multiple">
+                    <#if userList?? && userList?size gt 0>
+                        <#list userList as user>
+                            <option value="${user.id!}">${user.userName!}</option>
+                        </#list>
+                    </#if>
                 </select>
             </div>
-            <div class="pe-add-question-text">
-                <input type="hidden" name="libraryDetail.faceId" value="">
-                <input type="hidden" name="libraryDetail.faceName" value="">
-                <span class="pe-label-name floatL introduction-info">上传图片:</span>
-                <a href="#" class="img-upload" onclick="projectImgUpload()">上传图片</a>
+            <div class="pe-add-question-text pe-user-msg-detail" style="height:100px;">
+                 <span class="pe-input-tree-text introduction-info">
+                        上传封面:
+                 </span>
+                <button type="button" class="pe-user-head-edit-btn2" onclick="projectImgUpload()">
+                    <img src="${resourcePath!}/web-static/proExam/images/default-image.png"/>
+                    <span>编辑封面</span>
+                </button>
+                <input type="hidden" name="libraryDetail.faceId" class="target-fileId" value=""/>
+                <input type="hidden" name="libraryDetail.faceName" class="target-fileName" value=""/>
             </div>
             <div class="pe-add-question-text">
                 <span class="pe-label-name floatL introduction-info">项目介绍:</span>
                 <!-- 加载编辑器的容器 -->
-                <textarea name="libraryDetail.summary" id="webContainer" cols="30" rows="10"
-                          style="width:400px;height:400px;"></textarea>
+                <textarea name="libraryDetail.summary" id="webContainer-1" cols="30" rows="10"
+                          maxlength="1300" style="width:500px;height:200px;"></textarea>
+            </div>
+        </form>
+        <div class="pe-main-km-text-wrap">
+            <div class="pe-km-search-key pe-input-tree-wrap pe-stand-filter-form-input" style="display: none">
+
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/template" id="confirmDialogUpdate">
+    <div>
+        <form id="library_detail_update_form">
+            <input type="hidden" name="id" value="<%=data.id%>">
+            <input type="hidden" name="libraryDetail.id" value="<%=data.libraryDetail.id%>">
+            <input type="hidden" name="libraryDetail.libraryId" value="<%=data.id%>">
+            <div class="pe-add-question-text">
+                <span class="pe-label-name floatL introduction-info">项目名称:</span>
+                <input class="pe-stand-filter-form-input" maxlength="50" type="text"
+                       placeholder="请输入项目名称" name="libraryName" value="<%=data.libraryName%>">
+            </div>
+            <div class="pe-add-question-text show-user">
+                <span class="pe-label-name floatL introduction-info">负责人:</span>
+                <select class="pe-select-user" name="libraryDetail.chargeIds" multiple="multiple">
+                    <#if userList?? && userList?size gt 0>
+                        <#list userList as user>
+                            <option value="${user.id!}">${user.userName!}</option>
+                        </#list>
+                    </#if>
+                </select>
+            </div>
+            <div class="pe-add-question-text pe-user-msg-detail" style="height:100px;">
+                 <span class="pe-input-tree-text introduction-info">
+                        上传封面:
+                 </span>
+                <button type="button" class="pe-user-head-edit-btn2" onclick="projectImgUpload()">
+                    <img onerror="javascript:this.src='${resourcePath!}/web-static/proExam/images/default-image.png'" src="<%=data.libraryDetail.facePath%>"/>
+                    <span>编辑封面</span>
+                </button>
+                <input type="hidden" name="libraryDetail.faceId" class="target-fileId" value="<%=data.libraryDetail.faceId%>"/>
+                <input type="hidden" name="libraryDetail.faceName" class="target-fileName" value="<%=data.libraryDetail.faceName%>"/>
+            </div>
+            <div class="pe-add-question-text">
+                <span class="pe-label-name floatL introduction-info">项目介绍:</span>
+                <!-- 加载编辑器的容器 -->
+                <textarea name="libraryDetail.summary" id="webContainer-1" cols="30" rows="10"
+                          maxlength="1300" style="width:500px;height:200px;"><%=data.libraryDetail.summary%></textarea>
             </div>
         </form>
         <div class="pe-main-km-text-wrap">
@@ -130,7 +175,6 @@
 <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/uEditor/lang/zh-cn/zh-cn.js"></script>
 <script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/multiple-select.js"></script>
 
-<script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/jquery.searchableSelect.js"></script>
 <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery-peGrid.js"></script>
 <script>
     $(function () {
@@ -202,7 +246,7 @@
                             });
                         },
                         success: function () {
-                            UEditorS = UE.getEditor('webContainer');
+//                            UEditorS = UE.getEditor('webContainer');
                             // $('.selectpicker').selectpicker({
                             //     'selectedText': 'cat',
                             //     'style': 'btn-white'
@@ -214,10 +258,10 @@
                             });
                         },
                         cancel: function () {
-                            UEditorS.destroy();
+//                            UEditorS.destroy();
                         },
                         btn2 :function () {
-                            UEditorS.destroy();
+//                            UEditorS.destroy();
                         }
                     });
                 });
@@ -226,26 +270,30 @@
                     var id = $(this).data("id");
                     var name = $(this).data("libraryname");
                     console.log(name);
+                    var data = {};
+                    $.ajax({
+                        async: false,//此值要设置为FALSE  默认为TRUE 异步调用
+                        type: "POST",
+                        url: pageContext.resourcePath + '/library/load',
+                        data: {'libraryId': id},
+                        dataType: 'json',
+                        success: function (result) {
+                            data = result;
+                        }
+                    });
                     PEMO.DIALOG.confirmL({
-                        content: _.template($('#confirmDialogTemp').html())({
-                            data: {
-                                'firstName': '项目名称',
-                                'firstInputName': 'libraryName'
-                            }
-                        }),
+                        content: _.template($('#confirmDialogUpdate').html())({data: data}),
                         area: '800px',
                         title: '编辑重点项目',
                         btn: ['保存', '取消'],
                         btnAlign: 'l',
+                        skin: 'project-introduction-add',
                         btn1: function () {
                             var libraryName = $('input[name="libraryName"]').val();
                             PEBASE.ajaxRequest({
                                 //此处要返回给我新的修改过的节点的id，好和旧的的id进行比较从而是否刷新树节点
                                 url: pageContext.rootPath + '/project/updateProject',
-                                data: {
-                                    'id': id,
-                                    'libraryName': libraryName
-                                },
+                                data: $("#library_detail_update_form").serialize(),
                                 success: function (data) {
                                     var message;
                                     if (data.success) {
@@ -288,16 +336,20 @@
 
     function projectImgUpload() {
         PEMO.DIALOG.selectorDialog({
-            content: pageContext.rootPath + '/knowledge/openUpload',
-            area: ['600px', '400px'],
-            title: '上传图片',
+            content: pageContext.rootPath + '/project/initProjectFace',
+            area: ['606px', '400px'],
+            title: '项目封面',
             btn1: function () {
             },
             btn2: function () {
                 layer.closeAll();
             },
-            success: function (d, index) {
-
+            success: function (d,index) {
+                var iframeBody = layer.getChildFrame('body', index);
+                var hasPicSrc = $('.pe-user-head-edit-btn2').find('img').attr('src');
+                if(hasPicSrc){
+                    $(iframeBody).find('.jcrop-preview').prop("src", hasPicSrc);
+                }
             }
         });
     }

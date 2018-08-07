@@ -819,7 +819,7 @@ $(function () {
             }
             knowledgeIds = knowledgeIds.substring(0, knowledgeIds.length - 1);
             PEMO.DIALOG.confirmL({
-                content: '<div><h3 class="pe-dialog-content-head">确定还原选中的记录的？</h3><p class="pe-dialog-content-tip">还原后,可在我的云库内查看。 </p></div>',
+                content: '<div><h3 class="pe-dialog-content-head">确定还原选中的记录？</h3><p class="pe-dialog-content-tip">还原后,可在我的云库内查看。 </p></div>',
                 btn1: function () {
 
                     PEBASE.ajaxRequest({

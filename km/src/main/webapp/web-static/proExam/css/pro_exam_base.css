@@ -6390,6 +6390,22 @@ input:-moz-placeholder, input:-ms-input-placeholder, input::-moz-placeholder, in
     border: 1px solid #e0e0e0
 }
 
+.pe-user-head-edit-btn2 {
+    width: 100px;
+    height: 110px;
+    border: none;
+    position: relative;
+    background-color: transparent;
+    padding: 0;
+    overflow: hidden
+}
+
+.pe-user-head-edit-btn2 img {
+    width: 100px;
+    height: 110px;
+    padding: 2px;
+}
+
 .pe-user-head-edit-btn span {
     display: none;
     width: 100%;

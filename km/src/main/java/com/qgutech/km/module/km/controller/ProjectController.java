@@ -1,15 +1,19 @@
 package com.qgutech.km.module.km.controller;
 
-import com.qgutech.km.base.ExecutionContext;
+import com.qgutech.km.base.model.Page;
+import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.vo.JsonResult;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.module.km.model.Library;
-import com.qgutech.km.module.km.model.LibraryDetail;
 import com.qgutech.km.module.km.service.LibraryService;
+import com.qgutech.km.module.uc.model.User;
+import com.qgutech.km.module.uc.service.UserService;
 import com.qgutech.km.utils.UUIDGenerator;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
@@ -25,9 +29,16 @@ public class ProjectController {
 
     @Resource
     private LibraryService libraryService;
+    @Resource
+    private UserService userService;
 
     @RequestMapping("manage/initPage")
-    public String initPage() {
+    public String initPage(Model model) {
+        PageParam param = new PageParam();
+        param.setAutoPaging(false);
+        param.setAutoCount(false);
+        Page<User> page = userService.search(new User(), param);
+        model.addAttribute("userList", page.getRows());
         return "km/project/projectManage";
     }
 
@@ -91,12 +102,23 @@ public class ProjectController {
         }
 
         try {
-            libraryService.update(id, Library.LIBRARY_NAME, libraryName);
+            libraryService.updateAndDetail(library);
         } catch (Exception e) {
             e.printStackTrace();
             jsonResult.setSuccess(false);
         }
 
         return jsonResult;
+    }
+
+    @RequestMapping("initProjectFace")
+    public String initProjectFace(Model model, @RequestParam(required = false) String fileId,
+                                  @RequestParam(required = false) String fileName) {
+        if (StringUtils.isNotEmpty(fileId)) {
+            String sourceUrl = userService.getFacePath(fileId, fileName);
+            model.addAttribute("sourceUrl", sourceUrl);
+        }
+
+        return "km/project/initProjectFace";
     }
 }

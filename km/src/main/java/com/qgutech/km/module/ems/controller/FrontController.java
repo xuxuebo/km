@@ -41,7 +41,9 @@ public class FrontController {
 
     //首页  我的云库
     @RequestMapping("/index")
-    public String index() {
+    public String index(Model model) {
+        model.addAttribute("userName", SessionContext.get().getUserName());
+        model.addAttribute("admin", SessionContext.get().isAdmin());
         return "index/index";
     }
 

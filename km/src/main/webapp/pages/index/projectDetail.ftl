@@ -81,8 +81,8 @@
 
 <#--项目详情初始化-->
 <script type="text/template" id="projectDetailDetail">
-    <img class="y-project-img"
-         src="${resourcePath!}/web-static/proExam/index/img/ico_rar.png" alt="">
+    <img class="y-project-img" src="<%=data.libraryDetail.facePath%>"
+         onerror='javascript:this.src="${resourcePath!}/web-static/proExam/images/default-image.png"' alt="">
     <div class="y-project-introduction-content">
         <div class="y-project-content-title"><%= data.libraryName %></div>
         <div class="y-project-content-author">项目负责人：<%=data.libraryDetail.chargeName%></div>

@@ -471,4 +471,17 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
 
         return library;
     }
+
+    @Override
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public void updateAndDetail(Library library) {
+        if (library == null || library.getLibraryDetail() == null) {
+            throw new PeException("library invalid!");
+        }
+
+        update(library.getId(), Library.LIBRARY_NAME, library.getLibraryName());
+        LibraryDetail libraryDetail = library.getLibraryDetail();
+        libraryDetail.setCorpCode(ExecutionContext.getCorpCode());
+        libraryDetailService.update(libraryDetail);
+    }
 }
