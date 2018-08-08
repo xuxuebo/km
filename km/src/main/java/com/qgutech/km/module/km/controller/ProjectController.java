@@ -33,12 +33,7 @@ public class ProjectController {
     private UserService userService;
 
     @RequestMapping("manage/initPage")
-    public String initPage(Model model) {
-        PageParam param = new PageParam();
-        param.setAutoPaging(false);
-        param.setAutoCount(false);
-        Page<User> page = userService.search(new User(), param);
-        model.addAttribute("userList", page.getRows());
+    public String initPage() {
         return "km/project/projectManage";
     }
 

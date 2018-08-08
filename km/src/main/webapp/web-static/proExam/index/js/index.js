@@ -95,7 +95,7 @@ $(function () {
     }
 
     //修改
-    if (('onhashchange' in window) && ((typeof document.documentMode === 'undefined') || document.documentMode == 8)) {
+    if (('onhashchange' in window) && ((typeof document.documentMode === 'undefined') || document.documentMode >= 8)) {
         $(window).bind("hashchange", changeHashCb);
     }
 

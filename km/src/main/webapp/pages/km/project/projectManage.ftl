@@ -86,11 +86,10 @@
             <div class="pe-add-question-text show-user">
                 <span class="pe-label-name floatL introduction-info">负责人:</span>
                 <select class="pe-select-user" name="libraryDetail.chargeIds" multiple="multiple">
-                    <#if userList?? && userList?size gt 0>
-                        <#list userList as user>
-                            <option value="${user.id!}">${user.userName!}</option>
-                        </#list>
-                    </#if>
+                    <%if(user.length !== 0){%>
+                    <%_.each(user,function(item,i){%>
+                    <option value="<%=item.id%>"><%=item.userName%></option>
+                    <%})}%>
                 </select>
             </div>
             <div class="pe-add-question-text pe-user-msg-detail" style="height:100px;">
@@ -132,11 +131,10 @@
             <div class="pe-add-question-text show-user">
                 <span class="pe-label-name floatL introduction-info">负责人:</span>
                 <select class="pe-select-user" name="libraryDetail.chargeIds" multiple="multiple">
-                    <#if userList?? && userList?size gt 0>
-                        <#list userList as user>
-                            <option value="${user.id!}">${user.userName!}</option>
-                        </#list>
-                    </#if>
+                    <%if(user.length !== 0){%>
+                    <%_.each(user,function(item,i){%>
+                    <option value="<%=item.id%>" <%if(compare(data.libraryDetail.chargeIds, item.id)){%>selected="selected"<%}%>><%=item.userName%></option>
+                    <%})}%>
                 </select>
             </div>
             <div class="pe-add-question-text pe-user-msg-detail" style="height:100px;">
@@ -177,12 +175,27 @@
 
 <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery-peGrid.js"></script>
 <script>
+    function compare(target, source){
+        return target.indexOf(source) >= 0;
+    }
     $(function () {
         var UEditorS;
         var peTableTitle = [
             {'title': '重点项目名称', 'width': 300},
             {'title': '操作', 'width': 100}
         ];
+
+        var user = [];
+        $.ajax({
+            async: false,
+            type: "POST",
+            url: pageContext.resourcePath + '/uc/user/manage/search',//公共库的查询列表
+            data: {"autoCount": false, "autoPaging": false},
+            dataType: 'json',
+            success: function (result) {
+                user = result.rows;
+            }
+        });
         var exerciseManage = {
             init: function () {
                  $('.pe-stand-table-wrap').peGrid({
@@ -199,12 +212,7 @@
             bind: function () {
                 $('.create-exercise-btn').on('click', function () {
                     PEMO.DIALOG.confirmL({
-                        content: _.template($('#confirmDialogTemp').html())({
-                            data: {
-                                'firstName': '项目名称',
-                                'firstInputName': 'libraryName'
-                            }
-                        }),
+                        content: _.template($('#confirmDialogTemp').html())({data: {'firstName': '项目名称', 'firstInputName': 'libraryName'}, user:user}),
                         area: ['800px', '600px'],
                         btn: ['确定', '取消'],
                         btnAlign: 'l',
@@ -282,12 +290,19 @@
                         }
                     });
                     PEMO.DIALOG.confirmL({
-                        content: _.template($('#confirmDialogUpdate').html())({data: data}),
-                        area: '800px',
+                        content: _.template($('#confirmDialogUpdate').html())({data: data, user:user}),
+                        area: ['800px', '600px'],
                         title: '编辑重点项目',
                         btn: ['保存', '取消'],
                         btnAlign: 'l',
                         skin: 'project-introduction-add',
+                        success: function () {
+                            $("select").multipleSelect({
+                                filter: true,
+                                placeholder: "请选择",
+                                selectAllText: '全选'
+                            });
+                        },
                         btn1: function () {
                             var libraryName = $('input[name="libraryName"]').val();
                             PEBASE.ajaxRequest({
