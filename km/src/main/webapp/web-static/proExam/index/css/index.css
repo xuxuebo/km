@@ -1689,15 +1689,16 @@ body, html {
     color: #2F2D3B;
     margin-right: 44px;
     padding-bottom: 20px;
+    position: relative;
 }
 .y-share-project-type-item,.y-share-project-type-item-first{
     display: inline-block;
     float: left;
-    height: 26px;
     line-height: 26px;
     padding: 0 12px;
     margin-left: 36px;
     cursor: pointer;
+    margin-bottom: 5px;
 }
 .y-active{
     color: #FFFFFF;
@@ -1706,9 +1707,15 @@ body, html {
 }
 .y-share-project-type-list dt,.y-share-project-type-list dd{
     display: inline-block;
-    height: 26px;
     line-height: 26px;
     vertical-align: top;
+}
+.y-share-project-type-list dt{
+    position: absolute;
+    left: 0;
+}
+.y-share-project-type-list dd{
+    padding-left: 40px;
 }
 .y-share-bar{
     display: inline-block;
