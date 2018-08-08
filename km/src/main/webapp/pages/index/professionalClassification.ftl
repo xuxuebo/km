@@ -164,7 +164,7 @@
             var deptId, fileIds = "";
             PEMO.DIALOG.selectorDialog({
                 content: pageContext.rootPath + '/km/knowledge/openUpload',
-                area: ['600px', '400px'],
+                area: ['650px', '400px'],
                 title: '上传文件',
                 skin: 'js-file-upload',
                 btn: ['确定', '取消'],

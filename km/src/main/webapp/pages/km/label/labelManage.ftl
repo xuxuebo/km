@@ -91,14 +91,14 @@
 <script>
     $(function () {
         var peTableTitle = [
-            {'title': '标签名称', 'width': 300},
-            {'title': '操作', 'width': 100}
+            {'title': '标签名称', 'width': 80},
+            {'title': '操作', 'width': 20}
         ];
         var exerciseManage = {
             init: function () {
                 $('.pe-stand-table-wrap').peGrid({
                     url: pageContext.rootPath + '/km/label/listTree',
-//                    formParam: $('#labelManageForm').serializeArray(),
+                    formParam: $('#labelManageForm').serializeArray(),
                     tempId: 'peExerManaTemp',
                     showTotalDomId: 'showTotal',
                     title: peTableTitle

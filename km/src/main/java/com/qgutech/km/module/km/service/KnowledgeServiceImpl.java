@@ -17,15 +17,11 @@ import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -616,5 +612,25 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         knowledgeIds.addAll(knowledgeList.stream().map(Knowledge::getId).collect(Collectors.toList()));
 
         return knowledgeIds;
+    }
+
+    @Override
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public void deleteInDir(List<String> knowledgeIdList, String libraryId) {
+        if (CollectionUtils.isEmpty(knowledgeIdList) || StringUtils.isEmpty(libraryId)) {
+            throw new PeException("knowledgeIdList and libraryId must be not empty!");
+        }
+
+        List<KnowledgeRel> list = knowledgeRelService.findByLibraryIdAndKnowledgeIds(libraryId, knowledgeIdList);
+        if (CollectionUtils.isEmpty(list)) {
+            return;
+        }
+
+        Library recycleLibrary = libraryService.getUserLibraryByLibraryType(KnowledgeConstant.RECYCLE_LIBRARY);
+        //删除操作 将文件至回收站
+        for (KnowledgeRel kn : list) {
+            kn.setLibraryId(recycleLibrary.getId());
+        }
+        knowledgeRelService.update(list, KnowledgeRel.LIBRARY_ID);
     }
 }

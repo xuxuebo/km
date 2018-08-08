@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>博易考登录</title>
+    <title>智慧云登录</title>
     <link rel="shortcut icon" href="${resourcePath!}/web-static/proExam/images/pe_ico_32.ico" type="image/x-icon"/>
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/pro_exam_plugin_min.css?_v=${(resourceVersion)!}" type="text/css">
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/user.css?_v=${(resourceVersion)!}" type="text/css">

@@ -150,6 +150,7 @@ $(function () {
             if (!id) {
                 id = "";
             }
+            $('#myLibrary').val(id);
             breadCrumbsList.length = index + 1;
             route['YunCb']($yunContentBody, route.routes.yun, null, id);
         });
@@ -157,7 +158,7 @@ $(function () {
         $('.js-upload').on('click', function () {
             PEMO.DIALOG.selectorDialog({
                 content: pageContext.rootPath + '/km/knowledge/openUpload',
-                area: ['600px', '400px'],
+                area: ['650px', '400px'],
                 title: '上传文件',
                 btn1: function () {
                 },
@@ -389,7 +390,8 @@ $(function () {
                     PEBASE.ajaxRequest({
                         url: pageContext.rootPath + '/km/knowledge/delete',
                         data: {
-                            "knowledgeIds": knowledgeIds
+                            "knowledgeIds": knowledgeIds,
+                            "folderId": $("#myLibrary").val()
                         },
                         success: function (data) {
                             if (data.success) {
@@ -400,6 +402,9 @@ $(function () {
                                 layer.closeAll();
                                 //刷新列表
                                 route['YunCb']($yunContentBody, route.routes.yun, null, null);
+                                breadCrumbsList = [{title: '全部', id: ""}];
+                                $('#breadCrumbs').html(_.template($("#breadCrumbsTpl").html())({list: breadCrumbsList}));
+                                $('#myLibrary').val("");
                             } else {
                                 PEMO.DIALOG.alert({
                                     content: data.message,

@@ -93,8 +93,8 @@
 <script>
     $(function () {
         var peTableTitle = [
-            {'title': '分类名称', 'width': 300},
-            {'title': '操作', 'width': 100}
+            {'title': '分类名称', 'width': 80},
+            {'title': '操作', 'width': 20}
         ];
         var exerciseManage = {
             init: function () {

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>${(titleName)!'博易考'}</title>
+    <title>${(titleName)!'智慧云'}</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="renderer" content="webkit" />
@@ -78,6 +78,7 @@
             width: auto;
         }
     </style>
+    <script>document.documentElement.focus();</script>
 </head>
 <body class="pe-container">
 <#--公用头部-->

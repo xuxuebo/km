@@ -153,7 +153,7 @@
             <th class="y-table__td size">
                 <span class="">大小</span>
             </th>
-            <th class="y-table__td create-time">
+            <th class="y-table__td size">
                 <span class="">上传时间</span>
             </th>
         </tr>
@@ -169,14 +169,15 @@
                 </label>
             </td>
             <td class="y-table__td name">
-                <div class="y-table__filed_name type-<%=item.knowledgeType%>">
+                <div title="<%=item.knowledgeName%>" class="y-table__filed_name type-<%=item.knowledgeType%>"
+                     style="margin-right: 10px;overflow: hidden;text-overflow:ellipsis;">
                     <%=item.knowledgeName%>
                 </div>
             </td>
             <td class="y-table__td size">
                 <%=item.knowledgeSize%>
             </td>
-            <td class="y-table__td upload-time">
+            <td class="y-table__td size">
                 <%=item.createTimeStr%>
             </td>
         </tr>

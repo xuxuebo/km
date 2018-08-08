@@ -292,11 +292,15 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             return users;
         }
 
-        users.stream().filter(user -> user.getOrganize() != null).forEach(user -> {
+        for (User user : users) {
             Organize organize = organizeMap.get(user.getOrganize().getId());
             user.setOrganizeName(organize.getOrganizeName());
-            user.setFacePath(getFacePath(user.getFaceFileId(), user.getFaceFileName()));
-        });
+            String faceFileId = user.getFaceFileId();
+            if(StringUtils.isEmpty(faceFileId)){
+                continue;
+            }
+            user.setFacePath(getFacePath(faceFileId, user.getFaceFileName()));
+        }
 
         return users;
     }

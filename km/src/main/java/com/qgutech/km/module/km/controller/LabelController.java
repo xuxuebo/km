@@ -98,17 +98,17 @@ public class LabelController {
      */
     @ResponseBody
     @RequestMapping("listTree")
-    public Page<Label> listTree(){
-        PageParam pageParam = new PageParam();
-        pageParam.setAutoCount(false);
-        pageParam.setAutoPaging(false);
+    public Page<Label> listTree(PageParam pageParam){
         return labelService.listTree(pageParam);
     }
 
     @ResponseBody
     @RequestMapping("list")
     public List<Label> list() {
-        return listTree().getRows();
+        PageParam pageParam = new PageParam();
+        pageParam.setAutoCount(false);
+        pageParam.setAutoPaging(false);
+        return listTree(pageParam).getRows();
     }
 
     /**

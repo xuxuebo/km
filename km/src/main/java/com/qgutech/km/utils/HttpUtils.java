@@ -1,5 +1,7 @@
 package com.qgutech.km.utils;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
@@ -130,6 +132,18 @@ public class HttpUtils {
             return "SF";
         }
 
+        return null;
+    }
+
+    public static String doGet(String userInfoUrl, String token) {
+        GetMethod getMethod = new GetMethod(userInfoUrl+token);
+        HttpClient client = new HttpClient();
+        try {
+            client.executeMethod(getMethod);
+            return getMethod.getResponseBodyAsString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }

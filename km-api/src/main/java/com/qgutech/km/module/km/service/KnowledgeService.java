@@ -113,4 +113,14 @@ public interface KnowledgeService extends BaseService<Knowledge> {
      * @since TangFD@HF 2018-8-3
      */
     List<String> getIdsByFileIds(List<String> fileIds);
+
+    /**
+     * 根据文件夹Id和知识Id集合，删除知识，将知识移到回收站中
+     *
+     * @param knowledgeIdList 知识Id集合，不可为空
+     * @param libraryId       文件夹Id，不可为空
+     * @throws RuntimeException 当knowledgeIdList和libraryId为空时
+     * @since TangFD@HF 2018-8-8
+     */
+    void deleteInDir(List<String> knowledgeIdList, String libraryId);
 }

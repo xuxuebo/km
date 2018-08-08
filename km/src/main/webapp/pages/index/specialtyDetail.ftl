@@ -1,5 +1,5 @@
 <div class="y-content-body" id="yunContentBody">
-    <h4 class="y-content__title">配电线路</h4>
+    <h4 class="y-content__title">${libraryName!}</h4>
     <div class="y-content-professional" style="background: none;">
         <div class="y-content-professional-file-box">
             <div class="y-project-activity" style="width: 475px;">
@@ -130,7 +130,7 @@
             var deptId, fileIds = "";
             PEMO.DIALOG.selectorDialog({
                 content: pageContext.rootPath + '/km/knowledge/openUpload',
-                area: ['600px', '400px'],
+                area: ['650px', '400px'],
                 title: '上传文件',
                 skin: 'js-file-upload',
                 btn: ['确定', '取消'],
@@ -160,6 +160,7 @@
                                 "libraryIds": "${libraryId!}"
                             },
                             success: function (data) {
+                                initTable();
                                 if (data.success) {
                                     layer.closeAll();
                                     PEMO.DIALOG.tips({
@@ -182,9 +183,13 @@
             });
         });
 
+        initTable();
+    })
+
+    function initTable() {
         $.ajax({
             type: "POST",
-            url: pageContext.resourcePath + '/knowledge/searchKnowledge?page=1&pageSize=100&libraryId=${libraryId!}',
+            url: pageContext.resourcePath + '/knowledge/searchKnowledge?page=1&pageSize=6&libraryId=${libraryId!}',
             dataType: 'json',
             success: function (data) {
                 $(".y-content-professional-file-list").html(_.template($("#tplYunFileList").html())({list: data.rows}));
@@ -193,7 +198,7 @@
 
         $.ajax({
             type: "POST",
-            url: pageContext.resourcePath + '/library/dynamic?page=1&pageSize=10 &libraryId=${libraryId!}',
+            url: pageContext.resourcePath + '/library/dynamic?page=1&pageSize=10&libraryId=${libraryId!}',
             dataType: 'json',
             success: function (data) {
                 $(".y-content-professional-dynamic-list").html(_.template($("#tplYunDynamicList").html())({list: data.rows}));
@@ -208,8 +213,7 @@
                 $(".y-content-professional-rank-list").html(_.template($("#tplYunRankList").html())({list: result}));
             }
         });
-
-    })
+    }
 
     //查看更多
     function fileSelectMore(type) {

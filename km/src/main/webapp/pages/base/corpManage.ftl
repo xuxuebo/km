@@ -111,7 +111,7 @@
                 <td><%=peData.rows[j].corpStatus === 'DRAFT'?'--':peData.rows[j].usedNum%></td>
                 <td><%=moment(peData.rows[j].createTime).format('YYYY-MM-DD')%></td>
                 <td><%=peData.rows[j].endTime?moment(peData.rows[j].endTime).format('YYYY-MM-DD'):'永久'%></td>
-                <td><%if(peData.rows[j].fromAppType === 'ELP'){%>时代光华<%}else if(peData.rows[j].fromAppType === 'PE'){%>博易考<%}%></td>
+                <td><%if(peData.rows[j].fromAppType === 'ELP'){%>时代光华<%}else if(peData.rows[j].fromAppType === 'PE'){%>智慧云<%}%></td>
                 <%if (peData.rows[j].corpStatus === 'DRAFT') {%>
                 <td>草稿</td>
                 <%} else if (peData.rows[j].corpStatus === 'DISABLE'){%>

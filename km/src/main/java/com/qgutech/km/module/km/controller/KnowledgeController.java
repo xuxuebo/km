@@ -439,7 +439,7 @@ public class KnowledgeController {
      */
     @ResponseBody
     @RequestMapping("delete")
-    public JsonResult delete(String knowledgeIds){
+    public JsonResult delete(String knowledgeIds, @RequestParam(required = false) String folderId){
         JsonResult jsonResult = new JsonResult();
         try {
             if(StringUtils.isBlank(knowledgeIds)){
@@ -452,7 +452,12 @@ public class KnowledgeController {
                 jsonResult.setSuccess(true);
                 return jsonResult;
             }
-            knowledgeService.reductionOrDelete(knowledgeIdList,KnowledgeConstant.MY_LIBRARY);
+
+            if (StringUtils.isEmpty(folderId)) {
+                knowledgeService.reductionOrDelete(knowledgeIdList, KnowledgeConstant.MY_LIBRARY);
+            } else {
+                knowledgeService.deleteInDir(knowledgeIdList, folderId);
+            }
             for (String knowledgeId : knowledgeIdList) {
                 kmFullTextSearchService.delete(knowledgeId);
             }

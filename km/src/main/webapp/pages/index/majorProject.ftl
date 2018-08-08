@@ -11,7 +11,7 @@
     </ul>
 </aside>
 <section class="y-content">
-    <div class="y-content-body" id="yunLContentBody">
+    <div class="y-content-body" id="projectContentBody">
 
     </div>
 </section>

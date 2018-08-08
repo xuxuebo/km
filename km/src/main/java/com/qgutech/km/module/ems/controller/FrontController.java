@@ -2,6 +2,7 @@ package com.qgutech.km.module.ems.controller;
 
 import com.qgutech.km.base.service.CorpService;
 import com.qgutech.km.constant.KnowledgeConstant;
+import com.qgutech.km.module.km.model.Library;
 import com.qgutech.km.module.km.service.LibraryService;
 import com.qgutech.km.module.sfm.service.FileServerService;
 import com.qgutech.km.module.uc.model.SessionContext;
@@ -71,6 +72,8 @@ public class FrontController {
         model.addAttribute("userName", SessionContext.get().getUserName());
         model.addAttribute("admin", SessionContext.get().isAdmin());
         model.addAttribute("libraryId", libraryId);
+        Library library = libraryService.get(libraryId);
+        model.addAttribute("libraryName", library.getLibraryName());
         return "index/specialtyDetail";
     }
 

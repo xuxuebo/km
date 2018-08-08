@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>${(titleName)!'博易考'}</title>
+    <title>${(titleName)!'智慧云'}</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="renderer" content="webkit" />
@@ -75,7 +75,7 @@
 <div class="pe-mask-listen"></div>
 <#--公用部分尾部版权-->
 <footer class="pe-footer-wrap">
-    <div class="pe-footer-copyright"> ${(footExplain)!'Copyright &copy${.now?string("yyyy")} 青谷科技专业考试系统 All Rights Reserved 皖ICP备16015686号-2'}</div>
+    <div class="pe-footer-copyright"> ${(footExplain)!'Copyright &copy${.now?string("yyyy")} 国家电网江苏省电力公司 ©苏ICP备15007035号-1'}</div>
 </footer>
 <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/pro_exam_base.js?_v=${(resourceVersion)!}"></script>
 

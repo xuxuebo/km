@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html  style="height:100%;">
 <head>
-    <title>${(titleName)!'博易考'}</title>
+    <title>${(titleName)!'智慧云'}</title>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">

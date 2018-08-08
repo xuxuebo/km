@@ -28,7 +28,7 @@ $(function () {
         var $fileList = $("#fileList");
         $.ajax({
             type: "POST",
-            url: pageContext.resourcePath + '/knowledge/searchKnowledge?page=1&pageSize=10&libraryId='+libraryId,
+            url: pageContext.resourcePath + '/knowledge/searchKnowledge?page=1&pageSize=6&libraryId='+libraryId,
             dataType: 'json',
             success: function (result) {
                 var data = result.rows;
@@ -47,7 +47,7 @@ $(function () {
         var $activityList = $("#activityList");
         $.ajax({
             type: "POST",
-            url: pageContext.resourcePath + '/library/dynamic?page=1&pageSize=10&libraryId='+libraryId,
+            url: pageContext.resourcePath + '/library/dynamic?page=1&pageSize=6&libraryId='+libraryId,
             dataType: 'json',
             success: function (result) {
                 var data = result.rows;
@@ -89,7 +89,7 @@ $(function () {
         var deptId, fileIds = "";
         PEMO.DIALOG.selectorDialog({
             content: pageContext.rootPath + '/km/knowledge/openUpload',
-            area: ['600px', '400px'],
+            area: ['650px', '400px'],
             title: '上传文件',
             skin: 'js-file-upload',
             btn: ['确定', '取消'],
@@ -119,6 +119,9 @@ $(function () {
                             "libraryIds": libraryId
                         },
                         success: function (data) {
+                            initMajorProject();
+                            initActivity();
+                            initRank();
                             if (data.success) {
                                 layer.closeAll();
                                 PEMO.DIALOG.tips({

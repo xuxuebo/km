@@ -3,6 +3,7 @@
 <html lang="zh_CN">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>上传文件</title>
     <!--引入CSS-->
     <link rel="stylesheet" type="text/css" href="${resourcePath!}/web-static/proExam/index/css/webuploader.css">
@@ -173,7 +174,7 @@
     });
     var FLAG_FINISHED = false;
     var uploader = WebUploader.create({
-        swf: "/km/web-static/flash/Uploader.swf",
+        swf: "/km/web-static/flash/Uploader.swf?v_="+(new Date().getTime()),
         server: uploadFileUrl,
         pick: "#picker",
         resize: false,
@@ -225,7 +226,7 @@
     }
 
     uploader.on("fileQueued", function (file) {
-        $("#picker").hide()
+        $("#picker").css({position:'absolute',left:'-1000em'});
         $("#theList").append('<li id="' + file.id + '" data-id="" class="y-table__filed_name type-' + file.ext + '">' +
                 '<span class="file-name" title="' + file.name + '">' + file.name + '</span><span class="file-size">' + bytesToSize(file.size) + '</span>' +
                 '<span class="itemDel">删除</span><span class="finished-icon" style="display: none"></span><a href="javascript:void(0);" class="setting-btn" style="display: none">设置标签</a>' +

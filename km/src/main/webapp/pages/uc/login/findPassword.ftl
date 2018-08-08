@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="zn-CH">
 <head>
-    <title>${(titleName)!'博易考'}</title>
+    <title>${(titleName)!'智慧云'}</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="${(resourcePath+icoUrl)!'${resourcePath!}/web-static/proExam/images/pe_ico_32.ico'}" type="image/x-icon" />

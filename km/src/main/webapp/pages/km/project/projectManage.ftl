@@ -163,26 +163,32 @@
     </div>
 </script>
 
-<script>
+<#--<script>
     window.UEDITOR_HOME_URL = "${resourcePath!}/web-static/proExam/js/uEditor/";
-</script>
+</script>-->
 <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/index/css/multiple-select.css">
-<script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/jquery-1.10.2.min.js"></script>
-<script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/uEditor/ueditor.config.js"></script>
-<script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/uEditor/ueditor.all.min.js"></script>
-<script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/uEditor/lang/zh-cn/zh-cn.js"></script>
+<#--<script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/jquery-1.10.2.min.js"></script>-->
+<#--<script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/uEditor/ueditor.config.js"></script>-->
+<#--<script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/uEditor/ueditor.all.min.js"></script>-->
+<#--<script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/uEditor/lang/zh-cn/zh-cn.js"></script>-->
 <script type="text/javascript" src="${resourcePath!}/web-static/proExam/index/js/multiple-select.js"></script>
 
-<script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery-peGrid.js"></script>
+<#--<script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery-peGrid.js"></script>-->
 <script>
     function compare(target, source){
+        if (!source) {
+            return false;
+        }
+        if (!target) {
+            return false;
+        }
         return target.indexOf(source) >= 0;
     }
     $(function () {
         var UEditorS;
         var peTableTitle = [
-            {'title': '重点项目名称', 'width': 300},
-            {'title': '操作', 'width': 100}
+            {'title': '重点项目名称', 'width': 80},
+            {'title': '操作', 'width': 20}
         ];
 
         var user = [];

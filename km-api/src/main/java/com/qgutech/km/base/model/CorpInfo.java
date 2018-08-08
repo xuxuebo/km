@@ -83,7 +83,7 @@ public class CorpInfo extends BaseModel {
     }
 
     public enum FromAppType {
-        PE("博易考"), ELP("ELP");
+        PE("智慧云"), ELP("ELP");
         private String text;
 
         FromAppType(String text) {

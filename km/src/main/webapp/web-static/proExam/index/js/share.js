@@ -38,6 +38,19 @@ $(function () {
             "labelIds":labelIds
         };
     };
+
+    var refreshTable = function () {
+        typeIds = getTypeIds();
+        var param = {
+            'referId': orgTreeId,
+            'referType': orgType,
+            'tag': typeIds.labelIds,
+            'projectLibraryId': typeIds.projectIds,
+            'specialtyLibraryId': typeIds.majorIds,
+            'knowledgeName': ''
+        };
+        initShareTab(param);
+    }
     $(".y-share-project-type" ).delegate( ".y-share-project-type-item-first", "click", function(){
         var $this = $(this);
         if($this.hasClass('y-active')){
@@ -45,16 +58,7 @@ $(function () {
         }
         $this.addClass('y-active');
         $this.parent().find('.y-share-project-type-item').removeClass('y-active');
-        typeIds = getTypeIds();
-        var param = {
-            'referId':orgTreeId,
-            'referType':orgType,
-            'tag':typeIds.labelIds,
-            'projectLibraryId':typeIds.projectIds,
-            'specialtyLibraryId':typeIds.majorIds,
-            'knowledgeName':''
-        };
-        initShareTab(param);
+        refreshTable();
     });
     $(".y-share-project-type" ).delegate( ".y-share-project-type-item", "click", function(){
         var $this = $(this);
@@ -67,17 +71,7 @@ $(function () {
             $this.parent().find('.y-share-project-type-item-first').addClass('y-active');
         }
 
-        var orgTxt = $('#orgTreeAndUsers .curSelectedNode').attr('title');
-        typeIds = getTypeIds();
-        var param = {
-            'referId':orgTreeId,
-            'referType':orgType,
-            'tag':typeIds.labelIds,
-            'projectLibraryId':typeIds.projectIds,
-            'specialtyLibraryId':typeIds.majorIds,
-            'knowledgeName':''
-        };
-        initShareTab(param);
+        refreshTable();
     } );
     //初始化表格
     function initShareTab(param) {
@@ -126,7 +120,7 @@ $(function () {
             };
             PEMO.DIALOG.confirmL({
                 content: '<div class="y-content__table" id="yunTable"><div class="pe-stand-table-pagination"></div></div>',
-                area: ['750px', '520px'],
+                area: ['800px', '520px'],
                 title: '我的云库',
                 btn: ['下一步', '取消'],
                 skin: 'y-change-layer',
@@ -204,6 +198,7 @@ $(function () {
                                             content: '操作成功',
                                             time: 1000,
                                         });
+                                        refreshTable();
                                         return false;
                                     }
                                     PEMO.DIALOG.alert({
@@ -257,7 +252,7 @@ $(function () {
             var deptId, fileIds = "";
             PEMO.DIALOG.selectorDialog({
                 content: pageContext.rootPath + '/km/knowledge/openUpload',
-                area: ['600px', '400px'],
+                area: ['650px', '400px'],
                 title: '上传文件',
                 skin:'js-file-upload',
                 btn: ['下一步','取消'],
@@ -317,6 +312,7 @@ $(function () {
                                             content: '操作成功',
                                             time: 1000,
                                         });
+                                        refreshTable();
                                         return false;
                                     }
                                     PEMO.DIALOG.alert({

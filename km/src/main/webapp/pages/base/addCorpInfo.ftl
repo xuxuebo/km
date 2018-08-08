@@ -120,7 +120,7 @@
                             <span  class="iconfont
                              <#if ((corpInfo.fromAppType)! != ""&&(corpInfo.fromAppType)! == 'PE')||(corpInfo.id)! =="">icon-checked-radio peChecked<#else>icon-unchecked-radio</#if>"></span>
                         <input class="pe-form-ele" id="PESource" type="radio" value="PE" name="fromAppType"
-                               <#if ((corpInfo.fromAppType)! != ""&&(corpInfo.fromAppType)! == 'PE')||(corpInfo.id)! =="">checked="checked"</#if>/>博易考
+                               <#if ((corpInfo.fromAppType)! != ""&&(corpInfo.fromAppType)! == 'PE')||(corpInfo.id)! =="">checked="checked"</#if>/>智慧云
                     </label>
                     <label class="pe-radio" style="display: block;">
                                 <span class="iconfont
