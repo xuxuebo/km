@@ -22,6 +22,10 @@
     </div>
     <% }%>
 </script>
+<script type="text/template" id="tplYun">
+</script>
+<script type="text/template" id="tplYunTable">
+</script>
 
 
 <script src="${resourcePath!}/web-static/proExam/index/js/majorProject.js"></script>

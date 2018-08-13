@@ -43,7 +43,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     private final Log LOG = LogFactory.getLog(LoginInterceptor.class);
     private static final String MOBILE_CHANNEL = "mobile";
-    private static final String LOGIN_CHANNEL = "login";
+    public static final String LOGIN_CHANNEL = "login";
     private static final String CORP_CHANNEL = "corp";
 
     @Override
@@ -76,7 +76,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         return getSessionContext(request, response, channel);
     }
 
-    private boolean isStaticResource(RequestContext requestContext) {
+    public static boolean isStaticResource(RequestContext requestContext) {
 
         return "web-static".equals(requestContext.getChannel()) || "css".equals(requestContext.getChannel())
                 || "images".equals(requestContext.getChannel()) || "js".equals(requestContext.getChannel())

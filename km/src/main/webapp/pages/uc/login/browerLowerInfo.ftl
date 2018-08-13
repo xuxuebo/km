@@ -50,7 +50,7 @@
 <div class="pe-browser-lower-wrap">
     <div class="pe-top-nav-container">
         <div class="pe-logo" style="width:118px;height:30px;">
-            <img src="${(resourcePath+logoUrl)!'${resourcePath!}/web-static/proExam/images/long_logo_pure.png'}" class="floatL" width="100%" alt="LOGO">
+            <span style="font-size: 26px;font-weight: bold;">智慧云</span>
         </div>
     </div>
 
@@ -61,9 +61,9 @@
             <h2>抱歉，暂不支持低于IE9或Chrome小于35,Firefox小于30版本浏览器</h2>
             <p>请升级浏览器、或者使用高于30版本的火狐(Firefox)、谷歌（Chrome）浏览器。点击如下图标进行下载。</p>
             <ul class="get-new-browser">
-                <li class="floatL" title="chrome浏览器"><a href="https://www.baidu.com/s?wd=chrome"></a></li>
-                <li class="floatL firefox-browser" title="firefox浏览器"><a href="http://www.baidu.com/s?wd=firefox"></a></li>
-                <li class="floatL ie-browser" title="IE浏览器"><a href="https://www.baidu.com/s?wd=ie11"></a></li>
+                <li class="floatL" title="chrome浏览器"></li>
+                <li class="floatL firefox-browser" title="firefox浏览器"></li>
+                <li class="floatL ie-browser" title="IE浏览器"></li>
             </ul>
         </div>
     </div>

@@ -23,6 +23,10 @@
     </div>
     <% }%>
 </script>
+<script type="text/template" id="tplYun">
+</script>
+<script type="text/template" id="tplYunTable">
+</script>
 
 
 <script>

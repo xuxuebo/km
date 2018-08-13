@@ -1,6 +1,5 @@
 package com.qgutech.km.module.uc.service;
 
-import com.qgutech.km.utils.MD5Generator;
 import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.redis.PeJedisCommands;
 import com.qgutech.km.base.redis.PeRedisClient;
@@ -10,6 +9,7 @@ import com.qgutech.km.base.vo.JsonResult;
 import com.qgutech.km.constant.PeConstant;
 import com.qgutech.km.constant.RedisKey;
 import com.qgutech.km.module.uc.model.User;
+import com.qgutech.km.utils.MD5Generator;
 import com.qgutech.km.utils.PeException;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.Restrictions;
@@ -170,5 +170,44 @@ public class LoginServiceImpl extends BaseServiceImpl<User> implements LoginServ
         }
 
         return false;
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public JsonResult<User> ssoLogin(String userName) {
+        JsonResult<User> jsonResult = new JsonResult<>();
+        jsonResult.setSuccess(false);
+        //用户名或密码为空
+        if (StringUtils.isBlank(userName)) {
+            jsonResult.setMessage("用户名不能为空！");
+            return jsonResult;
+        }
+
+        User user = userService.getByAccount(userName);
+        if (user == null) {
+            jsonResult.setMessage(i18nService.getI18nValue("login.user.not.exist"));
+            return jsonResult;
+        }
+
+        if (!User.UserStatus.ENABLE.equals(user.getStatus())) {
+            jsonResult.setMessage(i18nService.getI18nValue("login.user.forbidden"));
+            return jsonResult;
+        }
+
+        userRedisService.save(user);
+        String userId = user.getId();
+        //防止重复登录
+        String lockKey = RedisKey.LOGIN_LOCK + PeConstant.REDIS_DIVISION
+                + user.getCorpCode() + PeConstant.REDIS_DIVISION
+                + userId;
+        if (!getLock(lockKey, 2)) {
+            jsonResult.setMessage(i18nService.getI18nValue("login.repeat.login"));
+            return jsonResult;
+        }
+
+        PeRedisClient.getSessionJedis().expire(lockKey, 0);
+        jsonResult.setSuccess(true);
+        jsonResult.setData(user);
+        return jsonResult;
     }
 }

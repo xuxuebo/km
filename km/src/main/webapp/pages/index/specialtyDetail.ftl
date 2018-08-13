@@ -261,7 +261,7 @@
                             });
                             layer.closeAll();
                             //刷新列表
-                            route['YunCb']($yunContentBody, route.routes.yun, null, null);
+                           initTable();
                         } else {
                             PEMO.DIALOG.alert({
                                 content: data.message,

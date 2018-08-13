@@ -15,7 +15,10 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -136,11 +139,22 @@ public class HttpUtils {
     }
 
     public static String doGet(String userInfoUrl, String token) {
-        GetMethod getMethod = new GetMethod(userInfoUrl+token);
+        String uri = userInfoUrl + "?token=" + token;
+        System.out.println("------uri----------" + uri);
+        GetMethod getMethod = new GetMethod(uri);
         HttpClient client = new HttpClient();
         try {
             client.executeMethod(getMethod);
-            return getMethod.getResponseBodyAsString();
+            InputStream stream = getMethod.getResponseBodyAsStream();
+            StringBuilder sb = new StringBuilder();
+            String line;
+            BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+
+            System.out.println(sb);
+            return sb.toString();
         } catch (IOException e) {
             e.printStackTrace();
         }

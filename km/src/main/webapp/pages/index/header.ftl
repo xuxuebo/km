@@ -15,7 +15,7 @@
           type="text/css"/>
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/pe-common.css?_v=${(resourceVersion)!}"
           type="text/css">
-    <link rel="stylesheet" href="//at.alicdn.com/t/font_700396_ee9lvh7z3mk.css" type="text/css">
+    <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/font_700396_ee9lvh7z3mk.css" type="text/css">
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/index/css/index.css">
     <script>
         var pageContext = {
@@ -61,7 +61,7 @@
             <i class="icon-tuichu">
                 <img class="icon-tuichu-pic" src="${(resourcePath+logoUrl)!'${resourcePath!}/web-static/proExam/index/img/icon-exist.png'}" onclick="YUN.loginOut();"/>
             </i>
-            <span class="y-header-user-name">按时间快点哈就</span>
+            <span class="y-header-user-name">${userName!}</span>
         </div>
         <#--<div class="y-head__msg">-->
             <#--<span class="yfont-icon">&#xe654;</span>-->
@@ -85,6 +85,12 @@
             <li data-type="dataShare" class="y-nav__link__item"><span class="txt">分享</span></li>
             <li data-type="majorProject" class="y-nav__link__item"><span class="txt">重点项目</span></li>
             <li data-type="specialty" class="y-nav__link__item"><span class="txt">专业分类</span></li>
+            <li data-type="CNKI" class="y-nav__link__item">
+                <a target="_blank" href="http://172.17.32.24/kns55/">CNKI</a>
+            </li>
+            <li data-type="FULLTEXT" class="y-nav__link__item">
+                <a target="_blank" href="http://26.47.100.214:7061/syn/loginOther.do">全景</a>
+            </li>
             <#--<li data-type="dataStatistics" class="y-nav__link__item"><span class="txt">数据统计</span></li>-->
         <#if admin?? && admin>
             <li data-type="adminSetting" class="y-nav__link__item"><span class="txt">设置</span></li>

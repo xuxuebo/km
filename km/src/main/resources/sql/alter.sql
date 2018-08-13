@@ -1,4 +1,5 @@
 ALTER TABLE t_km_share DROP  share_library_id;
+ALTER TABLE t_km_knowledge_rel add column share_id varchar(32);
 
 CREATE TABLE t_km_library_detail (
   id             VARCHAR(32) PRIMARY KEY,

@@ -50,7 +50,7 @@ $(function () {
             'knowledgeName': ''
         };
         initShareTab(param);
-    }
+    };
     $(".y-share-project-type" ).delegate( ".y-share-project-type-item-first", "click", function(){
         var $this = $(this);
         if($this.hasClass('y-active')){
@@ -418,6 +418,47 @@ $(function () {
                 },
             });
         });
+
+        //删除
+        $('.js-opt-delete').on('click', function () {
+            var relId = $(this).data("id");
+            if (relId == null || relId == undefined || relId == '') {
+                return false;
+            }
+            PEMO.DIALOG.confirmL({
+                content: '<div><h3 class="pe-dialog-content-head">确定删除分享的知识吗？</h3><p class="pe-dialog-content-tip">删除后，可在我的云库中查看。 </p></div>',
+                btn1: function () {
+                    PEBASE.ajaxRequest({
+                        url: pageContext.rootPath + '/km/knowledge/orgShare/deleteShare',
+                        data: {
+                            "relId": relId
+                        },
+                        success: function (data) {
+                            refreshTable();
+                            if (data.success) {
+                                PEMO.DIALOG.tips({
+                                    content: '操作成功',
+                                    time: 1000,
+                                });
+                                layer.closeAll();
+                            } else {
+                                PEMO.DIALOG.alert({
+                                    content: data.message,
+                                    btn: ['我知道了'],
+                                    yes: function (index) {
+                                        layer.close(index);
+                                    }
+                                });
+                            }
+
+                        }
+                    });
+                },
+                btn2: function () {
+                    layer.closeAll();
+                },
+            });
+        });
     }
 
     //初始化table事件
@@ -633,48 +674,6 @@ $('.y-share-table-main-panel').delegate('.js-opt-download', 'click', function ()
             }
 
         }
-    });
-});
-
-//删除
-$('.y-share-table-main-panel').delegate('.js-opt-delete', 'click', function () {
-    var relId = $(this).data("id");
-    if (relId == null || relId == undefined || relId == '') {
-        return false;
-    }
-    PEMO.DIALOG.confirmL({
-        content: '<div><h3 class="pe-dialog-content-head">确定删除分享的知识吗？</h3><p class="pe-dialog-content-tip">删除后，可在我的云库中查看。 </p></div>',
-        btn1: function () {
-            PEBASE.ajaxRequest({
-                url: pageContext.rootPath + '/km/knowledge/orgShare/deleteShare',
-                data: {
-                    "relId": relId
-                },
-                success: function (data) {
-                    if (data.success) {
-                        PEMO.DIALOG.tips({
-                            content: '操作成功',
-                            time: 1000,
-                        });
-                        layer.closeAll();
-                        //刷新列表
-                        route['YunCb']($yunContentBody, route.routes.yun, null, null);
-                    } else {
-                        PEMO.DIALOG.alert({
-                            content: data.message,
-                            btn: ['我知道了'],
-                            yes: function (index) {
-                                layer.close(index);
-                            }
-                        });
-                    }
-
-                }
-            });
-        },
-        btn2: function () {
-            layer.closeAll();
-        },
     });
 });
 

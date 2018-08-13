@@ -90,6 +90,12 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/**/login/**"/>
+            <bean class="com.qgutech.km.base.interceptor.AuthenticateInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/**/ssoLogin"/>
             <bean class="com.qgutech.km.base.interceptor.LoginInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

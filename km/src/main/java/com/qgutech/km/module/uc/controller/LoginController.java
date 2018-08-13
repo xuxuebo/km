@@ -1,26 +1,28 @@
 package com.qgutech.km.module.uc.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.controller.BaseController;
+import com.qgutech.km.base.model.CorpInfo;
+import com.qgutech.km.base.redis.PeJedisCommands;
 import com.qgutech.km.base.redis.PeRedisClient;
 import com.qgutech.km.base.service.CorpService;
+import com.qgutech.km.base.service.I18nService;
+import com.qgutech.km.base.vo.JsonResult;
 import com.qgutech.km.constant.CookieKey;
 import com.qgutech.km.constant.PeConstant;
+import com.qgutech.km.constant.RedisKey;
 import com.qgutech.km.module.im.domain.ImReceiver;
+import com.qgutech.km.module.im.domain.ImTemplate;
 import com.qgutech.km.module.im.service.MsgSendService;
+import com.qgutech.km.module.uc.model.SsoLogin;
 import com.qgutech.km.module.uc.model.User;
 import com.qgutech.km.module.uc.service.LoginService;
 import com.qgutech.km.module.uc.service.UserRedisService;
+import com.qgutech.km.module.uc.service.UserRoleService;
 import com.qgutech.km.module.uc.service.UserService;
 import com.qgutech.km.utils.*;
-import com.qgutech.km.base.ExecutionContext;
-import com.qgutech.km.base.model.CorpInfo;
-import com.qgutech.km.base.redis.PeJedisCommands;
-import com.qgutech.km.base.service.I18nService;
-import com.qgutech.km.base.vo.JsonResult;
-import com.qgutech.km.constant.RedisKey;
-import com.qgutech.km.module.im.domain.ImTemplate;
-import com.qgutech.km.module.uc.service.UserRoleService;
+import com.tbc.framework.util.Signer;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Restrictions;
@@ -38,6 +40,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * 登录的控制层
@@ -57,6 +60,8 @@ public class LoginController extends BaseController {
     private LoginService loginService;
     @Resource
     private UserRoleService userRoleService;
+    @Resource
+    private CorpService corpService;
 
     @RequestMapping("login/loginPage")
     public String initPage(HttpServletRequest request, HttpServletResponse response) {
@@ -509,5 +514,56 @@ public class LoginController extends BaseController {
         boolean isAdmin = userRoleService.checkSystemRole(userId);
         model.addAttribute("admin", isAdmin);
         return "myExamNav";
+    }
+
+    @RequestMapping("/login/ssoLogin")
+    public String ssoLogin(SsoLogin sso, Model model, HttpServletRequest request, HttpServletResponse response) {
+        String corpCode = sso.getCorpCode();
+        String userName = sso.getUserName();
+        String sign = sso.getSign();
+        long timestamp = sso.getTimestamp();
+        if (StringUtils.isBlank(corpCode)
+                || StringUtils.isBlank(userName)
+                || StringUtils.isBlank(sign)
+                || timestamp <= 0) {
+            model.addAttribute("message", "参数填写不完整！");
+            return "error";
+        }
+
+        Properties properties = PropertiesUtils.getConfigProp();
+        String cuSecret = properties.getProperty("sso_info_secret");
+        String action = properties.getProperty("sso_info_actionName");
+        String signingText = Signer.calculateSign(action, cuSecret, corpCode, userName.trim(), timestamp);
+        if (!sign.equalsIgnoreCase(signingText)) {
+            model.addAttribute("message", "参数签名不正确！");
+            return "error";
+        }
+
+        CorpInfo corpInfo = corpService.getByCode(corpCode);
+        if (corpInfo == null) {
+            model.addAttribute("公司不存在");
+            return "error";
+        }
+
+        JsonResult<User> jsonResult = checkCorp(corpInfo);
+        if (!jsonResult.isSuccess()) {
+            model.addAttribute("message", jsonResult.getMessage());
+            return "error";
+        }
+
+        jsonResult = loginService.ssoLogin(userName);
+        if (!jsonResult.isSuccess()) {
+            model.addAttribute("message", jsonResult.getMessage());
+            return "error";
+        }
+
+        User user = jsonResult.getData();
+        String sessionId = storeSession(request, response, user, corpInfo);
+        jsonResult.setSuccess(true);
+        user.setSessionId(sessionId);
+
+        String url = sso.getReturnUrl();
+        url = StringUtils.isEmpty(url) ? request.getContextPath() + "/front/index" : url;
+        return "redirect:" + url;
     }
 }

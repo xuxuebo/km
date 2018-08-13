@@ -38,6 +38,46 @@ $(function () {
                     uploadTime: "desc"
                 };
                 $fileList.html(_.template(tplsFileTable)({list: data, sort: initSort}));
+                //删除
+                $('.js-opt-delete').on('click',function (e) {
+                    var id = $(this).attr("data-id");
+                    PEMO.DIALOG.confirmL({
+                        content: '<div><h3 class="pe-dialog-content-head">确定删除上传的知识吗？</h3><p class="pe-dialog-content-tip">删除后，可在我的云库中查看。 </p></div>',
+                        btn1: function () {
+                            PEBASE.ajaxRequest({
+                                url: pageContext.rootPath + '/km/library/delete',
+                                data: {
+                                    "knowledgeIds": id,
+                                    "shareLibraryId": libraryId
+                                },
+                                success: function (data) {
+                                    if (data.success) {
+                                        initMajorProject();
+                                        initActivity();
+                                        initRank();
+                                        PEMO.DIALOG.tips({
+                                            content: '操作成功',
+                                            time: 1000,
+                                        });
+                                        layer.closeAll();
+                                    } else {
+                                        PEMO.DIALOG.alert({
+                                            content: data.message,
+                                            btn: ['我知道了'],
+                                            yes: function (index) {
+                                                layer.close(index);
+                                            }
+                                        });
+                                    }
+
+                                }
+                            });
+                        },
+                        btn2: function () {
+                            layer.closeAll();
+                        }
+                    });
+                });
             }
         });
     }

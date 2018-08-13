@@ -196,7 +196,7 @@
             async: false,
             type: "POST",
             url: pageContext.resourcePath + '/uc/user/manage/search',//公共库的查询列表
-            data: {"autoCount": false, "autoPaging": false},
+            data: {"autoCount": false, "autoPaging": false, "page": 1},
             dataType: 'json',
             success: function (result) {
                 user = result.rows;
