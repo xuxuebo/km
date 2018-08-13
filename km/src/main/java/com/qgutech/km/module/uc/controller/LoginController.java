@@ -541,10 +541,11 @@ public class LoginController extends BaseController {
 
         CorpInfo corpInfo = corpService.getByCode(corpCode);
         if (corpInfo == null) {
-            model.addAttribute("公司不存在");
+            model.addAttribute("message", "公司不存在");
             return "error";
         }
 
+        ExecutionContext.setCorpCode(corpCode);
         JsonResult<User> jsonResult = checkCorp(corpInfo);
         if (!jsonResult.isSuccess()) {
             model.addAttribute("message", jsonResult.getMessage());
@@ -566,4 +567,10 @@ public class LoginController extends BaseController {
         url = StringUtils.isEmpty(url) ? request.getContextPath() + "/front/index" : url;
         return "redirect:" + url;
     }
+
+    @RequestMapping("login/checkBrowseLower")
+    public String checkBrowseLower() {
+        return "uc/login/checkBrowserLower";
+    }
+
 }

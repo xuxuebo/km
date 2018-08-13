@@ -47,4 +47,5 @@ public interface LoginService extends BaseService<User> {
      * @return
      */
     JsonResult<User> login(User loginUser);
+    JsonResult<User> ssoLogin(String userName);
 }

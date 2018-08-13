@@ -45,6 +45,8 @@ public class FrontController {
     public String index(Model model) {
         model.addAttribute("userName", SessionContext.get().getUserName());
         model.addAttribute("admin", SessionContext.get().isAdmin());
+        model.addAttribute("CNKI", PropertiesUtils.getConfigProp().getProperty("zhy.cnki"));
+        model.addAttribute("FULLTEXT", PropertiesUtils.getConfigProp().getProperty("zhy.full.text"));
         return "index/index";
     }
 

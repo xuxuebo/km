@@ -183,12 +183,15 @@ public class LoginServiceImpl extends BaseServiceImpl<User> implements LoginServ
             return jsonResult;
         }
 
+        System.out.println("=============start login by user========" + userName);
         User user = userService.getByAccount(userName);
         if (user == null) {
+            System.out.println("=============search user result is null=========");
             jsonResult.setMessage(i18nService.getI18nValue("login.user.not.exist"));
             return jsonResult;
         }
 
+        System.out.println("=============search user result is=========" + user.getUserName());
         if (!User.UserStatus.ENABLE.equals(user.getStatus())) {
             jsonResult.setMessage(i18nService.getI18nValue("login.user.forbidden"));
             return jsonResult;

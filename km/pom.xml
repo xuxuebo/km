@@ -520,6 +520,16 @@
             <groupId>com.tbc.paas.paas-webutils</groupId>
             <artifactId>paas-webutils</artifactId>
             <version>4.0.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.tbc.paas.oms</groupId>
+                    <artifactId>oms-client</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.struts</groupId>
+                    <artifactId>struts2-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

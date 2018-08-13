@@ -68,7 +68,6 @@ public class AuthenticateInterceptor implements HandlerInterceptor {
             }
         }
 
-
         RequestContext requestContext = RequestContextFactory.toRequestContext(hRequest, hResponse);
         RequestContext.set(requestContext);
         Map<String, String> contextMap = new HashMap<>();
@@ -123,7 +122,7 @@ public class AuthenticateInterceptor implements HandlerInterceptor {
         try {
             String jsonStr = HttpUtils.doGet(userInfoUrl, token);
             JSONObject jsonObject = JSON.parseObject(jsonStr);
-            username = jsonObject.getString("username");
+            username = jsonObject.getString("id");
             if (StringUtils.isBlank(username)) {
                 throw new IllegalArgumentException("username is blank");
             }

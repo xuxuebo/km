@@ -29,7 +29,8 @@ public class SessionServiceImpl implements SessionService {
         String sessionKey = RedisKey.UC_LOGIN_SESSION + PeConstant.REDIS_DIVISION + sessionId;
         String sessionString = sessionJedis.get(sessionKey);
         if (StringUtils.isEmpty(sessionString)) {
-            throw new PeException("sessionToken is not found in server，sessionId:{" + sessionId + "}");
+            return new SessionContext();
+//            throw new PeException("sessionToken is not found in server，sessionId:{" + sessionId + "}");
         }
 
         Integer aliveSeconds = PeNumberUtils.transformInt(PropertiesUtils.getConfigProp().

@@ -824,7 +824,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                 Restrictions.or(
                         Restrictions.eq(User._loginName, account),
                         Restrictions.eq(User._email, account),
-                        Restrictions.eq(User._employeeCode, account),
+//                        Restrictions.eq(User._employeeCode, account),
                         Restrictions.eq(User._mobile, account)),
                 Restrictions.ne(User._status, User.UserStatus.DELETED));
         User user = getByCriterion(criterion, User.ID, User._employeeCode, User._mobile, User._loginName,

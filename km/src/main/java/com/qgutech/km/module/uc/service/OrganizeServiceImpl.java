@@ -11,11 +11,11 @@ import com.qgutech.km.module.uc.model.User;
 import com.qgutech.km.utils.PeException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.*;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -643,27 +643,22 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
     @Override
     @Transactional(readOnly = true)
     public List<PeTreeNode> listTreeNodeAndUsers() {
-        Criterion criterion = Restrictions.and(Restrictions.eq(Organize.CORP_CODE, ExecutionContext.getCorpCode()),
-                Restrictions.ne(Organize._organizeStauts, Organize.OrganizeStatus.DELETE));
-        List<Organize> organizes = listByCriterion((criterion),
-                new Order[]{Order.asc(Organize._showOrder), Order.desc(Organize.CREATE_TIME)});
+        List<Organize> organizes = getOrganizes();
         if (CollectionUtils.isEmpty(organizes)) {
             return new ArrayList<>(0);
         }
 
         int size = organizes.size();
         List<PeTreeNode> peTreeNodes = new ArrayList<>(size);
-        Map<String,Boolean> parentIdMap = new HashMap<>(size);
         for (Organize organize : organizes) {
             PeTreeNode peTreeNode = new PeTreeNode();
             peTreeNode.setName(organize.getOrganizeName());
             String parentId = organize.getParentId();
             peTreeNode.setpId(parentId);
             peTreeNode.setId(organize.getId());
-            peTreeNode.setParent(false);
+            peTreeNode.setParent(true);
             peTreeNodes.add(peTreeNode);
             peTreeNode.setCanEdit(false);
-            parentIdMap.put(parentId, true);
             List<User> users = organize.getUsers();
             if (CollectionUtils.isNotEmpty(users)) {
                 for (User user : users) {
@@ -671,7 +666,7 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
                     userNode.setName(user.getUserName());
                     userNode.setpId(organize.getId());
                     userNode.setId(user.getId());
-                    userNode.setParent(false);
+                    userNode.setParent(true);
                     userNode.setCanEdit(false);
                     userNode.setType(KnowledgeConstant.TYPE_USER);
                     peTreeNodes.add(userNode);
@@ -679,11 +674,52 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
             }
         }
 
-        for (PeTreeNode peTreeNode : peTreeNodes) {
-            peTreeNode.setParent(BooleanUtils.isTrue(parentIdMap.get(peTreeNode.getId())));
-        }
-
         return peTreeNodes;
+    }
+
+    private List<Organize> getOrganizes() {
+        Map<String, Object> param = new HashMap<>(3);
+        StringBuilder sql = new StringBuilder("SELECT o.id orgId,o.parent_id,o.organize_name,u.id,u.user_name FROM t_uc_organize o ");
+        sql.append(" LEFT JOIN t_uc_user u ON u.organize_id=o.id AND u.status=:status ");
+        param.put("status", User.UserStatus.ENABLE.name());
+        sql.append(" WHERE o.corp_code=:corpCode AND o.organize_status = :orgStatus ");
+        param.put("corpCode", ExecutionContext.getCorpCode());
+        param.put("orgStatus", Organize.OrganizeStatus.ENABLE.name());
+        sql.append(" ORDER BY o.show_order asc,o.create_time desc ");
+        NamedParameterJdbcTemplate jdbcTemplate = getJdbcTemplate();
+        List<Organize> organizes = new ArrayList<>();
+        Map<String, Organize> orgIdMap = new HashMap<>();
+        jdbcTemplate.query(sql.toString(), param, (resultSet, i) -> {
+            String orgId = resultSet.getString("orgId");
+            Organize organize = orgIdMap.get(orgId);
+            if (organize == null) {
+                organize = new Organize();
+                organize.setId(orgId);
+                organize.setOrganizeName(resultSet.getString("organize_name"));
+                organize.setParentId(resultSet.getString("parent_id"));
+                orgIdMap.put(orgId, organize);
+                organizes.add(organize);
+            }
+
+            List<User> users = organize.getUsers();
+            if (users == null) {
+                users = new ArrayList<>();
+                organize.setUsers(users);
+            }
+
+            String userId = resultSet.getString("id");
+            if (StringUtils.isEmpty(userId)) {
+                return null;
+            }
+
+            User user = new User();
+            user.setId(userId);
+            user.setUserName(resultSet.getString("user_name"));
+            users.add(user);
+            return null;
+        });
+
+        return organizes;
     }
 
     @Override

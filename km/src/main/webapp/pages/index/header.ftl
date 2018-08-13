@@ -86,10 +86,10 @@
             <li data-type="majorProject" class="y-nav__link__item"><span class="txt">重点项目</span></li>
             <li data-type="specialty" class="y-nav__link__item"><span class="txt">专业分类</span></li>
             <li data-type="CNKI" class="y-nav__link__item">
-                <a target="_blank" href="http://172.17.32.24/kns55/">CNKI</a>
+                <a target="_blank" href="${CNKI!}">CNKI</a>
             </li>
             <li data-type="FULLTEXT" class="y-nav__link__item">
-                <a target="_blank" href="http://26.47.100.214:7061/syn/loginOther.do">全景</a>
+                <a target="_blank" href="${FULLTEXT!}">全景</a>
             </li>
             <#--<li data-type="dataStatistics" class="y-nav__link__item"><span class="txt">数据统计</span></li>-->
         <#if admin?? && admin>
