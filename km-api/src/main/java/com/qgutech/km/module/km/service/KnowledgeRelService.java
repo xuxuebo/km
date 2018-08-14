@@ -4,6 +4,7 @@ import com.qgutech.km.base.service.BaseService;
 import com.qgutech.km.module.km.model.Knowledge;
 import com.qgutech.km.module.km.model.KnowledgeRel;
 import com.qgutech.km.module.km.model.Share;
+import com.qgutech.km.module.km.model.Statistic;
 
 import java.util.List;
 import java.util.Map;
@@ -74,4 +75,16 @@ public interface KnowledgeRelService extends BaseService<KnowledgeRel> {
      * @since TangFD@HF 2018-8-7
      */
     void deleteByKnowledgeIdsAndLibraryId(List<String> knowledgeIds, String libraryId);
+
+    /**
+     * 中心排行
+     *
+     * @param rankCount 排行前多少名
+     * @return 部门排行数据 <ul>
+     * <li>{@link Statistic#orgList :部门名称}</li>
+     * <li>{@link Statistic#rankList :部门中的知识数}</li>
+     * </ul>
+     * @since TangFD@HF 2018-8-14
+     */
+    Statistic orgRank(int rankCount);
 }

@@ -4,6 +4,8 @@ import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.module.km.model.*;
+import com.qgutech.km.module.uc.model.Organize;
+import com.qgutech.km.module.uc.service.OrganizeService;
 import com.qgutech.km.module.uc.service.UserService;
 import com.qgutech.km.utils.PeDateUtils;
 import com.qgutech.km.utils.PeException;
@@ -35,18 +37,20 @@ public class KnowledgeRelServiceImpl extends BaseServiceImpl<KnowledgeRel> imple
     private StatisticService statisticService;
     @Resource
     private KnowledgeLogService knowledgeLogService;
+    @Resource
+    private OrganizeService organizeService;
 
     @Override
     @Transactional(readOnly = true)
     public List<KnowledgeRel> findByLibraryId(String libraryId) {
-        if(StringUtils.isEmpty(libraryId)){
-            throw  new PeException("libraryId not be null ");
+        if (StringUtils.isEmpty(libraryId)) {
+            throw new PeException("libraryId not be null ");
         }
         Criterion criterion = Restrictions.and(Restrictions.eq(KnowledgeRel.CORP_CODE, ExecutionContext.getCorpCode()),
-                Restrictions.eq(KnowledgeRel.LIBRARY_ID,libraryId));
+                Restrictions.eq(KnowledgeRel.LIBRARY_ID, libraryId));
 
         List<KnowledgeRel> knowledgeRels = new ArrayList<>();
-        knowledgeRels = listByCriterion(   criterion ,
+        knowledgeRels = listByCriterion(criterion,
                 new Order[]{Order.desc(Library.CREATE_TIME)}
         );
         return knowledgeRels;
@@ -55,15 +59,15 @@ public class KnowledgeRelServiceImpl extends BaseServiceImpl<KnowledgeRel> imple
     @Override
     @Transactional(readOnly = true)
     public List<KnowledgeRel> findByLibraryIdAndKnowledgeIds(String libraryId, List<String> knowledgeIds) {
-        if(StringUtils.isEmpty(libraryId)){
-            throw  new PeException("libraryId not be null ");
+        if (StringUtils.isEmpty(libraryId)) {
+            throw new PeException("libraryId not be null ");
         }
         Criterion criterion = Restrictions.and(Restrictions.eq(KnowledgeRel.CORP_CODE, ExecutionContext.getCorpCode()),
-                Restrictions.eq(KnowledgeRel.LIBRARY_ID,libraryId),
-                Restrictions.in(KnowledgeRel.KNOWLEDGE_ID,knowledgeIds));
+                Restrictions.eq(KnowledgeRel.LIBRARY_ID, libraryId),
+                Restrictions.in(KnowledgeRel.KNOWLEDGE_ID, knowledgeIds));
 
         List<KnowledgeRel> knowledgeRels = new ArrayList<>();
-        knowledgeRels = listByCriterion(   criterion ,
+        knowledgeRels = listByCriterion(criterion,
                 new Order[]{Order.asc(Library.CREATE_TIME)}
         );
         return knowledgeRels;
@@ -226,5 +230,91 @@ public class KnowledgeRelServiceImpl extends BaseServiceImpl<KnowledgeRel> imple
         List<KnowledgeLog> knowledgeLogs = new ArrayList<>(knowledgeIds.size());
         knowledgeLogs.addAll(knowledgeIds.stream().map(knowledgeId -> new KnowledgeLog(knowledgeId, libraryId, KnowledgeConstant.LOG_DELETE)).collect(Collectors.toList()));
         knowledgeLogService.batchSave(knowledgeLogs);
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public Statistic orgRank(int rankCount) {
+        String sql = "SELECT o.id,count(kr.id) FROM t_uc_organize o LEFT JOIN t_km_knowledge_rel kr on o.id=kr.library_id "
+                + " WHERE o.corp_code=:corpCode and o.organize_status=:status AND o.parent_id is not null  GROUP BY o.id";
+        Map<String, Object> param = new HashMap<>(2);
+        param.put("corpCode", ExecutionContext.getCorpCode());
+        param.put("status", Organize.OrganizeStatus.ENABLE.name());
+        Map<String, Long> orgIdAndCountMap = new HashMap<>();
+        getJdbcTemplate().query(sql, param, (resultSet, i) -> {
+            String orgId = resultSet.getString("id");
+            long count = resultSet.getLong("count");
+            orgIdAndCountMap.put(orgId, count);
+            return null;
+        });
+
+        Organize root = organizeService.getRoot();
+        String rootId = root.getId();
+        Map<String, Organize> organizeMap = organizeService.findAll();
+        List<Organize> firstLevels = new ArrayList<>();
+        Map<String, String> orgIdAndFirstIdMap = new HashMap<>();
+        for (Organize organize : organizeMap.values()) {
+            String parentId = organize.getParentId();
+            if (StringUtils.isEmpty(parentId)) {
+                continue;
+            }
+
+            String organizeId = organize.getId();
+            if (rootId.equalsIgnoreCase(parentId)) {
+                firstLevels.add(organize);
+                orgIdAndFirstIdMap.put(organizeId, organizeId);
+            }
+
+            String idPath = organize.getIdPath();
+            String[] split = idPath.split("\\.");
+            if (split.length < 2) {
+                continue;
+            }
+
+            orgIdAndFirstIdMap.put(organizeId, split[1]);
+        }
+
+        Map<String, Long> firstIdAndCountMap = new HashMap<>();
+        for (Map.Entry<String, Long> entry : orgIdAndCountMap.entrySet()) {
+            String orgId = entry.getKey();
+            String firstOrgId = orgIdAndFirstIdMap.get(orgId);
+            if (StringUtils.isEmpty(firstOrgId)) {
+                continue;
+            }
+
+            Long count = firstIdAndCountMap.get(firstOrgId);
+            count = count == null ? 0 : count;
+            Long value = entry.getValue();
+            value = value == null ? 0 : value;
+            firstIdAndCountMap.put(firstOrgId, count + value);
+        }
+
+        List<Organize> organizes = new ArrayList<>(firstIdAndCountMap.size());
+        for (String firstId : firstIdAndCountMap.keySet()) {
+            Organize organize = organizeMap.get(firstId);
+            Long count = firstIdAndCountMap.get(firstId);
+            organize.setUserCount(count == null ? 0 : count);
+            organizes.add(organize);
+        }
+
+        int size = organizes.size();
+        if (size == 0) {
+            return new Statistic();
+        }
+
+        Collections.sort(organizes, (o1, o2) -> (int) (o2.getUserCount() - o1.getUserCount()));
+        List<String> orgNames = new ArrayList<>(size);
+        List<Long> countList = new ArrayList<>(size);
+        for (Organize organize : organizes) {
+            orgNames.add(organize.getOrganizeName());
+            countList.add(organize.getUserCount());
+        }
+
+        rankCount = rankCount <= 0 ? 5 : rankCount;
+        rankCount = rankCount > size ? size : rankCount;
+        Statistic statistic = new Statistic();
+        statistic.setNames(orgNames.subList(0, rankCount));
+        statistic.setCounts(countList.subList(0, rankCount));
+        return statistic;
     }
 }

@@ -2,10 +2,8 @@ package com.qgutech.km.module.km.model;
 
 import com.qgutech.km.base.model.BaseModel;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by Administrator on 2018/6/22.
@@ -40,6 +38,10 @@ public class Statistic extends BaseModel {
      */
     @Column(nullable = false)
     private Integer copyCount;
+    @Transient
+    private List<String> names;
+    @Transient
+    private List<Long> counts;
 
 
     public Statistic() {
@@ -82,5 +84,21 @@ public class Statistic extends BaseModel {
 
     public void setCopyCount(Integer copyCount) {
         this.copyCount = copyCount;
+    }
+
+    public void setNames(List<String> names) {
+        this.names = names;
+    }
+
+    public List<String> getNames() {
+        return names;
+    }
+
+    public void setCounts(List<Long> counts) {
+        this.counts = counts;
+    }
+
+    public List<Long> getCounts() {
+        return counts;
     }
 }

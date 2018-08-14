@@ -3,10 +3,12 @@ package com.qgutech.km.module.km.service;
 import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseService;
+import com.qgutech.km.base.vo.Rank;
 import com.qgutech.km.module.km.model.Knowledge;
 import com.qgutech.km.module.km.model.Share;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -123,4 +125,29 @@ public interface KnowledgeService extends BaseService<Knowledge> {
      * @since TangFD@HF 2018-8-8
      */
     void deleteInDir(List<String> knowledgeIdList, String libraryId);
+
+    /**
+     * 获取当前公司知识总数量及当日上传数量
+     *
+     * @return 知识数量 <ul>
+     * <li>totalCount:总数量</li>
+     * <li>dayCount:当日上传数量</li>
+     * </ul>
+     * @since TangFD@HF 2018-8-14
+     */
+    Map<String, String> getKnowledgeTotalAndDayCount();
+
+    /**
+     * 知识排行接口
+     *
+     * @param rankCount 查询排行前多少名
+     * @return 排行数据集合 <ul>
+     * <li>{@link Rank#userName}:姓名</li>
+     * <li>{@link Rank#orgName}:部门名称</li>
+     * <li>{@link Rank#count}:上传文件数</li>
+     * <li>{@link Rank#rank}:排名</li>
+     * </ul>
+     * @since TangFD@HF 2018-8-14
+     */
+    List<Rank> rank(int rankCount);
 }

@@ -386,29 +386,7 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
         }
 
         List<User> users = userService.list(userIds);
-        Map<String, User> userMap = new HashMap<>(userIds.size());
-        for (User user : users) {
-            userMap.put(user.getId(), user);
-        }
-
-        int rankIndex = 1, count = 0;
-        for (Rank rank : rankList) {
-            String userId = rank.getUserId();
-            User user = userMap.get(userId);
-            rank.setOrgName(user.getOrganizeName());
-            rank.setUserName(user.getUserName());
-            rank.setFacePath(user.getFacePath());
-            int rankCount = rank.getCount();
-            if (rankCount < count) {
-                rankIndex++;
-                count = rankCount;
-            } else if (count == 0) {
-                count = rankCount;
-            }
-
-            rank.setRank(rankIndex);
-        }
-
+        KnowledgeServiceImpl.setRankInfo(users, rankList);
         return rankList;
     }
 

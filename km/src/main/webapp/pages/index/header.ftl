@@ -91,8 +91,8 @@
             <li data-type="FULLTEXT" class="y-nav__link__item">
                 <a target="_blank" href="${FULLTEXT!}">全景</a>
             </li>
-            <#--<li data-type="dataStatistics" class="y-nav__link__item"><span class="txt">数据统计</span></li>-->
         <#if admin?? && admin>
+            <li data-type="dataStatistics" class="y-nav__link__item"><span class="txt">数据统计</span></li>
             <li data-type="adminSetting" class="y-nav__link__item"><span class="txt">设置</span></li>
         </#if>
 

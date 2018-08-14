@@ -1,75 +1,109 @@
 $(function () {
-    //柱状图
-    var myChart = echarts.init(document.getElementById('s-echarts-bar'));
-    var option = {
-        tooltip: {
-            trigger: 'axis'
-        },
-        toolbox: {
-            show: true,
-            orient: 'vertical',
-            y: 'center'
-        },
-        calculable: true,
-        grid: {
-            y: 80,
-            y2: 40,
-            x2: 10
-        },
-        xAxis: [
-            {
-                type: 'category',
-                //max: 30,
-                barWidth: 30,
-                data: ['电网技术中心', '状态评价中心', '计量中心', '客服中心', '人力资源服务室'],
-                axisLabel: {
-                    //X轴刻度配置
-                    interval: 0,//0：表示全部显示不间隔；auto:表示自动根据刻度个数和宽度自动设置间隔个数
-                    show: true,
-                    textStyle: {
-                        color: "#D9D9D9"
-                    }
-                }
+    //文件数量
+    $.ajax({
+        url: pageContext.resourcePath + "/statistic/fileCount",
+        dataType: 'json',
+        success: function (result) {
+            if(result){
+                $(".s-data-account").html(result.totalCount);
+                $(".s-file-upload-account").html(result.dayCount);
             }
-        ],
-        yAxis: [
-            {
-                type: 'value',
-                axisLabel: {
-                    show: true,
-                    textStyle: {
-                        color: "#D9D9D9"
-                    }
+        }
+    });
+
+    //个人排行
+    $.ajax({
+        url: pageContext.resourcePath + "/statistic/rank",
+        dataType: 'json',
+        success: function (result) {
+            $("#rankUL").html(_.template($("#rank").html())({list: result}));
+        }
+    });
+
+    //中心排行
+    $.ajax({
+        url: pageContext.resourcePath + "/statistic/orgStatistic",
+        dataType: 'json',
+        success: function (result) {
+            var names = result.names;
+            var counts = result.counts;
+            names = names ? names : [];
+            counts = counts ? counts : [];
+
+            //柱状图
+            var myChart = echarts.init(document.getElementById('s-echarts-bar'));
+            var option = {
+                tooltip: {
+                    trigger: 'axis'
                 },
-                lineStyle: {
-                    color: ['#FFFFFF'],
-                    width: 1,
-                    type: 'solid',
-                    opacity: 0.1
-                }
-            }
-        ],
-        series: [
-            {
-                type: 'bar',
-                itemStyle: {
-                    normal: {
-                        color: function (params) {
-                            // build a color map as your need.
-                            var colorList = [
-                                '#446EB6', '#F03869', '#F3CE30', '#45FBC8', '#588EE9'
-                            ];
-                            return colorList[params.dataIndex]
+                toolbox: {
+                    show: true,
+                    orient: 'vertical',
+                    y: 'center'
+                },
+                calculable: true,
+                grid: {
+                    y: 80,
+                    y2: 40,
+                    x2: 10
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        //max: 30,
+                        barWidth: 30,
+                        data: names,
+                        axisLabel: {
+                            //X轴刻度配置
+                            interval: 0,//0：表示全部显示不间隔；auto:表示自动根据刻度个数和宽度自动设置间隔个数
+                            show: true,
+                            textStyle: {
+                                color: "#D9D9D9"
+                            }
                         }
                     }
-                },
-                barWidth: 30,//柱图宽度
-                barCategoryGap: 30,
-                data: [350, 156, 423, 289, 540]
-            }
-        ]
-    };
-    myChart.setOption(option);
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: "#D9D9D9"
+                            }
+                        },
+                        lineStyle: {
+                            color: ['#FFFFFF'],
+                            width: 1,
+                            type: 'solid',
+                            opacity: 0.1
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        type: 'bar',
+                        itemStyle: {
+                            normal: {
+                                color: function (params) {
+                                    // build a color map as your need.
+                                    var colorList = [
+                                        '#446EB6', '#F03869', '#F3CE30', '#45FBC8', '#588EE9'
+                                    ];
+                                    return colorList[params.dataIndex]
+                                }
+                            }
+                        },
+                        barWidth: 30,//柱图宽度
+                        barCategoryGap: 30,
+                        data: counts
+                    }
+                ]
+            };
+            myChart.setOption(option);
+        }
+    });
+
 
     //环形图
     var myPieChart = echarts.init(document.getElementById('s-echarts-pie'));

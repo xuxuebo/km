@@ -1,13 +1,17 @@
 package com.qgutech.km.module.km.service;
 
 import com.qgutech.km.base.ExecutionContext;
+import com.qgutech.km.base.model.BaseModel;
 import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseServiceImpl;
+import com.qgutech.km.base.vo.Rank;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.module.km.model.*;
+import com.qgutech.km.module.uc.model.User;
 import com.qgutech.km.module.uc.service.OrganizeService;
 import com.qgutech.km.module.uc.service.UserService;
+import com.qgutech.km.utils.PeDateUtils;
 import com.qgutech.km.utils.PeException;
 import com.qgutech.km.utils.PeUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -632,5 +636,72 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             kn.setLibraryId(recycleLibrary.getId());
         }
         knowledgeRelService.update(list, KnowledgeRel.LIBRARY_ID);
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public Map<String, String> getKnowledgeTotalAndDayCount() {
+        Map<String, String> countMap = new HashMap<>(2);
+        Conjunction conjunction = getConjunction();
+        Long count = getRowCountByCriterion(conjunction);
+        countMap.put("totalCount", (count == null ? 0 : count) + "");
+        conjunction.add(Restrictions.gt(BaseModel.CREATE_TIME, PeDateUtils.getFirstDate(new Date())));
+        count = getRowCountByCriterion(conjunction);
+        countMap.put("dayCount", (count == null ? 0 : count) + "");
+        return countMap;
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public List<Rank> rank(int rankCount) {
+        if (rankCount <= 0) {
+            rankCount = 5;
+        }
+
+        String sql = "SELECT create_by,count(id) total FROM t_km_knowledge WHERE corp_code=:corpCode " +
+                " GROUP BY create_by ORDER BY total DESC,create_by LIMIT :rankCount";
+        Map<String, Object> params = new HashMap<>(2);
+        params.put("corpCode", ExecutionContext.getCorpCode());
+        params.put("rankCount", rankCount);
+
+        List<String> userIds = new ArrayList<>();
+        List<Rank> rankList = getJdbcTemplate().query(sql, params, (resultSet, i) -> {
+            String userId = resultSet.getString("create_by");
+            userIds.add(userId);
+            return new Rank(userId, (int) resultSet.getLong("total"));
+        });
+
+        if (CollectionUtils.isEmpty(rankList)) {
+            return new ArrayList<>(0);
+        }
+
+        List<User> users = userService.list(userIds);
+        setRankInfo(users, rankList);
+        return rankList;
+    }
+
+    public static void setRankInfo(List<User> users, List<Rank> rankList) {
+        Map<String, User> userMap = new HashMap<>(users.size());
+        for (User user : users) {
+            userMap.put(user.getId(), user);
+        }
+
+        int rankIndex = 1, count = 0;
+        for (Rank rank : rankList) {
+            String userId = rank.getUserId();
+            User user = userMap.get(userId);
+            rank.setOrgName(user.getOrganizeName());
+            rank.setUserName(user.getUserName());
+            rank.setFacePath(user.getFacePath());
+            int ranks = rank.getCount();
+            if (ranks < count) {
+                rankIndex++;
+                count = ranks;
+            } else if (count == 0) {
+                count = ranks;
+            }
+
+            rank.setRank(rankIndex);
+        }
     }
 }
