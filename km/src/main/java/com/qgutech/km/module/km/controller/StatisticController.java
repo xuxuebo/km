@@ -2,12 +2,11 @@ package com.qgutech.km.module.km.controller;
 
 import com.qgutech.km.base.vo.Rank;
 import com.qgutech.km.module.km.model.Statistic;
-import com.qgutech.km.module.km.service.*;
-import com.qgutech.km.module.sfm.service.FileServerService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.qgutech.km.module.km.service.KnowledgeRelService;
+import com.qgutech.km.module.km.service.KnowledgeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
@@ -24,21 +23,10 @@ import java.util.Map;
 @RequestMapping("statistic")
 public class StatisticController {
 
-    private static final Log LOG = LogFactory.getLog(StatisticController.class);
-    @Resource
-    private FileServerService fileServerService;
     @Resource
     private KnowledgeService knowledgeService;
     @Resource
     private KnowledgeRelService knowledgeRelService;
-    @Resource
-    private LibraryService libraryService;
-    @Resource
-    private ShareService shareService;
-    @Resource
-    private KmFullTextSearchService kmFullTextSearchService;
-    @Resource
-    private KnowledgeLogService knowledgeLogService;
 
 
     @RequestMapping("fileCount")
@@ -56,8 +44,13 @@ public class StatisticController {
     @RequestMapping("orgStatistic")
     @ResponseBody
     public Statistic orgStatistic() {
-        return knowledgeRelService.orgRank(5);
+        return knowledgeRelService.orgRank(6);
     }
 
+    @RequestMapping("libraryRank")
+    @ResponseBody
+    public Statistic libraryRank(@RequestParam String type) {
+        return knowledgeRelService.libraryRank(type, 6);
+    }
 
 }

@@ -81,10 +81,24 @@ public interface KnowledgeRelService extends BaseService<KnowledgeRel> {
      *
      * @param rankCount 排行前多少名
      * @return 部门排行数据 <ul>
-     * <li>{@link Statistic#orgList :部门名称}</li>
-     * <li>{@link Statistic#rankList :部门中的知识数}</li>
+     * <li>{@link Statistic#names :部门名称}</li>
+     * <li>{@link Statistic#counts :部门中的知识数}</li>
      * </ul>
      * @since TangFD@HF 2018-8-14
      */
     Statistic orgRank(int rankCount);
+
+    /**
+     * 知识库排行
+     *
+     * @param type      知识库类型，不可为空
+     * @param rankCount 排行前多少名
+     * @return 知识库排行数据 <ul>
+     * <li>{@link Statistic#names :知识库名称}</li>
+     * <li>{@link Statistic#valuePairs :知识库中的知识数和名称}</li>
+     * </ul>
+     * @throws RuntimeException 当type为空时
+     * @since TangFD@HF 2018-8-15
+     */
+    Statistic libraryRank(String type, int rankCount);
 }

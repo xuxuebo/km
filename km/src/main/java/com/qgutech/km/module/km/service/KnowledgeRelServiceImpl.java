@@ -317,4 +317,37 @@ public class KnowledgeRelServiceImpl extends BaseServiceImpl<KnowledgeRel> imple
         statistic.setCounts(countList.subList(0, rankCount));
         return statistic;
     }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public Statistic libraryRank(String type, int rankCount) {
+        if (StringUtils.isEmpty(type)) {
+            throw new PeException("type must be not empty!");
+        }
+
+        rankCount = rankCount <= 0 ? 5 : rankCount;
+        Map<String, Object> param = new HashMap<>(3);
+        StringBuilder sql = new StringBuilder("SELECT k.library_name,count(kr.id) total FROM t_km_knowledge_rel kr ");
+        sql.append(" INNER JOIN t_km_library k ON k.id=kr.library_id ");
+        sql.append(" WHERE kr.corp_code=:corpCode and k.library_type=:type ");
+        param.put("corpCode", ExecutionContext.getCorpCode());
+        param.put("type", type);
+        sql.append(" GROUP BY kr.library_id,k.library_name ");
+        sql.append(" ORDER BY total DESC,kr.library_id LIMIT :rankCount");
+        param.put("rankCount", rankCount);
+
+        List<String> names = new ArrayList<>(rankCount);
+        List<ValuePair> pairs = new ArrayList<>(rankCount);
+        getJdbcTemplate().query(sql.toString(), param, (resultSet, i) -> {
+            String libraryName = resultSet.getString("library_name");
+            names.add(libraryName);
+            pairs.add(new ValuePair(libraryName, resultSet.getLong("total")));
+            return null;
+        });
+
+        Statistic statistic = new Statistic();
+        statistic.setNames(names);
+        statistic.setValuePairs(pairs);
+        return statistic;
+    }
 }

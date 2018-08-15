@@ -42,7 +42,16 @@ public class Statistic extends BaseModel {
     private List<String> names;
     @Transient
     private List<Long> counts;
+    @Transient
+    private List<ValuePair> valuePairs;
 
+    public List<ValuePair> getValuePairs() {
+        return valuePairs;
+    }
+
+    public void setValuePairs(List<ValuePair> valuePairs) {
+        this.valuePairs = valuePairs;
+    }
 
     public Statistic() {
     }

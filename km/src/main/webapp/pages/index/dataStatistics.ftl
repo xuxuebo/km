@@ -32,42 +32,7 @@
             <div class="s-echarts-person">
                 <div class="s-echarts-person-info">个人排行</div>
                 <div class="s-person-picture">
-                    <ul id="rankUL">
-                        <li>
-                            <div class="s-person-icon_first"></div>
-                            <img class="s-person-img"
-                                 src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-                            <div class="s-person-name">张恒恒</div>
-                            <div class="s-person-number">50000份</div>
-                        </li>
-                        <li>
-                            <div class="s-person-icon_second"></div>
-                            <img class="s-person-img"
-                                 src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-                            <div class="s-person-name">张恒恒</div>
-                            <div class="s-person-number">50000份</div>
-                        </li>
-                        <li>
-                            <div class="s-person-icon_third"></div>
-                            <img class="s-person-img"
-                                 src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-                            <div class="s-person-name">张恒恒</div>
-                            <div class="s-person-number">50000份</div>
-                        </li>
-                        <li>
-                            <span class="s-person-order-number">4</span>
-                            <img class="s-person-img"
-                                 src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-                            <div class="s-person-name">张恒恒</div>
-                            <div class="s-person-number">50000份</div>
-                        </li>
-                        <li>
-                            <span class="s-person-order-number">5</span>
-                            <img class="s-person-img"
-                                 src="${resourcePath!}/web-static/proExam/index/img/default_user.png" alt="">
-                            <div class="s-person-name">张恒恒</div>
-                            <div class="s-person-number">50000份</div>
-                        </li>
+                    <ul id="rankUL"
                     </ul>
                 </div>
             </div>
