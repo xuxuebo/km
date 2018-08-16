@@ -65,8 +65,11 @@
             <th class="y-table__td name">
                 <span class="">文件名</span>
             </th>
-            <th class="y-table__td user-name">
+            <th class="y-table__td size">
                 <span class="">分享人</span>
+            </th>
+            <th class="y-table__td user-name">
+                <span class="">分享范围</span>
             </th>
             <th class="y-table__td size">
                 <span class="">大小</span>
@@ -79,7 +82,7 @@
         <tbody>
         <%if(list.length !== 0){%>
         <%_.each(list,function(item,i){%>
-        <tr class="y-table__tr js-opt-dbclick" data-shareid="<%=item.shareId%>" data-fileid = "<%=item.fileId%>" data-folder = "<%=item.folder%>" data-id="<%=item.id%>">
+        <tr class="y-table__tr js-share-opt-dbclick" data-relid="<%=item.relId%>" data-fileid="<%=item.fileId%>" data-folder="<%=item.folder%>" data-id="<%=item.id%>">
             <td class="y-table__td checkbox">
                 <label class="y-checkbox">
                     <input type="checkbox">
@@ -99,6 +102,9 @@
             </td>
             <td class="y-table__td user-name">
                 <%=item.userName%>
+            </td>
+            <td class="y-table__td size">
+                <%=item.orgName%>
             </td>
             <td class="y-table__td size">
                 <%=item.knowledgeSize%>
@@ -161,7 +167,7 @@
         <tbody>
         <%if(list.length !== 0){%>
         <%_.each(list,function(item,i){%>
-        <tr class="y-table__tr js-opt-dbclick" data-fileid = "<%=item.fileId%>" data-folder = "<%=item.folder%>" data-id="<%=item.id%>">
+        <tr class="y-table__tr js-share-opt-dbclick" data-relId="<%=item.relId%>" data-folder="<%=item.folder%>" data-id="<%=item.id%>">
             <td class="y-table__td checkbox">
                 <label class="y-checkbox">
                     <input type="checkbox">

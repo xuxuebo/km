@@ -94,14 +94,20 @@ public class KnowledgeController {
     public JsonResult<Knowledge> saveKnowledge(Knowledge knowledge) {
         try {
             if (StringUtils.isBlank(knowledge.getId())) {
-                String knowledgeId = knowledgeService.save(knowledge);
-                KnowledgeRel knowledgeRel = new KnowledgeRel();
-                knowledgeRel.setKnowledgeId(knowledgeId);
                 String libraryId = knowledge.getLibraryId();
-                if(StringUtils.isEmpty(knowledge.getLibraryId())){
+                if (StringUtils.isEmpty(libraryId)) {
                     Library myLibrary = libraryService.getUserLibraryByLibraryType("MY_LIBRARY");
                     libraryId = myLibrary.getId();
                 }
+
+                String knowledgeName = knowledge.getKnowledgeName();
+                String knowledgeType = knowledge.getKnowledgeType();
+                int count = knowledgeService.getSameNameCount(libraryId, knowledgeName, knowledgeType);
+                knowledgeName = getSameKnowledgeName(knowledgeName, knowledgeType, count);
+                knowledge.setKnowledgeName(knowledgeName);
+                String knowledgeId = knowledgeService.save(knowledge);
+                KnowledgeRel knowledgeRel = new KnowledgeRel();
+                knowledgeRel.setKnowledgeId(knowledgeId);
                 knowledgeRel.setLibraryId(libraryId);
                 knowledgeRel.setShareId("");
                 knowledgeRelService.save(knowledgeRel);
@@ -117,6 +123,15 @@ public class KnowledgeController {
         } catch (PeException e) {
             return new JsonResult<>(false, e.getMessage());
         }
+    }
+
+    private String getSameKnowledgeName(String knowledgeName, String knowledgeType, int count) {
+        if (count == 0) {
+            return knowledgeName;
+        }
+
+        String suffix = "." + knowledgeType;
+        return knowledgeName.replace(suffix, "") + "(" + count + ")" + suffix;
     }
 
     private IndexKnowledge convert(Knowledge knowledge) {
@@ -647,7 +662,17 @@ public class KnowledgeController {
             pageParam = new PageParam();
         }
 
-        return knowledgeService.searchOrgShare(knowledge, pageParam);
+        Page<Knowledge> page = knowledgeService.searchOrgShare(knowledge, pageParam);
+        List<Knowledge> rows = page.getRows();
+        if (CollectionUtils.isEmpty(rows)) {
+            return page;
+        }
+
+        for (Knowledge row : rows) {
+            row.setKnowledgeSize(totalSize(row.getId()));
+        }
+
+        return page;
     }
 
     @RequestMapping("orgShare/deleteShare")

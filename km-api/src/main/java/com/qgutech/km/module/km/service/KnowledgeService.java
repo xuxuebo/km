@@ -150,4 +150,16 @@ public interface KnowledgeService extends BaseService<Knowledge> {
      * @since TangFD@HF 2018-8-14
      */
     List<Rank> rank(int rankCount);
+
+    /**
+     * 根据文件名，获取指定知识库中重复文件的个数（处理重复上传同一个文件，文件名添加标识"XXXX(1)"）
+     *
+     * @param libraryId     知识库Id，不可为空
+     * @param knowledgeName 文件名，不可为空
+     * @param knowledgeType 文件类型，不可为空
+     * @return 重复文件名的个数
+     * @throws RuntimeException 当knowledgeName和libraryId为空时
+     * @since TangFD@HF 2018-8-16
+     */
+    int getSameNameCount(String libraryId, String knowledgeName, String knowledgeType);
 }

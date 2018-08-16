@@ -508,6 +508,233 @@ $(function () {
             }
 
         });
+        //从云库分享
+        $('.js-share-y').off().on('click', function () {
+            //我的云库弹框
+            var knowledgeIds;
+            var deptId;
+            var table, initSort = {
+                name: "desc",
+                size: "desc",
+                uploadTime: "desc"
+            };
+            PEMO.DIALOG.confirmL({
+                content: '<div class="y-content__table" id="yunShareOrgTable"><div class="pe-stand-table-pagination"></div></div>',
+                area: ['800px', '520px'],
+                title: '我的云库',
+                btn: ['下一步', '取消'],
+                skin: 'y-change-layer',
+                resize: false,
+                btn1: function () {
+                    //id
+                    var selectList = table.getSelect();
+                    if (selectList.length === 0) {
+                        layer.msg("请先选择操作项");
+                        return;
+                    }
+                    knowledgeIds = "";
+                    for (var i = 0; i < selectList.length; i++) {
+                        knowledgeIds += selectList[i] + ",";
+                    }
+                    knowledgeIds = knowledgeIds.substring(0, knowledgeIds.length - 1);
+                    console.log(knowledgeIds);
+                    layer.closeAll();
+                    getDept();
+                },
+                btn2: function () {//取消按钮
+                    layer.closeAll();
+                },
+
+                success: function () {
+                    //table渲染
+                    var _table = $("#tplShareOrgTable").html();
+                    var $yunTable = $('#yunShareOrgTable');
+                    var data = [];
+                    $.ajax({
+                        async: false,//此值要设置为FALSE  默认为TRUE 异步调用
+                        type: "POST",
+                        url: pageContext.resourcePath + '/knowledge/search',
+                        data: {},
+                        dataType: 'json',
+                        success: function (result) {
+                            data = result;
+                        }
+                    });
+                    for (var i = 0; i < data.length; i++) {
+                        data[i].knowledgeSize = YUN.conver(data[i].knowledgeSize);
+                    }
+
+                    renderTable();
+                    function renderTable() {
+                        $yunTable.html(_.template(_table)({list: data, sort: initSort}));
+                        table = initTable($yunTable);
+                        $yunTable.find('.sort').click(function () {
+                            $yunTable.html(_.template(_table)({
+                                list: data, sort: $.extend({}, initSort, {name: 'asc'})
+                            }));
+                        });
+                    }
+                }
+            });
+            function getDept(){
+                PEMO.DIALOG.confirmL({
+                    content: '<div class="y-content__table tree-and-users-default tree-and-users-dept ztree pe-tree-container mCustomScrollbar" id="ySharedeptTree"><div class="pe-stand-table-pagination"></div></div>',
+                    area: ['750px', '520px'],
+                    title: '部门',
+                    btn: ['保存', '取消'],
+                    skin: 'y-share-tree-layer',
+                    resize: false,
+                    btn1: function () {
+                        if(deptId){
+                            PEBASE.ajaxRequest({
+                                url: '/km/share/shareToOrg',
+                                data: {
+                                    "knowledgeIds":knowledgeIds,
+                                    "libraryIds":deptId
+                                },
+                                success: function (data) {
+                                    if (data.success) {
+                                        layer.closeAll();
+                                        PEMO.DIALOG.tips({
+                                            content: '操作成功',
+                                            time: 1000,
+                                        });
+                                        return false;
+                                    }
+                                    PEMO.DIALOG.alert({
+                                        content: data.message,
+                                        btn: ['我知道了'],
+                                        yes: function () {
+                                            layer.closeAll();
+                                        }
+                                    });
+                                }
+                            });
+                        }else{
+                            PEMO.DIALOG.tips({
+                                content: '您还未选择部门!',
+                                time:2000
+                            });
+                            return;
+                        }
+                    },
+                    btn2: function () {//取消按钮
+                        layer.closeAll();
+                    },
+                    success: function () {
+                        //部门树
+                        var yDeptOrgTree = {
+                            isOpen: true,
+                            dataUrl: pageContext.rootPath + '/km/uc/organize/listTree',
+                            clickNode: function (treeNode) {
+                                deptId = treeNode.id;
+                            },
+                            treePosition: 'inputDropDown',
+                            callback: {
+                                onExpand: function() {
+                                    delayRenderLeaf();
+                                }
+                            }
+                        };
+                        PEMO.ZTREE.initTree('ySharedeptTree', yDeptOrgTree,true);
+                        delayRenderLeaf();
+                        var treeObj = $.fn.zTree.getZTreeObj("ySharedeptTree");
+                        treeObj.expandAll(true);
+
+                    }
+                });
+            }
+
+
+        });
+        //从本地分享
+        $('.js-share-local').off().on('click',function (e) {
+            var deptId, fileIds = "";
+            PEMO.DIALOG.selectorDialog({
+                content: pageContext.rootPath + '/km/knowledge/openUpload',
+                area: ['650px', '400px'],
+                title: '上传文件',
+                skin:'js-file-upload',
+                btn: ['下一步','取消'],
+                btn1: function () {
+                    var fileList = window.frames[0] &&  window.frames[0].document.getElementById('theList');
+                    var length = $(fileList).find('li').length;
+                    if(window.frames[0] && length==0){
+                        PEMO.DIALOG.tips({
+                            content: '您还未上传文件!',
+                            time:2000
+                        });
+                        return;
+                    }
+
+                    if (length > 0) {
+                        for (var i = 0; i < length; i++) {
+                            fileIds += $($(fileList).find('li')[i]).attr("data-id");
+                            if (i < length - 1) {
+                                fileIds += ",";
+                            }
+                        }
+
+                        //部门树
+                        $('.js-file-upload .layui-layer-content iframe').remove();
+                        $('.js-file-upload .layui-layer-content').html('<ul id="deptTree" class="tree-and-users-default tree-and-users-dept ztree pe-tree-container mCustomScrollbar"></ul>');
+                        var deptOrgTree = {
+                            isOpen: true,
+                            dataUrl: pageContext.rootPath + '/km/uc/organize/listTree',
+                            clickNode: function (treeNode) {
+                                deptId = treeNode.id;
+                            },
+                            treePosition: 'inputDropDown',
+                            callback: {
+                                onExpand: function() {
+                                    delayRenderLeaf();
+                                }
+                            }
+                        };
+                        PEMO.ZTREE.initTree('deptTree', deptOrgTree,true);
+                        var treeObj = $.fn.zTree.getZTreeObj("deptTree");
+                        delayRenderLeaf();
+                        treeObj.expandAll(true);
+                        $('.js-file-upload .layui-layer-btn0').html('确定');
+                        $('.js-file-upload .layui-layer-btn0').addClass('layui-layer-save');
+                    }
+                    if($('.layui-layer-save').length>0 && deptId){
+                        PEBASE.ajaxRequest({
+                            url: '/km/share/shareToOrg',
+                            data: {
+                                "fileIds":fileIds,
+                                "libraryIds":deptId
+                            },
+                            success: function (data) {
+                                if (data.success) {
+                                    layer.closeAll();
+                                    PEMO.DIALOG.tips({
+                                        content: '操作成功',
+                                        time: 1000,
+                                    });
+                                    return false;
+                                }
+                                PEMO.DIALOG.alert({
+                                    content: data.message,
+                                    btn: ['我知道了'],
+                                    yes: function () {
+                                        layer.closeAll();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                },
+                btn2: function () {
+                    layer.closeAll();
+                },
+                success: function (d, index) {
+
+
+                }
+            });
+            return false;
+        });
     }
 
     //公共库

@@ -122,6 +122,8 @@ public class Knowledge extends BaseModel {
     private boolean canDelete = false;
     @Transient
     private String relId;
+    @Transient
+    private String orgName;
 
     public boolean isIncludeChild() {
         return includeChild;
@@ -358,5 +360,13 @@ public class Knowledge extends BaseModel {
 
     public String getRelId() {
         return relId;
+    }
+
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
+    }
+
+    public String getOrgName() {
+        return orgName;
     }
 }

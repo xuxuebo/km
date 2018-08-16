@@ -8,6 +8,7 @@ import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.base.vo.Rank;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.module.km.model.*;
+import com.qgutech.km.module.uc.model.Organize;
 import com.qgutech.km.module.uc.model.User;
 import com.qgutech.km.module.uc.service.OrganizeService;
 import com.qgutech.km.module.uc.service.UserService;
@@ -382,6 +383,25 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         }
 
         Page<Knowledge> page = new Page<>();
+        String folder = knowledge.getFolder();
+        if (StringUtils.isNotEmpty(folder)) {
+            List<String> knowledgeIds = getKnowledgeIds(knowledge, null);
+            if (CollectionUtils.isEmpty(knowledgeIds)) {
+                return page;
+            }
+
+            Map<String, Object> params = new HashMap<>(6);
+            StringBuilder sql = getConditionSql(null, Collections.singletonList(folder), knowledgeIds, params);
+            queryKnowledgeList(sql, params, pageParam, page);
+            List<Knowledge> rows = page.getRows();
+            if (CollectionUtils.isEmpty(rows)) {
+                return page;
+            }
+
+            setOrgName(knowledge.getRelId(), rows);
+            return page;
+        }
+
         String referType = knowledge.getReferType();
         List<String> userIds = getUserIds(knowledge, referType);
         if (userIds != null && userIds.size() == 0) {
@@ -403,11 +423,27 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
         Map<String, Object> params = new HashMap<>(6);
         StringBuilder sql = getConditionSql(userIds, orgIds, knowledgeIds, params);
+        queryKnowledgeList(sql, params, pageParam, page);
+        return page;
+    }
+
+    private void setOrgName(String relId, List<Knowledge> rows) {
+        KnowledgeRel knowledgeRel = knowledgeRelService.get(relId);
+        Organize organize = organizeService.get(knowledgeRel.getLibraryId());
+        if (organize != null) {
+            for (Knowledge row : rows) {
+                row.setOrgName(organize.getOrganizeName());
+            }
+        }
+    }
+
+    private void queryKnowledgeList(StringBuilder sql, Map<String, Object> params,
+                                    PageParam pageParam, Page<Knowledge> page) {
         NamedParameterJdbcTemplate jdbcTemplate = getJdbcTemplate();
         if (pageParam.isAutoCount()) {
             Long total = jdbcTemplate.queryForObject("SELECT count(*)" + sql, params, Long.class);
             if (total == null || total == 0) {
-                return page;
+                return;
             }
 
             page.setTotal(total);
@@ -420,7 +456,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             params.put("start", pageParam.getStart());
         }
 
-        List<Knowledge> knowledgeList = jdbcTemplate.query("SELECT k.*,kr.id relId" + sql, params, (resultSet, i) -> {
+        List<Knowledge> knowledgeList = jdbcTemplate.query("SELECT k.*,kr.id relId,o.organize_name " + sql, params, (resultSet, i) -> {
             Knowledge k = new Knowledge();
             k.setId(resultSet.getString("id"));
             k.setKnowledgeName(resultSet.getString("knowledge_name"));
@@ -430,17 +466,18 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             k.setKnowledgeType(resultSet.getString("knowledge_type"));
             k.setRelId(resultSet.getString("relId"));
             k.setFileId(resultSet.getString("file_id"));
+            k.setFolder(resultSet.getString("folder"));
             k.setCorpCode(resultSet.getString("corp_code"));
+            k.setOrgName(resultSet.getString("organize_name"));
             return k;
         });
 
         if (CollectionUtils.isEmpty(knowledgeList)) {
-            return page;
+            return;
         }
 
         setCreateNameAndDate(knowledgeList);
         page.setRows(knowledgeList);
-        return page;
     }
 
     private void setCreateNameAndDate(List<Knowledge> knowledgeList) {
@@ -459,6 +496,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         StringBuilder sql = new StringBuilder(" FROM t_km_knowledge k");
         sql.append(" INNER JOIN t_km_knowledge_rel kr ON k.id=kr.knowledge_id AND kr.library_id IN (:libraryIds)");
         params.put("libraryIds", orgIds);
+        sql.append(" LEFT JOIN t_uc_organize o ON o.id = kr.library_id");
         sql.append(" WHERE k.corp_code = :corpCode");
         params.put("corpCode", ExecutionContext.getCorpCode());
         if (CollectionUtils.isNotEmpty(userIds)) {
@@ -509,6 +547,16 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             params.put("specialtyLibraryId", specialtyLibraryId);
             if (CollectionUtils.isNotEmpty(userIds)) {
                 sql.append(" AND kr2.create_by in (:specialtyBy)");
+                params.put("specialtyBy", userIds);
+            }
+        }
+
+        String folder = knowledge.getFolder();
+        if (StringUtils.isNotEmpty(folder)) {
+            sql.append(" INNER JOIN t_km_knowledge_rel kr3 ON k.id=kr3.knowledge_id AND kr3.library_id=:folder");
+            params.put("folder", folder);
+            if (CollectionUtils.isNotEmpty(userIds)) {
+                sql.append(" AND kr3.create_by in (:specialtyBy)");
                 params.put("specialtyBy", userIds);
             }
         }
@@ -577,7 +625,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             }
         }
 
-        if(shareList.size()>0){
+        if (shareList.size() > 0) {
             shareService.batchSave(shareList);
             List<Statistic> statistics = new ArrayList<>(size);
             for (Share saveShared : shareList) {
@@ -592,6 +640,10 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
                 String shareId = knowledgeIdAndShareIdMap.get(knowledgeRel.getKnowledgeId());
                 knowledgeRel.setShareId(shareId);
             }
+        }
+
+        if (knowledgeRelList.size() == 0) {
+            return;
         }
 
         knowledgeRelService.batchSave(knowledgeRelList);
@@ -703,5 +755,56 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
             rank.setRank(rankIndex);
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public int getSameNameCount(String libraryId, String knowledgeName, String knowledgeType) {
+        if (StringUtils.isEmpty(libraryId) || StringUtils.isEmpty(knowledgeName) || StringUtils.isEmpty(knowledgeType)) {
+            throw new PeException("libraryId and knowledgeName must be not empty!");
+        }
+
+        String suffix = "." + knowledgeType;
+        Map<String, Object> param = new HashMap<>(4);
+        StringBuilder sql = new StringBuilder("SELECT k.knowledge_name FROM t_km_knowledge_rel kr ");
+        sql.append(" INNER JOIN t_km_knowledge k on k.id=kr.knowledge_id ");
+        sql.append(" WHERE kr.library_id=:libraryId AND kr.corp_code=:corpCode ");
+        param.put("libraryId", libraryId);
+        param.put("corpCode", ExecutionContext.getCorpCode());
+        sql.append(" AND k.knowledge_name LIKE :name AND k.knowledge_type != :type ");
+        String replace = knowledgeName.replace(suffix, "");
+        param.put("name", replace + "%");
+        param.put("type", "file");
+        List<String> names = getJdbcTemplate().queryForList(sql.toString(), param, String.class);
+        if (CollectionUtils.isEmpty(names)) {
+            return 0;
+        }
+
+        int sameName = 0;
+        for (String name : names) {
+            if (knowledgeName.equals(name)) {
+                sameName++;
+                continue;
+            }
+
+            if (!name.endsWith(suffix)) {
+                continue;
+            }
+
+            name = name.replace(suffix, "").replace(replace, "");
+            if (!name.startsWith("(") || !name.endsWith(")")) {
+                continue;
+            }
+            name = name.replace("(", "").replace(")", "");
+            try {
+                int parseInt = Integer.parseInt(name);
+                if (parseInt > 0) {
+                    sameName++;
+                }
+            } catch (NumberFormatException ignored) {
+            }
+        }
+
+        return sameName;
     }
 }

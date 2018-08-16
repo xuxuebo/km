@@ -284,6 +284,16 @@
 <script type="text/template" id="tplYun">
     <h4 class="y-content__title"><%=title%></h4>
     <div class="y-content__opt__bar">
+        <div class="y-share-bar">
+            <button class="y-btn y-btn__blue" id="filePicker" type="button">分享</button>
+            <div class="y-content__share__list">
+                <span class="arrow-top"></span>
+                <ul class="js-share-list">
+                    <li class="js-share-local">从本地分享</li>
+                    <li class="js-share-y">从云库分享</li>
+                </ul>
+            </div>
+        </div>
         <button class="y-btn y-btn__blue js-upload" id="filePicker" type="button">上传</button>
         <button class="y-btn y-btn__green js-download" type="button">下载</button>
         <#--<button class="y-btn y-btn__green js-share" type="button">分享至公共库</button>-->
@@ -415,6 +425,56 @@
         <%}%>
     <%})%>
 </script>
-
+<script type="text/template" id="tplShareOrgTable">
+    <table class="y-table">
+        <thead class="y-table__header">
+        <tr>
+            <th class="y-table__td checkbox">
+                <label class="y-checkbox">
+                    <input type="checkbox">
+                    <span class="y-checkbox__span"></span>
+                </label>
+            </th>
+            <th class="y-table__td name">
+                <span class="">文件名</span>
+            </th>
+            <th class="y-table__td size">
+                <span class="">大小</span>
+            </th>
+            <th class="y-table__td size">
+                <span class="">上传时间</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <%if(list.length !== 0){%>
+        <%_.each(list,function(item,i){%>
+        <tr class="y-table__tr js-share-opt-dbclick" data-relId="<%=item.relId%>" data-folder="<%=item.folder%>" data-id="<%=item.id%>">
+            <td class="y-table__td checkbox">
+                <label class="y-checkbox">
+                    <input type="checkbox">
+                    <span class="y-checkbox__span"></span>
+                </label>
+            </td>
+            <td class="y-table__td name">
+                <div title="<%=item.knowledgeName%>" class="y-table__filed_name type-<%=item.knowledgeType%>"
+                     style="margin-right: 10px;overflow: hidden;text-overflow:ellipsis;">
+                    <%=item.knowledgeName%>
+                </div>
+            </td>
+            <td class="y-table__td size">
+                <%=item.knowledgeSize%>
+            </td>
+            <td class="y-table__td size">
+                <%=item.createTimeStr%>
+            </td>
+        </tr>
+        <%})}%>
+        </tbody>
+    </table>
+    <%if(list.length === 0){%>
+    <div class="table__none">--暂无数据--</div>
+    <%}%>
+</script>
 
 <script src="${resourcePath!}/web-static/proExam/index/js/index.js"></script>

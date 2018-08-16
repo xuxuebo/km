@@ -39,7 +39,7 @@ $(function () {
         };
     };
 
-    var refreshTable = function () {
+    var refreshTable = function (folder, relId) {
         typeIds = getTypeIds();
         var param = {
             'referId': orgTreeId,
@@ -47,7 +47,9 @@ $(function () {
             'tag': typeIds.labelIds,
             'projectLibraryId': typeIds.projectIds,
             'specialtyLibraryId': typeIds.majorIds,
-            'knowledgeName': ''
+            'knowledgeName': '',
+            'folder': folder ? folder : '',
+            'relId': relId ? relId : ''
         };
         initShareTab(param);
     };
@@ -458,6 +460,12 @@ $(function () {
                     layer.closeAll();
                 },
             });
+        });
+
+        $('.js-share-opt-dbclick').dblclick(function () {
+            var folder = $(this).data('folder');
+            var relId = $(this).data('relid');
+            refreshTable(folder, relId);
         });
     }
 
