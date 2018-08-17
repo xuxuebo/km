@@ -95,7 +95,7 @@
             <li data-type="dataStatistics" class="y-nav__link__item"><span class="txt">数据统计</span></li>
             <li data-type="adminSetting" class="y-nav__link__item"><span class="txt">设置</span></li>
         </#if>
-
+            <li data-type="discover" class="y-nav__link__item"><span class="txt">发现</span></li>
         </ul>
     </nav>
 </header>
