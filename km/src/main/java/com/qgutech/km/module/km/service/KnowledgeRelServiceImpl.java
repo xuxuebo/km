@@ -1,6 +1,8 @@
 package com.qgutech.km.module.km.service;
 
 import com.qgutech.km.base.ExecutionContext;
+import com.qgutech.km.base.model.Page;
+import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.module.km.model.*;
@@ -39,6 +41,8 @@ public class KnowledgeRelServiceImpl extends BaseServiceImpl<KnowledgeRel> imple
     private KnowledgeLogService knowledgeLogService;
     @Resource
     private OrganizeService organizeService;
+    @Resource
+    private LibraryService libraryService;
 
     @Override
     @Transactional(readOnly = true)
@@ -349,5 +353,54 @@ public class KnowledgeRelServiceImpl extends BaseServiceImpl<KnowledgeRel> imple
         statistic.setNames(names);
         statistic.setValuePairs(pairs);
         return statistic;
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public boolean checkAuth(List<String> knowledgeIds) {
+        if (CollectionUtils.isEmpty(knowledgeIds)) {
+            throw new PeException("knowledgeIds must be not empty!");
+        }
+
+        List<String> libraryIds = getLibraryIds();
+        if(CollectionUtils.isEmpty(libraryIds)){
+            return false;
+        }
+
+        Conjunction conjunction = getConjunction();
+        conjunction.add(Restrictions.in(KnowledgeRel.LIBRARY_ID, libraryIds));
+        conjunction.add(Restrictions.in(KnowledgeRel.KNOWLEDGE_ID, knowledgeIds));
+        List<KnowledgeRel> knowledgeRelList = listByCriterion(conjunction);
+        if (CollectionUtils.isEmpty(knowledgeRelList)) {
+            return false;
+        }
+
+        Set<String> knowledgeSet = knowledgeRelList.stream().map(KnowledgeRel::getKnowledgeId).collect(Collectors.toSet());
+        return knowledgeSet.size() == new HashSet<>(knowledgeIds).size();
+    }
+
+    private List<String> getLibraryIds() {
+        List<String> libraryIds = new ArrayList<>();
+        libraryIds.add(ExecutionContext.getUserId());
+        Library myLibrary = libraryService.getUserLibraryByLibraryType(KnowledgeConstant.MY_LIBRARY);
+        if (myLibrary != null) {
+            libraryIds.add(myLibrary.getId());
+        }
+
+        PageParam pageParam = new PageParam();
+        pageParam.setAutoCount(false);
+        pageParam.setAutoPaging(false);
+        Library library = new Library();
+        library.setLibraryType(KnowledgeConstant.PUBLIC_LIBRARY);
+        Page<Library> libraryPage = libraryService.searchLibrary(pageParam, library);
+        List<Library> rows = libraryPage.getRows();
+        if (CollectionUtils.isNotEmpty(rows)) {
+            libraryIds.addAll(rows.stream().map(Library::getId).collect(Collectors.toList()));
+        }
+
+        List<String> parentOrgIds = organizeService.getAllParentOrgIds();
+        libraryIds.addAll(parentOrgIds);
+
+        return libraryIds;
     }
 }

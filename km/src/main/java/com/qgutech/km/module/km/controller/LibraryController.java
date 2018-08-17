@@ -87,7 +87,13 @@ public class LibraryController {
             jsonResult.setSuccess(false);
             return jsonResult;
         }
-        libraryService.addFolder(libraryName,libraryId);
+        String message = libraryService.addFolder(libraryName, libraryId);
+        if ("ERROR_NAME_REPEAT".equals(message)) {
+            jsonResult.setMessage("文件夹名称重复！");
+            jsonResult.setSuccess(false);
+            return jsonResult;
+        }
+
         return jsonResult;
     }
 

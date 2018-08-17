@@ -812,4 +812,40 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
         return sameName;
     }
+
+    @Override
+    public Page<Knowledge> searchHotKnowledge(Knowledge knowledge, PageParam pageParam) {
+        PeUtils.validPage(pageParam);
+        if (knowledge == null) {
+            throw new PeException("Knowledge condition invalid!");
+        }
+
+        Map<String, Object> params = new HashMap<>(4);
+        StringBuilder sql = new StringBuilder(" FROM t_km_knowledge k ");
+        sql.append(" LEFT JOIN t_km_knowledge_log kl on k.id=kl.knowledge_id AND type=:type ");
+        params.put("type", KnowledgeConstant.LOG_DOWNLOAD);
+        sql.append(" WHERE k.corp_code=:corpCode GROUP BY k.id ORDER BY count(kl.id) DESC,max(k.create_time) DESC ");
+        params.put("corpCode", ExecutionContext.getCorpCode());
+
+        Page<Knowledge> page = new Page<>();
+        NamedParameterJdbcTemplate jdbcTemplate = getJdbcTemplate();
+        if (pageParam.isAutoCount()) {
+            List<Long> counts = jdbcTemplate.queryForList("SELECT COUNT(*)" + sql, params, Long.class);
+            if (CollectionUtils.isEmpty(counts)) {
+                return page;
+            }
+
+            page.setTotal(counts.size());
+        }
+
+        if (pageParam.isAutoPaging()) {
+            sql.append(" LIMIT :num OFFSET :start");
+            params.put("num", pageParam.getPageSize());
+            params.put("start", pageParam.getStart());
+        }
+
+        List<Knowledge> knowledges = jdbcTemplate.queryForList("SELECT k.id,k.knowledge_name" + sql, params, Knowledge.class);
+        page.setRows(knowledges);
+        return page;
+    }
 }
