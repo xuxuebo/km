@@ -16,6 +16,8 @@
             });
         } else if(type === "publicLibrary"){
             $yContainer.load('${ctx!}/km/front/publicLibrary');
+        } else if(type === "discover"){
+            $yContainer.load('${ctx!}/km/front/discover');
         } else{
                 // 首页
                 $yContainer.load('${ctx!}/km/front/loadIndex',function () {
