@@ -36,4 +36,14 @@ public interface LabelService extends BaseService<Label> {
      * @since TangFD@HF 2018-8-7
      */
     List<String> saveLabelRel(LabelRel labelRel);
+
+    /**
+     * 查询热门标签列表（依据文件数进行统计）
+     *
+     * @param hotCount 排行数量
+     * @return 标签列表
+     * @throws RuntimeException 当labelRel为空，或者knowledgeId为空时
+     * @since TangFD@HF 2018-8-17
+     */
+    List<Label> getHostLabels(int hotCount);
 }

@@ -101,4 +101,14 @@ public interface KnowledgeRelService extends BaseService<KnowledgeRel> {
      * @since TangFD@HF 2018-8-15
      */
     Statistic libraryRank(String type, int rankCount);
+
+    /**
+     * 根据知识Id列表，检查当前人是否有权限
+     *
+     * @param knowledgeIds 知识Id列表，不可为空
+     * @return 是否有权限，true:有权限，false：无
+     * @throws RuntimeException 当knowledgeIds为空时
+     * @since TangFD@HF 2018-8-17
+     */
+    boolean checkAuth(List<String> knowledgeIds);
 }

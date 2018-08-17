@@ -73,9 +73,17 @@ public class KnowledgeLogServiceImpl extends BaseServiceImpl<KnowledgeLog> imple
         StringBuilder sql = new StringBuilder(" FROM t_km_knowledge_log kl");
         sql.append(" INNER JOIN t_km_knowledge k on kl.knowledge_id=k.id");
         sql.append(" INNER JOIN t_uc_user u ON kl.create_by=u.id");
-        sql.append(" WHERE kl.corp_code=:corpCode AND kl.library_id=:libraryId");
+        sql.append(" WHERE kl.corp_code=:corpCode");
         params.put("corpCode", ExecutionContext.getCorpCode());
-        params.put("libraryId", knowledgeLog.getLibraryId());
+        String libraryId = knowledgeLog.getLibraryId();
+        if (StringUtils.isNotEmpty(libraryId)) {
+            sql.append(" AND kl.library_id=:libraryId");
+            params.put("libraryId", libraryId);
+        } else {
+            sql.append(" AND kl.type !=:type");
+            params.put("type", KnowledgeConstant.LOG_DELETE);
+        }
+
         String knowledgeName = knowledgeLog.getKnowledgeName();
         if (StringUtils.isNotEmpty(knowledgeName)) {
             sql.append(" AND k.knowledge_name ILIKE :name");

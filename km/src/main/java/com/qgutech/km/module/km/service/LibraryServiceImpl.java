@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Administrator on 2018/6/22.
@@ -124,6 +125,12 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
             Library myLibrary = getUserLibraryByLibraryType(KnowledgeConstant.MY_LIBRARY);
             libraryId = myLibrary.getId();
         }
+
+        boolean repeat = checkFolderNameRepeat(libraryId, libraryName);
+        if (repeat) {
+            return "ERROR_NAME_REPEAT";
+        }
+
         Library oldLibrary = get(libraryId);
         Library library = new Library();
         library.setLibraryName(libraryName);
@@ -152,6 +159,23 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
 
 
         return id;
+    }
+
+    private boolean checkFolderNameRepeat(String libraryId, String folderName) {
+        Criterion criterion = Restrictions.and(Restrictions.eq(Library.CORP_CODE, ExecutionContext.getCorpCode()),
+                Restrictions.eq(Library.LIBRARY_NAME, folderName),
+                Restrictions.eq(Library.LIBRARY_TYPE, KnowledgeConstant.MY_LIBRARY),
+                Restrictions.eq(Library.CREATE_BY, ExecutionContext.getUserId()),
+                Restrictions.eq(Library.PARENT_ID, libraryId));
+        List<Library> libraryList = listByCriterion(criterion);
+        if(CollectionUtils.isEmpty(libraryList)){
+            return false;
+        }
+
+        List<String> libraryIds = new ArrayList<>(libraryList.size());
+        libraryIds.addAll(libraryList.stream().map(Library::getId).collect(Collectors.toList()));
+        //// TODO: 2018/8/17 检查回收站
+        return CollectionUtils.isNotEmpty(libraryList);
     }
 
     /**
@@ -483,5 +507,27 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
         }
 
         return library.getId();
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public List<Library> getHotLibraryByType(String libraryType, int hotCount) {
+        if (StringUtils.isEmpty(libraryType)) {
+            throw new PeException("libraryType must be not empty!");
+        }
+
+        Map<String, Object> param = new HashMap<>(3);
+        StringBuilder sql = new StringBuilder("SELECT l.id,l.library_name FROM t_km_library l ");
+        sql.append(" LEFT JOIN t_km_knowledge_rel kr ON l.id=kr.library_id ");
+        sql.append(" WHERE l.corp_code=:corpCode AND l.library_type=:type ");
+        param.put("corpCode", ExecutionContext.getCorpCode());
+        param.put("type", libraryType);
+        sql.append(" GROUP BY l.id ORDER BY count(kr.id) DESC,l.id LIMIT :rankCount ");
+        if (hotCount > 0) {
+            sql.append(" LIMIT :rankCount ");
+            param.put("rankCount", hotCount);
+        }
+
+        return getJdbcTemplate().queryForList(sql.toString(), param, Library.class);
     }
 }

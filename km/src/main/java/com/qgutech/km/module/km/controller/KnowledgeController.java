@@ -3,6 +3,8 @@ package com.qgutech.km.module.km.controller;
 import com.qgutech.fs.utils.FsFileManagerUtil;
 import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
+import com.qgutech.km.base.redis.PeJedisCommands;
+import com.qgutech.km.base.redis.PeRedisClient;
 import com.qgutech.km.base.vo.JsonResult;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.constant.PeConstant;
@@ -563,74 +565,98 @@ public class KnowledgeController {
 
     /**
      * 下载文件
-     * @param request
-     * @param response
-     * @param knowledgeIds  文件id
+     *
+     * @param knowledgeIds 文件id
      * @return
      */
     @ResponseBody
     @RequestMapping("downloadKnowledge2")
-    public JsonResult downloadKnowledge(HttpServletRequest request, HttpServletResponse response,String knowledgeIds,
-                                        @RequestParam(required = false) String libraryId) {
+    public JsonResult downloadKnowledge(String knowledgeIds, @RequestParam(required = false) String libraryId) {
         JsonResult jsonResult = new JsonResult();
-        if(StringUtils.isEmpty(knowledgeIds)){
+        if (StringUtils.isEmpty(knowledgeIds)) {
             jsonResult.setSuccess(false);
             jsonResult.setMessage("请选择文件");
             return jsonResult;
         }
-        List<String> ids =Arrays.asList(knowledgeIds.split(","));
+        List<String> ids = Arrays.asList(knowledgeIds.split(","));
         List<Knowledge> knowledgeList = knowledgeService.recursionList(ids);
-        if(CollectionUtils.isEmpty(knowledgeList)){
+        if (CollectionUtils.isEmpty(knowledgeList)) {
             jsonResult.setSuccess(false);
             jsonResult.setMessage("此文件夹内没有文件");
             return jsonResult;
         }
-        String name  = "";
-        if(knowledgeList.size()==1){
-            name = knowledgeList.get(0).getKnowledgeName();
-        }else{
-            name = UUID.randomUUID().toString().replace("-","")+".zip";
-        }
-        List<String> fileIds = new ArrayList<>(knowledgeList.size());
-        for(Knowledge s : knowledgeList){
-            fileIds.add(s.getFileId());
-        }
 
-        if (StringUtils.isNotEmpty(libraryId)) {
-            List<KnowledgeLog> knowledgeLogs = new ArrayList<>(knowledgeList.size());
-            knowledgeLogs.addAll(knowledgeList.stream().map(s -> new KnowledgeLog(s.getId(), libraryId, KnowledgeConstant.LOG_DOWNLOAD)).collect(Collectors.toList()));
-            knowledgeLogService.batchSave(knowledgeLogs);
-        }
-
-        Map<String, String> shareIdMap = shareService.getSharedKnowledgeIdAndShareIdMap(ids);
-        if (MapUtils.isNotEmpty(shareIdMap)) {
-            StringBuilder shareIds = new StringBuilder();
-            shareIdMap.values().forEach(shareId -> {
-                shareIds.append(shareId).append(",");
-            });
-            try {
-                shareService.updateDownCount(shareIds.toString());
-            } catch (Exception e) {
-                e.printStackTrace();
+        String key = "DOWNLOAD_KNOWLEDGE_" + knowledgeIds + "_" + libraryId;
+        PeJedisCommands jedis = PeRedisClient.getCommonJedis();
+        try {
+            Long lock = jedis.setnx(key, 60L);
+            if (lock <= 0) {
+                jsonResult.setSuccess(false);
+                jsonResult.setMessage("文件正在下载中，请稍候！");
+                return jsonResult;
             }
+
+            boolean hasAuth = knowledgeRelService.checkAuth(ids);
+            if (!hasAuth) {
+                jsonResult.setSuccess(false);
+                jsonResult.setMessage("此文件暂无权限，不能下载！");
+                return jsonResult;
+            }
+
+            String name;
+            if (knowledgeList.size() == 1) {
+                name = knowledgeList.get(0).getKnowledgeName();
+            } else {
+                name = UUID.randomUUID().toString().replace("-", "") + ".zip";
+            }
+            List<String> fileIds = new ArrayList<>(knowledgeList.size());
+            fileIds.addAll(knowledgeList.stream().map(Knowledge::getFileId).collect(Collectors.toList()));
+            if (StringUtils.isEmpty(libraryId)) {
+                Library myLibrary = libraryService.getUserLibraryByLibraryType("MY_LIBRARY");
+                libraryId = myLibrary.getId();
+            }
+
+            List<KnowledgeLog> knowledgeLogs = new ArrayList<>(knowledgeList.size());
+            final String finalLibraryId = libraryId;
+            knowledgeLogs.addAll(knowledgeList.stream().map(s -> new KnowledgeLog(s.getId(), finalLibraryId, KnowledgeConstant.LOG_DOWNLOAD)).collect(Collectors.toList()));
+            knowledgeLogService.batchSave(knowledgeLogs);
+            Map<String, String> shareIdMap = shareService.getSharedKnowledgeIdAndShareIdMap(ids);
+            if (MapUtils.isNotEmpty(shareIdMap)) {
+                StringBuilder shareIds = new StringBuilder();
+                shareIdMap.values().forEach(shareId -> {
+                    shareIds.append(shareId).append(",");
+                });
+                try {
+                    shareService.updateDownCount(shareIds.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            //批量文件的路径
+            List<String> fileUrls = new ArrayList<>(fileIds.size());
+            StringBuilder sb = new StringBuilder();
+            for (String s : fileIds) {
+                String fileUrl = FsFileManagerUtil.getFileUrl(PropertiesUtils.getConfigProp().getProperty("fs.server.host"), s, UUID.randomUUID().toString());
+                sb.append(fileUrl).append(",");
+            }
+            fileUrls.add(sb.substring(0, sb.length() - 1));
+            FileVo fileVo = new FileVo();
+            fileVo.setName(name);
+            fileVo.setFileUrl(sb.substring(0, sb.length() - 1));
+            jsonResult.setData(fileVo);
+            jsonResult.setSuccess(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            jsonResult.setSuccess(false);
+            jsonResult.setMessage("系统异常！");
+        } finally {
+            jedis.expire(key, 0);
         }
 
-        //批量文件的路径
-        List<String> fileUrls = new ArrayList<>(fileIds.size());
-        StringBuffer sb = new StringBuffer();
-        for(String s : fileIds){
-            String fileUrl = FsFileManagerUtil.getFileUrl(PropertiesUtils.getConfigProp().getProperty("fs.server.host"),s, UUID.randomUUID().toString());
-            sb.append(fileUrl).append(",");
-        }
-        fileUrls.add(sb.substring(0,sb.length()-1));
-        FileVo fileVo = new FileVo();
-        fileVo.setName(name);
-        fileVo.setFileUrl(sb.substring(0,sb.length()-1));
-        jsonResult.setData(fileVo);
-        jsonResult.setSuccess(true);
         return jsonResult;
-
     }
+
     @RequestMapping("updateDownCount")
     @ResponseBody
     public JsonResult updateDownCount(String shareIds){

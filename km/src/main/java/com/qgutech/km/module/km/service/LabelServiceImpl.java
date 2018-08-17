@@ -19,7 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -226,5 +228,21 @@ public class LabelServiceImpl extends BaseServiceImpl<Label> implements LabelSer
         labelRelList.addAll(labelIds.stream().map(labelId ->
                 new LabelRel(knowledgeId, labelId, ExecutionContext.getCorpCode())).collect(Collectors.toList()));
         return labelRelService.batchSave(labelRelList);
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public List<Label> getHostLabels(int hotCount) {
+        Map<String, Object> param = new HashMap<>(2);
+        StringBuilder sql = new StringBuilder("SELECT l.id,l.label_name FROM t_km_label l ");
+        sql.append(" LEFT JOIN t_km_label_rel lr ON l.id=lr.label_id ");
+        sql.append(" WHERE l.corp_code=:corpCode GROUP BY l.id ORDER BY count(lr.id) DESC,l.id ");
+        param.put("corpCode", ExecutionContext.getCorpCode());
+        if (hotCount > 0) {
+            sql.append(" LIMIT :rankCount ");
+            param.put("rankCount", hotCount);
+        }
+
+        return getJdbcTemplate().queryForList(sql.toString(), param, Label.class);
     }
 }

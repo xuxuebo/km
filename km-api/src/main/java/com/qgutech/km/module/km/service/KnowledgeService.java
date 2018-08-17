@@ -162,4 +162,15 @@ public interface KnowledgeService extends BaseService<Knowledge> {
      * @since TangFD@HF 2018-8-16
      */
     int getSameNameCount(String libraryId, String knowledgeName, String knowledgeType);
+
+    /**
+     * 获取热门知识列表，（依据下载量进行统计）
+     *
+     * @param Knowledge 条件对象，不可为空（暂时没有添加条件，可根据后续需求添加）
+     * @param pageParam 分页对象
+     * @return 包含热门知识数据的分页对象
+     * @throws RuntimeException 当page对象不符合分页数据或者Knowledge为null时
+     * @since TangFD@HF 2018-8-17
+     */
+    Page<Knowledge> searchHotKnowledge(Knowledge knowledge, PageParam pageParam);
 }

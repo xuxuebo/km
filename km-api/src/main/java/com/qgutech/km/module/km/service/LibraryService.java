@@ -141,4 +141,15 @@ public interface LibraryService extends BaseService<Library> {
      * @since TangFD@HF 2018-8-17
      */
     String getIdByNameAndType(String folderName, String type);
+
+    /**
+     * 根据库类型查找热门库列表（依据文件数统计）
+     *
+     * @param libraryType 知识库类型，不可为空
+     * @param hotCount    排行数量
+     * @return 热门库列表
+     * @throws RuntimeException 当folderName或者type为空时
+     * @since TangFD@HF 2018-8-17
+     */
+    List<Library> getHotLibraryByType(String libraryType, int hotCount);
 }
