@@ -93,7 +93,7 @@ public class LoginController extends BaseController {
 
         if (loginUser!=null&&StringUtils.isNotBlank(loginUser.getPassword())) {
             String password=loginUser.getPassword();
-            loginUser.setPassword(new String(Base64.decodeBase64(password)));
+            loginUser.setPassword(Aes.aesDecrypt(password));
         }
 
         JsonResult<User> jsonResult = new JsonResult<>();

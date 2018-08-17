@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/user.css?_v=${(resourceVersion)!}" type="text/css">
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery-1.9.1.min.js?_v=${(resourceVersion)!}"></script>
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/base64.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/aes.js?_v=${(resourceVersion)!}"></script>
     <script>
         pageContext = {
             resourcePath:'${resourcePath!}',
@@ -108,6 +109,13 @@
             $('.J_Submit').addClass('no-login');
         }
     }
+    //aes加密
+    function encrypt(word){
+        var key = CryptoJS.enc.Utf8.parse("abcdefgabcdefg12");
+        var srcs = CryptoJS.enc.Utf8.parse(word);
+        var encrypted = CryptoJS.AES.encrypt(srcs, key, {mode:CryptoJS.mode.ECB,padding: CryptoJS.pad.Pkcs7});
+        return encrypted.toString();
+    }
     $(function () {
 
         if($('.pre-login-links').find('.icon-checked-checkbox').get(0)){
@@ -177,8 +185,8 @@
                 $errorDiv.addClass('error-bg');
                 return false;
             }
-            if(password && password != '' && window.BASE64){
-                password = window.BASE64.encoder(password);
+            if(password && password != ''){
+                password =encrypt(password);
             }
 
             $.ajax({

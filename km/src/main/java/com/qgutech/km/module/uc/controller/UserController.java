@@ -290,7 +290,7 @@ public class UserController extends BaseController {
             throw new IllegalArgumentException("Parameters is not valid!");
         }
         String password = user.getPassword();
-        user.setPassword(new String(Base64.decodeBase64(password)));
+        user.setPassword(Aes.aesDecrypt(password));
         userService.updatePwd(Arrays.asList(user.getId().split(PeConstant.COMMA)), user.getPassword());
         final Map<String, String> contextMap = ExecutionContext.getContextMap();
         String corpCode = ExecutionContext.getCorpCode();
