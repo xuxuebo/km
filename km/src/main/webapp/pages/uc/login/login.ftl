@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/pro_exam_plugin_min.css?_v=${(resourceVersion)!}" type="text/css">
     <link rel="stylesheet" href="${resourcePath!}/web-static/proExam/css/user.css?_v=${(resourceVersion)!}" type="text/css">
     <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/plugins/jquery-1.9.1.min.js?_v=${(resourceVersion)!}"></script>
+    <script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/base64.js?_v=${(resourceVersion)!}"></script>
     <script>
         pageContext = {
             resourcePath:'${resourcePath!}',
@@ -176,10 +177,13 @@
                 $errorDiv.addClass('error-bg');
                 return false;
             }
+            if(password && password != '' && window.BASE64){
+                password = window.BASE64.encoder(password);
+            }
 
             $.ajax({
                 url: '${ctx}/login/ajaxLogin',
-                data: $('#loginForm').serialize(),
+                data:  {"loginName":loginName , "password":password},
                 async: true,
                 dataType: 'json',
                 type: 'post',
@@ -195,7 +199,6 @@
             });
         });
 
-//        PEBASE.peFormEvent('checkbox');
         //类别点击筛选事件
         $('.pe-check-by-list').off().click(function () {
             var iconCheck = $(this).find('span.iconfont');
