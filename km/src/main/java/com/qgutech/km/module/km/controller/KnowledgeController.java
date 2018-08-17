@@ -1,8 +1,11 @@
 package com.qgutech.km.module.km.controller;
 
 import com.qgutech.fs.utils.FsFileManagerUtil;
+import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
+import com.qgutech.km.base.redis.PeJedisCommands;
+import com.qgutech.km.base.redis.PeRedisClient;
 import com.qgutech.km.base.vo.JsonResult;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.constant.PeConstant;
@@ -11,10 +14,7 @@ import com.qgutech.km.module.km.service.*;
 import com.qgutech.km.module.km.vo.FileVo;
 import com.qgutech.km.module.sfm.model.PeFile;
 import com.qgutech.km.module.sfm.service.FileServerService;
-import com.qgutech.km.utils.PeDateUtils;
-import com.qgutech.km.utils.PeException;
-import com.qgutech.km.utils.PeFileUtils;
-import com.qgutech.km.utils.PropertiesUtils;
+import com.qgutech.km.utils.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -419,8 +419,29 @@ public class KnowledgeController {
      */
     @ResponseBody
     @RequestMapping("emptyTrash")
-    public JsonResult emptyTrash(){
+    public JsonResult emptyTrash( HttpServletRequest hRequest){
         JsonResult jsonResult = new JsonResult();
+        String timestamp = hRequest.getParameter("timestamp");
+        String nonce = hRequest.getParameter("nonce");
+        String sign = hRequest.getParameter("sign");
+        if (StringUtils.isBlank(sign)||StringUtils.isBlank(timestamp)||StringUtils.isBlank(nonce)){
+            jsonResult.setMessage("操作有误");
+            jsonResult.setSuccess(false);
+            return jsonResult;
+        }
+        if (!sign.equals(MD5Generator.getHexMD5(nonce+"xu"+timestamp).toUpperCase())){
+            jsonResult.setMessage("操作有误");
+            jsonResult.setSuccess(false);
+            return jsonResult;
+        }
+        PeJedisCommands commonJedis = PeRedisClient.getCommonJedis();
+        String key="nonce_"+nonce+ExecutionContext.getUserId();
+        if (commonJedis.exists(key)) {
+            jsonResult.setMessage("操作有误");
+            jsonResult.setSuccess(false);
+            return jsonResult;
+        }
+        commonJedis.setex(key,60,"1");
         try {
             knowledgeService.emptyTrash();
         }catch (Exception e){

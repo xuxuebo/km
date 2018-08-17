@@ -418,3 +418,4 @@
 
 
 <script src="${resourcePath!}/web-static/proExam/index/js/index.js"></script>
+<script src="${resourcePath!}/web-static/proExam/index/js/md5.js"></script>
