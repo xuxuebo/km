@@ -62,4 +62,8 @@ public class KnowledgeConstant {
 
     public static final DateFormat TIME_FORMAT= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static final DateFormat DATE_FORMAT= new SimpleDateFormat("yyyy-MM-dd");
+    //文件上传来源
+    public static final String UPLOAD_SHARE = "UPLOAD_SHARE";
+    public static final String UPLOAD_PROJECT = "UPLOAD_PROJECT";
+    public static final String UPLOAD_SPECIAL = "UPLOAD_SPECIAL";
 }

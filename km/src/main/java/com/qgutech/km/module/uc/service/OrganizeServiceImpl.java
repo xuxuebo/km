@@ -728,13 +728,14 @@ public class OrganizeServiceImpl extends BaseServiceImpl<Organize> implements Or
         User user = userService.get(ExecutionContext.getUserId());
         Organize organize = get(user.getOrganize().getId(), Organize._idPath, Organize._parentId);
         String orgId = organize.getId();
+        List<String> orgIds = new ArrayList<>();
         if (organize.getParentId() == null) {
-            return Collections.singletonList(orgId);
+            orgIds.add(orgId);
+            return orgIds;
         }
 
         String idPath = organize.getIdPath();
         String[] ids = idPath.split("\\.");
-        List<String> orgIds = new ArrayList<>(ids.length + 1);
         Collections.addAll(orgIds, ids);
         orgIds.add(orgId);
         return orgIds;

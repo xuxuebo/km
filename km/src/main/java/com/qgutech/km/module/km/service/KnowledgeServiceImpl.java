@@ -413,6 +413,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             return page;
         }
 
+        orgIds.add(ExecutionContext.getUserId());
         List<String> knowledgeIds = null;
         if (hasSearchCondition(knowledge)) {
             knowledgeIds = getKnowledgeIds(knowledge, userIds);
@@ -456,7 +457,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             params.put("start", pageParam.getStart());
         }
 
-        List<Knowledge> knowledgeList = jdbcTemplate.query("SELECT k.*,kr.id relId,o.organize_name " + sql, params, (resultSet, i) -> {
+        List<Knowledge> knowledgeList = jdbcTemplate.query("SELECT k.*,kr.id relId,o.organize_name,u.user_name " + sql, params, (resultSet, i) -> {
             Knowledge k = new Knowledge();
             k.setId(resultSet.getString("id"));
             k.setKnowledgeName(resultSet.getString("knowledge_name"));
@@ -468,7 +469,10 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             k.setFileId(resultSet.getString("file_id"));
             k.setFolder(resultSet.getString("folder"));
             k.setCorpCode(resultSet.getString("corp_code"));
-            k.setOrgName(resultSet.getString("organize_name"));
+            String orgName = resultSet.getString("organize_name");
+            String userName = resultSet.getString("user_name");
+            orgName = StringUtils.isEmpty(orgName) ? userName : orgName;
+            k.setOrgName(orgName);
             return k;
         });
 
@@ -497,6 +501,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         sql.append(" INNER JOIN t_km_knowledge_rel kr ON k.id=kr.knowledge_id AND kr.library_id IN (:libraryIds)");
         params.put("libraryIds", orgIds);
         sql.append(" LEFT JOIN t_uc_organize o ON o.id = kr.library_id");
+        sql.append(" LEFT JOIN t_uc_user u ON u.id = kr.library_id");
         sql.append(" WHERE k.corp_code = :corpCode");
         params.put("corpCode", ExecutionContext.getCorpCode());
         if (CollectionUtils.isNotEmpty(userIds)) {
@@ -595,7 +600,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         List<String> knowledgeIds = share.getKnowledgeIds();
         Map<String, String> knowledgeIdAndShareIdMap = shareService.getSharedKnowledgeIdAndShareIdMap(knowledgeIds);
         List<String> libraryIds = share.getLibraryIds();
-        libraryService.initLibraryByOrgId(libraryIds);
+        libraryService.initLibraryByLibraryIdAndType(libraryIds, KnowledgeConstant.ORG_SHARE_LIBRARY);
         Map<String, Boolean> existMap = knowledgeRelService.getLibraryIdKnowledgeIdMap(libraryIds, knowledgeIds);
         int size = knowledgeIds.size();
         String corpCode = ExecutionContext.getCorpCode();

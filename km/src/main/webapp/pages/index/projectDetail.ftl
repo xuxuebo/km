@@ -158,7 +158,7 @@
     //查看更多
     function fileSelectMore(type) {
         var $yContainer = $('.y-content');
-        $yContainer.load('${ctx!}/km/front/fileList?libraryId='+libraryId+"&type="+type);
+        $yContainer.load('${ctx!}/km/front/fileList?libraryType=PROJECT_LIBRARY&libraryId='+libraryId+"&type="+type);
     }
     //查看全文
     function selectProjectIntroduction() {

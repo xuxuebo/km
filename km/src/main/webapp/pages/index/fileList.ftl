@@ -117,8 +117,13 @@
 
 </script>
 <script>
-    var libraryId = '${libraryId!}';
-    var type = '${type!}';
+    var libraryId = '${libraryId!}', libraryType = "${libraryType!}";
+    var type = '${type!}', uploadClass = '';
+    if (libraryType == "SPECIALTY_LIBRARY") {
+        uploadClass = "js-file-upload-special";
+    } else if (libraryType == "PROJECT_LIBRARY") {
+        uploadClass = "js-file-upload-project";
+    }
 </script>
 <script src="${resourcePath!}/web-static/proExam/index/js/fileList.js"></script>
 

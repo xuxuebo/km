@@ -325,36 +325,36 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
 
     @Override
     @Transactional(readOnly = false, rollbackFor = Exception.class)
-    public void initLibraryByOrgId(List<String> orgIds) {
-        if (CollectionUtils.isEmpty(orgIds)) {
-            throw new PeException("orgIds must be not empty!");
+    public void initLibraryByLibraryIdAndType(List<String> libraryIds, String libraryType) {
+        if (CollectionUtils.isEmpty(libraryIds) || StringUtils.isEmpty(libraryType)) {
+            throw new PeException("libraryIds and libraryType must be not empty!");
         }
 
         String corpCode = ExecutionContext.getCorpCode();
         Conjunction conjunction = Restrictions.and(Restrictions.eq(Library.CORP_CODE, corpCode),
-                Restrictions.eq(Library.LIBRARY_TYPE, KnowledgeConstant.ORG_SHARE_LIBRARY),
-                Restrictions.in(Library.ID, orgIds));
+                Restrictions.eq(Library.LIBRARY_TYPE, libraryType),
+                Restrictions.in(Library.ID, libraryIds));
         List<Library> libraries = listByCriterion(conjunction, Library.ID);
         if (CollectionUtils.isNotEmpty(libraries)) {
             int librariesSize = libraries.size();
-            if (librariesSize == orgIds.size()) {
+            if (librariesSize == libraryIds.size()) {
                 return;
             }
 
             for (Library library : libraries) {
-                orgIds.remove(library.getId());
+                libraryIds.remove(library.getId());
             }
         }
 
-        List<Library> libraryList = new ArrayList<>(orgIds.size());
-        for (String orgId : orgIds) {
+        List<Library> libraryList = new ArrayList<>(libraryIds.size());
+        for (String libraryId : libraryIds) {
             Library library = new Library();
-            library.setId(orgId);
-            library.setIdPath(orgId);
+            library.setId(libraryId);
+            library.setIdPath(libraryId);
             library.setParentId("0");
-            library.setLibraryType(KnowledgeConstant.ORG_SHARE_LIBRARY);
+            library.setLibraryType(libraryType);
             library.setShowOrder(0);
-            library.setLibraryName(orgId);
+            library.setLibraryName(libraryId);
             library.setCorpCode(corpCode);
             libraryList.add(library);
         }
@@ -461,5 +461,27 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
         LibraryDetail libraryDetail = library.getLibraryDetail();
         libraryDetail.setCorpCode(ExecutionContext.getCorpCode());
         libraryDetailService.update(libraryDetail);
+    }
+
+    @Override
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public String getIdByNameAndType(String folderName, String type) {
+        if (StringUtils.isEmpty(folderName) || StringUtils.isEmpty(type)) {
+            throw new PeException("type and folderName must be not empty!");
+        }
+
+        Library myLibrary = getUserLibraryByLibraryType(KnowledgeConstant.MY_LIBRARY);
+        Criterion criterion = Restrictions.and(Restrictions.eq(Library.CORP_CODE, ExecutionContext.getCorpCode()),
+                Restrictions.eq(Library.LIBRARY_TYPE, type),
+                Restrictions.eq(Library.LIBRARY_NAME, folderName),
+                Restrictions.eq(Library.PARENT_ID, myLibrary.getId()),
+                Restrictions.eq(Library.CREATE_BY, ExecutionContext.getUserId()));
+
+        Library library = getByCriterion(criterion);
+        if (library == null) {
+            return null;
+        }
+
+        return library.getId();
     }
 }

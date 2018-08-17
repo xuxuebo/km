@@ -23,6 +23,7 @@ public class Knowledge extends BaseModel {
     public static String SHOW_ORDER = "showOrder";
 
     public static String FOLDER = "folder";
+    public static String KNOWLEDGE_TYPE = "knowledgeType";
 
     /**
      * 文件名称

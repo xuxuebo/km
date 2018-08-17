@@ -128,7 +128,7 @@ $(function () {
             content: pageContext.rootPath + '/km/knowledge/openUpload',
             area: ['600px', '400px'],
             title: '上传文件',
-            skin: 'js-file-upload',
+            skin: uploadClass,
             btn: ['确定', '取消'],
             btn1: function () {
                 var fileList = window.frames[0] && window.frames[0].document.getElementById('theList');
@@ -157,6 +157,22 @@ $(function () {
                         },
                         success: function (data) {
                             if (data.success) {
+                                $.ajax({
+                                    type: "POST",
+                                    url: url,
+                                    dataType: 'json',
+                                    success: function (result) {
+                                        data = result.rows;
+                                        for (var i = 0; i < data.length; i++) {
+                                            data[i].knowledgeSize = YUN.conver(data[i].knowledgeSize);
+                                        }
+                                        if (type == 'activity') {
+                                            $yunTable.html(_.template(tplActivityTable)({list: data, sort: initSort}));
+                                        } else {
+                                            $yunTable.html(_.template(tplYunTable)({list: data, sort: initSort}));
+                                        }
+                                    }
+                                });
                                 layer.closeAll();
                                 PEMO.DIALOG.tips({
                                     content: '操作成功',

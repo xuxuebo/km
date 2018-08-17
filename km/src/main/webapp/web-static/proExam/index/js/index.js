@@ -512,7 +512,7 @@ $(function () {
         $('.js-share-y').off().on('click', function () {
             //我的云库弹框
             var knowledgeIds;
-            var deptId;
+            var deptId, nodeType;
             var table, initSort = {
                 name: "desc",
                 size: "desc",
@@ -578,7 +578,9 @@ $(function () {
             });
             function getDept(){
                 PEMO.DIALOG.confirmL({
-                    content: '<div class="y-content__table tree-and-users-default tree-and-users-dept ztree pe-tree-container mCustomScrollbar" id="ySharedeptTree"><div class="pe-stand-table-pagination"></div></div>',
+                    content: '<div><input type="text" class="pe-tree-form-text y-nav__search__input" ' +
+                    'style="border: 1px solid #ccc;margin: 10px 0 10px 20px;border-radius: 20px;" placeholder="部门，人员名称搜索"></div>' +
+                    '<div class="y-content__table tree-and-users-default tree-and-users-dept ztree pe-tree-container mCustomScrollbar" id="peZtreeMain"><div class="pe-stand-table-pagination"></div></div>',
                     area: ['750px', '520px'],
                     title: '部门',
                     btn: ['保存', '取消'],
@@ -590,7 +592,8 @@ $(function () {
                                 url: '/km/share/shareToOrg',
                                 data: {
                                     "knowledgeIds":knowledgeIds,
-                                    "libraryIds":deptId
+                                    "libraryIds":deptId,
+                                    "shareType": nodeType ? nodeType : ""
                                 },
                                 success: function (data) {
                                     if (data.success) {
@@ -625,9 +628,10 @@ $(function () {
                         //部门树
                         var yDeptOrgTree = {
                             isOpen: true,
-                            dataUrl: pageContext.rootPath + '/km/uc/organize/listTree',
+                            dataUrl: pageContext.rootPath + '/km/uc/user/listOrgTreeAndUsers',
                             clickNode: function (treeNode) {
                                 deptId = treeNode.id;
+                                nodeType = treeNode.type;
                             },
                             treePosition: 'inputDropDown',
                             callback: {
@@ -636,9 +640,9 @@ $(function () {
                                 }
                             }
                         };
-                        PEMO.ZTREE.initTree('ySharedeptTree', yDeptOrgTree,true);
+                        PEMO.ZTREE.initTree('peZtreeMain', yDeptOrgTree,true);
                         delayRenderLeaf();
-                        var treeObj = $.fn.zTree.getZTreeObj("ySharedeptTree");
+                        var treeObj = $.fn.zTree.getZTreeObj("peZtreeMain");
                         treeObj.expandAll(true);
 
                     }
@@ -649,12 +653,12 @@ $(function () {
         });
         //从本地分享
         $('.js-share-local').off().on('click',function (e) {
-            var deptId, fileIds = "";
+            var deptId, nodeType, fileIds = "";
             PEMO.DIALOG.selectorDialog({
                 content: pageContext.rootPath + '/km/knowledge/openUpload',
-                area: ['650px', '400px'],
+                area: ['650px', '460px'],
                 title: '上传文件',
-                skin:'js-file-upload',
+                skin:'js-file-upload-share',
                 btn: ['下一步','取消'],
                 btn1: function () {
                     var fileList = window.frames[0] &&  window.frames[0].document.getElementById('theList');
@@ -676,13 +680,16 @@ $(function () {
                         }
 
                         //部门树
-                        $('.js-file-upload .layui-layer-content iframe').remove();
-                        $('.js-file-upload .layui-layer-content').html('<ul id="deptTree" class="tree-and-users-default tree-and-users-dept ztree pe-tree-container mCustomScrollbar"></ul>');
+                        $('.js-file-upload-share .layui-layer-content iframe').remove();
+                        $('.js-file-upload-share .layui-layer-content').html('<div><input type="text" class="pe-tree-form-text y-nav__search__input" ' +
+                            'style="border: 1px solid #ccc;margin: 10px 0 10px 20px;border-radius: 20px;" placeholder="部门，人员名称搜索"></div>' +
+                            '<ul id="peZtreeMain" class="tree-and-users-default tree-and-users-dept ztree pe-tree-container mCustomScrollbar"></ul>');
                         var deptOrgTree = {
                             isOpen: true,
-                            dataUrl: pageContext.rootPath + '/km/uc/organize/listTree',
+                            dataUrl: pageContext.rootPath + '/km/uc/user/listOrgTreeAndUsers',
                             clickNode: function (treeNode) {
                                 deptId = treeNode.id;
+                                nodeType = treeNode.type;
                             },
                             treePosition: 'inputDropDown',
                             callback: {
@@ -691,19 +698,20 @@ $(function () {
                                 }
                             }
                         };
-                        PEMO.ZTREE.initTree('deptTree', deptOrgTree,true);
-                        var treeObj = $.fn.zTree.getZTreeObj("deptTree");
+                        PEMO.ZTREE.initTree('peZtreeMain', deptOrgTree,true);
+                        var treeObj = $.fn.zTree.getZTreeObj("peZtreeMain");
                         delayRenderLeaf();
                         treeObj.expandAll(true);
-                        $('.js-file-upload .layui-layer-btn0').html('确定');
-                        $('.js-file-upload .layui-layer-btn0').addClass('layui-layer-save');
+                        $('.js-file-upload-share .layui-layer-btn0').html('确定');
+                        $('.js-file-upload-share .layui-layer-btn0').addClass('layui-layer-save');
                     }
                     if($('.layui-layer-save').length>0 && deptId){
                         PEBASE.ajaxRequest({
                             url: '/km/share/shareToOrg',
                             data: {
                                 "fileIds":fileIds,
-                                "libraryIds":deptId
+                                "libraryIds":deptId,
+                                "shareType": nodeType ? nodeType : ""
                             },
                             success: function (data) {
                                 if (data.success) {
@@ -1248,3 +1256,8 @@ function handleName(name) {
     return name;
 }
 
+function delayRenderLeaf() {
+    setTimeout(function() {
+        $(".tree-and-users-default li .zTree-node .before-node-icon:not(.icon-tree-dot)").closest('.zTree-node-li').children('span.switch').css('visibility', 'visible');
+    }, 100);
+}

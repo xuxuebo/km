@@ -111,11 +111,12 @@ public class FrontController {
     }
     //首页  重点项目 查看更多
     @RequestMapping("fileList")
-    public String fileList(Model model,String libraryId,String type){
+    public String fileList(Model model,String libraryId,String type,String libraryType){
         model.addAttribute("userName", SessionContext.get().getUserName());
         model.addAttribute("admin", SessionContext.get().isAdmin());
         model.addAttribute("libraryId", libraryId);
         model.addAttribute("type", type);
+        model.addAttribute("libraryType", libraryType);
         return "index/fileList";
     }
     //首页  重点项目 项目详情

@@ -131,7 +131,7 @@ $(function () {
             content: pageContext.rootPath + '/km/knowledge/openUpload',
             area: ['650px', '400px'],
             title: '上传文件',
-            skin: 'js-file-upload',
+            skin: 'js-file-upload-project',
             btn: ['确定', '取消'],
             btn1: function () {
                 var fileList = window.frames[0] && window.frames[0].document.getElementById('theList');

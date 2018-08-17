@@ -78,13 +78,14 @@ public interface LibraryService extends BaseService<Library> {
     Page<Library> searchLibrary(PageParam page, Library library);
 
     /**
-     * 部门分享，根据部门数据初始化库数据，将每个部门新建为一个库
+     * 部门分享，根据部门,人员数据初始化库数据，将每个部门，人员新建为一个库
      *
-     * @param orgIds 部门Id集合，不可为空
-     * @throws RuntimeException 当orgIds为空时
+     * @param libraryIds  部门,人员Id集合，不可为空
+     * @param libraryType 知识库类型，不可为空
+     * @throws RuntimeException 当libraryIds，或者libraryType为空时
      * @since TangFD@HF 2018-7-31
      */
-    void initLibraryByOrgId(List<String> orgIds);
+    void initLibraryByLibraryIdAndType(List<String> libraryIds, String libraryType);
 
     /**
      * 重点项目，专业分类 排行接口
@@ -129,4 +130,15 @@ public interface LibraryService extends BaseService<Library> {
      * @since TangFD@HF 2018-8-7
      */
     void updateAndDetail(Library library);
+
+    /**
+     * 根据知识库名称和知识库类型查找知识库Id
+     *
+     * @param folderName 知识库名称，不可为空
+     * @param type 知识库类型，不可为空
+     * @return 知识库Id
+     * @throws RuntimeException 当folderName或者type为空时
+     * @since TangFD@HF 2018-8-17
+     */
+    String getIdByNameAndType(String folderName, String type);
 }

@@ -95,11 +95,7 @@ public class KnowledgeController {
         try {
             if (StringUtils.isBlank(knowledge.getId())) {
                 String libraryId = knowledge.getLibraryId();
-                if (StringUtils.isEmpty(libraryId)) {
-                    Library myLibrary = libraryService.getUserLibraryByLibraryType("MY_LIBRARY");
-                    libraryId = myLibrary.getId();
-                }
-
+                libraryId = getLibraryId(libraryId);
                 String knowledgeName = knowledge.getKnowledgeName();
                 String knowledgeType = knowledge.getKnowledgeType();
                 int count = knowledgeService.getSameNameCount(libraryId, knowledgeName, knowledgeType);
@@ -123,6 +119,33 @@ public class KnowledgeController {
         } catch (PeException e) {
             return new JsonResult<>(false, e.getMessage());
         }
+    }
+
+    private String getLibraryId(String libraryId) {
+        if (StringUtils.isEmpty(libraryId)) {
+            Library myLibrary = libraryService.getUserLibraryByLibraryType("MY_LIBRARY");
+            return myLibrary.getId();
+        }
+
+        String folderName = null;
+        if (KnowledgeConstant.UPLOAD_SHARE.equals(libraryId)) {
+            folderName = "分享";
+        } else if (KnowledgeConstant.UPLOAD_PROJECT.equals(libraryId)) {
+            folderName = "重点项目";
+        } else if (KnowledgeConstant.UPLOAD_SPECIAL.equals(libraryId)) {
+            folderName = "专业分类";
+        }
+
+        if (StringUtils.isEmpty(folderName)) {
+            return libraryId;
+        }
+
+        libraryId = libraryService.getIdByNameAndType(folderName, KnowledgeConstant.MY_LIBRARY);
+        if (StringUtils.isEmpty(libraryId)) {
+            libraryId = libraryService.addFolder(folderName, null);
+        }
+
+        return libraryId;
     }
 
     private String getSameKnowledgeName(String knowledgeName, String knowledgeType, int count) {

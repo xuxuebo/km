@@ -308,8 +308,22 @@
     function UploadComlate(file) {
         var $file = $("#" + file.id);
         $file.find('.percentage').css({width: "100%"});
-        var data = file.data
+        var data = file.data;
         $("#"+file.id).attr("data-id", data.id);
+        var notFresh = false;
+        var shareUpload = window.parent.document.getElementsByClassName("js-file-upload-share");
+        var projectUpload = window.parent.document.getElementsByClassName("js-file-upload-project");
+        var specialUpload = window.parent.document.getElementsByClassName("js-file-upload-special");
+        if (shareUpload && shareUpload.length > 0) {
+            libraryId = "UPLOAD_SHARE";
+            notFresh = true;
+        } else if (projectUpload && projectUpload.length > 0) {
+            libraryId = "UPLOAD_PROJECT";
+            notFresh = true;
+        } else if (specialUpload && specialUpload.length > 0) {
+            libraryId = "UPLOAD_SPECIAL";
+            notFresh = true;
+        }
         //TODO 上传成功后 请求km保存
         var url = pageContext.rootPath + '/knowledge/saveKnowledge';
         $.ajax({
@@ -336,8 +350,10 @@
                         window.parent.layer.closeAll();
                     }
                 }*/
-                if (parent && parent.refreshPage && typeof parent.refreshPage == "function") {
-                    parent.refreshPage();
+                if (!notFresh) {
+                    if (parent && parent.refreshPage && typeof parent.refreshPage == "function") {
+                        parent.refreshPage();
+                    }
                 }
                 //刷新列表
                 //var folderId = $('#floderId').val();
