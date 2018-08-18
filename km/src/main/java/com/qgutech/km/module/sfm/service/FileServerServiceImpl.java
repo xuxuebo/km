@@ -4,6 +4,7 @@ import com.qgutech.km.module.sfm.model.PeFile;
 import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.constant.PeConstant;
+import com.qgutech.km.utils.PathManipulationUtils;
 import com.qgutech.km.utils.PeDateUtils;
 import com.qgutech.km.utils.PeException;
 import com.qgutech.km.utils.PropertiesUtils;
@@ -63,7 +64,9 @@ public class FileServerServiceImpl extends BaseServiceImpl<PeFile> implements Fi
 
         String filePath = getStoragePath(peFile);
         String storageRootPath = PropertiesUtils.getEnvProp().getProperty("file.upload.path");
-        File file = new File(storageRootPath + PeConstant.BACKSLASH + filePath);
+        String path = storageRootPath + PeConstant.BACKSLASH + filePath;
+        path = PathManipulationUtils.filterPath(path);
+        File file = new File(path);
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
@@ -109,7 +112,9 @@ public class FileServerServiceImpl extends BaseServiceImpl<PeFile> implements Fi
 
         String filePath = getStoragePath(peFile);
         String storageRootPath = PropertiesUtils.getEnvProp().getProperty("file.upload.path");
-        File file = new File(storageRootPath + PeConstant.BACKSLASH + filePath);
+        String path = storageRootPath + PeConstant.BACKSLASH + filePath;
+        path = PathManipulationUtils.filterPath(path);
+        File file = new File(path);
         if (!file.exists()) {
             throw new PeException("源图片不存在");
         }
@@ -138,7 +143,9 @@ public class FileServerServiceImpl extends BaseServiceImpl<PeFile> implements Fi
         graphics.drawImage(img, 0, 0, null);
         graphics.dispose();
         filePath = StringUtils.substringBeforeLast(filePath, PeConstant.BACKSLASH) + PeConstant.BACKSLASH + fileName;
-        File targetFile = new File(storageRootPath + PeConstant.BACKSLASH + filePath);
+        String path1 = storageRootPath + PeConstant.BACKSLASH + filePath;
+        path1 = PathManipulationUtils.filterPath(path1);
+        File targetFile = new File(path1);
         File targetParentFile = targetFile.getParentFile();
         if (!targetParentFile.exists()) {
             targetParentFile.mkdirs();

@@ -20,6 +20,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
+import org.springframework.util.ReflectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
@@ -268,7 +269,7 @@ public class PeUtils {
                     throw new RuntimeException("field[" + fieldName + "] is not exist!");
                 }
 
-                field.setAccessible(true);
+                ReflectionUtils.makeAccessible(field);
             }
 
             try {
@@ -349,14 +350,6 @@ public class PeUtils {
 
         if (StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
-            if (ip.equals("127.0.0.1")) {
-                //根据网卡取本机配置的IP
-                try {
-                    ip = InetAddress.getLocalHost().getHostAddress();
-                } catch (UnknownHostException e) {
-                    LOG.error("can not get ip address!", e);
-                }
-            }
         }
 
         return ip;

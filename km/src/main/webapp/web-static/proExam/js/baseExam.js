@@ -882,7 +882,6 @@ var BaseExam = {
         $(document).ajaxComplete(function (event, jqXHR, options) {
             var ajaxRequestStatus = jqXHR.getResponseHeader("ajaxRequest");
             if (ajaxRequestStatus === 'loginFailed') {
-                window.opener.location.href = CFG.ctx + '/client/logout';
                 window.close();
             }
         });

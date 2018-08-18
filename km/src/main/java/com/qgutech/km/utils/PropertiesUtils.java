@@ -1,5 +1,6 @@
 package com.qgutech.km.utils;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -21,12 +22,14 @@ public class PropertiesUtils {
     private static Properties envProp = new Properties();
 
     static {
-        InputStream inputStream = PropertiesUtils.class.getClassLoader().getResourceAsStream("config.properties");
+        InputStream inputStream = null;
         try {
+            inputStream = PropertiesUtils.class.getClassLoader().getResourceAsStream("config.properties");
             configProp.load(inputStream);
-
         } catch (IOException e) {
             LOG.error(e);
+        } finally {
+            IOUtils.closeQuietly(inputStream);
         }
 
         inputStream = PropertiesUtils.class.getClassLoader().getResourceAsStream("env.properties");
@@ -34,6 +37,8 @@ public class PropertiesUtils {
             envProp.load(inputStream);
         } catch (IOException e) {
             LOG.error(e);
+        } finally {
+            IOUtils.closeQuietly(inputStream);
         }
     }
 

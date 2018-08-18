@@ -1,5 +1,6 @@
 package com.qgutech.km.base.service;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
@@ -19,12 +20,15 @@ public class I18nServiceImpl implements I18nService {
     private Properties properties = null;
 
     public I18nServiceImpl() {
-        InputStream inputStream = I18nServiceImpl.class.getClassLoader().getResourceAsStream("pe_zh_CN.properties");
+        InputStream inputStream = null;
         try {
+            inputStream = I18nServiceImpl.class.getClassLoader().getResourceAsStream("pe_zh_CN.properties");
             properties = new Properties();
             properties.load(inputStream);
         } catch (IOException e) {
             LOG.error(e);
+        } finally {
+            IOUtils.closeQuietly(inputStream);
         }
     }
 

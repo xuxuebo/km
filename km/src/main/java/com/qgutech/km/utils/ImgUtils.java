@@ -1,5 +1,6 @@
 package com.qgutech.km.utils;
 
+import org.apache.commons.io.IOUtils;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
@@ -20,6 +21,7 @@ public class ImgUtils {
      */
     public static String GetImageStrFromUrl(String imgURL) {
         byte[] data = null;
+        InputStream inStream = null;
         try {
             // 创建URL
             URL url = new URL(imgURL);
@@ -27,7 +29,7 @@ public class ImgUtils {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setConnectTimeout(5 * 1000);
-            InputStream inStream = conn.getInputStream();
+            inStream = conn.getInputStream();
             data = readInputStream(inStream);
             inStream.read(data);
             inStream.close();
@@ -35,6 +37,8 @@ public class ImgUtils {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(inStream);
         }
         // 对字节数组Base64编码
         BASE64Encoder encoder = new BASE64Encoder();
@@ -59,6 +63,8 @@ public class ImgUtils {
             in.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(in);
         }
         // 对字节数组Base64编码
         BASE64Encoder encoder = new BASE64Encoder();
@@ -76,6 +82,7 @@ public class ImgUtils {
         if (imgStr == null) // 图像数据为空
             return false;
         BASE64Decoder decoder = new BASE64Decoder();
+        OutputStream out = null;
         try {
             // Base64解码
             byte[] b = decoder.decodeBuffer(imgStr);
@@ -86,13 +93,15 @@ public class ImgUtils {
             }
             // 生成jpeg图片
             String imgFilePath = "d://222.jpg";
-            OutputStream out = new FileOutputStream(imgFilePath);
+            out = new FileOutputStream(imgFilePath);
             out.write(b);
             out.flush();
             out.close();
             return true;
         } catch (Exception e) {
             return false;
+        } finally {
+            IOUtils.closeQuietly(out);
         }
     }
 
