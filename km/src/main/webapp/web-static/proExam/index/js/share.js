@@ -650,24 +650,6 @@ $(function () {
         });
     }
 });
-$("#searchBtn").on('click', function () {
-    var $searchKeyword = $("#searchKeyword");
-    var _keyword = $searchKeyword.val();
-    $.ajax({
-        async: false,//此值要设置为FALSE  默认为TRUE 异步调用
-        type: "POST",
-        url: pageContext.resourcePath + '/knowledge/fullTextSearch?keyword=' + _keyword,
-        dataType: 'json',
-        success: function (result) {
-            data = result;
-            for (var i = 0; i < data.length; i++) {
-                data[i].knowledgeSize = YUN.conver(data[i].knowledgeSize);
-            }
-        }
-    });
-
-    renderTable();
-});
 
 //绑定事件
 $('.y-share-table-main-panel').delegate('.js-opt-download', 'click', function () {

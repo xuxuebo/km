@@ -189,7 +189,6 @@ $(function () {
             var _keyword = $searchKeyword.val();
             console.log(_keyword);
             $.ajax({
-                async: false,//此值要设置为FALSE  默认为TRUE 异步调用
                 type: "POST",
                 url: pageContext.resourcePath + '/knowledge/fullTextSearch?keyword=' + _keyword,
                 dataType: 'json',
@@ -198,10 +197,9 @@ $(function () {
                     for (var i = 0; i < data.length; i++) {
                         data[i].knowledgeSize = YUN.conver(data[i].knowledgeSize);
                     }
+                    renderYunTable();
                 }
             });
-
-            renderYunTable();
         });
 
         //绑定事件
