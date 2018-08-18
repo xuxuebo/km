@@ -1,7 +1,10 @@
 package com.qgutech.km.module.km.controller;
 
+import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
+import com.qgutech.km.base.redis.PeJedisCommands;
+import com.qgutech.km.base.redis.PeRedisClient;
 import com.qgutech.km.base.vo.JsonResult;
 import com.qgutech.km.base.vo.PeTreeNode;
 import com.qgutech.km.base.vo.Rank;
@@ -14,6 +17,7 @@ import com.qgutech.km.module.km.service.KnowledgeRelService;
 import com.qgutech.km.module.km.service.KnowledgeService;
 import com.qgutech.km.module.km.service.LibraryService;
 import com.qgutech.km.module.uc.service.UserService;
+import com.qgutech.km.utils.MD5Generator;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,44 +50,67 @@ public class LibraryController {
 
     /**
      * 一级公共库
+     *
      * @return
      */
     @ResponseBody
     @RequestMapping("firstLevelLibrary")
-    public List<Library> firstLevelLibrary(){
+    public List<Library> firstLevelLibrary() {
 
         return libraryService.getFirstLevelLibrary();
     }
 
     @ResponseBody
     @RequestMapping("manage/search")
-    public Page<Library> search(Library library, PageParam pageParam){
-        if(library==null){
+    public Page<Library> search(Library library, PageParam pageParam) {
+        if (library == null) {
             library = new Library();
         }
-        if(pageParam==null){
+        if (pageParam == null) {
             pageParam = new PageParam();
         }
-        return libraryService.search(pageParam,library);
+        return libraryService.search(pageParam, library);
     }
 
 
     @ResponseBody
     @RequestMapping("listTree")
-    public List<PeTreeNode> listTree(){
+    public List<PeTreeNode> listTree() {
         return libraryService.listTree();
     }
 
     /**
      * 新建文件夹
+     *
      * @param libraryName
      * @return
      */
     @ResponseBody
     @RequestMapping("addFolder")
-    public JsonResult addFolder(String libraryName,String libraryId){
+    public JsonResult addFolder(String libraryName, String libraryId, HttpServletRequest hRequest) {
         JsonResult jsonResult = new JsonResult();
-        if(StringUtils.isEmpty(libraryName)){
+        String timestamp = hRequest.getParameter("timestamp");
+        String nonce = hRequest.getParameter("nonce");
+        String sign = hRequest.getParameter("sign");
+        if (StringUtils.isBlank(sign)||StringUtils.isBlank(timestamp)||StringUtils.isBlank(nonce)){
+            jsonResult.setMessage("操作有误");
+            jsonResult.setSuccess(false);
+            return jsonResult;
+        }
+        if (!sign.equals(MD5Generator.getHexMD5(nonce+"xu"+timestamp).toUpperCase())){
+            jsonResult.setMessage("操作有误");
+            jsonResult.setSuccess(false);
+            return jsonResult;
+        }
+        PeJedisCommands commonJedis = PeRedisClient.getCommonJedis();
+        String key="nonce_"+nonce+ExecutionContext.getUserId();
+        if (commonJedis.exists(key)) {
+            jsonResult.setMessage("操作有误");
+            jsonResult.setSuccess(false);
+            return jsonResult;
+        }
+        commonJedis.setex(key,60,"1");
+        if (StringUtils.isEmpty(libraryName)) {
             jsonResult.setMessage("请输入文件夹名");
             jsonResult.setSuccess(false);
             return jsonResult;
@@ -94,50 +122,53 @@ public class LibraryController {
             return jsonResult;
         }
 
+        libraryService.addFolder(libraryName, libraryId);
         return jsonResult;
     }
 
     @RequestMapping("manage/initPage")
-    public String initPage(){
+    public String initPage() {
         return "km/library/libraryManage";
     }
 
     /**
      * 新增公共库
+     *
      * @return
      */
     @RequestMapping("addPublicLibrary")
     @ResponseBody
-    public JsonResult addPublicLibrary(Library library){
+    public JsonResult addPublicLibrary(Library library) {
         JsonResult jsonResult = new JsonResult();
-        if(library==null||StringUtils.isEmpty(library.getLibraryName())){
+        if (library == null || StringUtils.isEmpty(library.getLibraryName())) {
             jsonResult.setSuccess(false);
             jsonResult.setMessage("新增失败");
-        }else{
+        } else {
             String result = libraryService.saveLibrary(library);
-            if("库名重复".equals(result)){
+            if ("库名重复".equals(result)) {
                 jsonResult.setSuccess(false);
                 jsonResult.setMessage(result);
-            }else{
+            } else {
                 jsonResult.setSuccess(true);
             }
         }
 
         return jsonResult;
     }
+
     @RequestMapping("updateLibrary")
     @ResponseBody
-    public JsonResult updateLibrary(Library library){
+    public JsonResult updateLibrary(Library library) {
         JsonResult jsonResult = new JsonResult();
-        if(library==null||StringUtils.isEmpty(library.getLibraryName())||StringUtils.isEmpty(library.getId())){
+        if (library == null || StringUtils.isEmpty(library.getLibraryName()) || StringUtils.isEmpty(library.getId())) {
             jsonResult.setSuccess(false);
             jsonResult.setMessage("编辑失败");
-        }else{
-            String result =  libraryService.updateLibrary(library);
-            if("库名重复".equals(result)){
+        } else {
+            String result = libraryService.updateLibrary(library);
+            if ("库名重复".equals(result)) {
                 jsonResult.setSuccess(false);
                 jsonResult.setMessage(result);
-            }else{
+            } else {
                 jsonResult.setSuccess(true);
             }
         }
@@ -146,11 +177,11 @@ public class LibraryController {
 
     @ResponseBody
     @RequestMapping("libraryName")
-    public JsonResult libraryName(String id){
-        Library library ;
-        if(StringUtils.isEmpty(id)){
+    public JsonResult libraryName(String id) {
+        Library library;
+        if (StringUtils.isEmpty(id)) {
             library = libraryService.getUserLibraryByLibraryType(KnowledgeConstant.MY_LIBRARY);
-        }else{
+        } else {
             library = libraryService.get(id);
         }
         JsonResult jsonResult = new JsonResult();
@@ -206,7 +237,7 @@ public class LibraryController {
 
     @ResponseBody
     @RequestMapping("rank")
-    public List<Rank> rank(@RequestParam String libraryId){
+    public List<Rank> rank(@RequestParam String libraryId) {
         return libraryService.rank(libraryId);
     }
 

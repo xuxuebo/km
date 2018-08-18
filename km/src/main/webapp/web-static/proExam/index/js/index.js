@@ -328,6 +328,9 @@ $(function () {
                 }
             });
         });
+        function rand(min,max) {
+                return Math.floor(Math.random()*(max-min))+min;
+            }
 
         //新建文件夹
         $('.js-newFolder').on('click', function () {
@@ -345,10 +348,13 @@ $(function () {
                     if (libraryName == null || libraryName == '' || libraryName == undefined) {
                         return false;
                     }
+                    var nonce=rand(1000,9999);
+                    var timestamp=new Date().getTime();
+                    var sign=hex_md5(nonce+"xu"+timestamp).toUpperCase();
                     PEBASE.ajaxRequest({
                         url: pageContext.rootPath + '/km/library/addFolder',
                         data: {
-                            "libraryName": libraryName, "libraryId": libraryId
+                            "libraryName": libraryName, "libraryId": libraryId,"timestamp":timestamp,"nonce":nonce,"sign":sign
                         },
                         success: function (data) {
 
@@ -1100,14 +1106,20 @@ $(function () {
                 },
             });
         });
+        function rand(min,max) {
+            return Math.floor(Math.random()*(max-min))+min;
+        }
         //清空回收站
         $('.js-emptyRecycle').on('click', function () {
+            var nonce=rand(1000,9999);
+            var timestamp=new Date().getTime();
+            var sign=hex_md5(nonce+"xu"+timestamp).toUpperCase();
             PEMO.DIALOG.confirmL({
                 content: '<div><h3 class="pe-dialog-content-head">确定清空回收站？</h3><p class="pe-dialog-content-tip">确认后,不可恢复,请谨慎操作！ </p></div>',
                 btn1: function () {
                     PEBASE.ajaxRequest({
                         url: pageContext.rootPath + '/km/knowledge/emptyTrash',
-                        data: {},
+                        data: {"timestamp":timestamp,"nonce":nonce,"sign":sign},
                         success: function (data) {
                             if (data.success) {
                                 PEMO.DIALOG.tips({

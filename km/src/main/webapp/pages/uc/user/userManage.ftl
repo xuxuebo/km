@@ -1,12 +1,6 @@
 <#assign ctx=request.contextPath/>
 <div class="pe-break-nav-tip-container">
-    <#--<ul class="pe-break-nav-ul">-->
-        <#--<li class="pe-brak-nav-items">用户</li>-->
-        <#--<li class="pe-brak-nav-items iconfont icon-bread-arrow">用户管理</li>-->
-     <#--&lt;#&ndash;   <li class="pe-brak-nav-items" style="float: right">-->
-            <#--<button type="button" class="pe-btn pe-btn-blue pe-question-choosen-btn pe-user-msg-setting">消息设置</button>-->
-        <#--</li>&ndash;&gt;-->
-    <#--</ul>-->
+
 </div>
 <div class="pe-user-manage-all-wrap ">
     <form name="peFormSub" id="peFormSub" class="">
@@ -569,6 +563,8 @@
     <div class="input-tree-no-data-tip">此类别下暂无数据</div>
     <%}%>
 </script>
+<script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/base64.js?_v=${(resourceVersion)!}"></script>
+<script type="text/javascript" src="${resourcePath!}/web-static/proExam/js/aes.js?_v=${(resourceVersion)!}"></script>
 
 <script>
     $(function () {
@@ -1007,6 +1003,13 @@
                         }
                     });
                 });
+                //aes加密
+                function encrypt(word){
+                    var key = CryptoJS.enc.Utf8.parse("abcdefgabcdefg12");
+                    var srcs = CryptoJS.enc.Utf8.parse(word);
+                    var encrypted = CryptoJS.AES.encrypt(srcs, key, {mode:CryptoJS.mode.ECB,padding: CryptoJS.pad.Pkcs7});
+                    return encrypted.toString();
+                }
 
                 //批量激活
                 $('#enableBtn').click(function () {
@@ -1148,6 +1151,9 @@
                         content: '<div><h3 class="pe-dialog-content-head">确定要把密码重置为&nbsp;<input type="text" value="102030" id="resetPwsDialog" style="width: 75px;height: 20px;border: 1px solid #999;border-radius: 3px;"/>&nbsp;吗？</h3></div>',
                         btn2: function () {
                             var psw = $('#resetPwsDialog').val();
+                            if(psw && psw != '' ){
+                                psw=encrypt(psw);
+                            }
                             $.post(pageContext.rootPath + '/uc/user/manage/resetPsw', {
                                 'id': rows.join(','),
                                 'password': psw

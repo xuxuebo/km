@@ -20,6 +20,7 @@ import com.qgutech.km.module.sfm.model.PeFile;
 import com.qgutech.km.module.sfm.service.FileServerService;
 import com.qgutech.km.module.uc.model.*;
 import com.qgutech.km.module.uc.service.*;
+import com.qgutech.km.utils.Base64;
 import com.qgutech.km.utils.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
@@ -75,7 +76,7 @@ public class UserController extends BaseController {
     private UserRedisService userRedisService;
     @Resource
     private ThreadPoolTaskExecutor taskExecutor;
-//    @Resource
+    //    @Resource
 //    private SystemSettingService systemSettingService;
     @Resource
     private CorpService corpService;
@@ -289,25 +290,14 @@ public class UserController extends BaseController {
         if (user == null || StringUtils.isBlank(user.getId()) || StringUtils.isBlank(user.getPassword())) {
             throw new IllegalArgumentException("Parameters is not valid!");
         }
-
+        String password = user.getPassword();
+        user.setPassword(Aes.aesDecrypt(password));
         userService.updatePwd(Arrays.asList(user.getId().split(PeConstant.COMMA)), user.getPassword());
         final Map<String, String> contextMap = ExecutionContext.getContextMap();
         String corpCode = ExecutionContext.getCorpCode();
         taskExecutor.submit(() -> {
             ExecutionContext.setContextMap(contextMap);
             ExecutionContext.setCorpCode(corpCode);
-            Boolean messageSetting = corpService.checkMessage();
-//            SystemSetting systemSetting = systemSettingService.getByCorp(SystemSetting.SystemType.USER);
-//            if (systemSetting == null || StringUtils.isBlank(systemSetting.getMessage())) {
-//                return;
-//            }
-//
-//            Us us = JSON.parseObject(systemSetting.getMessage(), Us.class);
-//            if (MapUtils.isEmpty(us.getRsMsg())) {
-//                return;
-//            }
-
-//            sendManagerUpdatePwd(Arrays.asList(user.getId().split(PeConstant.COMMA)), user.getPassword(), us.getRsMsg(), messageSetting);
         });
 
         return new JsonResult(true, i18nService.getI18nValue("update.success"));

@@ -90,6 +90,12 @@ public class LoginController extends BaseController {
     @ResponseBody
     @RequestMapping("login/ajaxLogin")
     public JsonResult<User> ajaxLogin(User loginUser, HttpServletRequest request, HttpServletResponse response) {
+
+        if (loginUser!=null&&StringUtils.isNotBlank(loginUser.getPassword())) {
+            String password=loginUser.getPassword();
+            loginUser.setPassword(Aes.aesDecrypt(password));
+        }
+
         JsonResult<User> jsonResult = new JsonResult<>();
         CorpService corpService = SpringContextHolder.getBean("corpService");
         CorpInfo corpInfo = corpService.getByCode(ExecutionContext.getCorpCode());
