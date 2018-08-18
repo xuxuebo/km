@@ -140,6 +140,11 @@ public interface KnowledgeService extends BaseService<Knowledge> {
     /**
      * 知识排行接口
      *
+     * @param type      排行类型，为空默认为总排行 <ul>
+     *                  <li>WEEK：周排行</li>
+     *                  <li>MONTH：月排行</li>
+     *                  <li>TOTAL：总排行</li>
+     *                  </ul>
      * @param rankCount 查询排行前多少名
      * @return 排行数据集合 <ul>
      * <li>{@link Rank#userName}:姓名</li>
@@ -149,7 +154,7 @@ public interface KnowledgeService extends BaseService<Knowledge> {
      * </ul>
      * @since TangFD@HF 2018-8-14
      */
-    List<Rank> rank(int rankCount);
+    List<Rank> rank(String type, int rankCount);
 
     /**
      * 根据文件名，获取指定知识库中重复文件的个数（处理重复上传同一个文件，文件名添加标识"XXXX(1)"）
@@ -166,7 +171,7 @@ public interface KnowledgeService extends BaseService<Knowledge> {
     /**
      * 获取热门知识列表，（依据下载量进行统计）
      *
-     * @param Knowledge 条件对象，不可为空（暂时没有添加条件，可根据后续需求添加）
+     * @param knowledge 条件对象，不可为空（暂时没有添加条件，可根据后续需求添加）
      * @param pageParam 分页对象
      * @return 包含热门知识数据的分页对象
      * @throws RuntimeException 当page对象不符合分页数据或者Knowledge为null时

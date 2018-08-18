@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by Administrator on 2018/6/22.
@@ -162,20 +161,16 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
     }
 
     private boolean checkFolderNameRepeat(String libraryId, String folderName) {
-        Criterion criterion = Restrictions.and(Restrictions.eq(Library.CORP_CODE, ExecutionContext.getCorpCode()),
-                Restrictions.eq(Library.LIBRARY_NAME, folderName),
-                Restrictions.eq(Library.LIBRARY_TYPE, KnowledgeConstant.MY_LIBRARY),
-                Restrictions.eq(Library.CREATE_BY, ExecutionContext.getUserId()),
-                Restrictions.eq(Library.PARENT_ID, libraryId));
-        List<Library> libraryList = listByCriterion(criterion);
-        if(CollectionUtils.isEmpty(libraryList)){
-            return false;
-        }
+        StringBuilder sql = new StringBuilder("SELECT count(*) FROM t_km_knowledge k ");
+        sql.append(" INNER JOIN t_km_knowledge_rel kr ON k.id=kr.knowledge_id ");
+        sql.append(" where k.corp_code=:corpCode AND kr.library_id=:libraryId AND k.knowledge_name=:knowledgeName ");
+        Map<String, Object> param = new HashMap<>(3);
+        param.put("corpCode", ExecutionContext.getCorpCode());
+        param.put("libraryId", libraryId);
+        param.put("knowledgeName", folderName);
 
-        List<String> libraryIds = new ArrayList<>(libraryList.size());
-        libraryIds.addAll(libraryList.stream().map(Library::getId).collect(Collectors.toList()));
-        //// TODO: 2018/8/17 检查回收站
-        return CollectionUtils.isNotEmpty(libraryList);
+        Long count = getJdbcTemplate().queryForObject(sql.toString(), param, Long.class);
+        return count != null && count > 0;
     }
 
     /**
@@ -522,12 +517,17 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
         sql.append(" WHERE l.corp_code=:corpCode AND l.library_type=:type ");
         param.put("corpCode", ExecutionContext.getCorpCode());
         param.put("type", libraryType);
-        sql.append(" GROUP BY l.id ORDER BY count(kr.id) DESC,l.id LIMIT :rankCount ");
+        sql.append(" GROUP BY l.id ORDER BY count(kr.id) DESC,l.id ");
         if (hotCount > 0) {
             sql.append(" LIMIT :rankCount ");
             param.put("rankCount", hotCount);
         }
 
-        return getJdbcTemplate().queryForList(sql.toString(), param, Library.class);
+        return getJdbcTemplate().query(sql.toString(), param, (resultSet, i) -> {
+            Library library = new Library();
+            library.setId(resultSet.getString("id"));
+            library.setLibraryName(resultSet.getString("library_name"));
+            return library;
+        });
     }
 }

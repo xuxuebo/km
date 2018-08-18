@@ -280,4 +280,16 @@ public class LibraryController {
         return jsonResult;
     }
 
+    @RequestMapping("hotLibrary")
+    @ResponseBody
+    public List<Library> hotLibrary(String libraryType, int hotCount) {
+        try {
+            return libraryService.getHotLibraryByType(libraryType, hotCount);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 }

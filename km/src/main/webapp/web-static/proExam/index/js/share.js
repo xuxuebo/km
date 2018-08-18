@@ -13,7 +13,7 @@ $(function () {
     initSpecialty();
     initProject();
     initLabel();
-    initShareTab();
+    initShareTab({'knowledgeName':  $(".discover-all-search").val()});
 
     //获取筛选类型
     var getTypeIds = function(){
@@ -47,7 +47,7 @@ $(function () {
             'tag': typeIds.labelIds,
             'projectLibraryId': typeIds.projectIds,
             'specialtyLibraryId': typeIds.majorIds,
-            'knowledgeName': '',
+            'knowledgeName':  $(".discover-all-search").val(),
             'folder': folder ? folder : '',
             'relId': relId ? relId : ''
         };
@@ -77,7 +77,7 @@ $(function () {
     } );
     //初始化表格
     function initShareTab(param) {
-        //table渲染
+        $(".discover-all-search").val('');
         var _table = $("#tplShareTable").html();
         var $shareTable = $('#shareTable');
         var data = [];
@@ -575,7 +575,7 @@ $(function () {
                 'tag':typeIds.labelIds,
                 'projectLibraryId':typeIds.projectIds,
                 'specialtyLibraryId':typeIds.majorIds,
-                'knowledgeName':''
+                'knowledgeName': $(".discover-all-search").val()
             };
             $('.show-org-name').text(treeNode.name);
             initShareTab(param);

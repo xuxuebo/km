@@ -13,9 +13,11 @@ import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.model.CorpInfo;
 import com.qgutech.km.utils.PeDateUtils;
 import com.qgutech.km.utils.PropertiesUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 
@@ -62,9 +64,10 @@ public class FrontController {
     }
     //首页  专业分类
     @RequestMapping("specialty")
-    public String specialty(Model model){
+    public String specialty(Model model, @RequestParam(required = false) String libraryId){
         model.addAttribute("userName", SessionContext.get().getUserName());
         model.addAttribute("admin", SessionContext.get().isAdmin());
+        model.addAttribute("libraryId", StringUtils.isEmpty(libraryId) ? "" : libraryId);
         return "index/specialty";
     }
 
@@ -104,9 +107,10 @@ public class FrontController {
     }
     //首页  重点项目
     @RequestMapping("majorProject")
-    public String majorProject(Model model){
+    public String majorProject(Model model, @RequestParam(required = false) String libraryId){
         model.addAttribute("userName", SessionContext.get().getUserName());
         model.addAttribute("admin", SessionContext.get().isAdmin());
+        model.addAttribute("libraryId", StringUtils.isEmpty(libraryId) ? "" : libraryId);
         return "index/majorProject";
     }
     //首页  重点项目 查看更多

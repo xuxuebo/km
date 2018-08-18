@@ -2472,7 +2472,8 @@ body, html {
 }
 
 .d-hot__tag__list__item{
-    margin-right: 68px;
+    margin-right: 20px;
+    margin-top: 20px;
     float: left;
 }
 
@@ -2480,10 +2481,16 @@ body, html {
     margin-right: 0;
 }
 
-.d-hot__tag__list__item a{
-    font-size: 14px;
-    color: #5C5C5C;
-    line-height: 20px;
+.d-hot__tag__list__item span{
+    width: 85px;
+    height: 15px;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.d-hot__tag__list__item:hover{
+    cursor: pointer;
 }
 
 .d-hot__tag__list__item a:hover {
@@ -2844,4 +2851,11 @@ body, html {
     .d-search__type{
         width: 150px;
     }
+}
+
+.d-name-item{
+    width: 90%;
+    height: 15px;
+    overflow: hidden;text-overflow: ellipsis;
+    white-space: nowrap;
 }

@@ -739,4 +739,10 @@ public class KnowledgeController {
         return jsonResult;
     }
 
+
+    @ResponseBody
+    @RequestMapping("searchHotKnowledge")
+    public Page<Knowledge> searchHotKnowledge(Knowledge knowledge, PageParam pageParam) {
+        return knowledgeService.searchHotKnowledge(knowledge, pageParam);
+    }
 }

@@ -1,13 +1,15 @@
 <#include "header.ftl"/>
 <script type="text/javascript">
-    function goLoadPage(type) {
+    function goLoadPage(type, id) {
+        id = id ? id : "";
+        $(".y-head__searcher").hide();
         var $yContainer = $('.y-container');
         if (type === 'dataShare') {
             $yContainer.load('${ctx!}/km/front/dataShare');
         } else if (type === "majorProject") {
-            $yContainer.load('${ctx!}/km/front/majorProject');
+            $yContainer.load('${ctx!}/km/front/majorProject?libraryId=' + id);
         }else if (type === "specialty") {
-            $yContainer.load('${ctx!}/km/front/specialty');
+            $yContainer.load('${ctx!}/km/front/specialty?libraryId=' + id);
         }else if (type === "dataStatistics") {
             $yContainer.load('${ctx!}/km/front/dataStatistics');
         }else if (type === "adminSetting") {
@@ -16,13 +18,13 @@
             });
         } else if(type === "publicLibrary"){
             $yContainer.load('${ctx!}/km/front/publicLibrary');
-        } else if(type === "discover"){
-            $yContainer.load('${ctx!}/km/front/discover');
-        } else{
-                // 首页
-                $yContainer.load('${ctx!}/km/front/loadIndex',function () {
+        } else if(type === "index"){
+            $(".y-head__searcher").show();
+            $yContainer.load('${ctx!}/km/front/loadIndex', function () {
                 location.hash = 'yun';
             });
+        } else {
+            $yContainer.load('${ctx!}/km/front/discover');
         }
     }
 
@@ -34,7 +36,8 @@
             }
             $(".y-nav__link").find("li").removeClass("active");
             $this.addClass("active");
-            goLoadPage($this.attr("data-type"))
+            goLoadPage($this.attr("data-type"), $this.attr("data-id"));
+            $this.attr("data-id", "");
         });
         goLoadPage();
     })

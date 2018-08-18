@@ -18,6 +18,7 @@ import com.qgutech.km.utils.PeUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
@@ -710,31 +711,50 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
     @Override
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<Rank> rank(int rankCount) {
+    public List<Rank> rank(String type, int rankCount) {
         if (rankCount <= 0) {
             rankCount = 5;
         }
 
-        String sql = "SELECT create_by,count(id) total FROM t_km_knowledge WHERE corp_code=:corpCode " +
-                " GROUP BY create_by ORDER BY total DESC,create_by LIMIT :rankCount";
-        Map<String, Object> params = new HashMap<>(2);
-        params.put("corpCode", ExecutionContext.getCorpCode());
-        params.put("rankCount", rankCount);
-
-        List<String> userIds = new ArrayList<>();
-        List<Rank> rankList = getJdbcTemplate().query(sql, params, (resultSet, i) -> {
-            String userId = resultSet.getString("create_by");
-            userIds.add(userId);
-            return new Rank(userId, (int) resultSet.getLong("total"));
-        });
-
-        if (CollectionUtils.isEmpty(rankList)) {
-            return new ArrayList<>(0);
+        Map<String, Object> params = new HashMap<>(3);
+        StringBuilder sql = new StringBuilder("SELECT u.user_name,count(k.id) total FROM t_uc_user u ");
+        sql.append(" LEFT JOIN t_km_knowledge k on k.create_by=u.id ");
+        Date startDate = getStartDate(type);
+        if (startDate != null) {
+            sql.append(" AND k.create_time >=:start ");
+            params.put("start", startDate);
         }
 
-        List<User> users = userService.list(userIds);
-        setRankInfo(users, rankList);
+        sql.append(" WHERE u.corp_code=:corpCode AND u.status=:status ");
+        params.put("corpCode", ExecutionContext.getCorpCode());
+        params.put("status", "ENABLE");
+        sql.append(" GROUP BY u.id ORDER BY total DESC,u.id LIMIT :rankCount ");
+        params.put("rankCount", rankCount);
+        final int[] index = {1};
+        List<Rank> rankList = getJdbcTemplate().query(sql.toString(), params, (resultSet, i) -> {
+            Rank rank = new Rank(null, (int) resultSet.getLong("total"));
+            rank.setUserName(resultSet.getString("user_name"));
+            rank.setRank(index[0]++);
+            return rank;
+        });
+
         return rankList;
+    }
+
+    private Date getStartDate(String type) {
+        int day = 0;
+        if (KnowledgeConstant.RANK_WEEK.equals(type)) {
+            day = -7;
+        } else if (KnowledgeConstant.RANK_MONTH.equals(type)) {
+            day = -30;
+        }
+
+        if (day == 0) {
+            return null;
+        }
+
+        return PeDateUtils.getFirstDate(DateUtils.addDays(new Date(), day));
+
     }
 
     public static void setRankInfo(List<User> users, List<Rank> rankList) {
@@ -844,7 +864,13 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             params.put("start", pageParam.getStart());
         }
 
-        List<Knowledge> knowledges = jdbcTemplate.queryForList("SELECT k.id,k.knowledge_name" + sql, params, Knowledge.class);
+        List<Knowledge> knowledges = jdbcTemplate.query("SELECT k.id,k.knowledge_name" + sql, params, (resultSet, i) -> {
+            Knowledge k = new Knowledge();
+            k.setId(resultSet.getString("id"));
+            k.setKnowledgeName(resultSet.getString("knowledge_name"));
+            return k;
+        });
+
         page.setRows(knowledges);
         return page;
     }

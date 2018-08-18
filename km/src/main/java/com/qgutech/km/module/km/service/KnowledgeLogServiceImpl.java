@@ -29,7 +29,7 @@ public class KnowledgeLogServiceImpl extends BaseServiceImpl<KnowledgeLog> imple
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public Page<KnowledgeLog> search(KnowledgeLog knowledgeLog, PageParam pageParam) {
         PeUtils.validPage(pageParam);
-        if (knowledgeLog == null || StringUtils.isEmpty(knowledgeLog.getLibraryId())) {
+        if (knowledgeLog == null) {
             throw new PeException("knowledgeLog condition invalid!");
         }
 

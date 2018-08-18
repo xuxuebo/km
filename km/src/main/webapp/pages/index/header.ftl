@@ -52,6 +52,8 @@
         <a href="${ctx!}/km/front/index" class="y-logo"></a>
     </div>
     <div class="y-head__right">
+        <input type="hidden" class="discover-search"/>
+        <input type="hidden" class="discover-all-search"/>
         <form class="y-head__searcher" name="searchForm" action="javascript:void(0);">
             <label><input type="text" class="y-nav__search__input" id="searchKeyword" placeholder="搜索文件"/></label>
             <button type="submit" class="y-nav__search__btn" id="searchBtn"><span class="yfont-icon">&#xe658;</span>
@@ -81,7 +83,8 @@
     </div>
     <nav class="y-nav">
         <ul class="y-nav__link">
-            <li data-type="index" class="y-nav__link__item active"><span class="txt">我的云库</span></li>
+            <li data-type="discover" class="y-nav__link__item active"><span class="txt">发现</span></li>
+            <li data-type="index" class="y-nav__link__item"><span class="txt">我的云库</span></li>
             <li data-type="dataShare" class="y-nav__link__item"><span class="txt">分享</span></li>
             <li data-type="majorProject" class="y-nav__link__item"><span class="txt">重点项目</span></li>
             <li data-type="specialty" class="y-nav__link__item"><span class="txt">专业分类</span></li>
@@ -95,7 +98,6 @@
             <li data-type="dataStatistics" class="y-nav__link__item"><span class="txt">数据统计</span></li>
             <li data-type="adminSetting" class="y-nav__link__item"><span class="txt">设置</span></li>
         </#if>
-            <li data-type="discover" class="y-nav__link__item"><span class="txt">发现</span></li>
         </ul>
     </nav>
 </header>

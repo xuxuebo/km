@@ -17,7 +17,7 @@
 </section>
 <script type="text/template" id="tplYunManageList">
     <% for(var i=0;i< data.length;i++) {%>
-    <div class="y-menu-item-title" onclick="selectProjectDetail('<%=data[i].id%>')">
+    <div class="y-menu-item-title" data-id="<%=data[i].id%>" onclick="selectProjectDetail('<%=data[i].id%>')">
         <%= data[i].name %>
     </div>
     <% }%>
@@ -26,6 +26,8 @@
 </script>
 <script type="text/template" id="tplYunTable">
 </script>
-
+<script>
+    var libraryId = '${libraryId!}';
+</script>
 
 <script src="${resourcePath!}/web-static/proExam/index/js/majorProject.js"></script>

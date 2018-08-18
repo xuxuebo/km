@@ -66,4 +66,7 @@ public class KnowledgeConstant {
     public static final String UPLOAD_SHARE = "UPLOAD_SHARE";
     public static final String UPLOAD_PROJECT = "UPLOAD_PROJECT";
     public static final String UPLOAD_SPECIAL = "UPLOAD_SPECIAL";
+    public static final String RANK_WEEK = "WEEK";
+    public static final String RANK_MONTH = "MONTH";
+    public static final String RANK_TOTAL = "TOTAL";
 }

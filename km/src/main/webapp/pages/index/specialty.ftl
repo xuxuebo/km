@@ -18,7 +18,7 @@
 </section>
 <script type="text/template" id="tplYunManageList">
     <% for(var i=0;i< data.length;i++) {%>
-    <div class="y-menu-item-title" onclick="selectProjectDetail('<%=data[i].id%>')">
+    <div class="y-menu-item-title" data-id="<%=data[i].id%>" onclick="selectProjectDetail('<%=data[i].id%>')">
         <%= data[i].name %>
     </div>
     <% }%>
@@ -40,12 +40,20 @@
                 var user = $(".y-user");
                 var h = user.height() + 23;
                 user.height(h);
-                $(".y-menu-item-title").eq(0).addClass("y-menu-item-title-active");
                 tree.delegate(".y-menu-item-title", "click", function () {
                     $(this).addClass("y-menu-item-title-active").siblings().removeClass("y-menu-item-title-active");
                 });
+
+                var libraryId = '${libraryId!}';
+                if (libraryId) {
+                    $("div[data-id='" + libraryId + "']").addClass("y-menu-item-title-active");
+                } else {
+                    libraryId = result[0].id;
+                    $(".y-menu-item-title").eq(0).addClass("y-menu-item-title-active");
+                }
+
                 var $yContainer = $('.y-content');
-                $yContainer.load('/km/front/specialtyDetail?libraryId=' + result[0].id);
+                $yContainer.load('/km/front/specialtyDetail?libraryId=' + libraryId);
             }
         });
     })

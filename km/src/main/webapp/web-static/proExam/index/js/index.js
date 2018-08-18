@@ -51,7 +51,7 @@ $(function () {
     function changeHashCb(cb) {
         var _hash = location.hash.substring(1);
         if (!_hash) {
-            location.hash = 'yun';
+            //location.hash = 'yun';
         }
         var hashArr = _hash.split("/");
         $yAside.find("li").removeClass('active');
@@ -105,22 +105,29 @@ $(function () {
 
     //初始化我的云库页面
     function initYunPage(container, routeInfo, cb, id) {
+        $(".y-head__searcher").show();
         var _tpl = $(routeInfo.templateId).html();
         container.html(_.template(_tpl)({title: '我的云库'}));
         //table渲染
         var _table = $("#tplYunTable").html();
         var $yunTable = $('#yunTable');
-        var data = [];
+        var data = [], url = pageContext.resourcePath + '/knowledge/search';
+        var $discover = $(".discover-search");
+        var key = $discover.val();
+        if (key) {
+            url = pageContext.resourcePath + '/knowledge/fullTextSearch?keyword=' + key;
+        }
         $.ajax({
             async: false,//此值要设置为FALSE  默认为TRUE 异步调用
             type: "POST",
-            url: pageContext.resourcePath + '/knowledge/search',
+            url: url,
             data: {'libraryId': id},
             dataType: 'json',
             success: function (result) {
                 data = result;
             }
         });
+        $discover.val('');
         for (var i = 0; i < data.length; i++) {
             data[i].knowledgeSize = YUN.conver(data[i].knowledgeSize);
         }
@@ -129,8 +136,8 @@ $(function () {
             size: "desc",
             uploadTime: "desc"
         };
-        renderTable();
-        function renderTable() {
+        renderYunTable();
+        function renderYunTable() {
             $yunTable.html(_.template(_table)({list: data, sort: initSort}));
             table = initTable($yunTable);
             $yunTable.find('.sort').click(function () {
@@ -194,7 +201,7 @@ $(function () {
                 }
             });
 
-            renderTable();
+            renderYunTable();
         });
 
         //绑定事件
@@ -1014,6 +1021,7 @@ $(function () {
 
     //回收站
     function initRecyclePage(container, routeInfo) {
+        $(".y-head__searcher").hide();
         var _tpl = $(routeInfo.templateId).html();
         container.html(_.template(_tpl)({title: '我的回收站'}));
         //table渲染

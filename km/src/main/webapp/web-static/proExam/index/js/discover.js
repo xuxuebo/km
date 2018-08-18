@@ -17,159 +17,99 @@ $(function () {
         $tplCloudList = $('#tplCloudList');
 
     // 渲染文件数量-已上传数量
-    $dSearchFileNum.text(999);
-    $dSearchUploadNum.text(666);
+    $.ajax({
+        url: pageContext.resourcePath + "/statistic/fileCount",
+        dataType: 'json',
+        success: function (result) {
+            if (result) {
+                $dSearchFileNum.text(result.totalCount);
+                $dSearchUploadNum.text(result.dayCount);
+            }
+        }
+    });
+
 
     // 渲染热门标签
-    function renderHotTag(obj) {
-        var html = _.template($tplHotTagContainer.html())({
-            d: obj
+    function renderHotTag() {
+        var hotTagData = {};
+        $.ajax({
+            async: false,//此值要设置为FALSE  默认为TRUE 异步调用
+            type: "POST",
+            url: pageContext.resourcePath + "/library/hotLibrary",
+            data: {"libraryType":"PROJECT_LIBRARY", "hotCount":8},
+            dataType: 'json',
+            success: function (result) {
+                hotTagData.hotProject=result;
+            }
         });
-        $hotTagContainer.html(html);
+        $.ajax({
+            type: "POST",
+            url: pageContext.resourcePath + "/library/hotLibrary",
+            data: {"libraryType":"SPECIALTY_LIBRARY", "hotCount":8},
+            dataType: 'json',
+            success: function (result) {
+                hotTagData.hotMajor=result;
+                var html = _.template($tplHotTagContainer.html())({
+                    d: hotTagData
+                });
+                $hotTagContainer.html(html);
+            }
+        });
     }
-    // 热门标签示例数据 todo 示例数据联调时删除
-    var hotTagData = {
-        hotProject: [
-            {
-                link: 'http://www.baidu.com',
-                name: '会议资料'
-            }, {
-                link: 'http://www.baidu.com',
-                name: '学术报告'
-            }, {
-                link: 'http://www.baidu.com',
-                name: '学术论文'
-            }, {
-                link: 'http://www.baidu.com',
-                name: '项目资料'
-            }
-        ],
-        hotMajor: [
-            {
-                link: 'http://www.baidu.com',
-                name: '财务资产'
-            }, {
-                link: 'http://www.baidu.com',
-                name: '人力资源'
-            }, {
-                link: 'http://www.baidu.com',
-                name: '规划建设'
-            }, {
-                link: 'http://www.baidu.com',
-                name: '工程建设'
-            }
-        ],
-        hotTag: [
-            {
-                link: 'http://www.baidu.com',
-                name: '学术交流'
-            }, {
-                link: 'http://www.baidu.com',
-                name: '党团工作'
-            }, {
-                link: 'http://www.baidu.com',
-                name: '故障分析'
-            }
-        ]
-    };
-    renderHotTag(hotTagData);
+
+    renderHotTag();
 
     // 渲染热门资源
-    function renderHotResource(list) {
-        var html = _.template($tplHotResourceContainer.html())({
-            list: list
+    function renderHotResource() {
+        $.ajax({
+            type: "POST",
+            url: pageContext.resourcePath + "/knowledge/searchHotKnowledge",
+            data: {"page":1,"pageSize":7},
+            dataType: 'json',
+            success: function (result) {
+                $hotResource.html(_.template($tplHotResourceContainer.html())({list: result.rows}));
+            }
         });
-        $hotResource.html(html);
+
     }
-    // 热门资源示例数据
-    var hotResourceData = [
-        {
-            link: 'http://www.baidu.com',
-            name: '《2018年第一季度总结大会会议纪要》'
-        }, {
-            link: 'http://www.baidu.com',
-            name: '《2018年第一季度总结大会会议纪要》'
-        }, {
-            link: 'http://www.baidu.com',
-            name: '《2018年第一季度总结大会会议纪要》'
-        }, {
-            link: 'http://www.baidu.com',
-            name: '《2018年第一季度总结大会会议纪要》'
-        }, {
-            link: 'http://www.baidu.com',
-            name: '《2018年第一季度总结大会会议纪要》'
-        }
-    ];
-    renderHotResource(hotResourceData);
+
+    renderHotResource();
 
     // 渲染贡献达人
-    function renderCtrPerson(list) {
-        var html = _.template($tplCtrPerson.html())({
-            list: list
+    function renderCtrPerson(type) {
+        $.ajax({
+            type: "POST",
+            url: pageContext.resourcePath + '/statistic/rank?type=' + type,
+            dataType: 'json',
+            success: function (result) {
+                $ctrPerson.html(_.template($tplCtrPerson.html())({list: result}));
+            }
         });
-        $ctrPerson.html(html);
     }
-    var ctrPersonData = [
-        {
-            imgUrl: 'http://img.hb.aicdn.com/6b924d41912d0a5dcb881675c1ef9d47532cc5643f7ec-eB3ORE_fw658',
-            score: 5000,
-            name: '北落师门'
-        }, {
-            imgUrl: 'http://img.hb.aicdn.com/6b924d41912d0a5dcb881675c1ef9d47532cc5643f7ec-eB3ORE_fw658',
-            score: 5000,
-            name: '北落师门'
-        }, {
-            imgUrl: 'http://img.hb.aicdn.com/6b924d41912d0a5dcb881675c1ef9d47532cc5643f7ec-eB3ORE_fw658',
-            score: 5000,
-            name: '北落师门'
-        }, {
-            imgUrl: 'http://img.hb.aicdn.com/6b924d41912d0a5dcb881675c1ef9d47532cc5643f7ec-eB3ORE_fw658',
-            score: 5000,
-            name: '北落师门'
-        }, {
-            imgUrl: 'http://img.hb.aicdn.com/6b924d41912d0a5dcb881675c1ef9d47532cc5643f7ec-eB3ORE_fw658',
-            score: 5000,
-            name: '北落师门'
-        }
-    ];
-    renderCtrPerson(ctrPersonData);
+
+    renderCtrPerson("WEEK");
 
     // 渲染达人类别点击事件
     $ctrPersonNav.delegate('.d-ctr__nav', 'click', function() {
-        var $this = $(this),
-            type = $this.attr('data-type');
+        var $this = $(this);
+        var type = $this.attr('data-type');
         $this.addClass('active').siblings().removeClass('active');
-        // todo 获取数据
-        console.log(type);
-        renderCtrPerson(ctrPersonData);
+        renderCtrPerson(type);
     });
 
     // 渲染部门排行
-    function renderDepartmentRank(list) {
-        var html = _.template($tplDepartmentRank.html())({
-            list: list
+    function renderDepartmentRank() {
+        $.ajax({
+            type: "POST",
+            url: pageContext.resourcePath + '/statistic/orgRank',
+            dataType: 'json',
+            success: function (result) {
+                $departmentRank.html(_.template($tplDepartmentRank.html())({list: result}));
+            }
         });
-        $departmentRank.html(html);
     }
-    var departmentRankData = [
-        {
-            score: 5000,
-            name: '北落师门'
-        }, {
-            score: 5000,
-            name: '北落师门'
-        }, {
-            score: 5000,
-            name: '北落师门'
-        }, {
-            score: 5000,
-            name: '北落师门'
-        }, {
-            score: 5000,
-            name: '北落师门'
-        }
-    ];
-    renderDepartmentRank(departmentRankData);
+
+    renderDepartmentRank();
 
     // 全局搜索点击事件
     $dSearchGlobal.click(function() {
@@ -177,8 +117,9 @@ $(function () {
         if(!val) {
             return;
         }
-        console.log(val);
-        // todo 全局跳转
+
+        $(".discover-all-search").val(val);
+        $("li[data-type='dataShare']").click();
     });
 
     // 个人云库搜索点击事件
@@ -187,34 +128,24 @@ $(function () {
         if(!val) {
             return;
         }
-        console.log(val);
-        // todo 个人云库搜索跳转
+
+        $(".discover-search").val(val);
+        $("#searchKeyword").val(val);
+        $("li[data-type='index']").click();
     });
 
     // 渲染云库动态
-    function renderCloudList(list) {
-        var html = _.template($tplCloudList.html())({
-            list: list
+    function renderCloudList() {
+        $.ajax({
+            type: "POST",
+            url: pageContext.resourcePath + '/library/dynamic',
+            data: {"page":1,"pageSize":6},
+            dataType: 'json',
+            success: function (result) {
+                $dCloudList.html(_.template($tplCloudList.html())({list: result.rows}));
+            }
         });
-        $dCloudList.html(html);
     }
-    var cloudList = [
-        {
-            date: '2018/08/15',
-            name: '周凯上传了《喜迎党的十九大知识竞赛题库》'
-        }, {
-            date: '2018/08/15',
-            name: '周凯上传了《喜迎党的十九大知识竞赛题库》'
-        }, {
-            date: '2018/08/15',
-            name: '周凯上传了《喜迎党的十九大知识竞赛题库》'
-        }, {
-            date: '2018/08/15',
-            name: '周凯上传了《喜迎党的十九大知识竞赛题库》'
-        }, {
-            date: '2018/08/15',
-            name: '周凯上传了《喜迎党的十九大知识竞赛题库》'
-        }
-    ];
-    renderCloudList(cloudList);
+
+    renderCloudList();
 });
