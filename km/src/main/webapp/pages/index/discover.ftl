@@ -48,7 +48,7 @@
                 <div class="d-search__type upload">
                     <img class="d-search__type__upload" src="${resourcePath!}/web-static/proExam/index/img/ico_download.png" alt="文件数量">
                     <div class="d-search__type__container">
-                        <div class="d-search__type__title">已上传数量</div>
+                        <div class="d-search__type__title">日上传数量</div>
                         <div id="dSearchUploadNum" class="d-search__type__num"></div>
                     </div>
                 </div>
@@ -175,6 +175,20 @@
             }
         });
 
+    }
+
+    function downloadFile(path, params) {
+        var downUrl = $('#downloadServerUrl').val();
+        var a = document.createElement('a');
+        var corpCode = $('#corpCode').val();
+        a.download = '';
+        a.style.display = 'none';
+        a.href = downUrl + '/file/downLoadFiles?fileIds=' + path + '&fileName=' + params + '&corpCode='+corpCode;
+        // 触发点击
+        document.body.appendChild(a);
+        a.click();
+        // 然后移除
+        document.body.removeChild(a);
     }
 
     function projectAndSpecial(id, type) {

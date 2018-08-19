@@ -840,12 +840,16 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             throw new PeException("Knowledge condition invalid!");
         }
 
+        Organize root = organizeService.getRoot();
         Map<String, Object> params = new HashMap<>(4);
         StringBuilder sql = new StringBuilder(" FROM t_km_knowledge k ");
+        sql.append(" INNER JOIN t_km_knowledge_rel kr on k.id=kr.knowledge_id ");
         sql.append(" LEFT JOIN t_km_knowledge_log kl on k.id=kl.knowledge_id AND type=:type ");
         params.put("type", KnowledgeConstant.LOG_DOWNLOAD);
-        sql.append(" WHERE k.corp_code=:corpCode GROUP BY k.id ORDER BY count(kl.id) DESC,max(k.create_time) DESC ");
+        sql.append(" WHERE k.corp_code=:corpCode AND kr.library_id =:libraryId");
         params.put("corpCode", ExecutionContext.getCorpCode());
+        params.put("libraryId", root.getId());
+        sql.append(" GROUP BY k.id ORDER BY count(kl.id) DESC,max(k.create_time) DESC ");
 
         Page<Knowledge> page = new Page<>();
         NamedParameterJdbcTemplate jdbcTemplate = getJdbcTemplate();
