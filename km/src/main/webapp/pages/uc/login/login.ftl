@@ -74,10 +74,10 @@
                                        class="pre-login-text password-input" value="${(user.password)!}" max-length="50"
                                        placeholder="密码">
                             </div>
-                            <div class="pre-login-links">
+                            <#--<div class="pre-login-links">
                                 <a href="${ctx!}/login/forgetPwdPage" class="pre-login-register"
                                    target="_blank">忘记密码</a>
-                            </div>
+                            </div>-->
 
                             <div class="pre-login-submit">
                                 <button type="button" class="J_Submit no-login">登录</button>

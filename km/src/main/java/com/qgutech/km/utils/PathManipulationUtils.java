@@ -17,11 +17,11 @@ public class PathManipulationUtils {
     private static String[] chars = new String[]{"9", "8", "7", "6", "5", "4", "3", "1", "2", "0", "a", "b", "c", "d",
             "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y",
             "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
-            "U", "V", "W", "X", "Y", "Z", ":", "/", "\\"};
+            "U", "V", "W", "X", "Y", "Z", ":", "/", "\\", "."};
     private static Map<String, String> charMap;
 
     static {
-        charMap = new HashMap<String, String>(65);
+        charMap = new HashMap<>(65);
         for (String aChar : chars) {
             charMap.put(aChar, aChar);
         }
