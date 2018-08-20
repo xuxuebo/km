@@ -462,7 +462,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             Knowledge k = new Knowledge();
             k.setId(resultSet.getString("id"));
             k.setKnowledgeName(resultSet.getString("knowledge_name"));
-            k.setCreateTime(resultSet.getDate("create_time"));
+            k.setCreateTime(resultSet.getTimestamp("create_time"));
             k.setCreateBy(resultSet.getString("create_by"));
             k.setKnowledgeSize(resultSet.getLong("knowledge_size"));
             k.setKnowledgeType(resultSet.getString("knowledge_type"));
