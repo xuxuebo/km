@@ -84,4 +84,9 @@ public class JsonResult<T> {
                 ", object=" + object +
                 '}';
     }
+
+    public void setSuccessAndMessage(boolean success, String message) {
+        this.success = success;
+        this.message = message;
+    }
 }

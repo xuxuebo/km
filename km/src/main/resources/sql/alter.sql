@@ -46,3 +46,103 @@ COMMENT ON COLUMN t_km_knowledge_log."type" IS '操作类型，DELETE:删除，U
 COMMENT ON COLUMN t_km_knowledge_log."remark" IS '备注';
 
 CREATE INDEX "i_km_knowledge_log_corpCode" ON t_km_knowledge_log USING btree (corp_code);
+
+CREATE TABLE t_km_score_rule (
+  id             VARCHAR(32) PRIMARY KEY,
+  corp_code      VARCHAR(50)  NOT NULL,
+  create_by      VARCHAR(32)  NOT NULL,
+  create_time    TIMESTAMP(6) NOT NULL,
+  update_by      VARCHAR(32)  NOT NULL,
+  update_time    TIMESTAMP(6) NOT NULL,
+  code           VARCHAR(50)  NOT NULL,
+  name           VARCHAR(100) NOT NULL,
+  score      int4         NOT NULL
+);
+
+COMMENT ON TABLE t_km_score_rule IS '积分规则表';
+COMMENT ON COLUMN t_km_score_rule."id" IS '主键';
+COMMENT ON COLUMN t_km_score_rule."code" IS '规则编号';
+COMMENT ON COLUMN t_km_score_rule."name" IS '规则名称';
+COMMENT ON COLUMN t_km_score_rule."score" IS '该规则获得的积分，正数为获得积分，负数位扣除积分';
+
+CREATE INDEX "i_km_score_rule_corpCode" ON t_km_score_rule USING btree (corp_code);
+
+CREATE TABLE t_km_score_detail (
+  id             VARCHAR(32) PRIMARY KEY,
+  corp_code      VARCHAR(50)  NOT NULL,
+  create_by      VARCHAR(32)  NOT NULL,
+  create_time    TIMESTAMP(6) NOT NULL,
+  update_by      VARCHAR(32)  NOT NULL,
+  update_time    TIMESTAMP(6) NOT NULL,
+  rule_id        VARCHAR(32)  NOT NULL,
+  user_id        VARCHAR(32)  NOT NULL,
+  opt_user_id    vARCHAR(32)  NOT NULL,
+  knowledge_id   VARCHAR(32)  NOT NULL,
+  score          int4         NOT NULL
+);
+
+COMMENT ON TABLE t_km_score_detail IS '积分明细表';
+COMMENT ON COLUMN t_km_score_detail."id" IS '主键';
+COMMENT ON COLUMN t_km_score_detail."rule_id" IS '规则Id';
+COMMENT ON COLUMN t_km_score_detail."user_id" IS '获取积分的人员Id';
+COMMENT ON COLUMN t_km_score_detail."opt_user_id" IS '操作人员Id';
+COMMENT ON COLUMN t_km_score_detail."knowledge_id" IS '操作的知识Id';
+COMMENT ON COLUMN t_km_score_detail."score" IS '实际获得的积分数';
+
+CREATE INDEX "i_km_score_detail_corpCode" ON t_km_score_detail USING btree (corp_code);
+
+INSERT INTO "public"."t_km_score_rule" (
+	"id",
+	"corp_code",
+	"create_by",
+	"create_time",
+	"update_by",
+	"update_time",
+	"code",
+	"name",
+	"score"
+)
+VALUES
+	(
+		'11111111111111111111',
+		'default',
+		'admin',
+		'2018-08-21 16:14:59',
+		'admin',
+		'2018-08-21 16:15:03',
+		'upload',
+		'上传知识',
+		'10'
+	),
+	(
+		'22222222222222222222',
+		'default',
+		'admin',
+		'2018-08-21 16:14:59',
+		'admin',
+		'2018-08-21 16:15:03',
+		'download',
+		'下载知识',
+		'10'
+	),
+	(
+		'333333333333333333333',
+		'default',
+		'admin',
+		'2018-08-21 16:14:59',
+		'admin',
+		'2018-08-21 16:15:03',
+		'share',
+		'分享知识',
+		'10'
+	),
+	(
+		'4444444444444444444444',
+		'default',
+		'admin',
+		'2018-08-21 16:14:59',
+		'admin',
+		'2018-08-21 16:15:03',
+		'delete',
+		'删除知识',
+		'-10');
