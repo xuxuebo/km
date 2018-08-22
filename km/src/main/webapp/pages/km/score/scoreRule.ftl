@@ -86,9 +86,9 @@
             <input type="hidden" name="id" value="<%=data.id%>">
             <input type="hidden" name="code" value="<%=data.code%>">
             <div class="pe-add-question-text">
+                <input type="hidden" name="name" value="<%=data.name%>">
                 <span class="pe-label-name floatL introduction-info">规则名称:</span>
-                <input class="pe-stand-filter-form-input" maxlength="50" type="text"
-                       placeholder="请输入规则名称" name="name" value="<%=data.name%>">
+                <input class="pe-stand-filter-form-input" maxlength="50" type="text" style="color:#ccc;" disabled value="<%=data.name%>">
             </div>
             <div class="pe-add-question-text">
                 <span class="pe-label-name floatL introduction-info">规则分值:</span>

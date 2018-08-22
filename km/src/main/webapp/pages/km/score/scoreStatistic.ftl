@@ -7,9 +7,14 @@
         <div class="pe-manage-content-right">
             <div class="pe-manage-panel pe-manage-default">
                 <div class="pe-stand-table-panel">
-                    <div class="pe-stand-table-top-panel">
+                    <div class="pe-stand-table-top-panel" style="float: left;">
                         <button type="button" class="pe-btn pe-btn-green create-exercise-btn">积分规则</button>
                     </div>
+                    <div class="pe-stand-table-top-panel">
+                        <input type="text" class="pe-tree-form-text" name="codeAndName" placeholder="工号/姓名/用户名"
+                               style="border: 1px solid #ccc;margin: -3px 0 0 10px;border-radius: 20px;width: 280px;">
+                    </div>
+                    <div class="clear"></div>
                 <#--表格包裹的div-->
                     <div class="pe-stand-table-main-panel">
                         <div class="pe-stand-table-wrap"></div>
@@ -137,6 +142,15 @@
             },
 
             bind: function () {
+                $(".pe-tree-form-text").keyup(function (e) {
+                    var e = e || window.event;
+                    e.stopPropagation();
+                    var thisSearchVal = $.trim($(this).val());
+                    if (e.keyCode === 13 || e.keyCode === 108 || !thisSearchVal) {
+                        $('.pe-stand-table-wrap').peGrid('load', $('#scoreManageForm').serializeArray());
+                    }
+                });
+
                 $('.create-exercise-btn').on('click', function () {
                     parent.$('#yunContentBody').html('<iframe style="width:100%;height: 100%;margin-left:0;" src="/km/front/manage/initPage#url=/km/score/manage/scoreRule"></iframe>');
                 });
