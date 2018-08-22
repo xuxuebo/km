@@ -29,4 +29,20 @@ public interface ScoreRuleService extends BaseService<ScoreRule> {
      * @since TangFD@HF 2018-8-21
      */
     Page<ScoreRule> search(ScoreRule rule, PageParam pageParam);
+
+    /**
+     * 根据积分规则编号，获取积分规则实体信息
+     *
+     * @param ruleCode 积分规则编号，不可为空 <ul>
+     *                 <li>upload</li>
+     *                 <li>download</li>
+     *                 <li>share</li>
+     *                 <li>delete</li>
+     *                 <li>cancel_share</li>
+     *                 </ul>
+     * @return 积分规则实体信息
+     * @throws RuntimeException 当ruleCode为空时
+     * @since TangFD@HF 2018-8-21
+     */
+    ScoreRule getByCode(String ruleCode);
 }

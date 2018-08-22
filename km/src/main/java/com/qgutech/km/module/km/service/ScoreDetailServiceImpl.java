@@ -5,7 +5,9 @@ import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.constant.KnowledgeConstant;
+import com.qgutech.km.module.km.model.Knowledge;
 import com.qgutech.km.module.km.model.ScoreDetail;
+import com.qgutech.km.module.km.model.ScoreRule;
 import com.qgutech.km.utils.PeException;
 import com.qgutech.km.utils.PeUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -14,7 +16,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +30,11 @@ import java.util.Map;
  */
 @Service("scoreDetailService")
 public class ScoreDetailServiceImpl extends BaseServiceImpl<ScoreDetail> implements ScoreDetailService {
+    @Resource
+    private KnowledgeService knowledgeService;
+    @Resource
+    private ScoreRuleService scoreRuleService;
+
 
     @Override
     @Transactional(readOnly = true, rollbackFor = Exception.class)
@@ -67,7 +76,7 @@ public class ScoreDetailServiceImpl extends BaseServiceImpl<ScoreDetail> impleme
             params.put("start", pageParam.getStart());
         }
 
-        String query = "SELECT u.*,o.organize_name,SUM(sd.score) score " + sql;
+        String query = "SELECT u.*,o.organize_name,SUM(COALESCE(sd.score,0)) score " + sql;
         List<ScoreDetail> scoreDetails = jdbcTemplate.query(query, params, (resultSet, i) -> {
             ScoreDetail scoreDetail = new ScoreDetail();
             scoreDetail.setUserId(resultSet.getString("id"));
@@ -138,5 +147,52 @@ public class ScoreDetailServiceImpl extends BaseServiceImpl<ScoreDetail> impleme
 
         page.setRows(scoreDetails);
         return page;
+    }
+
+    @Override
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public void addScore(List<String> knowledgeIds, String ruleCode) {
+        if (CollectionUtils.isEmpty(knowledgeIds) || StringUtils.isEmpty(ruleCode)) {
+            throw new PeException("knowledgeIds and ruleCode must be not empty!");
+        }
+
+        ScoreRule scoreRule = scoreRuleService.getByCode(ruleCode);
+        if (scoreRule == null) {
+            throw new PeException("ruleCode not exist!");
+        }
+
+        List<Knowledge> knowledgeList = knowledgeService.getKnowledgeByIds(knowledgeIds);
+        if (CollectionUtils.isEmpty(knowledgeList)) {
+            return;
+        }
+
+        int score = scoreRule.getScore();
+        String ruleId = scoreRule.getId();
+        String corpCode = ExecutionContext.getCorpCode();
+        String userId = ExecutionContext.getUserId();
+        List<ScoreDetail> scoreDetails = new ArrayList<>(knowledgeList.size());
+        for (Knowledge knowledge : knowledgeList) {
+            if (KnowledgeConstant.SCORE_RULE_DOWNLOAD.equals(ruleCode) && userId.equals(knowledge.getCreateBy())) {
+                continue;
+            }
+
+            String knowledgeType = knowledge.getKnowledgeType();
+            if ("file".equals(knowledgeType)) {
+                continue;
+            }
+
+            ScoreDetail detail = new ScoreDetail();
+            detail.setScore(score);
+            detail.setRuleId(ruleId);
+            detail.setCorpCode(corpCode);
+            detail.setUserId(knowledge.getCreateBy());
+            detail.setKnowledgeId(knowledge.getId());
+            detail.setOptUserId(userId);
+            scoreDetails.add(detail);
+        }
+
+        if (scoreDetails.size() > 0) {
+            batchSave(scoreDetails);
+        }
     }
 }

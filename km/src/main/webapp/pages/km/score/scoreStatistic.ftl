@@ -70,7 +70,7 @@
                 </td>
                 <td>
                     <div class="pe-stand-table-btn-group">
-                        <button type="button" class="edit-btn pe-icon-btn iconfont icon-edit" title="编辑"
+                        <button type="button" class="edit-btn pe-icon-btn iconfont icon-view-detail" title="积分明细"
                                 data-id="<%=peData.rows[j].userId%>"></button>
                     </div>
                 </td>

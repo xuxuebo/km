@@ -3,6 +3,7 @@ package com.qgutech.km.module.km.service;
 import com.qgutech.km.base.ExecutionContext;
 import com.qgutech.km.base.service.BaseServiceImpl;
 import com.qgutech.km.base.service.SessionService;
+import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.module.km.model.Knowledge;
 import com.qgutech.km.module.km.model.KnowledgeRel;
 import com.qgutech.km.module.km.model.Share;
@@ -38,7 +39,8 @@ public class ShareServiceImpl extends BaseServiceImpl<Share> implements ShareSer
     private SessionService sessionService;
     @Resource
     private KnowledgeRelService knowledgeRelService;
-
+    @Resource
+    private ScoreDetailService scoreDetailService;
     /**
      *1.我的分享--分享文件--分享统计
      *
@@ -117,6 +119,7 @@ public class ShareServiceImpl extends BaseServiceImpl<Share> implements ShareSer
                 Restrictions.eq(Statistic.CREATE_BY,ExecutionContext.getUserId())));
         knowledgeRelService.delete(Restrictions.and(Restrictions.in(KnowledgeRel.LIBRARY_ID,libraryIds),
                 Restrictions.in(KnowledgeRel.KNOWLEDGE_ID,knowledgeIds)));
+        scoreDetailService.addScore(knowledgeIds, KnowledgeConstant.SCORE_RULE_CANCEL_SHARE);
     }
 
     @Override

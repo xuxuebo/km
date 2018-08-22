@@ -5,6 +5,8 @@ import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.service.BaseService;
 import com.qgutech.km.module.km.model.ScoreDetail;
 
+import java.util.List;
+
 
 /**
  * 积分明细
@@ -34,4 +36,20 @@ public interface ScoreDetailService extends BaseService<ScoreDetail> {
      * @since TangFD@HF 2018-8-21
      */
     Page<ScoreDetail> searchDetail(ScoreDetail detail, PageParam pageParam);
+
+    /**
+     * 根据积分规则，为操作的知识创建者添加积分
+     *
+     * @param knowledgeIds 知识Id列表，不可为空
+     * @param ruleCode     积分规则编号，不可为空 <ul>
+     *                     <li>upload</li>
+     *                     <li>download</li>
+     *                     <li>share</li>
+     *                     <li>delete</li>
+     *                     <li>cancel_share</li>
+     *                     </ul>
+     * @throws RuntimeException 当knowledgeIds为空，或者ruleCode为，或者ruleCode不存在时
+     * @since TangFD@HF 2018-8-21
+     */
+    void addScore(List<String> knowledgeIds, String ruleCode);
 }

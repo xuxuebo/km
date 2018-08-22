@@ -43,6 +43,8 @@ public class KnowledgeRelServiceImpl extends BaseServiceImpl<KnowledgeRel> imple
     private OrganizeService organizeService;
     @Resource
     private LibraryService libraryService;
+    @Resource
+    private ScoreDetailService scoreDetailService;
 
     @Override
     @Transactional(readOnly = true)
@@ -402,5 +404,18 @@ public class KnowledgeRelServiceImpl extends BaseServiceImpl<KnowledgeRel> imple
         libraryIds.addAll(parentOrgIds);
 
         return libraryIds;
+    }
+
+    @Override
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public void deleteShare(String relId) {
+        if (StringUtils.isEmpty(relId)) {
+            throw new PeException("relId must be not empty!");
+        }
+
+        KnowledgeRel knowledgeRel = get(relId);
+        List<String> knowledgeIds = Collections.singletonList(knowledgeRel.getKnowledgeId());
+        delete(relId);
+        scoreDetailService.addScore(knowledgeIds, KnowledgeConstant.SCORE_RULE_CANCEL_SHARE);
     }
 }

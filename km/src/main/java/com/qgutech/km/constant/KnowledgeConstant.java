@@ -69,4 +69,10 @@ public class KnowledgeConstant {
     public static final String RANK_WEEK = "WEEK";
     public static final String RANK_MONTH = "MONTH";
     public static final String RANK_TOTAL = "TOTAL";
+    public static final String SCORE_RULE_UPLOAD = "upload";
+    public static final String SCORE_RULE_DOWNLOAD = "download";
+    public static final String SCORE_RULE_SHARE = "share";
+    public static final String SCORE_RULE_DELETE = "delete";
+    public static final String SCORE_RULE_CANCEL_SHARE = "cancel_share";
+    public static final String SCORE_RULE_RECYCLE = "recycle";
 }

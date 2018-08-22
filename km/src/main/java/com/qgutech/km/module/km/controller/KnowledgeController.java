@@ -61,6 +61,8 @@ public class KnowledgeController {
     private KmFullTextSearchService kmFullTextSearchService;
     @Resource
     private KnowledgeLogService knowledgeLogService;
+    @Resource
+    private ScoreDetailService scoreDetailService;
 
     @ResponseBody
     @RequestMapping("uploadFile")
@@ -101,16 +103,8 @@ public class KnowledgeController {
                 int count = knowledgeService.getSameNameCount(libraryId, knowledgeName, knowledgeType);
                 knowledgeName = getSameKnowledgeName(knowledgeName, knowledgeType, count);
                 knowledge.setKnowledgeName(knowledgeName);
-                String knowledgeId = knowledgeService.save(knowledge);
-                KnowledgeRel knowledgeRel = new KnowledgeRel();
-                knowledgeRel.setKnowledgeId(knowledgeId);
-                knowledgeRel.setLibraryId(libraryId);
-                knowledgeRel.setShareId("");
-                knowledgeRelService.save(knowledgeRel);
-                knowledgeLogService.save(new KnowledgeLog(knowledgeId, libraryId, KnowledgeConstant.LOG_UPLOAD));
-
-                IndexKnowledge indexKnowledge = convert(knowledge);
-                kmFullTextSearchService.add(indexKnowledge);
+                knowledge.setLibraryId(libraryId);
+                knowledgeService.saveAndRel(knowledge);
             } else {
                 knowledgeService.update(knowledge);
             }
@@ -155,25 +149,6 @@ public class KnowledgeController {
 
         String suffix = "." + knowledgeType;
         return knowledgeName.replace(suffix, "") + "(" + count + ")" + suffix;
-    }
-
-    private IndexKnowledge convert(Knowledge knowledge) {
-        if (knowledge == null) {
-            throw new IllegalArgumentException("Knowledge is null!");
-        }
-
-        IndexKnowledge indexKnowledge = new IndexKnowledge();
-        indexKnowledge.setKnowledgeId(knowledge.getId());
-        indexKnowledge.setCorpCode(knowledge.getCorpCode());
-        indexKnowledge.setKnowledgeName(knowledge.getKnowledgeName());
-        indexKnowledge.setKnowledgeType(knowledge.getKnowledgeType());
-        indexKnowledge.setStoredFileId(knowledge.getFileId());
-        indexKnowledge.setTags(knowledge.getTag());
-        indexKnowledge.setContent("");
-        indexKnowledge.setOptStatus("ENABLE");
-        indexKnowledge.setUploaderUserName("");
-
-        return indexKnowledge;
     }
 
     @ResponseBody
@@ -615,12 +590,12 @@ public class KnowledgeController {
                 return jsonResult;
             }
 
-            boolean hasAuth = knowledgeRelService.checkAuth(ids);
+            /*boolean hasAuth = knowledgeRelService.checkAuth(ids);
             if (!hasAuth) {
                 jsonResult.setSuccess(false);
                 jsonResult.setMessage("此文件暂无权限，不能下载！");
                 return jsonResult;
-            }
+            }*/
 
             String name;
             if (knowledgeList.size() == 1) {
@@ -639,6 +614,7 @@ public class KnowledgeController {
             final String finalLibraryId = libraryId;
             knowledgeLogs.addAll(knowledgeList.stream().map(s -> new KnowledgeLog(s.getId(), finalLibraryId, KnowledgeConstant.LOG_DOWNLOAD)).collect(Collectors.toList()));
             knowledgeLogService.batchSave(knowledgeLogs);
+            scoreDetailService.addScore(ids, KnowledgeConstant.SCORE_RULE_DOWNLOAD);
             Map<String, String> shareIdMap = shareService.getSharedKnowledgeIdAndShareIdMap(ids);
             if (MapUtils.isNotEmpty(shareIdMap)) {
                 StringBuilder shareIds = new StringBuilder();
@@ -748,7 +724,7 @@ public class KnowledgeController {
     public JsonResult deleteShare(String relId) {
         JsonResult jsonResult = new JsonResult();
         try {
-            knowledgeRelService.delete(relId);
+            knowledgeRelService.deleteShare(relId);
         } catch (Exception e) {
             e.printStackTrace();
             jsonResult.setSuccess(false);

@@ -111,4 +111,13 @@ public interface KnowledgeRelService extends BaseService<KnowledgeRel> {
      * @since TangFD@HF 2018-8-17
      */
     boolean checkAuth(List<String> knowledgeIds);
+
+    /**
+     * 删除部门分享几积分
+     *
+     * @param relId 知识关联Id，不可为空
+     * @throws RuntimeException 当relId为空时
+     * @since TangFD@HF 2018-8-17
+     */
+    void deleteShare(String relId);
 }

@@ -91,58 +91,10 @@ COMMENT ON COLUMN t_km_score_detail."score" IS '实际获得的积分数';
 
 CREATE INDEX "i_km_score_detail_corpCode" ON t_km_score_detail USING btree (corp_code);
 
-INSERT INTO "public"."t_km_score_rule" (
-	"id",
-	"corp_code",
-	"create_by",
-	"create_time",
-	"update_by",
-	"update_time",
-	"code",
-	"name",
-	"score"
-)
-VALUES
-	(
-		'11111111111111111111',
-		'default',
-		'admin',
-		'2018-08-21 16:14:59',
-		'admin',
-		'2018-08-21 16:15:03',
-		'upload',
-		'上传知识',
-		'10'
-	),
-	(
-		'22222222222222222222',
-		'default',
-		'admin',
-		'2018-08-21 16:14:59',
-		'admin',
-		'2018-08-21 16:15:03',
-		'download',
-		'下载知识',
-		'10'
-	),
-	(
-		'333333333333333333333',
-		'default',
-		'admin',
-		'2018-08-21 16:14:59',
-		'admin',
-		'2018-08-21 16:15:03',
-		'share',
-		'分享知识',
-		'10'
-	),
-	(
-		'4444444444444444444444',
-		'default',
-		'admin',
-		'2018-08-21 16:14:59',
-		'admin',
-		'2018-08-21 16:15:03',
-		'delete',
-		'删除知识',
-		'-10');
+INSERT INTO "public"."t_km_score_rule" ("id","corp_code","create_by","create_time","update_by","update_time","code","name","score")
+VALUES(	'11111111111111111111',	'default',	'admin',	'2018-08-21 16:14:59',	'admin',	'2018-08-21 16:15:03',	'upload',	'上传知识',	'10'),
+(	'2222222222222222222222',	'default',	'admin',	'2018-08-21 16:14:59',	'admin',	'2018-08-21 16:15:03',	'download',	'知识被下载',	'10'),
+(	'3333333333333333333333',	'default',	'admin',	'2018-08-21 16:14:59',	'admin',	'2018-08-21 16:15:03',	'share',	'分享知识',	'10'),
+(	'4444444444444444444444',	'default',	'admin',	'2018-08-21 16:14:59',	'admin',	'2018-08-21 16:15:03',	'delete',	'删除知识',	'-10'),
+(	'5555555555555555555555',	'default',	'admin',	'2018-08-21 16:14:59',	'admin',	'2018-08-21 16:15:03',	'cancel_share',	'取消知识分享',	'-10'),
+(	'6666666666666666666666',	'default',	'admin',	'2018-08-21 16:14:59',	'admin',	'2018-08-21 16:15:03',	'recycle',	'知识从回收站还原',	'10');

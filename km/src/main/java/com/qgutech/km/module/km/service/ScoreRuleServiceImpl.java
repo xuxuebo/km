@@ -8,6 +8,8 @@ import com.qgutech.km.module.km.model.ScoreRule;
 import com.qgutech.km.utils.PeException;
 import com.qgutech.km.utils.PeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.criterion.Conjunction;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,5 +72,17 @@ public class ScoreRuleServiceImpl extends BaseServiceImpl<ScoreRule> implements 
 
         page.setRows(scoreRules);
         return page;
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public ScoreRule getByCode(String ruleCode) {
+        if (StringUtils.isEmpty(ruleCode)) {
+            throw new PeException("ruleCode must be not empty!");
+        }
+
+        Conjunction conjunction = getConjunction();
+        conjunction.add(Restrictions.eq(ScoreRule.CODE, ruleCode));
+        return getByCriterion(conjunction);
     }
 }

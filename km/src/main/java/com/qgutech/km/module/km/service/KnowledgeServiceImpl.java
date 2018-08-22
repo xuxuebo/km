@@ -41,7 +41,6 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
     private KnowledgeRelService knowledgeRelService;
     @Resource
     private ShareService shareService;
-
     @Resource
     private StatisticService statisticService;
     @Resource
@@ -50,6 +49,10 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
     private UserService userService;
     @Resource
     private KnowledgeLogService knowledgeLogService;
+    @Resource
+    private KmFullTextSearchService kmFullTextSearchService;
+    @Resource
+    private ScoreDetailService scoreDetailService;
 
     /**
      * 获取个人云库文件列表
@@ -112,14 +115,17 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         List<Statistic> statisticList = new ArrayList<>(knowledgeIdList.size());
         KnowledgeRel knowledgeRel;
         Statistic statistic;
+        String shareLibraryId = share.getShareLibraryId();
+        List<String> newShareKnowledgeIds = new ArrayList<>(knowledgeIdList.size());
+        Map<String, Boolean> existMap = knowledgeRelService.getLibraryIdKnowledgeIdMap(Collections.singletonList(shareLibraryId), knowledgeIdList);
         for(String knowledgeId : knowledgeIdList){
             //保存公共库
             knowledgeRel = new KnowledgeRel();
             knowledgeRel.setKnowledgeId(knowledgeId);
-            knowledgeRel.setLibraryId(share.getShareLibraryId());
+            knowledgeRel.setLibraryId(shareLibraryId);
             knowledgeRel.setShareId("");
             knowledgeRelList.add(knowledgeRel);
-            knowledgeLogList.add(new KnowledgeLog(knowledgeId, share.getShareLibraryId(), KnowledgeConstant.LOG_SHARE));
+            knowledgeLogList.add(new KnowledgeLog(knowledgeId, shareLibraryId, KnowledgeConstant.LOG_SHARE));
 
             //保存分享记录
             share.setShareType(KnowledgeConstant.SHARE_NO_PASSWORD);
@@ -127,6 +133,10 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             share.setKnowledgeId(knowledgeId);
             share.setPassword("");
             shareList.add(share);
+            String key = shareLibraryId + "&" + knowledgeId;
+            if (BooleanUtils.isNotTrue(existMap.get(key))) {
+                newShareKnowledgeIds.add(knowledgeId);
+            }
         }
 
         knowledgeRelService.batchSave(knowledgeRelList);
@@ -146,6 +156,9 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         }
         //保存共享统计记录
         statisticService.batchSave(statisticList);
+        if (newShareKnowledgeIds.size() > 0) {
+            scoreDetailService.addScore(newShareKnowledgeIds, KnowledgeConstant.SCORE_RULE_SHARE);
+        }
         return 1;
     }
 
@@ -193,7 +206,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
     public int reductionOrDelete(List<String> knowledgeIdList, String libraryType) {
         if (CollectionUtils.isEmpty(knowledgeIdList)){
             return 0;
@@ -201,20 +214,32 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         Library myLibrary = libraryService.getUserLibraryByLibraryType(KnowledgeConstant.MY_LIBRARY);
         Library recycleLibrary = libraryService.getUserLibraryByLibraryType(KnowledgeConstant.RECYCLE_LIBRARY);
         //删除操作 将文件至回收站
-        List<KnowledgeRel> list = new ArrayList<>();
-        if(KnowledgeConstant.MY_LIBRARY.equals(libraryType)){
-            list = knowledgeRelService.findByLibraryIdAndKnowledgeIds(myLibrary.getId(),knowledgeIdList);
-            for(KnowledgeRel kn : list){
-                kn.setLibraryId(recycleLibrary.getId());
-            }
-            knowledgeRelService.update(list,KnowledgeRel.LIBRARY_ID);
-        }else if(KnowledgeConstant.RECYCLE_LIBRARY.equals(libraryType)){//还原操作 将文件至个人云库
-            list = knowledgeRelService.findByLibraryIdAndKnowledgeIds(recycleLibrary.getId(),knowledgeIdList);
-            for(KnowledgeRel kn : list){
-                kn.setLibraryId(myLibrary.getId());
-            }
-            knowledgeRelService.update(list,KnowledgeRel.LIBRARY_ID);
+        List<KnowledgeRel> list;
+        String ruleCode, libraryId;
+        if (KnowledgeConstant.MY_LIBRARY.equals(libraryType)) {
+            list = knowledgeRelService.findByLibraryIdAndKnowledgeIds(myLibrary.getId(), knowledgeIdList);
+            ruleCode = KnowledgeConstant.SCORE_RULE_DELETE;
+            libraryId = recycleLibrary.getId();
+        } else if (KnowledgeConstant.RECYCLE_LIBRARY.equals(libraryType)) {
+            //还原操作 将文件至个人云库
+            list = knowledgeRelService.findByLibraryIdAndKnowledgeIds(recycleLibrary.getId(), knowledgeIdList);
+            ruleCode = KnowledgeConstant.SCORE_RULE_RECYCLE;
+            libraryId = myLibrary.getId();
+        } else {
+            return 0;
         }
+
+        List<String> knowledgeIds = new ArrayList<>(list.size());
+        for (KnowledgeRel kn : list) {
+            kn.setLibraryId(libraryId);
+            knowledgeIds.add(kn.getKnowledgeId());
+        }
+
+        knowledgeRelService.update(list, KnowledgeRel.LIBRARY_ID);
+        if (CollectionUtils.isNotEmpty(knowledgeIds)) {
+            scoreDetailService.addScore(knowledgeIds, ruleCode);
+        }
+
         return list.size();
     }
 
@@ -609,6 +634,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         int capacity = size * libraryIds.size() - existMap.size();
         List<KnowledgeRel> knowledgeRelList = new ArrayList<>(capacity);
         List<KnowledgeLog> knowledgeLogList = new ArrayList<>(capacity);
+        List<String> newShareKnowledgeIds = new ArrayList<>(capacity);
         for (String libraryId : libraryIds) {
             for (String knowledgeId : knowledgeIds) {
                 String key = libraryId + "&" + knowledgeId;
@@ -616,6 +642,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
                     continue;
                 }
 
+                newShareKnowledgeIds.add(knowledgeId);
                 String shareId = knowledgeIdAndShareIdMap.get(knowledgeId);
                 if (StringUtils.isEmpty(shareId)) {
                     shareList.add(getInitShare(knowledgeIdAndShareIdMap, corpCode, knowledgeId));
@@ -654,6 +681,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
         knowledgeRelService.batchSave(knowledgeRelList);
         knowledgeLogService.batchSave(knowledgeLogList);
+        scoreDetailService.addScore(newShareKnowledgeIds, KnowledgeConstant.SCORE_RULE_SHARE);
     }
 
     @Override
@@ -690,10 +718,15 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
         Library recycleLibrary = libraryService.getUserLibraryByLibraryType(KnowledgeConstant.RECYCLE_LIBRARY);
         //删除操作 将文件至回收站
+        List<String> knowledgeIds = new ArrayList<>(list.size());
         for (KnowledgeRel kn : list) {
             kn.setLibraryId(recycleLibrary.getId());
+            knowledgeIds.add(kn.getKnowledgeId());
         }
         knowledgeRelService.update(list, KnowledgeRel.LIBRARY_ID);
+        if (CollectionUtils.isNotEmpty(knowledgeIds)) {
+            scoreDetailService.addScore(knowledgeIds, KnowledgeConstant.SCORE_RULE_DELETE);
+        }
     }
 
     @Override
@@ -834,6 +867,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
     }
 
     @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public Page<Knowledge> searchHotKnowledge(Knowledge knowledge, PageParam pageParam) {
         PeUtils.validPage(pageParam);
         if (knowledge == null) {
@@ -877,5 +911,45 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
         page.setRows(knowledges);
         return page;
+    }
+
+    @Override
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public String saveAndRel(Knowledge knowledge) {
+        if (knowledge == null) {
+            throw new PeException("knowledge must be not null");
+        }
+
+        String knowledgeId = save(knowledge);
+        String libraryId = knowledge.getLibraryId();
+        KnowledgeRel knowledgeRel = new KnowledgeRel();
+        knowledgeRel.setKnowledgeId(knowledgeId);
+        knowledgeRel.setLibraryId(libraryId);
+        knowledgeRel.setShareId("");
+        knowledgeRelService.save(knowledgeRel);
+        knowledgeLogService.save(new KnowledgeLog(knowledgeId, libraryId, KnowledgeConstant.LOG_UPLOAD));
+        IndexKnowledge indexKnowledge = convert(knowledge);
+        kmFullTextSearchService.add(indexKnowledge);
+        scoreDetailService.addScore(Collections.singletonList(knowledgeId), KnowledgeConstant.SCORE_RULE_UPLOAD);
+        return knowledgeId;
+    }
+
+    private IndexKnowledge convert(Knowledge knowledge) {
+        if (knowledge == null) {
+            throw new IllegalArgumentException("Knowledge is null!");
+        }
+
+        IndexKnowledge indexKnowledge = new IndexKnowledge();
+        indexKnowledge.setKnowledgeId(knowledge.getId());
+        indexKnowledge.setCorpCode(knowledge.getCorpCode());
+        indexKnowledge.setKnowledgeName(knowledge.getKnowledgeName());
+        indexKnowledge.setKnowledgeType(knowledge.getKnowledgeType());
+        indexKnowledge.setStoredFileId(knowledge.getFileId());
+        indexKnowledge.setTags(knowledge.getTag());
+        indexKnowledge.setContent("");
+        indexKnowledge.setOptStatus("ENABLE");
+        indexKnowledge.setUploaderUserName("");
+
+        return indexKnowledge;
     }
 }

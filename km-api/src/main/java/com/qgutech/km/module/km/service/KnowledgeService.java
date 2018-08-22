@@ -178,4 +178,14 @@ public interface KnowledgeService extends BaseService<Knowledge> {
      * @since TangFD@HF 2018-8-17
      */
     Page<Knowledge> searchHotKnowledge(Knowledge knowledge, PageParam pageParam);
+
+    /**
+     * 保存知识
+     *
+     * @param knowledge 知识实体
+     * @return 知识主键
+     * @throws RuntimeException knowledge为null时
+     * @since TangFD@HF 2018-8-22
+     */
+    String saveAndRel(Knowledge knowledge);
 }
