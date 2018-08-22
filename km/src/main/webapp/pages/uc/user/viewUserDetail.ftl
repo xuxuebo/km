@@ -7,7 +7,7 @@
     <div class="pe-manage-default">
         <div class="detail-panel-left floatL">
             <div class="user-detail-head-pic">
-                <img onerror="javascript:this.src='${resourcePath!}/web-static/proExam/images/default/default_face.png'" src="${(user.facePath)!'/pe/web-static/proExam/images/default/default_face.png'}" width=100%
+                <img onerror="javascript:this.src='${resourcePath!}/web-static/proExam/images/default/default_face.png'" src="${(user.facePath)!}" width=100%
                      height=100% alt="头像">
             </div>
         </div>

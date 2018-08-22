@@ -12,7 +12,7 @@
                                     <input type="hidden" name="faceFileName" class="target-fileName"/>
                                     <button type="button" class="pe-user-head-edit-btn">
                                         <img class="userHeaderImg" onerror="javascript:this.src='${resourcePath!}/web-static/proExam/images/default/default_face.png'"
-                                             src="${(user.facePath)!'/pe/web-static/proExam/images/default/default_face.png'}" />
+                                             src="${(user.facePath)!}" />
                                         <span>编辑头像</span>
                                     </button>
                                 </div>

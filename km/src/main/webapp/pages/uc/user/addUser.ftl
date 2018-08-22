@@ -224,7 +224,7 @@
                         头像设置:
                  </span>
                 <button type="button" class="pe-user-head-edit-btn">
-                    <img onerror="javascript:this.src='${resourcePath!}/web-static/proExam/images/default/default_face.png'" src="${(user.facePath)!'/pe/web-static/proExam/images/default/default_face.png'}"/>
+                    <img onerror="javascript:this.src='${resourcePath!}/web-static/proExam/images/default/default_face.png'" src="${(user.facePath)!}"/>
                     <span>编辑头像</span>
                 </button>
                 <input type="hidden" name="faceFileId" class="target-fileId" value="${(user.faceFileId)!}"/>
