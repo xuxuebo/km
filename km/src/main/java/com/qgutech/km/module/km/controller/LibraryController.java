@@ -97,7 +97,7 @@ public class LibraryController {
             jsonResult.setSuccess(false);
             return jsonResult;
         }
-        if (!sign.equals(MD5Generator.getHexMD5(nonce+"xu"+timestamp).toUpperCase())){
+        if (!sign.equalsIgnoreCase(MD5Generator.getHexMD5(nonce + "xu" + timestamp))) {
             jsonResult.setMessage("操作有误");
             jsonResult.setSuccess(false);
             return jsonResult;
