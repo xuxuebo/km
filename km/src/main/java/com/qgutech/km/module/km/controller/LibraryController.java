@@ -21,6 +21,7 @@ import com.qgutech.km.utils.MD5Generator;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -62,7 +63,7 @@ public class LibraryController {
 
     @ResponseBody
     @RequestMapping("manage/search")
-    public Page<Library> search(Library library, PageParam pageParam) {
+    public Page<Library> search(@ModelAttribute Library library, @ModelAttribute PageParam pageParam) {
         if (library == null) {
             library = new Library();
         }
@@ -138,7 +139,7 @@ public class LibraryController {
      */
     @RequestMapping("addPublicLibrary")
     @ResponseBody
-    public JsonResult addPublicLibrary(Library library) {
+    public JsonResult addPublicLibrary(@ModelAttribute Library library) {
         JsonResult jsonResult = new JsonResult();
         if (library == null || StringUtils.isEmpty(library.getLibraryName())) {
             jsonResult.setSuccess(false);
@@ -158,7 +159,7 @@ public class LibraryController {
 
     @RequestMapping("updateLibrary")
     @ResponseBody
-    public JsonResult updateLibrary(Library library) {
+    public JsonResult updateLibrary(@ModelAttribute Library library) {
         JsonResult jsonResult = new JsonResult();
         if (library == null || StringUtils.isEmpty(library.getLibraryName()) || StringUtils.isEmpty(library.getId())) {
             jsonResult.setSuccess(false);
@@ -192,7 +193,7 @@ public class LibraryController {
 
     @ResponseBody
     @RequestMapping("manage/searchLibrary")
-    public Page<Library> searchLibrary(Library library, PageParam pageParam) {
+    public Page<Library> searchLibrary(@ModelAttribute Library library, @ModelAttribute PageParam pageParam) {
         if (library == null) {
             library = new Library();
         }
@@ -243,13 +244,13 @@ public class LibraryController {
 
     @ResponseBody
     @RequestMapping("dynamic")
-    public Page<KnowledgeLog> dynamic(KnowledgeLog knowledgeLog, PageParam pageParam) {
+    public Page<KnowledgeLog> dynamic(@ModelAttribute KnowledgeLog knowledgeLog, @ModelAttribute PageParam pageParam) {
         return knowledgeLogService.search(knowledgeLog, pageParam);
     }
 
     @RequestMapping("addToLibrary")
     @ResponseBody
-    public JsonResult addToLibrary(Share share) {
+    public JsonResult addToLibrary(@ModelAttribute Share share) {
         JsonResult jsonResult = new JsonResult();
         List<String> libraryIds = share.getLibraryIds();
         if (CollectionUtils.isEmpty(libraryIds)) {
@@ -290,7 +291,7 @@ public class LibraryController {
 
     @RequestMapping("delete")
     @ResponseBody
-    public JsonResult delete(Share share) {
+    public JsonResult delete(@ModelAttribute Share share) {
         JsonResult jsonResult = new JsonResult();
         List<String> knowledgeIds = share.getKnowledgeIds();
         String libraryId = share.getShareLibraryId();

@@ -1328,6 +1328,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             positionService.save(positions);
         }
 
+        preOrgMap = preOrgMap == null ? new HashMap<>(0) : preOrgMap;
         for (User user : users) {
             if (MapUtils.isNotEmpty(preOrgMap)) {
                 Organize organize = preOrgMap.get(user.getOrganizeName());
@@ -1454,7 +1455,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             //4、同步人员信息
             processUser(userUrl, corpCode);
         } catch (RuntimeException e) {
-            LOG.error("Sync user info failed.corpCode 【" + corpCode + "】", e);
+            LOG.error("Sync user info failed.corpCode 【" + corpCode + "】");
             throw new RuntimeException(e);
         }
 
@@ -1480,7 +1481,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             }
             users = JSON.parseArray(userStr, User.class);
         } catch (RuntimeException e) {
-            LOG.error(userStr, e);
+            LOG.error(userStr);
             throw new RuntimeException(e);
         }
 
@@ -1497,7 +1498,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                 }
                 users = JSON.parseArray(userStr, User.class);
             } catch (RuntimeException e) {
-                LOG.error(userStr, e);
+                LOG.error(userStr);
                 throw new RuntimeException(e);
             }
         }
@@ -1525,7 +1526,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         try {
             positions = JSON.parseArray(positionStr, Position.class);
         } catch (RuntimeException e) {
-            LOG.error(positionStr, e);
+            LOG.error(positionStr);
             throw new RuntimeException(e);
         }
 
@@ -1542,7 +1543,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                 }
                 positions = JSON.parseArray(positionStr, Position.class);
             } catch (RuntimeException e) {
-                LOG.error(positionStr, e);
+                LOG.error(positionStr);
                 throw new RuntimeException(e);
             }
         }
@@ -1570,7 +1571,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         try {
             categories = JSON.parseArray(categoryStr, Category.class);
         } catch (RuntimeException e) {
-            LOG.error(categoryStr, e);
+            LOG.error(categoryStr);
             throw new RuntimeException(e);
         }
 
@@ -1585,7 +1586,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                 }
                 categories = JSON.parseArray(categoryStr, Category.class);
             } catch (RuntimeException e) {
-                LOG.error(categoryStr, e);
+                LOG.error(categoryStr);
                 throw new RuntimeException(e);
             }
         }
@@ -1610,7 +1611,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         try {
             organizes = JSON.parseArray(organizeStr, Organize.class);
         } catch (RuntimeException e) {
-            LOG.error(organizeStr, e);
+            LOG.error(organizeStr);
             throw new RuntimeException(e);
         }
 
@@ -1631,7 +1632,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             try {
                 organizes = JSON.parseArray(organizeStr, Organize.class);
             } catch (RuntimeException e) {
-                LOG.error(organizeStr, e);
+                LOG.error(organizeStr);
                 throw new RuntimeException(e);
             }
         }

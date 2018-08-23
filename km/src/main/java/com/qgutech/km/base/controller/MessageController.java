@@ -10,6 +10,7 @@ import com.qgutech.km.base.vo.JsonResult;
 import com.qgutech.km.utils.PeException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -27,7 +28,7 @@ public class MessageController {
 
     @ResponseBody
     @RequestMapping("searchMyMessage")
-    public Page<Message> searchMyMessage(PageParam pageParam) {
+    public Page<Message> searchMyMessage(@ModelAttribute PageParam pageParam) {
         return messageService.search(pageParam);
     }
 

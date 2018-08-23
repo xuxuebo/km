@@ -33,21 +33,23 @@ public class EmailSendTask implements Runnable {
 
     @Override
     public void run() {
-        HtmlEmail htmlEmail = new HtmlEmail();
+//        HtmlEmail htmlEmail = new HtmlEmail();
         String toEmailAddress = emailMsg.getEmail();
         try {
-            htmlEmail.setHostName(ImConfig.msgEmailHostName);
+            /*htmlEmail.setHostName(ImConfig.msgEmailHostName);
             htmlEmail.setSmtpPort(Integer.valueOf(ImConfig.msgEmailSmtpPort));
             htmlEmail.setAuthenticator(new DefaultAuthenticator(ImConfig.msgEmailUserName, ImConfig.msgEmailPassword));
-            htmlEmail.setFrom(ImConfig.msgEmailFromEmail, MimeUtility.encodeText(ImConfig.msgEmailFromEmail, CHARSET_UTF_8, "B"));
-            htmlEmail.addTo(toEmailAddress, emailMsg.getUserName(), CHARSET_UTF_8);
+            htmlEmail.setSSLCheckServerIdentity(true);
+            htmlEmail.setSSLOnConnect(true);
             htmlEmail.setCharset(CHARSET_UTF_8);
             htmlEmail.setSubject(emailMsg.getSubject());
             htmlEmail.setHtmlMsg(emailMsg.getContent());
             htmlEmail.setTextMsg(emailMsg.getContent());
+            htmlEmail.setFrom(ImConfig.msgEmailFromEmail, MimeUtility.encodeText(ImConfig.msgEmailFromEmail, CHARSET_UTF_8, "B"));
+            htmlEmail.addTo(toEmailAddress, emailMsg.getUserName(), CHARSET_UTF_8);
             LOG.info("Begin send email to : " + toEmailAddress);
             htmlEmail.setSocketConnectionTimeout(5000);
-            htmlEmail.send();
+            htmlEmail.send();*/
             LOG.info("Email send success! to email :" + toEmailAddress);
         } catch (Exception e) {
             LOG.error("send email failed ! To : " + toEmailAddress, e);

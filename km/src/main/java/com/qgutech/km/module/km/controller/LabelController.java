@@ -9,6 +9,7 @@ import com.qgutech.km.module.km.service.LabelService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -51,7 +52,7 @@ public class LabelController {
      */
     @ResponseBody
     @RequestMapping("addLabel")
-    public JsonResult addLabel(Label label) {
+    public JsonResult addLabel(@ModelAttribute Label label) {
         JsonResult jsonResult = new JsonResult();
         if (StringUtils.isEmpty(label.getLabelName())) {
             jsonResult.setMessage("NAME_EMPTY");
@@ -97,7 +98,7 @@ public class LabelController {
 
     @ResponseBody
     @RequestMapping("updateLabel")
-    public JsonResult updateLabel(Label label){
+    public JsonResult updateLabel(@ModelAttribute Label label){
         JsonResult jsonResult = new JsonResult();
         labelService.updateLabel(label);
         jsonResult.setSuccess(true);
@@ -111,7 +112,7 @@ public class LabelController {
      */
     @ResponseBody
     @RequestMapping("listTree")
-    public Page<Label> listTree(PageParam pageParam){
+    public Page<Label> listTree(@ModelAttribute PageParam pageParam){
         return labelService.listTree(pageParam);
     }
 
@@ -140,7 +141,7 @@ public class LabelController {
 
     @ResponseBody
     @RequestMapping("addLabelRel")
-    public JsonResult addLabelRel(LabelRel labelRel) {
+    public JsonResult addLabelRel(@ModelAttribute LabelRel labelRel) {
         JsonResult jsonResult = new JsonResult();
         String knowledgeId = labelRel.getKnowledgeId();
         if (StringUtils.isEmpty(knowledgeId)) {

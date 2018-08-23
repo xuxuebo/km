@@ -12,6 +12,7 @@ import com.qgutech.km.utils.UUIDGenerator;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -42,7 +43,7 @@ public class ProjectController {
      */
     @RequestMapping("addProject")
     @ResponseBody
-    public JsonResult addProject(Library library) {
+    public JsonResult addProject(@ModelAttribute Library library) {
         JsonResult jsonResult = new JsonResult();
         if (library == null || StringUtils.isEmpty(library.getLibraryName())) {
             jsonResult.setSuccess(false);
@@ -79,7 +80,7 @@ public class ProjectController {
 
     @RequestMapping("updateProject")
     @ResponseBody
-    public JsonResult updateProject(Library library) {
+    public JsonResult updateProject(@ModelAttribute Library library) {
         JsonResult jsonResult = new JsonResult();
         if (library == null || StringUtils.isEmpty(library.getLibraryName()) || StringUtils.isEmpty(library.getId())) {
             jsonResult.setSuccess(false);

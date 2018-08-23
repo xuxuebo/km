@@ -114,7 +114,7 @@ public class HttpUtils {
             }
 
         } catch (IOException e) {
-            LOG.error(e);
+            LOG.error("IOException");
         } finally {
             try {
                 if (response != null) {

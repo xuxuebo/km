@@ -19,6 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -117,7 +118,7 @@ public class PeController {
      */
     @ResponseBody
     @RequestMapping("website/registerCorp")
-    public JsonResult<Integer> registerCorp(CorpInfo corpInfo, String smsCode) {
+    public JsonResult<Integer> registerCorp(@ModelAttribute CorpInfo corpInfo, String smsCode) {
         if (StringUtils.isBlank(corpInfo.getContactsMobile())) {
             return new JsonResult<>(false, "手机号码不允许为空!");
         }
@@ -196,7 +197,7 @@ public class PeController {
      */
     @ResponseBody
     @RequestMapping("website/retrieveCorp")
-    public JsonResult<Integer> retrieveCorp(CorpInfo corpInfo, String smsCode) {
+    public JsonResult<Integer> retrieveCorp(@ModelAttribute CorpInfo corpInfo, String smsCode) {
         if (StringUtils.isBlank(corpInfo.getContactsMobile())) {
             return new JsonResult<>(false, "手机号码不允许为空!");
         }
@@ -244,7 +245,7 @@ public class PeController {
      */
     @ResponseBody
     @RequestMapping("website/openCorpForElp")
-    public JsonResult<CorpInfo> openCorpForElp(CorpInfo corpInfo) {
+    public JsonResult<CorpInfo> openCorpForElp(@ModelAttribute CorpInfo corpInfo) {
         try {
             corpService.openCorpForElp(corpInfo);
         } catch (PeException e) {

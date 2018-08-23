@@ -12,6 +12,7 @@ import com.qgutech.km.module.uc.service.UserPositionService;
 import com.qgutech.km.utils.PeException;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -106,7 +107,7 @@ public class PositionController {
      */
     @ResponseBody
     @RequestMapping("manage/search")
-    public Page<Position> search(Position position, PageParam pageParam) {
+    public Page<Position> search(@ModelAttribute Position position, @ModelAttribute PageParam pageParam) {
         return positionService.search(position, pageParam);
     }
 
@@ -117,7 +118,7 @@ public class PositionController {
      */
     @ResponseBody
     @RequestMapping("manage/savePosition")
-    public JsonResult<Position> savePosition(Position position) {
+    public JsonResult<Position> savePosition(@ModelAttribute Position position) {
         try {
             positionService.save(position);
             return new JsonResult<>(true, JsonResult.SUCCESS);
@@ -133,7 +134,7 @@ public class PositionController {
      */
     @ResponseBody
     @RequestMapping("manage/updatePosition")
-    public JsonResult<Position> updatePosition(Position position) {
+    public JsonResult<Position> updatePosition(@ModelAttribute Position position) {
         try {
             positionService.update(position);
             return new JsonResult<>(true, JsonResult.SUCCESS);

@@ -188,7 +188,7 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
                         + "]to the directory[" + fullTextSearchManager.getIndexPath(KM_APP_CODE) + "]"
                         + ",during this process," + "knowledgeList size is[" + indexKnowledgeList.size()
                         + "],corpCode is[" + ExecutionContext.getCorpCode() + "]and appCode is[" + KM_APP_CODE + "]!";
-                LOG.error(msg, e);
+                LOG.error(msg);
             }
         }
 
@@ -201,7 +201,7 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
                     + fullTextSearchManager.getIndexPath(KM_APP_CODE) + " ],during this process,"
                     + "knowledgeList size is[" + indexKnowledgeList.size() + "],corpCode is["
                     + ExecutionContext.getCorpCode() + "]and appCode is[" + KM_APP_CODE + "]!";
-            LOG.error(msg, e);
+            LOG.error(msg);
             throw new RuntimeException(msg, e);
         } finally {
             String knowledgeAddFlag;
@@ -249,9 +249,9 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
                         + "]in the directory[" + fullTextSearchManager.getIndexPath(KM_APP_CODE) + "]"
                         + ",during this process," + "knowledgeList size is[" + indexKnowledgeList.size()
                         + "],corpCode is[" + ExecutionContext.getCorpCode() + "]and appCode is[" + KM_APP_CODE + "]!";
-                LOG.error(msg, e);
+                LOG.error(msg);
             } catch (Exception e) {
-                LOG.error("Knowledge updated index failed!", e);
+                LOG.error("Knowledge updated index failed!");
             }
         }
 
@@ -262,7 +262,7 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
                     + fullTextSearchManager.getIndexPath(KM_APP_CODE) + " ],during this process,"
                     + "knowledgeList size is[" + indexKnowledgeList.size() + "],corpCode is["
                     + ExecutionContext.getCorpCode() + "]and appCode is[" + KM_APP_CODE + "]!";
-            LOG.error(msg, e);
+            LOG.error(msg);
             throw new RuntimeException(msg, e);
         }
     }
@@ -281,7 +281,7 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
             String msg = "Exception occurred when delete the index of knowledge[" + knowledgeId + "] from "
                     + "directory[" + fullTextSearchManager.getIndexPath(KM_APP_CODE) + "],during this process"
                     + ",corpCode is[" + ExecutionContext.getCorpCode() + "]and appCode is[" + KM_APP_CODE + "]!";
-            LOG.error(msg, e);
+            LOG.error(msg);
             throw new RuntimeException(msg, e);
         }
     }
@@ -323,7 +323,7 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
             bakFile = bakFile(indexPath);
         } catch (IOException e) {
             String msg = "Exception occurred when backup the index directory [" + indexPath + "]!";
-            LOG.error(msg, e);
+            LOG.error(msg);
             throw new RuntimeException(msg, e);
         }
 
@@ -348,7 +348,7 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
             bakFile.renameTo(indexFile);
 
             String msg = "Exception occurred when rebuild the index directory [" + indexPath + "]!";
-            LOG.error(msg, e);
+            LOG.error(msg);
             throw new RuntimeException(msg, e);
         }
     }
@@ -411,7 +411,7 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
             return page;
         } catch (IOException e) {
             String msg = "Exception occurred when searching doc with condition[" + keyword + "]!";
-            LOG.error(msg, e);
+            LOG.error(msg);
             throw new RuntimeException(msg, e);
         }
     }
@@ -474,7 +474,7 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
                     conditionValues, fields, flags, keywordAnalyzer);
         } catch (ParseException e) {
             String msg = "Exception occurred when creating a multiple field query with search condition[" + keyword + "]!";
-            LOG.error(msg, e);
+            LOG.error(msg);
             throw new RuntimeException(msg, e);
         }
     }
@@ -558,14 +558,14 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
             url = new URL(fileUrl);
             return tika.parseToString(url);
         } catch (MalformedURLException e) {
-            LOG.error("Format of url[" + fileUrl + "] is malformed!", e);
+            LOG.error("Format of url[" + fileUrl + "] is malformed!");
         } catch (Exception e) {
             String content = extractCompatibleMode(url);
             if (StringUtils.isNotEmpty(content)) {
                 return content;
             }
 
-            LOG.error("Tika extracts content of url[" + fileUrl + "] failed!", e);
+            LOG.error("Tika extracts content of url[" + fileUrl + "] failed!");
         }
 
         return StringUtils.EMPTY;
@@ -606,7 +606,7 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
                 return content;
             }
 
-            LOG.error("Tika extracts compatible mode file's content of url[" + url.toString() + "]failed!", e);
+            LOG.error("Tika extracts compatible mode file's content of url[" + url.toString() + "]failed!");
         } finally {
             IOUtils.closeQuietly(os);
             IOUtils.closeQuietly(is);
@@ -638,7 +638,7 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
                 content += StringUtils.trimToEmpty(slide.getTitle());
             }
         } catch (Exception e) {
-            LOG.error("Extracting content of ppt[2003] failed!", e);
+            LOG.error("Extracting content of ppt[2003] failed!");
         } finally {
             IOUtils.closeQuietly(is);
         }
@@ -681,7 +681,7 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
             indexWriter = fullTextSearchManager.getIndexWriter(path);
         } catch (IOException e) {
             String msg = "Exception occurred when get the IndexWriter object of lucene by appCode[" + KM_APP_CODE + "]!";
-            LOG.error(msg, e);
+            LOG.error(msg);
             throw new RuntimeException(msg, e);
         }
 
@@ -701,7 +701,7 @@ public class KmFullTextSearchServiceImpl  implements KmFullTextSearchService {
             return fullTextSearchManager.getIndexSearcher(indexPath);
         } catch (IOException e) {
             String msg = "Exception occurred when get the IndexSearcher object of lucene by appCode[" + KM_APP_CODE + "]!";
-            LOG.error(msg, e);
+            LOG.error(msg);
             throw new RuntimeException(msg, e);
         }
     }

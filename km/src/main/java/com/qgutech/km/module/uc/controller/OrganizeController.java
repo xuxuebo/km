@@ -8,6 +8,7 @@ import com.qgutech.km.utils.PeException;
 import com.qgutech.km.base.service.I18nService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -54,7 +55,7 @@ public class OrganizeController {
      */
     @ResponseBody
     @RequestMapping("/manage/save")
-    public JsonResult<Organize> saveOrganize(Organize organize) {
+    public JsonResult<Organize> saveOrganize(@ModelAttribute Organize organize) {
         try {
             String organizeId = organizeService.save(organize);
             organize.setId(organizeId);
@@ -74,7 +75,7 @@ public class OrganizeController {
      */
     @ResponseBody
     @RequestMapping("/manage/update")
-    public JsonResult<Organize> updateOrganize(Organize organize) {
+    public JsonResult<Organize> updateOrganize(@ModelAttribute Organize organize) {
         try {
             organizeService.update(organize);
             return new JsonResult<>(true, JsonResult.SUCCESS);

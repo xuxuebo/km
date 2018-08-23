@@ -1,5 +1,6 @@
 package com.qgutech.km.utils;
 import java.math.BigInteger;
+import java.util.Properties;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -16,11 +17,15 @@ import sun.misc.BASE64Decoder;
  * @author libo
  */
 public class Aes {
-    //密钥 (需要前端和后端保持一致)
-    private static final String KEY = "abcdefgabcdefg12";
     //算法
     private static final String ALGORITHMSTR = "AES/ECB/PKCS5Padding";
+    //密钥 (需要前端和后端保持一致)
+    private static String KEY = null;
 
+    static {
+        Properties configProp = PropertiesUtils.getConfigProp();
+        KEY = KMBasicDataSource.deEncryptString(configProp.getProperty("aes.key"));
+    }
     /**
      * aes解密
      * @param encrypt   内容

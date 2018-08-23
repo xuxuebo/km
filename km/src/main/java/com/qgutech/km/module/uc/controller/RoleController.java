@@ -19,6 +19,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -56,7 +57,7 @@ public class RoleController {
 
     @ResponseBody
     @RequestMapping("manage/search")
-    public Page<Role> search(Role role, PageParam pageParam) {
+    public Page<Role> search(@ModelAttribute Role role, @ModelAttribute PageParam pageParam) {
         return roleService.search(role, pageParam);
     }
 
@@ -81,6 +82,7 @@ public class RoleController {
             peTreeNode.setpId(authority.getParentId());
             peTreeNode.setParent(true);
             peTreeNode.setName(authority.getAuthName());
+            selectAuthorityIds = selectAuthorityIds == null ? new ArrayList<>(0) : selectAuthorityIds;
             if (CollectionUtils.isNotEmpty(selectAuthorityIds) && selectAuthorityIds.contains(authority.getId())) {
                 peTreeNode.setChecked(true);
                 peTreeNode.setOpen(true);
@@ -113,7 +115,7 @@ public class RoleController {
      */
     @ResponseBody
     @RequestMapping("manage/searchByUser")
-    public Page<User> searchByUser(PageParam pageParam, User user) {
+    public Page<User> searchByUser(@ModelAttribute PageParam pageParam, @ModelAttribute User user) {
         return userService.searchUserRoleByCondition(user, pageParam);
     }
 
@@ -138,7 +140,7 @@ public class RoleController {
      */
     @ResponseBody
     @RequestMapping("manage/deleteRolesByUserId")
-    public JsonResult deleteRolesByUserId(User user) {
+    public JsonResult deleteRolesByUserId(@ModelAttribute User user) {
         if (CollectionUtils.isEmpty(user.getRoleIds()) || StringUtils.isBlank(user.getId())) {
             return new JsonResult(true, i18nService.getI18nValue("save.success"));
         }
@@ -167,7 +169,7 @@ public class RoleController {
      */
     @ResponseBody
     @RequestMapping("manage/saveRole")
-    public JsonResult saveRole(Role role) {
+    public JsonResult saveRole(@ModelAttribute Role role) {
         roleService.save(role);
         return new JsonResult(true, i18nService.getI18nValue("save.success"));
     }
@@ -229,7 +231,7 @@ public class RoleController {
      */
     @ResponseBody
     @RequestMapping("manage/searchWaitUser")
-    public Page<User> searchWaitUser(PageParam pageParam, User user, String roleId) {
+    public Page<User> searchWaitUser(@ModelAttribute PageParam pageParam, @ModelAttribute User user, String roleId) {
         Page<User> page = userService.searchWaitUserByRoleId(roleId, user, pageParam);
         page.setPage(pageParam.getPage() - 1);
         page.setPageSize(pageParam.getPageSize());
@@ -241,7 +243,7 @@ public class RoleController {
      */
     @ResponseBody
     @RequestMapping("manage/searchSelectUser")
-    public Page<User> searchSelectUser(PageParam pageParam, String roleId) {
+    public Page<User> searchSelectUser(@ModelAttribute PageParam pageParam, String roleId) {
         Page<User> page = userRoleService.searchByRoleId(roleId, pageParam);
         page.setPage(pageParam.getPage() - 1);
         page.setPageSize(pageParam.getPageSize());
@@ -253,7 +255,7 @@ public class RoleController {
      */
     @ResponseBody
     @RequestMapping("manage/saveUserRole")
-    public JsonResult saveUserRole(Role role, String userIds) {
+    public JsonResult saveUserRole(@ModelAttribute Role role, String userIds) {
         if (StringUtils.isBlank(userIds)) {
             return new JsonResult(true, i18nService.getI18nValue("save.success"));
         }
@@ -282,7 +284,7 @@ public class RoleController {
      */
     @ResponseBody
     @RequestMapping("manage/deleteUserRole")
-    public JsonResult deleteUserRole(Role role) {
+    public JsonResult deleteUserRole(@ModelAttribute Role role) {
         List<User> users = role.getUsers();
         if (CollectionUtils.isEmpty(users)) {
             return new JsonResult(true, i18nService.getI18nValue("delete.success"));
@@ -304,7 +306,7 @@ public class RoleController {
      */
     @ResponseBody
     @RequestMapping("manage/updateRole")
-    public JsonResult updateRole(Role role) {
+    public JsonResult updateRole(@ModelAttribute Role role) {
         try {
             roleService.update(role);
         } catch (Exception e) {
@@ -316,7 +318,7 @@ public class RoleController {
 
     @ResponseBody
     @RequestMapping("manage/delete")
-    public JsonResult delete(Role role) {
+    public JsonResult delete(@ModelAttribute Role role) {
         if (role == null) {
             return new JsonResult(false, i18nService.getI18nValue("role.object.not.empty"));
         }

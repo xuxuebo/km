@@ -19,7 +19,7 @@ public class KMBasicDataSource extends BasicDataSource {
         super.setUsername(deEncryptString(username));
     }
 
-    private static String deEncryptString(String express) {
+    public static String deEncryptString(String express) {
         try {
             BASE64Decoder decoder = new BASE64Decoder();
             byte[] bytes = decoder.decodeBuffer(express);

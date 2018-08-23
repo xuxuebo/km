@@ -7,6 +7,7 @@ import com.qgutech.km.module.km.service.LibraryService;
 import com.qgutech.km.utils.UUIDGenerator;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -34,7 +35,7 @@ public class SpecialtyController {
      */
     @RequestMapping("addSpecialty")
     @ResponseBody
-    public JsonResult addSpecialty(Library library) {
+    public JsonResult addSpecialty(@ModelAttribute Library library) {
         JsonResult jsonResult = new JsonResult();
         if (library == null || StringUtils.isEmpty(library.getLibraryName())) {
             jsonResult.setSuccess(false);
@@ -71,7 +72,7 @@ public class SpecialtyController {
 
     @RequestMapping("updateSpecialty")
     @ResponseBody
-    public JsonResult updateSpecialty(Library library) {
+    public JsonResult updateSpecialty(@ModelAttribute Library library) {
         JsonResult jsonResult = new JsonResult();
         if (library == null || StringUtils.isEmpty(library.getLibraryName()) || StringUtils.isEmpty(library.getId())) {
             jsonResult.setSuccess(false);

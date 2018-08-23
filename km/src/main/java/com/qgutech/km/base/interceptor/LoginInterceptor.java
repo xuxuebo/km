@@ -92,6 +92,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
 
         String sessionId = request.getParameter("sessionId");
+        sessionId = CookieUtil.matcher(sessionId);
         Cookie cookie = CookieUtil.getCookie(request, CookieKey.UC_LOGIN_SESSION_ID);
         if (StringUtils.isBlank(sessionId) && (cookie == null || StringUtils.isBlank(cookie.getValue()))) {
             processLoginPage(request, response, channel,null);
@@ -112,6 +113,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
                 String mobileType = request.getParameter("mobileType");
                 if (StringUtils.isNotBlank(mobileType)) {
+                    mobileType = CookieUtil.matcher(mobileType);
                     CookieUtil.setCookie(response, CookieKey.MOBILE_TYPE, mobileType);
                 }
             }

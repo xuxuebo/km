@@ -8,6 +8,7 @@ import com.qgutech.km.module.km.service.StatisticService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -50,7 +51,7 @@ public class ShareController {
 
     @ResponseBody
     @RequestMapping("shareToOrg")
-    public JsonResult shareToOrg(Share share) {
+    public JsonResult shareToOrg(@ModelAttribute Share share) {
         JsonResult jsonResult = new JsonResult();
         List<String> libraryIds = share.getLibraryIds();
         if (CollectionUtils.isEmpty(libraryIds)) {

@@ -28,6 +28,7 @@ import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -89,7 +90,7 @@ public class LoginController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("login/ajaxLogin")
-    public JsonResult<User> ajaxLogin(User loginUser, HttpServletRequest request, HttpServletResponse response) {
+    public JsonResult<User> ajaxLogin(@ModelAttribute User loginUser, HttpServletRequest request, HttpServletResponse response) {
 
         if (loginUser!=null&&StringUtils.isNotBlank(loginUser.getPassword())) {
             String password=loginUser.getPassword();
@@ -332,7 +333,7 @@ public class LoginController extends BaseController {
 
 
     @RequestMapping("login/toPhoneCode")
-    public String toPhoneCode(Model model, User user) {
+    public String toPhoneCode(Model model, @ModelAttribute User user) {
         //页面上对“手机、邮箱”都未绑定时做处理
         model.addAttribute(user);
         return "";
@@ -343,7 +344,7 @@ public class LoginController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("login/createIdentityCode")
-    public JsonResult<User> createIdentityCode(User user, HttpServletRequest request) {
+    public JsonResult<User> createIdentityCode(@ModelAttribute User user, HttpServletRequest request) {
         if (user == null || (StringUtils.isBlank(user.getMobile()) && StringUtils.isBlank(user.getEmail()))) {
             throw new IllegalArgumentException("Checking info is illegal!");
         }
@@ -398,7 +399,7 @@ public class LoginController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("login/checkIdentityCode")
-    public JsonResult checkIdentityCode(User user) {
+    public JsonResult checkIdentityCode(@ModelAttribute User user) {
         if (user == null || (StringUtils.isBlank(user.getMobile())
                 && StringUtils.isBlank(user.getEmail())) || StringUtils.isBlank(user.getVerifyCode())) {
             throw new IllegalArgumentException("Checking info is illegal!");
@@ -424,7 +425,7 @@ public class LoginController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("login/updatePwd")
-    public JsonResult updatePwd(User user) {
+    public JsonResult updatePwd(@ModelAttribute User user) {
         if (user == null || StringUtils.isBlank(user.getId())
                 || StringUtils.isBlank(user.getNewPassword())) {
             throw new IllegalArgumentException("User parameter is illegal!");
@@ -523,7 +524,7 @@ public class LoginController extends BaseController {
     }
 
     @RequestMapping("/login/ssoLogin")
-    public String ssoLogin(SsoLogin sso, Model model, HttpServletRequest request, HttpServletResponse response) {
+    public String ssoLogin(@ModelAttribute SsoLogin sso, Model model, HttpServletRequest request, HttpServletResponse response) {
         String corpCode = sso.getCorpCode();
         String userName = sso.getUserName();
         String sign = sso.getSign();

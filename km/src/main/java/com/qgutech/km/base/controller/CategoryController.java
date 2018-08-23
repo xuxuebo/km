@@ -8,6 +8,7 @@ import com.qgutech.km.base.vo.JsonResult;
 import com.qgutech.km.utils.PeException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -29,7 +30,7 @@ public class CategoryController {
      */
     @ResponseBody
     @RequestMapping("manage/add")
-    public JsonResult<PeTreeNode> add(PeTreeNode treeNode, Category.CategoryEnumType categoryType) {
+    public JsonResult<PeTreeNode> add(@ModelAttribute PeTreeNode treeNode, @ModelAttribute Category.CategoryEnumType categoryType) {
         Category category = getCategory(treeNode, categoryType);
         JsonResult<PeTreeNode> jsonResult = getSaveOrUpdateCategoryResult(category);
         if (jsonResult != null) {
@@ -57,7 +58,7 @@ public class CategoryController {
     /**
      * 将treeNode转换为category
      */
-    private Category getCategory(PeTreeNode treeNode, Category.CategoryEnumType categoryType) {
+    private Category getCategory(@ModelAttribute PeTreeNode treeNode, @ModelAttribute Category.CategoryEnumType categoryType) {
         if (treeNode == null) {
             throw new IllegalArgumentException("PeTreeNode parameter is illegal!");
         }
@@ -102,7 +103,7 @@ public class CategoryController {
      */
     @ResponseBody
     @RequestMapping("manage/delete")
-    public JsonResult delete(String id, Category.CategoryEnumType categoryType) {
+    public JsonResult delete(String id, @ModelAttribute Category.CategoryEnumType categoryType) {
         if (StringUtils.isBlank(id)) {
             return new JsonResult(false, i18nService.getI18nValue("category.not.exist"));
         }
@@ -121,7 +122,7 @@ public class CategoryController {
      */
     @ResponseBody
     @RequestMapping("manage/edit")
-    public JsonResult<PeTreeNode> edit(PeTreeNode treeNode, Category.CategoryEnumType categoryType) {
+    public JsonResult<PeTreeNode> edit(@ModelAttribute PeTreeNode treeNode, @ModelAttribute Category.CategoryEnumType categoryType) {
         Category category = getCategory(treeNode, categoryType);
         if (StringUtils.isBlank(treeNode.getId())) {
             throw new IllegalArgumentException("PeTreeNode parameter is illegal!");
@@ -163,7 +164,7 @@ public class CategoryController {
      */
     @ResponseBody
     @RequestMapping("manage/checkNameExists")
-    public JsonResult checkNameExists(Category category) {
+    public JsonResult checkNameExists(@ModelAttribute Category category) {
         try {
             String catagoryId = categoryService.checkCatagoryName(category);
             if (StringUtils.isBlank(catagoryId)) {

@@ -12,6 +12,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -106,7 +107,7 @@ public class CorpController {
 
     @ResponseBody
     @RequestMapping("manage/save")
-    public JsonResult<CorpInfo> save(CorpInfo corpInfo) {
+    public JsonResult<CorpInfo> save(@ModelAttribute CorpInfo corpInfo) {
         try {
             if (StringUtils.isNotBlank(corpInfo.getPayApps())) {
                 String payAppStr = corpInfo.getPayApps();
@@ -134,7 +135,7 @@ public class CorpController {
 
     @ResponseBody
     @RequestMapping("manage/search")
-    public Page<CorpInfo> search(PageParam pageParam, CorpInfo corpInfo) {
+    public Page<CorpInfo> search(@ModelAttribute PageParam pageParam, @ModelAttribute CorpInfo corpInfo) {
         return corpService.search(pageParam, corpInfo);
     }
 

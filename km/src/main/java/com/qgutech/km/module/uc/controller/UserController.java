@@ -34,6 +34,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -142,7 +143,7 @@ public class UserController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("manage/search")
-    public Page<User> search(PageParam pageParam, User user) {
+    public Page<User> search(@ModelAttribute PageParam pageParam, @ModelAttribute User user) {
         if (user == null) {
             user = new User();
         }
@@ -155,7 +156,7 @@ public class UserController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("manage/freeze")
-    public JsonResult freeze(User user) {
+    public JsonResult freeze(@ModelAttribute User user) {
         return updateStatus(user, User.UserStatus.FORBIDDEN);
     }
 
@@ -164,7 +165,7 @@ public class UserController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("manage/enable")
-    public JsonResult enable(User user) {
+    public JsonResult enable(@ModelAttribute User user) {
         return updateStatus(user, User.UserStatus.ENABLE);
     }
 
@@ -173,7 +174,7 @@ public class UserController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("manage/delete")
-    public JsonResult delete(User user) {
+    public JsonResult delete(@ModelAttribute User user) {
         return updateStatus(user, User.UserStatus.DELETED);
     }
 
@@ -286,7 +287,7 @@ public class UserController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("manage/resetPsw")
-    public JsonResult resetPsw(User user) {
+    public JsonResult resetPsw(@ModelAttribute User user) {
         if (user == null || StringUtils.isBlank(user.getId()) || StringUtils.isBlank(user.getPassword())) {
             throw new IllegalArgumentException("Parameters is not valid!");
         }
@@ -442,7 +443,7 @@ public class UserController extends BaseController {
 
     @ResponseBody
     @RequestMapping("manage/saveUser")
-    public JsonResult<User> saveUser(User user) {
+    public JsonResult<User> saveUser(@ModelAttribute User user) {
         try {
             if (StringUtils.isBlank(user.getId())) {
                 userService.save(user);
@@ -500,7 +501,7 @@ public class UserController extends BaseController {
 
     @ResponseBody
     @RequestMapping("client/reviseFace")
-    public JsonResult reviseFace(User user) {
+    public JsonResult reviseFace(@ModelAttribute User user) {
         if (user == null || StringUtils.isBlank(user.getFaceFileId()) || StringUtils.isBlank(user.getFaceFileName()) ||
                 StringUtils.isBlank(user.getId())) {
             throw new IllegalArgumentException("Parameters is not valid!");
@@ -597,7 +598,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("manage/exportUser")
-    public void exportUser(User user, HttpServletResponse response, HttpServletRequest request) {
+    public void exportUser(@ModelAttribute User user, HttpServletResponse response, HttpServletRequest request) {
         if (user == null) {
             throw new IllegalArgumentException("Parameters is not valid!");
         }
@@ -691,7 +692,7 @@ public class UserController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("manage/searchByOrganize")
-    public Page<User> searchByOrganize(Organize organize, PageParam pageParam) {
+    public Page<User> searchByOrganize(@ModelAttribute Organize organize, @ModelAttribute PageParam pageParam) {
         return userService.searchByOrganize(organize, pageParam);
     }
 

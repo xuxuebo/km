@@ -124,8 +124,11 @@ public class RequestContextFactory {
         String requestToken = null;
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(CLIENT_TOKEN)) {
+                String name = cookie.getName();
+                name = CookieUtil.matcher(name);
+                if (name.equals(CLIENT_TOKEN)) {
                     requestToken = cookie.getValue();
+                    requestToken = CookieUtil.matcher(requestToken);
                     break;
                 }
             }
@@ -151,9 +154,8 @@ public class RequestContextFactory {
     }
 
     private static Cookie newClientCookie(String requestToken) {
-
-        Cookie cookie = new Cookie(CLIENT_TOKEN, requestToken);
-        cookie.setPath("/");
+        Cookie cookie = new Cookie(CookieUtil.matcher(CLIENT_TOKEN), requestToken);
+        cookie.setPath("/km");
         return cookie;
     }
 

@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -14,6 +16,7 @@ import java.util.Map;
 public class CookieUtil {
 
     private static final int MINUTE_SECONDS = 60;
+    public static final Pattern pattern = Pattern.compile("[`~!@#$%^&*()\\+\\=\\{}|:\"?><【】\\/r\\/n]");
 
     /**
      * 设置cookie名和对应的值,默认有效时间1天
@@ -23,7 +26,20 @@ public class CookieUtil {
      * @param value    cookie值
      */
     public static void setCookie(HttpServletResponse response, String name, String value) {
-        setCookie(response, name, value, "/", null, null);
+        setCookie(response, name, value, "/km", null, null);
+    }
+
+    public static String matcher(String value) {
+        if (StringUtils.isEmpty(value)) {
+            return value;
+        }
+
+        Matcher ma = pattern.matcher(value);
+        if (ma.find()) {
+            return ma.replaceAll("");
+        }
+
+        return value;
     }
 
     /**
@@ -38,8 +54,9 @@ public class CookieUtil {
      */
     public static void setCookie(HttpServletResponse response, String name, String value, String path, String age,
                                  String domain) {
-        Cookie cookie = new Cookie(name, value);
+        Cookie cookie = new Cookie(matcher(name), matcher(value));
         cookie.setSecure(false);
+        path = "/".equalsIgnoreCase(path) ? "/km" : path;
         cookie.setPath(path);
         if (StringUtils.isNotEmpty(domain)) {
             cookie.setDomain(domain);
@@ -82,6 +99,9 @@ public class CookieUtil {
             }
         }
 
+        if (returnCookie != null) {
+            returnCookie.setValue(matcher(returnCookie.getValue()));
+        }
         return returnCookie;
     }
 
@@ -131,6 +151,7 @@ public class CookieUtil {
     public static void deleteCookie(HttpServletResponse response, Cookie cookie, String path) {
         if (cookie != null) {
             cookie.setMaxAge(0);
+            path = "/".equalsIgnoreCase(path) ? "/km" : path;
             cookie.setPath(path);
             response.addCookie(cookie);
         }
@@ -143,7 +164,7 @@ public class CookieUtil {
      * @param cookie   Cookie对象
      */
     public static void deleteCookie(HttpServletResponse response, Cookie cookie) {
-        deleteCookie(response, cookie, "/");
+        deleteCookie(response, cookie, "/km");
     }
 
     /**

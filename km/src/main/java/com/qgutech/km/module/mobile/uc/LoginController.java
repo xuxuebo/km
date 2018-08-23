@@ -16,6 +16,7 @@ import com.qgutech.km.module.uc.service.UserService;
 import com.qgutech.km.utils.CookieUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -61,7 +62,7 @@ public class LoginController extends BaseController {
     }
     @ResponseBody
     @RequestMapping("ajaxLogin")
-    public JsonResult<User> login(User loginUser, HttpServletResponse response, HttpServletRequest request) {
+    public JsonResult<User> login(@ModelAttribute User loginUser, HttpServletResponse response, HttpServletRequest request) {
         if (StringUtils.isBlank(loginUser.getCorpCode())) {
             return new JsonResult<>(false, "企业ID为空");
         }

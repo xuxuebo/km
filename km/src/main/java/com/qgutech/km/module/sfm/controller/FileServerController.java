@@ -12,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,7 +45,7 @@ public class FileServerController {
     @ResponseBody
     @RequestMapping("uploadFile")
     public JsonResult<PeFile> uploadFile(@RequestParam(value = "uploadFile", required = false) MultipartFile multipartFile,
-                                         PeFile peFile) throws IOException {
+                                         @ModelAttribute PeFile peFile) throws IOException {
         try {
             // multipartFile.transferTo(new File("D:/1.webm"));
             JsonResult<PeFile> jsonResult = checkFile(multipartFile, peFile);

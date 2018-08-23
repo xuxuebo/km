@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -67,7 +68,7 @@ public class KnowledgeController {
     @ResponseBody
     @RequestMapping("uploadFile")
     public JsonResult<PeFile> uploadFile(@RequestParam(value = "uploadFile", required = false) MultipartFile multipartFile,
-                                         PeFile peFile) throws IOException {
+                                         @ModelAttribute PeFile peFile) throws IOException {
         try {
             // multipartFile.transferTo(new File("D:/1.webm"));
             JsonResult<PeFile> jsonResult = checkFile(multipartFile, peFile);
@@ -93,7 +94,7 @@ public class KnowledgeController {
 
     @ResponseBody
     @RequestMapping("saveKnowledge")
-    public JsonResult<Knowledge> saveKnowledge(Knowledge knowledge) {
+    public JsonResult<Knowledge> saveKnowledge(@ModelAttribute Knowledge knowledge) {
         try {
             if (StringUtils.isBlank(knowledge.getId())) {
                 String libraryId = knowledge.getLibraryId();
@@ -355,7 +356,7 @@ public class KnowledgeController {
      */
     @ResponseBody
     @RequestMapping("shareToPublic")
-    public JsonResult shareToPublic(Share share){
+    public JsonResult shareToPublic(@ModelAttribute Share share){
         JsonResult jsonResult = new JsonResult();
         int count = knowledgeService.shareToPublic(share);
         if(count<=0){
@@ -519,7 +520,7 @@ public class KnowledgeController {
      */
     @ResponseBody
     @RequestMapping("publicLibraryData")
-    public Page<Knowledge> publicLibraryData(PageParam pageParam, Knowledge knowledge, String libraryId){
+    public Page<Knowledge> publicLibraryData(@ModelAttribute PageParam pageParam, Knowledge knowledge, String libraryId){
         if(StringUtils.isEmpty(libraryId)){
             return new Page<Knowledge>();
         }
@@ -692,13 +693,13 @@ public class KnowledgeController {
 
     @ResponseBody
     @RequestMapping("searchKnowledge")
-    public Page<Knowledge> searchKnowledge(Knowledge knowledge, PageParam pageParam) {
+    public Page<Knowledge> searchKnowledge(@ModelAttribute Knowledge knowledge, @ModelAttribute PageParam pageParam) {
         return knowledgeService.search(knowledge, pageParam);
     }
 
     @RequestMapping("orgShare/search")
     @ResponseBody
-    public Page<Knowledge> search(Knowledge knowledge, PageParam pageParam) {
+    public Page<Knowledge> search(@ModelAttribute Knowledge knowledge, @ModelAttribute PageParam pageParam) {
         if (knowledge == null) {
             knowledge = new Knowledge();
         }
@@ -737,7 +738,7 @@ public class KnowledgeController {
 
     @ResponseBody
     @RequestMapping("searchHotKnowledge")
-    public Page<Knowledge> searchHotKnowledge(Knowledge knowledge, PageParam pageParam) {
+    public Page<Knowledge> searchHotKnowledge(@ModelAttribute Knowledge knowledge, @ModelAttribute PageParam pageParam) {
         return knowledgeService.searchHotKnowledge(knowledge, pageParam);
     }
 }

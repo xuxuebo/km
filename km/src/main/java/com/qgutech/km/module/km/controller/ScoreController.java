@@ -13,6 +13,7 @@ import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -66,13 +67,13 @@ public class ScoreController {
 
     @RequestMapping("manage/search")
     @ResponseBody
-    public Page<ScoreRule> search(ScoreRule rule, PageParam pageParam) {
+    public Page<ScoreRule> search(ScoreRule rule, @ModelAttribute PageParam pageParam) {
         return scoreRuleService.search(rule, pageParam);
     }
 
     @RequestMapping("manage/updateRule")
     @ResponseBody
-    public JsonResult updateRule(ScoreRule rule) {
+    public JsonResult updateRule(@ModelAttribute ScoreRule rule) {
         JsonResult jsonResult = new JsonResult();
         if (rule == null || StringUtils.isEmpty(rule.getId())) {
             jsonResult.setSuccess(false);
@@ -91,13 +92,13 @@ public class ScoreController {
 
     @RequestMapping("manage/searchStatistic")
     @ResponseBody
-    public Page<ScoreDetail> searchStatistic(ScoreDetail detail, PageParam pageParam) {
+    public Page<ScoreDetail> searchStatistic(@ModelAttribute ScoreDetail detail, @ModelAttribute PageParam pageParam) {
         return scoreDetailService.searchStatistic(detail, pageParam);
     }
 
     @RequestMapping("manage/searchDetail")
     @ResponseBody
-    public Page<ScoreDetail> searchDetail(ScoreDetail detail, PageParam pageParam) {
+    public Page<ScoreDetail> searchDetail(@ModelAttribute ScoreDetail detail, @ModelAttribute PageParam pageParam) {
         return scoreDetailService.searchDetail(detail, pageParam);
     }
 
