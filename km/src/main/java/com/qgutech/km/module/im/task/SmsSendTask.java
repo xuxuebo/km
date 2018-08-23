@@ -1,9 +1,9 @@
 package com.qgutech.km.module.im.task;
 
 import com.alibaba.fastjson.JSON;
-import com.qgutech.km.module.im.domain.ImSms;
 import com.qgutech.km.constant.RedisKey;
 import com.qgutech.km.module.im.domain.ImConfig;
+import com.qgutech.km.module.im.domain.ImSms;
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import org.dom4j.io.SAXReader;
 import redis.clients.jedis.JedisCommands;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -66,6 +67,7 @@ public class SmsSendTask implements Runnable {
 
         NameValuePair[] dataTem = data.toArray(new NameValuePair[data.size()]);
         method.setRequestBody(dataTem);
+        InputStream inputStream = null;
         try {
             log.info("Send sms : " + smsMsg.toString());
             int statusCode = httpClient.executeMethod(method);
@@ -75,7 +77,7 @@ public class SmsSendTask implements Runnable {
             }
 
             // 读取内容
-            InputStream inputStream = method.getResponseBodyAsStream();
+            inputStream = method.getResponseBodyAsStream();
             if (inputStream != null) {
                 SAXReader reader = new SAXReader();
                 org.dom4j.Document doc = reader.read(inputStream);
@@ -109,8 +111,16 @@ public class SmsSendTask implements Runnable {
         } finally {
             // 释放连接
             method.releaseConnection();
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
+
 
     private NameValuePair setHttpParam(String key, String value) {
         return new NameValuePair(key, StringUtils.defaultString(value));
