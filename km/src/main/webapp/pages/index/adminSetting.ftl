@@ -43,11 +43,11 @@
                 <span class="yfont-icon">&#xe643;</span><span class="txt">专业分类管理</span>
             </a>
         </li>
-        <li class="y-menu__item y-score">
+        <#--<li class="y-menu__item y-score">
             <a href="#score" class="y-menu__item__title y-aside__menu__item__title">
                 <span class="yfont-icon">&#xe643;</span><span class="txt">积分管理</span>
             </a>
-        </li>
+        </li>-->
     </ul>
 </aside>
 <div class="y-content">
