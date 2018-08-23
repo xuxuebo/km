@@ -194,6 +194,7 @@
     </div>
     <div class="y-content__table" id="specialtyTable"></div>
 </script>
+<#--
 
 <script type="text/template" id="tplScore">
     <h4 class="y-content__title"><%=title%></h4>
@@ -202,5 +203,6 @@
     </div>
     <div class="y-content__table" id="scoreTable"></div>
 </script>
+-->
 
 <script src="${resourcePath!}/web-static/proExam/index/js/settingIndex.js"></script>

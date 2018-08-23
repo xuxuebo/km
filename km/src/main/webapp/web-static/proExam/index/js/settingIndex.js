@@ -45,12 +45,12 @@ $(function(){
                 "templateId":'#tplProject',
                 nav:'y-project',
                 cb:"projectCb"
-            },
+            }/*,
             'score':{
                 "templateId":'#tplScore',
                 nav:'y-score',
                 cb:"scoreCb"
-            }
+            }*/
         },
         userCb: function (container, routeInfo, cb) {
             $('#yunContentBody').html('<iframe style="width:100%;height: 100%;" src="/km/front/manage/initPage#url=/km/uc/user/manage/initPage"></iframe>');
@@ -80,9 +80,9 @@ $(function(){
         projectCb:function (container, routeInfo, cb) {
             $('#yunContentBody').html('<iframe style="width:100%;height: 100%;margin-left:0;" src="/km/front/manage/initPage#url=/km/project/manage/initPage"></iframe>');
         },
-        scoreCb:function (container, routeInfo, cb) {
+        /*scoreCb:function (container, routeInfo, cb) {
             $('#yunContentBody').html('<iframe style="width:100%;height: 100%;margin-left:0;" src="/km/front/manage/initPage#url=/km/score/manage/initPage"></iframe>');
-        }
+        }*/
     };
 
     function changeHashCb(cb) {
