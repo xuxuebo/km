@@ -572,7 +572,7 @@
 //        PEBASE.isPlaceholder();
         var columnsSetting = [{'columnName': 'userName', 'columnTitle': '姓名','checked':true},
             {'columnName': 'loginName', 'columnTitle': '用户名', 'checked':true},
-            {'columnName': 'organizeName', 'columnTitle': '部门', 'checked': false},
+            {'columnName': 'organizeName', 'columnTitle': '部门', 'checked': true},
             {'columnName': 'employeeCode', 'columnTitle': '工号', 'checked':true},
             {'columnName': 'mobile', 'columnTitle': '手机号', 'checked': true},
             {'columnName': 'positionName', 'columnTitle': '岗位', 'checked': true},

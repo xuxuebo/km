@@ -952,4 +952,10 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
 
         return indexKnowledge;
     }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public List<Knowledge> findAll() {
+        return listByCriterion(getConjunction());
+    }
 }

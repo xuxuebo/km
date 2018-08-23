@@ -49,6 +49,24 @@
             </div>
         </#if>
             <div class="pe-user-msg-detail">
+                <div class="pe-main-input-tree" style="margin-left: 11px;">
+                    <span style="color:red;">*</span>
+                    <span>
+                        部&emsp;门:
+                    </span>
+                    <div class="pe-stand-filter-form-input  pe-organize-input-tree" style="margin-left: 10px;">
+                        <input class="pe-tree-show-name" required name="organizeName" readonly="readonly" title="${(user.organize.organizeName)!}" type="text" maxlength=50 value="${(user.organize.organizeName)!}" style="    width: 305px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"/>
+                        <input type="hidden" name="organize.id" value="${(user.organize.id)!}"/>
+                        <span class="pe-input-tree-search-btn input-icon iconfont icon-class-tree"
+                              style="height:36px;line-height:36px;"></span>
+                        <div class="pe-select-tree-wrap pe-input-tree-wrap-drop pe-input-tree-drop-third"
+                             style="display:none;">
+                            <ul id="organizeTreeData" class="ztree pe-tree-container floatL"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pe-user-msg-detail">
                 <label class=" pe-question-label">
                      <span class="pe-input-tree-text">
                          <span>工&nbsp;&nbsp;号:</span>
@@ -98,23 +116,6 @@
                     <input class="pe-stand-filter-form-input pe-question-score-num" value="${(user.email)!}" type="text"
                            name="email" maxlength="50">
                 </label>
-            </div>
-            <div class="pe-user-msg-detail">
-                <div class="pe-main-input-tree clearF" style="relative;">
-                    <span class="pe-input-tree-text">
-                        部&emsp;门:
-                    </span>
-                    <div class="pe-stand-filter-form-input  pe-organize-input-tree">
-                        <input class="pe-tree-show-name" name="organizeName" readonly="readonly" title="${(user.organize.organizeName)!}" type="text" maxlength=50 value="${(user.organize.organizeName)!}" style="    width: 305px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"/>
-                        <input type="hidden" name="organize.id" value="${(user.organize.id)!}"/>
-                        <span class="pe-input-tree-search-btn input-icon iconfont icon-class-tree"
-                              style="height:36px;line-height:36px;"></span>
-                        <div class="pe-select-tree-wrap pe-input-tree-wrap-drop pe-input-tree-drop-third"
-                             style="display:none;">
-                            <ul id="organizeTreeData" class="ztree pe-tree-container floatL"></ul>
-                        </div>
-                    </div>
-                </div>
             </div>
             <div class="pe-user-msg-detail">
                 <div class="pe-main-input-tree clearF" style="relative;">

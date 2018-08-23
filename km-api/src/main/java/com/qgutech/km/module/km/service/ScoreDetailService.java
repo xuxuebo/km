@@ -6,6 +6,7 @@ import com.qgutech.km.base.service.BaseService;
 import com.qgutech.km.module.km.model.ScoreDetail;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -52,4 +53,14 @@ public interface ScoreDetailService extends BaseService<ScoreDetail> {
      * @since TangFD@HF 2018-8-21
      */
     void addScore(List<String> knowledgeIds, String ruleCode);
+
+    /**
+     * 根据规则Id获取所有的知识Id映射
+     *
+     * @param ruleId 规则Id，不可为空
+     * @return 知识Id映射，key：knowledgeId,value:true
+     * @throws RuntimeException 当ruleId为空时
+     * @since TangFD@HF 2018-8-23
+     */
+    Map<String, Boolean> getKnowledgeIdMapByRuleId(String ruleId);
 }

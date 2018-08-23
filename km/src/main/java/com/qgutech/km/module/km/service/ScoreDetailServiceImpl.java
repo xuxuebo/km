@@ -12,6 +12,8 @@ import com.qgutech.km.utils.PeException;
 import com.qgutech.km.utils.PeUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.criterion.Conjunction;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -152,7 +154,7 @@ public class ScoreDetailServiceImpl extends BaseServiceImpl<ScoreDetail> impleme
     @Override
     @Transactional(readOnly = false, rollbackFor = Exception.class)
     public void addScore(List<String> knowledgeIds, String ruleCode) {
-        if (CollectionUtils.isEmpty(knowledgeIds) || StringUtils.isEmpty(ruleCode)) {
+        /*if (CollectionUtils.isEmpty(knowledgeIds) || StringUtils.isEmpty(ruleCode)) {
             throw new PeException("knowledgeIds and ruleCode must be not empty!");
         }
 
@@ -193,6 +195,28 @@ public class ScoreDetailServiceImpl extends BaseServiceImpl<ScoreDetail> impleme
 
         if (scoreDetails.size() > 0) {
             batchSave(scoreDetails);
+        }*/
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public Map<String, Boolean> getKnowledgeIdMapByRuleId(String ruleId) {
+        if (StringUtils.isEmpty(ruleId)) {
+            throw new PeException("ruleId must be not empty!");
         }
+
+        Conjunction conjunction = getConjunction();
+        conjunction.add(Restrictions.eq(ScoreDetail.RULE_ID, ruleId));
+        List<ScoreDetail> scoreDetails = listByCriterion(conjunction);
+        if (CollectionUtils.isEmpty(scoreDetails)) {
+            return new HashMap<>(0);
+        }
+
+        Map<String, Boolean> knowledgeIdMap = new HashMap<>(scoreDetails.size());
+        for (ScoreDetail scoreDetail : scoreDetails) {
+            knowledgeIdMap.put(scoreDetail.getKnowledgeId(), true);
+        }
+
+        return knowledgeIdMap;
     }
 }

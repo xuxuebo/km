@@ -3,11 +3,13 @@ package com.qgutech.km.module.km.controller;
 import com.qgutech.km.base.model.Page;
 import com.qgutech.km.base.model.PageParam;
 import com.qgutech.km.base.vo.JsonResult;
-import com.qgutech.km.module.km.model.ScoreDetail;
-import com.qgutech.km.module.km.model.ScoreRule;
-import com.qgutech.km.module.km.service.ScoreDetailService;
-import com.qgutech.km.module.km.service.ScoreRuleService;
-import com.qgutech.km.module.uc.service.UserService;
+import com.qgutech.km.constant.KnowledgeConstant;
+import com.qgutech.km.module.km.model.*;
+import com.qgutech.km.module.km.service.*;
+import com.qgutech.km.module.uc.model.Organize;
+import com.qgutech.km.module.uc.service.OrganizeService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.*;
 
 /**
  * 积分管理
@@ -31,7 +34,13 @@ public class ScoreController {
     @Resource
     private ScoreDetailService scoreDetailService;
     @Resource
-    private UserService userService;
+    private KnowledgeService knowledgeService;
+    @Resource
+    private KnowledgeRelService knowledgeRelService;
+    @Resource
+    private LibraryService libraryService;
+    @Resource
+    private OrganizeService organizeService;
 
     @RequestMapping("manage/initPage")
     public String initPage() {
@@ -91,5 +100,71 @@ public class ScoreController {
     public Page<ScoreDetail> searchDetail(ScoreDetail detail, PageParam pageParam) {
         return scoreDetailService.searchDetail(detail, pageParam);
     }
+
+    @RequestMapping("manage/dealOldData")
+    @ResponseBody
+    public void dealOldData() {
+        List<Knowledge> knowledges = knowledgeService.findAll();
+        if (CollectionUtils.isEmpty(knowledges)) {
+            return;
+        }
+
+        List<String> knowledgeIds = new ArrayList<>(knowledges.size());
+        ScoreRule upload = scoreRuleService.getByCode(KnowledgeConstant.SCORE_RULE_UPLOAD);
+        Map<String, Boolean> knowledgeIdMap = scoreDetailService.getKnowledgeIdMapByRuleId(upload.getId());
+        for (Knowledge knowledge : knowledges) {
+            String knowledgeId = knowledge.getId();
+            if ("file".equals(knowledge.getKnowledgeType()) || BooleanUtils.isTrue(knowledgeIdMap.get(knowledgeId))) {
+                continue;
+            }
+
+            knowledgeIds.add(knowledgeId);
+        }
+
+        if (knowledgeIds.size() > 0) {
+            scoreDetailService.addScore(knowledgeIds, KnowledgeConstant.SCORE_RULE_UPLOAD);
+        }
+
+
+        Library library = libraryService.getUserLibraryByLibraryType(KnowledgeConstant.RECYCLE_LIBRARY);
+        List<KnowledgeRel> recycleRels = knowledgeRelService.findByLibraryId(library.getId());
+        if (CollectionUtils.isNotEmpty(recycleRels)) {
+            List<String> recycleKnowledgeIds = new ArrayList<>(recycleRels.size());
+            ScoreRule delete = scoreRuleService.getByCode(KnowledgeConstant.SCORE_RULE_DELETE);
+            Map<String, Boolean> deleteKnowledgeIdMap = scoreDetailService.getKnowledgeIdMapByRuleId(delete.getId());
+            for (KnowledgeRel rel : recycleRels) {
+                String knowledgeId = rel.getKnowledgeId();
+                if (BooleanUtils.isTrue(deleteKnowledgeIdMap.get(knowledgeId))) {
+                    continue;
+                }
+
+                recycleKnowledgeIds.add(knowledgeId);
+            }
+
+            if (recycleKnowledgeIds.size() > 0) {
+                scoreDetailService.addScore(recycleKnowledgeIds, KnowledgeConstant.SCORE_RULE_DELETE);
+            }
+        }
+
+        Map<String, Organize> organizeMap = organizeService.findAll();
+        Set<String> keySet = organizeMap.keySet();
+        List<String> shareKnowledgeIds = knowledgeRelService.getKnowledgeIdsByLibraryIdsAndUserIds(new ArrayList<>(keySet), null);
+        if (CollectionUtils.isEmpty(shareKnowledgeIds)) {
+            return;
+        }
+
+        ScoreRule share = scoreRuleService.getByCode(KnowledgeConstant.SCORE_RULE_SHARE);
+        Map<String, Boolean> shareKnowledgeIdMap = scoreDetailService.getKnowledgeIdMapByRuleId(share.getId());
+        for (Iterator<String> iterator = shareKnowledgeIds.iterator(); iterator.hasNext(); ) {
+            if (BooleanUtils.isTrue(shareKnowledgeIdMap.get(iterator.next()))) {
+                iterator.remove();
+            }
+        }
+
+        if (shareKnowledgeIds.size() > 0) {
+            scoreDetailService.addScore(shareKnowledgeIds, KnowledgeConstant.SCORE_RULE_SHARE);
+        }
+    }
+
 
 }

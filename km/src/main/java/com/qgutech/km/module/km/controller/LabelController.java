@@ -6,7 +6,6 @@ import com.qgutech.km.base.vo.JsonResult;
 import com.qgutech.km.module.km.model.Label;
 import com.qgutech.km.module.km.model.LabelRel;
 import com.qgutech.km.module.km.service.LabelService;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,9 +51,23 @@ public class LabelController {
      */
     @ResponseBody
     @RequestMapping("addLabel")
-    public JsonResult addLabel(Label label){
+    public JsonResult addLabel(Label label) {
         JsonResult jsonResult = new JsonResult();
-        String labelId = labelService.saveLabel(label);
+        if (StringUtils.isEmpty(label.getLabelName())) {
+            jsonResult.setMessage("NAME_EMPTY");
+            jsonResult.setSuccess(false);
+            return jsonResult;
+        }
+        String labelId;
+        try {
+            labelId = labelService.saveLabel(label);
+        } catch (Exception e) {
+            e.printStackTrace();
+            jsonResult.setMessage("NAME_REPEAT");
+            jsonResult.setSuccess(false);
+            return jsonResult;
+        }
+
         label.setId(labelId);
         jsonResult.setData(label);
         jsonResult.setSuccess(true);

@@ -188,4 +188,12 @@ public interface KnowledgeService extends BaseService<Knowledge> {
      * @since TangFD@HF 2018-8-22
      */
     String saveAndRel(Knowledge knowledge);
+
+    /**
+     * 查询当前公司所有知识
+     *
+     * @return 知识集合
+     * @since TangFD@HF 2018-8-22
+     */
+    List<Knowledge> findAll();
 }
