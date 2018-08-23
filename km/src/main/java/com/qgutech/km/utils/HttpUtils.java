@@ -67,6 +67,13 @@ public class HttpUtils {
             } catch (IOException ignored) {
 
             }
+            if (httpclient != null) {
+                try {
+                    httpclient.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         return content;
@@ -115,6 +122,13 @@ public class HttpUtils {
                 }
             } catch (IOException ignored) {
 
+            }
+            if (httpclient != null) {
+                try {
+                    httpclient.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
