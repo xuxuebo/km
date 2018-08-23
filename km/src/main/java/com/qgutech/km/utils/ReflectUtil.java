@@ -33,8 +33,7 @@ public final class ReflectUtil {
      */
     public static Object getFieldValue(Field field, Object obj) {
         if (field == null || obj == null) {
-            throw new IllegalArgumentException("Can query field (" + field
-                    + ") from object (" + obj + ")!");
+            throw new IllegalArgumentException("Can query field  from object !");
         }
 
         try {
@@ -73,7 +72,7 @@ public final class ReflectUtil {
      */
     public static boolean setFieldValue(Field field, Object obj, Object value) {
         if (field == null || obj == null) {
-            throw new IllegalArgumentException("Can query field (" + field + ") from object (" + obj + ")!");
+            throw new IllegalArgumentException("Can query field from object!");
         }
 
         value = adapterValue(field, value);
@@ -98,7 +97,7 @@ public final class ReflectUtil {
      */
     public static boolean setFieldValue(String fieldName, Object obj, Object value) {
         if (StringUtils.isBlank(fieldName)) {
-            throw new IllegalArgumentException("Can query field (" + fieldName + ") from object (" + obj + ")!");
+            throw new IllegalArgumentException(" FieldName mustn't be null");
         }
 
         Field field = getField(obj.getClass(), fieldName);
