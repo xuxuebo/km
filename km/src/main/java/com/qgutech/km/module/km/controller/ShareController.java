@@ -84,7 +84,11 @@ public class ShareController {
         } catch (Exception e) {
             e.printStackTrace();
             jsonResult.setSuccess(false);
-            jsonResult.setMessage("分享失败");
+            if ("KNOWLEDGE_SHARED".equalsIgnoreCase(e.getMessage())) {
+                jsonResult.setMessage("知识已分享过");
+            } else {
+                jsonResult.setMessage("分享失败");
+            }
         }
 
         return jsonResult;

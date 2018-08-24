@@ -635,10 +635,12 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         List<KnowledgeRel> knowledgeRelList = new ArrayList<>(capacity);
         List<KnowledgeLog> knowledgeLogList = new ArrayList<>(capacity);
         List<String> newShareKnowledgeIds = new ArrayList<>(capacity);
+        boolean knowledgeShared = false;
         for (String libraryId : libraryIds) {
             for (String knowledgeId : knowledgeIds) {
                 String key = libraryId + "&" + knowledgeId;
                 if (BooleanUtils.isTrue(existMap.get(key))) {
+                    knowledgeShared = true;
                     continue;
                 }
 
@@ -676,6 +678,10 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         }
 
         if (knowledgeRelList.size() == 0) {
+            if (knowledgeShared) {
+                throw new PeException("KNOWLEDGE_SHARED");
+            }
+
             return;
         }
 
