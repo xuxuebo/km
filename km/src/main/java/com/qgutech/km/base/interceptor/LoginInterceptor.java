@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 
 public class LoginInterceptor implements HandlerInterceptor {
@@ -203,13 +204,9 @@ public class LoginInterceptor implements HandlerInterceptor {
      * @throws IOException IOException
      */
     private void redirect(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        //cookie为空直接跳转到login
-        String sourceUrl = request.getRequestURL().toString();
-        if (request.getQueryString() != null) {
-            sourceUrl += "?" + request.getQueryString();
-        }
-
-        response.sendRedirect(request.getContextPath() + "/login/loginPage#url=" + URLEncoder.encode(sourceUrl, "UTF-8"));
+        Properties configProp = PropertiesUtils.getEnvProp();
+        String returnUrl = configProp.getProperty("static.resource.path") + "/front/index";
+        response.sendRedirect(request.getContextPath() + "/login/loginPage#url=" + URLEncoder.encode(returnUrl, "UTF-8"));
     }
 
     @Override

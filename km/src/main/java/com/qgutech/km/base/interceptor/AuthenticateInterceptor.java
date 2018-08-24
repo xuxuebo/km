@@ -105,13 +105,7 @@ public class AuthenticateInterceptor implements HandlerInterceptor {
             actionName = action;
         }
 
-        String isChain = hRequest.getQueryString() == null ? "" : hRequest.getQueryString();
-        if (isChain.contains("token")) {
-            isChain = isChain.substring(0, isChain.indexOf("token"));
-        }
-
-        isChain = StringUtils.isNotBlank(isChain) ? "?" + isChain : isChain;
-        String returnUrl = hRequest.getRequestURL().toString().concat(isChain);
+        String returnUrl = PropertiesUtils.getEnvProp().getProperty("static.resource.path") + "/front/index";
         if (token == null) {
             //跳转登录页面,回调returnUrl时需要拼接上 token
             hResponse.sendRedirect(loginUrl + "?returnUrl=" + URLEncoder.encode(returnUrl, "UTF-8"));

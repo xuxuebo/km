@@ -293,6 +293,8 @@ public class UserDoc {
                 } else {
                     errorMap.put(rowNum + PeConstant.COMMA + 6, "第7列部门名称填写不正确");
                 }
+            } else {
+                errorMap.put(rowNum + PeConstant.COMMA + 6, "第7列部门信息不能为空");
             }
             //岗位类别
             String positionCategoryName = ExcelUtils.getStringValue(row.getCell(7));
