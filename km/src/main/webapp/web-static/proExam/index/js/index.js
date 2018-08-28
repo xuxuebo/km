@@ -436,10 +436,8 @@ $(function () {
                                 });
                                 layer.closeAll();
                                 //刷新列表
-                                route['YunCb']($yunContentBody, route.routes.yun, null, null);
-                                breadCrumbsList = [{title: '全部', id: ""}];
+                                route['YunCb']($yunContentBody, route.routes.yun, null, $("#myLibrary").val());
                                 $('#breadCrumbs').html(_.template($("#breadCrumbsTpl").html())({list: breadCrumbsList}));
-                                $('#myLibrary').val("");
                             } else {
                                 PEMO.DIALOG.alert({
                                     content: data.message,

@@ -522,6 +522,9 @@ $(function () {
 
         $('.js-share-opt-dbclick').dblclick(function () {
             var folder = $(this).data('folder');
+            if (!folder) {
+                return;
+            }
             var relId = $(this).data('relid');
             refreshTable(folder, relId);
             backList.push({"folder": folder, "relId": relId});
