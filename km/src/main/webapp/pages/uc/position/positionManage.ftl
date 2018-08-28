@@ -49,8 +49,8 @@
             <#--</div>-->
                 <div class="pe-stand-table-panel">
                     <div class="pe-stand-table-top-panel">
-                    <@authVerify authCode="USER_POSITION_MANAGE_ADD"><button type="button" class="pe-btn pe-btn-green pe-new-question-btn">新增岗位</button></@authVerify>
-                    <#--<span class="pe-table-tip floatR">共有<span class="pe-table-number-tip" id="showKnowledgeTotal">0</span>条记录</span>-->
+                        <button type="button" class="pe-btn pe-btn-green pe-category-btn">岗位类别管理</button>
+                        <button type="button" class="pe-btn pe-btn-green pe-new-question-btn">新增岗位</button>
                     </div>
                 <#--表格包裹的div-->
                     <div class="pe-stand-table-main-panel">
@@ -399,5 +399,9 @@
         };
         //初始化左侧树状功能；peZtreeMain为主要树的id
         PEMO.ZTREE.initTree('peZtreeMain', settingUrl);
+
+        $('.pe-category-btn').on('click', function () {
+            parent.$('#yunContentBody').html('<iframe style="width:100%;height: 100%;margin-left:0;" src="/km/front/manage/initPage#url=/km/base/category/manage/init"></iframe>');
+        });
     });
 </script>

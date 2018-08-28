@@ -3,8 +3,8 @@ package com.qgutech.km.base.controller;
 import com.qgutech.km.base.model.Category;
 import com.qgutech.km.base.service.CategoryService;
 import com.qgutech.km.base.service.I18nService;
-import com.qgutech.km.base.vo.PeTreeNode;
 import com.qgutech.km.base.vo.JsonResult;
+import com.qgutech.km.base.vo.PeTreeNode;
 import com.qgutech.km.utils.PeException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -25,13 +25,18 @@ public class CategoryController {
     @Resource
     private I18nService i18nService;
 
+    @RequestMapping("manage/init")
+    public String init() {
+        return "uc/position/categoryManage";
+    }
+
     /**
      * 类别添加
      */
     @ResponseBody
     @RequestMapping("manage/add")
-    public JsonResult<PeTreeNode> add(@ModelAttribute PeTreeNode treeNode, @ModelAttribute Category.CategoryEnumType categoryType) {
-        Category category = getCategory(treeNode, categoryType);
+    public JsonResult<PeTreeNode> add(@ModelAttribute PeTreeNode treeNode) {
+        Category category = getCategory(treeNode, Category.CategoryEnumType.POSITION);
         JsonResult<PeTreeNode> jsonResult = getSaveOrUpdateCategoryResult(category);
         if (jsonResult != null) {
             return jsonResult;
@@ -103,13 +108,13 @@ public class CategoryController {
      */
     @ResponseBody
     @RequestMapping("manage/delete")
-    public JsonResult delete(String id, @ModelAttribute Category.CategoryEnumType categoryType) {
+    public JsonResult delete(String id) {
         if (StringUtils.isBlank(id)) {
             return new JsonResult(false, i18nService.getI18nValue("category.not.exist"));
         }
 
         try {
-            categoryService.delete(id, categoryType);
+            categoryService.delete(id, Category.CategoryEnumType.POSITION);
             return new JsonResult(true, i18nService.getI18nValue("delete.success"));
         } catch (PeException e) {
             return new JsonResult(false, e.getMessage());
@@ -122,8 +127,8 @@ public class CategoryController {
      */
     @ResponseBody
     @RequestMapping("manage/edit")
-    public JsonResult<PeTreeNode> edit(@ModelAttribute PeTreeNode treeNode, @ModelAttribute Category.CategoryEnumType categoryType) {
-        Category category = getCategory(treeNode, categoryType);
+    public JsonResult<PeTreeNode> edit(@ModelAttribute PeTreeNode treeNode) {
+        Category category = getCategory(treeNode, Category.CategoryEnumType.POSITION);
         if (StringUtils.isBlank(treeNode.getId())) {
             throw new IllegalArgumentException("PeTreeNode parameter is illegal!");
         }
