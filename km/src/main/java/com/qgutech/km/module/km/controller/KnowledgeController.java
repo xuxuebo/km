@@ -9,7 +9,10 @@ import com.qgutech.km.base.redis.PeRedisClient;
 import com.qgutech.km.base.vo.JsonResult;
 import com.qgutech.km.constant.KnowledgeConstant;
 import com.qgutech.km.constant.PeConstant;
-import com.qgutech.km.module.km.model.*;
+import com.qgutech.km.module.km.model.Knowledge;
+import com.qgutech.km.module.km.model.KnowledgeLog;
+import com.qgutech.km.module.km.model.Library;
+import com.qgutech.km.module.km.model.Share;
 import com.qgutech.km.module.km.service.*;
 import com.qgutech.km.module.km.vo.FileVo;
 import com.qgutech.km.module.sfm.model.PeFile;
@@ -602,7 +605,7 @@ public class KnowledgeController {
             if (knowledgeList.size() == 1) {
                 name = knowledgeList.get(0).getKnowledgeName();
             } else {
-                name = UUID.randomUUID().toString().replace("-", "") + ".zip";
+                name = "压缩文件包.zip";
             }
             List<String> fileIds = new ArrayList<>(knowledgeList.size());
             fileIds.addAll(knowledgeList.stream().map(Knowledge::getFileId).collect(Collectors.toList()));

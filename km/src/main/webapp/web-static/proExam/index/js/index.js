@@ -6,7 +6,7 @@ $(function () {
     var publicName = "";
     var breadCrumbsList = [{title: '全部', id: $("#myLibrary").val()}];
     var _breadCrumbsTpl = $("#breadCrumbsTpl").html();
-
+    var shareBackList = [""];
     var route = {
         routes: {
             'yun': {
@@ -147,6 +147,9 @@ $(function () {
             });
         }
 
+        if (breadCrumbsList.length > 1) {
+            $('.js-folder-back').show();
+        }
         //渲染面包屑
         var $breadCrumbs = $('#breadCrumbs');
         $breadCrumbs.html(_.template(_breadCrumbsTpl)({list: breadCrumbsList}));
@@ -160,6 +163,9 @@ $(function () {
             $('#myLibrary').val(id);
             breadCrumbsList.length = index + 1;
             route['YunCb']($yunContentBody, route.routes.yun, null, id);
+            if (index == 0) {
+                $('.js-folder-back').hide();
+            }
         });
 
         $('.js-upload').on('click', function () {
@@ -388,6 +394,24 @@ $(function () {
             });
         });
 
+        $('.js-folder-back').on('click', function () {
+            var length = breadCrumbsList.length;
+            if (length <= 2) {
+                route['YunCb']($yunContentBody, route.routes.yun, null, null);
+                breadCrumbsList = [{title: '全部', id: ""}];
+                $('#breadCrumbs').html(_.template($("#breadCrumbsTpl").html())({list: breadCrumbsList}));
+                $('#myLibrary').val("");
+                $('.js-folder-back').hide();
+                return;
+            }
+
+            var id = breadCrumbsList[length - 2].id;
+            $('#myLibrary').val(id);
+            breadCrumbsList.length = length - 1;
+            route['YunCb']($yunContentBody, route.routes.yun, null, id);
+            $('.js-folder-back').show();
+        });
+
         //删除
         $('.pe-stand-table-main-panel').delegate('.js-opt-delete', 'click', function () {
             var knowledgeIds = $(this).data("id");
@@ -514,6 +538,7 @@ $(function () {
                 breadCrumbsList.push({id: folder, title: title});
                 $('#myLibrary').val(folder);
                 route['YunCb']($yunContentBody, route.routes.yun, null, folder);
+                $('.js-folder-back').show();
             } else {
                 return false;
             }
@@ -529,11 +554,14 @@ $(function () {
                 size: "desc",
                 uploadTime: "desc"
             };
+            var _table = $("#tplShareOrgTable").html();
+            var $yunTable;
+            var data = [];
             PEMO.DIALOG.confirmL({
                 content: '<div class="y-content__table" id="yunShareOrgTable"><div class="pe-stand-table-pagination"></div></div>',
                 area: ['800px', '520px'],
                 title: '我的云库',
-                btn: ['下一步', '取消'],
+                btn: ['下一步', '取消', '返回上一级'],
                 skin: 'y-change-layer',
                 resize: false,
                 btn1: function () {
@@ -555,42 +583,68 @@ $(function () {
                 btn2: function () {//取消按钮
                     layer.closeAll();
                 },
+                btn3: function () {
+                    var length = shareBackList.length;
+                    if (length <= 2) {
+                        initShareData();
+                        shareBackList = [""];
+                        $(".layui-layer-btn2").hide();
+                        return false;
+                    }
 
+                    var id = shareBackList[length - 2];
+                    initShareData(id);
+                    shareBackList.length = length - 1;
+                    return false;
+                },
                 success: function () {
                     //table渲染
-                    var _table = $("#tplShareOrgTable").html();
-                    var $yunTable = $('#yunShareOrgTable');
-                    var data = [];
-                    $.ajax({
-                        async: false,//此值要设置为FALSE  默认为TRUE 异步调用
-                        type: "POST",
-                        url: pageContext.resourcePath + '/knowledge/search',
-                        data: {},
-                        dataType: 'json',
-                        success: function (result) {
-                            data = result;
-                        }
-                    });
-                    for (var i = 0; i < data.length; i++) {
-                        data[i].knowledgeSize = YUN.conver(data[i].knowledgeSize);
-                    }
-
-                    renderTable();
-                    function renderTable() {
-                        $yunTable.html(_.template(_table)({list: data, sort: initSort}));
-                        table = initTable($yunTable);
-                        $yunTable.find('.sort').click(function () {
-                            $yunTable.html(_.template(_table)({
-                                list: data, sort: $.extend({}, initSort, {name: 'asc'})
-                            }));
-                        });
-                    }
+                    $(".layui-layer-btn2").hide();
+                    $yunTable = $('#yunShareOrgTable');
+                    initShareData();
                 }
             });
+            function initShareData(id){
+                $.ajax({
+                    async: false,//此值要设置为FALSE  默认为TRUE 异步调用
+                    type: "POST",
+                    url: pageContext.resourcePath + '/knowledge/search',
+                    data: {"libraryId": id ? id : ""},
+                    dataType: 'json',
+                    success: function (result) {
+                        data = result;
+                    }
+                });
+                for (var i = 0; i < data.length; i++) {
+                    data[i].knowledgeSize = YUN.conver(data[i].knowledgeSize);
+                }
+
+                renderTable();
+            }
+            function renderTable() {
+                $yunTable.html(_.template(_table)({list: data, sort: initSort}));
+                table = initTable($yunTable);
+                $yunTable.find('.sort').click(function () {
+                    $yunTable.html(_.template(_table)({
+                        list: data, sort: $.extend({}, initSort, {name: 'asc'})
+                    }));
+                });
+
+                $(".js-share-opt-dbclick").dblclick(function () {
+                    var id = $(this).attr("data-folder");
+                    if (!id) {
+                        return;
+                    }
+                    initShareData(id);
+                    shareBackList.push(id);
+                    $(".layui-layer-btn2").show();
+                });
+            }
             function getDept(){
                 PEMO.DIALOG.confirmL({
                     content: '<div><input type="text" class="pe-tree-form-text y-nav__search__input" ' +
-                    'style="border: 1px solid #ccc;margin: 10px 0 10px 20px;border-radius: 20px;" placeholder="部门，人员名称搜索"></div>' +
+                    'style="border: 1px solid #ccc;margin: 10px 0 10px 20px;border-radius: 20px;width:70%;" placeholder="部门，人员名称搜索">' +
+                    '<button style="width: auto;height: auto;float: none;box-shadow: none;" class="pe-tree-search-btn icon-search-magnifier y-btn y-btn__blue">搜索</button></div>' +
                     '<div class="y-content__table tree-and-users-default tree-and-users-dept ztree pe-tree-container mCustomScrollbar" id="peZtreeMain"><div class="pe-stand-table-pagination"></div></div>',
                     area: ['750px', '520px'],
                     title: '部门',
@@ -693,7 +747,8 @@ $(function () {
                         //部门树
                         $('.js-file-upload-share .layui-layer-content iframe').remove();
                         $('.js-file-upload-share .layui-layer-content').html('<div><input type="text" class="pe-tree-form-text y-nav__search__input" ' +
-                            'style="border: 1px solid #ccc;margin: 10px 0 10px 20px;border-radius: 20px;" placeholder="部门，人员名称搜索"></div>' +
+                            'style="border: 1px solid #ccc;margin: 10px 0 10px 20px;border-radius: 20px;width:70%;" placeholder="部门，人员名称搜索">' +
+                            '<button style="width: auto;height: auto;float: none;box-shadow: none;" class="pe-tree-search-btn icon-search-magnifier y-btn y-btn__blue">搜索</button></div>' +
                             '<ul id="peZtreeMain" class="tree-and-users-default tree-and-users-dept ztree pe-tree-container mCustomScrollbar"></ul>');
                         var deptOrgTree = {
                             isOpen: true,

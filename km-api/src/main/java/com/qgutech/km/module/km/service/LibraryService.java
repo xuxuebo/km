@@ -63,6 +63,10 @@ public interface LibraryService extends BaseService<Library> {
     String insert(Library library);
 
     /**
+     * 新增
+     */
+    void batchInsert(List<Library> libraries);
+    /**
      * 根据条件，分页查询不同类型的库数据
      *
      * @param page    分页对象

@@ -291,7 +291,8 @@ public class LibraryServiceImpl extends BaseServiceImpl<Library> implements Libr
         return library.getId();
     }
 
-    private void batchInsert(List<Library> libraries) {
+    @Override
+    public void batchInsert(List<Library> libraries) {
         String insertSql = "INSERT INTO t_km_library (id, corp_code, create_by, create_time, update_by, update_time, " +
                 "id_path, parent_id, show_order, library_name, library_type) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
         baseService.getJdbcTemplate().batchUpdate(insertSql, getParams(libraries));

@@ -15,7 +15,9 @@ import com.qgutech.km.module.uc.service.UserService;
 import com.qgutech.km.utils.PeDateUtils;
 import com.qgutech.km.utils.PeException;
 import com.qgutech.km.utils.PeUtils;
+import com.qgutech.km.utils.UUIDGenerator;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -623,10 +625,19 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
             throw new PeException("share param is invalid!");
         }
 
-        List<String> knowledgeIds = share.getKnowledgeIds();
-        Map<String, String> knowledgeIdAndShareIdMap = shareService.getSharedKnowledgeIdAndShareIdMap(knowledgeIds);
         List<String> libraryIds = share.getLibraryIds();
         libraryService.initLibraryByLibraryIdAndType(libraryIds, KnowledgeConstant.ORG_SHARE_LIBRARY);
+        List<Knowledge> knowledgeList = getKnowledgeByIds(share.getKnowledgeIds());
+        if (CollectionUtils.isEmpty(knowledgeList)) {
+            return;
+        }
+
+        List<String> knowledgeIds = dealFolder(knowledgeList, libraryIds.get(0));
+        if (CollectionUtils.isEmpty(knowledgeIds)) {
+            return;
+        }
+
+        Map<String, String> knowledgeIdAndShareIdMap = shareService.getSharedKnowledgeIdAndShareIdMap(knowledgeIds);
         Map<String, Boolean> existMap = knowledgeRelService.getLibraryIdKnowledgeIdMap(libraryIds, knowledgeIds);
         int size = knowledgeIds.size();
         String corpCode = ExecutionContext.getCorpCode();
@@ -678,16 +689,199 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<Knowledge> implements 
         }
 
         if (knowledgeRelList.size() == 0) {
-            if (knowledgeShared) {
-                throw new PeException("KNOWLEDGE_SHARED");
+            if (!knowledgeShared || hasFolder(knowledgeList)) {
+                return;
             }
 
-            return;
+            throw new PeException("KNOWLEDGE_SHARED");
         }
 
         knowledgeRelService.batchSave(knowledgeRelList);
         knowledgeLogService.batchSave(knowledgeLogList);
         scoreDetailService.addScore(newShareKnowledgeIds, KnowledgeConstant.SCORE_RULE_SHARE);
+    }
+
+    private boolean hasFolder(List<Knowledge> knowledgeList) {
+        for (Knowledge knowledge : knowledgeList) {
+            if ("file".equals(knowledge.getKnowledgeType())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 处理分享文件夹问题，只对单个库处理
+     */
+    private List<String> dealFolder(List<Knowledge> knowledgeList, String libraryId) {
+        List<String> knowledgeIdList = new ArrayList<>(knowledgeList.size());
+        Map<String, String> folderNameAndIdMap = new HashMap<>(knowledgeList.size());
+        for (Knowledge knowledge : knowledgeList) {
+            String folder = knowledge.getFolder();
+            if ("file".equals(knowledge.getKnowledgeType()) && StringUtils.isNotEmpty(folder)) {
+                folderNameAndIdMap.put(knowledge.getKnowledgeName(), folder);
+            } else {
+                knowledgeIdList.add(knowledge.getId());
+            }
+        }
+
+        if (MapUtils.isEmpty(folderNameAndIdMap)) {
+            return knowledgeIdList;
+        }
+
+        List<String> folderNames = new ArrayList<>(folderNameAndIdMap.keySet());
+        Map<String, Knowledge> knowledgeMap = getExistFolderKnowledge(libraryId, folderNames);
+        Map<String, String> existFolderNameAndIdMap = new HashMap<>(folderNames.size());
+        List<String> notExistFolderNames;
+        if (MapUtils.isNotEmpty(knowledgeMap)) {
+            notExistFolderNames = new ArrayList<>(folderNames.size());
+            for (String folderName : folderNames) {
+                Knowledge knowledge = knowledgeMap.get(folderName);
+                if (knowledge != null) {
+                    knowledgeIdList.add(knowledge.getId());
+                    existFolderNameAndIdMap.put(folderName, knowledge.getFolder());
+                } else {
+                    notExistFolderNames.add(folderName);
+                }
+            }
+        } else {
+            notExistFolderNames = folderNames;
+        }
+
+
+        if (CollectionUtils.isNotEmpty(notExistFolderNames)) {
+            Map<String, String> newFolderNameAndIdMap = addFolder(notExistFolderNames, libraryId, knowledgeIdList);
+            existFolderNameAndIdMap.putAll(newFolderNameAndIdMap);
+        }
+
+        if (MapUtils.isNotEmpty(existFolderNameAndIdMap)) {
+            syncKnowledge(existFolderNameAndIdMap, folderNameAndIdMap);
+        }
+
+        return knowledgeIdList;
+    }
+
+    private void syncKnowledge(Map<String, String> targetFolderNameAndIdMap, Map<String, String> sourceFolderNameAndIdMap) {
+        Map<String, List<KnowledgeRel>> sourceLibraryIdAndKnowledgesMap = knowledgeRelService.getByLibraryIds(sourceFolderNameAndIdMap.values());
+        if (MapUtils.isEmpty(sourceLibraryIdAndKnowledgesMap)) {
+            return;
+        }
+
+        Map<String, String> sourceFolderIdAndNameMap = new HashMap<>(sourceFolderNameAndIdMap.size());
+        for (Map.Entry<String, String> entry : sourceFolderNameAndIdMap.entrySet()) {
+            sourceFolderIdAndNameMap.put(entry.getValue(), entry.getKey());
+        }
+
+        List<KnowledgeRel> newKnowledgeRels = new ArrayList<>();
+        Map<String, List<KnowledgeRel>> targetLibraryIdAndKnowledgesMap = knowledgeRelService.getByLibraryIds(targetFolderNameAndIdMap.values());
+        for (Map.Entry<String, List<KnowledgeRel>> entry : sourceLibraryIdAndKnowledgesMap.entrySet()) {
+            List<KnowledgeRel> value = entry.getValue();
+            if (CollectionUtils.isEmpty(value)) {
+                continue;
+            }
+
+            String folderName = sourceFolderIdAndNameMap.get(entry.getKey());
+            String folderId = targetFolderNameAndIdMap.get(folderName);
+            List<KnowledgeRel> knowledgeRels = targetLibraryIdAndKnowledgesMap.get(folderId);
+            Map<String, Boolean> existKnowledgeIdMap = getExistKnowledgeIdMap(knowledgeRels);
+
+            for (KnowledgeRel rel : value) {
+                if (BooleanUtils.isTrue(existKnowledgeIdMap.get(rel.getKnowledgeId()))) {
+                    continue;
+                }
+
+                newKnowledgeRels.add(getKnowledgeRel(folderId, rel.getKnowledgeId()));
+            }
+        }
+
+        if (newKnowledgeRels.size() > 0) {
+            knowledgeRelService.batchSave(newKnowledgeRels);
+        }
+    }
+
+    private Map<String, Boolean> getExistKnowledgeIdMap(List<KnowledgeRel> knowledgeRels) {
+        if (CollectionUtils.isEmpty(knowledgeRels)) {
+            return new HashMap<>(0);
+        }
+
+        Map<String, Boolean> knowledgeIdMap = new HashMap<>(knowledgeRels.size());
+        for (KnowledgeRel knowledgeRel : knowledgeRels) {
+            knowledgeIdMap.put(knowledgeRel.getKnowledgeId(), true);
+        }
+        return knowledgeIdMap;
+    }
+
+    private Map<String, String> addFolder(List<String> folderNames, String libraryId, List<String> newKnowledgeIds) {
+        List<Library> libraryList = new ArrayList<>(folderNames.size());
+        List<Knowledge> knowledgeList = new ArrayList<>(folderNames.size());
+        for (String folderName : folderNames) {
+            Library library = new Library();
+            String id = UUIDGenerator.uuid();
+            library.setId(id);
+            library.setLibraryName(folderName);
+            library.setParentId(libraryId);
+            library.setLibraryType(KnowledgeConstant.ORG_SHARE_LIBRARY);
+            library.setIdPath(libraryId);
+            library.setShowOrder(0);
+            libraryList.add(library);
+
+            Knowledge knowledge = new Knowledge();
+            knowledge.setKnowledgeName(folderName);
+            knowledge.setKnowledgeType("file");
+            knowledge.setFolder(id);
+            knowledge.setFileId("");
+            knowledge.setKnowledgeSize(0);
+            knowledge.setSourceKnowledgeId("");
+            knowledge.setShowOrder(0);
+            knowledgeList.add(knowledge);
+        }
+
+        libraryService.batchInsert(libraryList);
+        batchSave(knowledgeList);
+
+        Map<String, String> folderNameAndIdMap = new HashMap<>(knowledgeList.size());
+        List<KnowledgeRel> knowledgeRels = new ArrayList<>(knowledgeList.size());
+        for (Knowledge knowledge : knowledgeList) {
+            String knowledgeId = knowledge.getId();
+            newKnowledgeIds.add(knowledgeId);
+            knowledgeRels.add(getKnowledgeRel(libraryId, knowledgeId));
+            folderNameAndIdMap.put(knowledge.getKnowledgeName(), knowledge.getFolder());
+        }
+
+        knowledgeRelService.batchSave(knowledgeRels);
+        return folderNameAndIdMap;
+    }
+
+    private KnowledgeRel getKnowledgeRel(String libraryId, String knowledgeId) {
+        KnowledgeRel k = new KnowledgeRel();
+        k.setLibraryId(libraryId);
+        k.setKnowledgeId(knowledgeId);
+        k.setShareId("");
+        return k;
+    }
+
+    private Map<String, Knowledge> getExistFolderKnowledge(String libraryId, List<String> folderNames) {
+        Map<String, Object> params = new HashMap<>(3);
+        StringBuilder sql = new StringBuilder("SELECT k.id,k.folder,k.knowledge_name FROM t_km_knowledge k ");
+        sql.append(" INNER JOIN t_km_knowledge_rel kr ON k.id=kr.knowledge_id");
+        sql.append(" WHERE k.corp_code=:corpCode AND kr.library_id=:libraryId ");
+        params.put("corpCode", ExecutionContext.getCorpCode());
+        params.put("libraryId", libraryId);
+        sql.append("  AND k.knowledge_name IN (:names)  AND k.create_by=:create");
+        params.put("names", folderNames);
+        params.put("create", ExecutionContext.getUserId());
+        Map<String, Knowledge> nameAndKnowledgeMap = new HashMap<>();
+        getJdbcTemplate().query(sql.toString(), params, (resultSet, i) -> {
+            Knowledge knowledge = new Knowledge();
+            knowledge.setId(resultSet.getString("id"));
+            knowledge.setFolder(resultSet.getString("folder"));
+            String knowledgeName = resultSet.getString("knowledge_name");
+            knowledge.setKnowledgeName(knowledgeName);
+            nameAndKnowledgeMap.put(knowledgeName, knowledge);
+            return knowledge;
+        });
+
+        return nameAndKnowledgeMap;
     }
 
     @Override

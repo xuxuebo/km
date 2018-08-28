@@ -6,6 +6,7 @@ import com.qgutech.km.module.km.model.KnowledgeRel;
 import com.qgutech.km.module.km.model.Share;
 import com.qgutech.km.module.km.model.Statistic;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -120,4 +121,14 @@ public interface KnowledgeRelService extends BaseService<KnowledgeRel> {
      * @since TangFD@HF 2018-8-17
      */
     void deleteShare(String relId);
+
+    /**
+     * 根据知识库Id集合，批量获取每个库对于的知识集合
+     *
+     * @param libraryIds 知识库Id集合
+     * @return 每个库对于的知识集合 key：libraryId，value：List<KnowledgeRel>
+     * @throws RuntimeException 当libraryIds为空时
+     * @since TangFD@HF 2018-8-28
+     */
+    Map<String, List<KnowledgeRel>> getByLibraryIds(Collection<String> libraryIds);
 }

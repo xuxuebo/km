@@ -416,6 +416,44 @@ public class KnowledgeRelServiceImpl extends BaseServiceImpl<KnowledgeRel> imple
         KnowledgeRel knowledgeRel = get(relId);
         List<String> knowledgeIds = Collections.singletonList(knowledgeRel.getKnowledgeId());
         delete(relId);
-        scoreDetailService.addScore(knowledgeIds, KnowledgeConstant.SCORE_RULE_CANCEL_SHARE);
+        String libraryId = knowledgeRel.getLibraryId();
+        try {
+            //分享的文件夹中的文件删除不减积分
+            Organize organize = organizeService.get(libraryId);
+            if (organize != null) {
+                scoreDetailService.addScore(knowledgeIds, KnowledgeConstant.SCORE_RULE_CANCEL_SHARE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public Map<String, List<KnowledgeRel>> getByLibraryIds(Collection<String> libraryIds) {
+        if (CollectionUtils.isEmpty(libraryIds)) {
+            throw new PeException("libraryIds must be not empty!");
+        }
+
+        Criterion criterion = Restrictions.and(Restrictions.eq(KnowledgeRel.CORP_CODE, ExecutionContext.getCorpCode()),
+                Restrictions.in(KnowledgeRel.LIBRARY_ID, libraryIds));
+
+        List<KnowledgeRel> knowledgeRels = listByCriterion(criterion);
+        if (CollectionUtils.isEmpty(knowledgeRels)) {
+            return new HashMap<>(0);
+        }
+
+        Map<String, List<KnowledgeRel>> map = new HashMap<>(libraryIds.size());
+        for (KnowledgeRel knowledgeRel : knowledgeRels) {
+            String libraryId = knowledgeRel.getLibraryId();
+            List<KnowledgeRel> knowledgeRelList = map.get(libraryId);
+            if (knowledgeRelList == null) {
+                knowledgeRelList = new ArrayList<>();
+                map.put(libraryId, knowledgeRelList);
+            }
+            knowledgeRelList.add(knowledgeRel);
+        }
+
+        return map;
     }
 }

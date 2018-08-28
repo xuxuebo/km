@@ -1,3 +1,8 @@
+<style>
+    .icon-search-magnifier:before {
+        content: none;
+    }
+</style>
 <aside class="y-aside" id="YAside">
     <div class="y-aside__title">
         <span class="yfont-icon">&#xe650;</span><span class="txt">菜单</span>
@@ -41,6 +46,8 @@
                 </div>
                 <button class="y-btn y-btn__green js-download" type="button">下载</button>
                 <button class="y-btn y-btn__orange js-copy" type="button">复制</button>
+                <button class="y-btn y-btn__orange js-folder-back" style="display: none;" type="button">返回上一级</button>
+                <div class="hide" id="backList"></div>
                 <div id="theList"></div>
             </div>
             <div class="y-share-table-main-panel">
@@ -96,7 +103,7 @@
                     <button type="button" title="删除" data-id="<%=item.relId%>" class="yfont-icon opt-item js-opt-delete">&#xe65c;</button>
                     <%}%>
                 </div>
-                <div class="y-table__filed_name type-<%=item.knowledgeType%>">
+                <div class="y-table__filed_name type-<%=item.knowledgeType%>" <%if(item.folder){%>style="cursor: pointer;"<%}%>>
                     <%=item.knowledgeName%>
                 </div>
             </td>
@@ -176,7 +183,7 @@
             </td>
             <td class="y-table__td name">
                 <div title="<%=item.knowledgeName%>" class="y-table__filed_name type-<%=item.knowledgeType%>"
-                     style="margin-right: 10px;overflow: hidden;text-overflow:ellipsis;">
+                     style="margin-right: 10px;overflow: hidden;text-overflow:ellipsis;<%if(item.folder){%>cursor: pointer;<%}%>">
                     <%=item.knowledgeName%>
                 </div>
             </td>
