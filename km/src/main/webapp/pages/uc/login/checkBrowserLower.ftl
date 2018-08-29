@@ -12,22 +12,27 @@
         var ieBrowserReg = /IE_\d/ig;
         var firBrowserReg = /FIREFOX_\d/ig;
         var chromeBrowserReg = /CHROME_\d/ig;
+        var validBrowser = true;
         if (EnCheck.browserName && EnCheck.browserNum) {
             if (ieBrowserReg.test(EnCheck.browserName)) {
                 if (EnCheck.browserNum < 9) {
-                    location.href = '/km/login/initBrowseLower';
+                    validBrowser = false;
                 }
             } else if (firBrowserReg.test(EnCheck.browserName)) {
                 if (EnCheck.browserNum < 30) {
-                    location.href = '/km/login/initBrowseLower';
+                    validBrowser = false;
                 }
             } else if (chromeBrowserReg.test(EnCheck.browserName)) {
                 if (EnCheck.browserNum < 35) {
-                    location.href = '/km/login/initBrowseLower';
+                    validBrowser = false;
                 }
             }
         }
-        location.href = '/km/front/index';
+        if (validBrowser) {
+            location.href = '/km/front/index';
+        } else {
+            location.href = '/km/login/initBrowseLower';
+        }
     </script>
 </head>
 <body>
