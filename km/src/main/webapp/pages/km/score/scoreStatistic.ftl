@@ -13,6 +13,8 @@
                     <div class="pe-stand-table-top-panel">
                         <input type="text" class="pe-tree-form-text" name="codeAndName" placeholder="工号/姓名/用户名"
                                style="border: 1px solid #ccc;margin: -3px 0 0 10px;border-radius: 20px;width: 280px;">
+                        <span class="iconfont pe-tree-search-btn input-icon icon-search-magnifier"
+                              style="position: relative;float: none;margin-left: -30px;"></span>
                     </div>
                     <div class="clear"></div>
                 <#--表格包裹的div-->
@@ -119,6 +121,7 @@
 
 <script>
     $(function () {
+        PEBASE.isPlaceholder();
         var peTableTitle = [
             {'title': '工号', 'width': 20},
             {'title': '姓名', 'width': 20},
@@ -149,6 +152,12 @@
                     if (e.keyCode === 13 || e.keyCode === 108 || !thisSearchVal) {
                         $('.pe-stand-table-wrap').peGrid('load', $('#scoreManageForm').serializeArray());
                     }
+                });
+
+                $('.pe-tree-search-btn').on('click', function (e) {
+                    var e = e || window.event;
+                    e.stopPropagation();
+                    $('.pe-stand-table-wrap').peGrid('load', $('#scoreManageForm').serializeArray());
                 });
 
                 $('.create-exercise-btn').on('click', function () {
