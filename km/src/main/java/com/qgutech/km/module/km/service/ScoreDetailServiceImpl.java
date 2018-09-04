@@ -154,7 +154,7 @@ public class ScoreDetailServiceImpl extends BaseServiceImpl<ScoreDetail> impleme
     @Override
     @Transactional(readOnly = false, rollbackFor = Exception.class)
     public void addScore(List<String> knowledgeIds, String ruleCode) {
-        /*if (CollectionUtils.isEmpty(knowledgeIds) || StringUtils.isEmpty(ruleCode)) {
+        if (CollectionUtils.isEmpty(knowledgeIds) || StringUtils.isEmpty(ruleCode)) {
             throw new PeException("knowledgeIds and ruleCode must be not empty!");
         }
 
@@ -195,7 +195,7 @@ public class ScoreDetailServiceImpl extends BaseServiceImpl<ScoreDetail> impleme
 
         if (scoreDetails.size() > 0) {
             batchSave(scoreDetails);
-        }*/
+        }
     }
 
     @Override
